@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `1dffbb6fefbafeea57492f7b2932c6d78a94a2e0` (documentation-only follow-up after CI passed on `c4700d33ff1e3bd84e034cb41fecea2ffff6d595`).
+**Latest branch head checked during this update:** `4fcfacc9c405eceb3eb10ff9aae22b64923074bd` (documentation-only follow-up after CI passed on `2b56ad2a91ede9081ae56e51ed72b9dcfaf4aa6e`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -77,7 +77,7 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - Added `scripts/train_horizon_model.py` to train separate patient-disjoint logistic models with causal temporal features, training-only preprocessing, fixed reference threshold, aggregate-only output, patient-level alert burden, challenge-label forecast-window coverage, label-relative warning time, and patient-cluster bootstrap intervals.
 - Added `tests/test_horizon.py` for target alignment, patient boundary isolation, time eligibility, alert refractory logic, forecast-window coverage, and uncertainty intervals.
 - Added [Horizon forecasting protocol](HORIZON_FORECASTING.md) and documented the CLI in the README.
-- GitHub Actions passed for the horizon target and full test suite on code-bearing commit `c4700d33ff1e3bd84e034cb41fecea2ffff6d595`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38613967293). The run included 117 tests; the first run exposed one incorrect expected count in a test fixture, which was corrected and then passed.
+- GitHub Actions passed on code-bearing commit `2b56ad2a91ede9081ae56e51ed72b9dcfaf4aa6e`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38614183618). All 118 tests passed, including an end-to-end synthetic-PSV training run for the horizon model. An earlier test run exposed one incorrect expected alert count in a test fixture; the fixture was corrected and the suite passed.
 - The full-cohort horizon CLI has **not** yet been run in this environment because the authorized patient data are local and must not be uploaded or committed. No horizon performance results are claimed yet.
 
 **Interpretation boundary:** these targets forecast entry into the Challenge SepsisLabel-positive window. The source label already uses a six-hour lead convention, so the new 1/3/6-hour targets are not independent predictions of biological onset. Alert rates are relative to eligible at-risk hours; alerts outside forecast-positive windows are not verified clinical false alarms. Threshold and refractory settings remain research defaults.
