@@ -87,7 +87,8 @@ def _weighted_rank_metrics(prepared: dict, row_weights: np.ndarray) -> tuple[flo
     group_pos = np.add.reduceat(ww * yy, group_starts)
     group_total = np.add.reduceat(ww, group_starts)
     cum_pos, cum_total = np.cumsum(group_pos), np.cumsum(group_total)
-    ap = np.sum((group_pos / pos_total) * (cum_pos / cum_total))
+    nonzero = cum_total > 0
+    ap = np.sum((group_pos[nonzero] / pos_total) * (cum_pos[nonzero] / cum_total[nonzero]))
     brier = np.sum(w * (prepared["p"] - y) ** 2) / np.sum(w)
     return float(auc), float(ap), float(brier)
 
