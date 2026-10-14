@@ -41,12 +41,13 @@ Keep the PhysioNet/CinC Challenge 2019 data outside Git and follow its access te
 python scripts/build_cohort.py /path/to/psv_files --output outputs/cohort_inventory.json
 ```
 
-Train the static baseline, temporal variant, or matched comparison:
+Train the static baseline, temporal variant, matched comparison, or a deterministic subset experiment:
 
 ```bash
 python scripts/train_baseline.py /path/to/psv_files --output outputs/static_metrics.json
 python scripts/train_baseline.py /path/to/psv_files --temporal --output outputs/temporal_metrics.json
 python scripts/compare_models.py /path/to/psv_files --output outputs/model_comparison.json
+python scripts/run_subset_experiment.py /path/to/psv_files --sample-size 1500 --sampling-seed 2026 --split-seed 42 --output outputs/subset_comparison.json
 ```
 
 For the dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
@@ -62,6 +63,7 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 - [Local experiment history](docs/LOCAL_EXPERIMENTS.md) records prior exploratory runs and their limitations.
 - [Aggregate dataset inventory](results/dataset_inventory.json) records the verified local archive counts for training sets A and B; no raw or patient-level data are stored here.
 - [Multi-seed experiment runner](scripts/run_experiment_suite.py) supports reproducible static-versus-temporal comparisons across patient-level split seeds.
+- [Subset experiment runner](scripts/run_subset_experiment.py) deterministically samples patient files and writes aggregate-only matched comparison results.
 - [Structured historical results](results/local_experiment_summary.json) is an aggregate-only record of earlier experiments. These historical metrics are not automatically reproduced by the current workflow.
 - [Fresh subset rerun](results/current_subset_rerun.json) records a 1,500-patient current-protocol experiment; its results are mixed and exploratory.
 - [Next steps and research roadmap](docs/NEXT_STEPS.md) lists pipeline fixes, reproducible validation, external validation, and IP safeguards.
