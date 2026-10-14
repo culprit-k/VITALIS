@@ -119,3 +119,8 @@ The independent-evaluation protocol now has a machine-checkable scaffold: `confi
 
 
 - [Utility-based operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) documents the cost-sensitivity method for missed forecast windows versus alert burden. The exploratory nine-run aggregate analysis is complete: [results report](docs/HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate JSON](results/horizon_utility_operating_point_aggregate_2026-10-15.json). Cost ratios are illustrative, the run used a reconstructed working copy, and no threshold is selected from Set B. Independent cost review and a new evaluation cohort remain required.
+
+
+### Repository data-artifact hygiene
+
+CI runs \`scripts/check_repository_hygiene.py\` to reject common row-level data/cache/model-artifact file extensions and files larger than 5 MiB in the current working tree. This is a preventive current-tree check only; it does not scan Git history or replace secret scanning, data-governance review, or a manual privacy audit.
