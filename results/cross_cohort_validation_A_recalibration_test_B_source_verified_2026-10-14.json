@@ -1,0 +1,310 @@
+{
+  "project": "VITALIS",
+  "run_type": "cross_cohort_validation_A_recalibration_test_B_source_verified_run",
+  "date": "2026-10-14",
+  "repository": "culprit-k/VITALIS",
+  "main_commit_sha": "90ce87677b1e1692c3a6f04f7394f9ce59cf7481",
+  "source_blob_shas": {
+    "scripts/build_feature_cache.py": "eba7dda1532675c2e3f21476b0bba2cead537e78",
+    "scripts/evaluate_cross_cohort_recalibration.py": "a14e4706f0560a677b788f1a2aa4e18dfc237852",
+    "tests/test_cross_cohort_recalibration.py": "0abe395b83b06a9152543f52b6e7598137f225c0"
+  },
+  "source_provenance": "The three relevant source files were retrieved from main and local Git blob hashes matched the GitHub blob SHAs exactly. A full git clone could not resolve github.com DNS in this runtime, so this is a byte-identical-source run, not a verified full Git checkout.",
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0"
+  },
+  "tests": {
+    "focused_pytest": "7 passed in 0.85 seconds",
+    "github_actions_run": "38589529596",
+    "github_actions_conclusion": "success"
+  },
+  "dataset": {
+    "training_setA": {
+      "patients": 20336,
+      "rows": 790215,
+      "positive_hourly_labels": 17136
+    },
+    "training_setB": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780,
+      "positive_hourly_label_prevalence": 0.014147074455869133
+    }
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "set_a_split": "60% model training / 20% recalibration validation / 20% unused; patient-disjoint",
+    "set_b_test": "All set B patients; not used for model fitting, recalibrator fitting, or threshold selection",
+    "recalibration": "Platt/logistic recalibration fitted on set A validation predictions only",
+    "row_level_predictions_exported": false
+  },
+  "aggregate_mean_and_sample_sd_across_seeds": {
+    "static": {
+      "raw_set_b": {
+        "auroc": {
+          "mean": 0.6750166555304314,
+          "sample_sd": 0.00582416929377881
+        },
+        "auprc": {
+          "mean": 0.04549463942027698,
+          "sample_sd": 0.0017931824464817653
+        },
+        "brier_score": {
+          "mean": 0.16589241050101514,
+          "sample_sd": 0.005733622377220677
+        },
+        "log_loss": {
+          "mean": 0.522277922374278,
+          "sample_sd": 0.012058017729506942
+        },
+        "mean_predicted_probability": {
+          "mean": 0.3676225939834037,
+          "sample_sd": 0.008949402118358402
+        }
+      },
+      "recalibrated_set_b": {
+        "auroc": {
+          "mean": 0.6750166555304314,
+          "sample_sd": 0.0058241597291106
+        },
+        "auprc": {
+          "mean": 0.04549463942027698,
+          "sample_sd": 0.0017931807678908428
+        },
+        "brier_score": {
+          "mean": 0.014071162019169116,
+          "sample_sd": 0.000186954117
+        },
+        "log_loss": {
+          "mean": 0.07172112703908183,
+          "sample_sd": 0.0001497
+        },
+        "mean_predicted_probability": {
+          "mean": 0.018861966200122926,
+          "sample_sd": 0.0006448
+        }
+      }
+    },
+    "temporal": {
+      "raw_set_b": {
+        "auroc": {
+          "mean": 0.7319108726402911,
+          "sample_sd": 0.006418500017207337
+        },
+        "auprc": {
+          "mean": 0.058094760738500985,
+          "sample_sd": 0.0014806834562855798
+        },
+        "brier_score": {
+          "mean": 0.09722227333924051,
+          "sample_sd": 0.0021598541879650347
+        },
+        "log_loss": {
+          "mean": 0.3525856692160966,
+          "sample_sd": 0.005238692815048651
+        },
+        "mean_predicted_probability": {
+          "mean": 0.2632675128512416,
+          "sample_sd": 0.004877335085866534
+        }
+      },
+      "recalibrated_set_b": {
+        "auroc": {
+          "mean": 0.7319108726402911,
+          "sample_sd": 0.006418503979594225
+        },
+        "auprc": {
+          "mean": 0.058094760738500985,
+          "sample_sd": 0.001480683680885981
+        },
+        "brier_score": {
+          "mean": 0.013830165423673125,
+          "sample_sd": 0.0000314
+        },
+        "log_loss": {
+          "mean": 0.0689960023746189,
+          "sample_sd": 0.00028
+        },
+        "mean_predicted_probability": {
+          "mean": 0.01336148771331064,
+          "sample_sd": 0.000821
+        }
+      }
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 42,
+      "patient_counts": {
+        "set_a_train": 12201,
+        "set_a_validation": 4067,
+        "set_a_unused": 4068,
+        "set_b_test": 20000
+      },
+      "row_counts": {
+        "set_a_train": 473301,
+        "set_a_validation": 158883,
+        "set_a_unused": 158031,
+        "set_b_test": 761995
+      },
+      "models": {
+        "static": {
+          "raw_set_b": {
+            "auroc": 0.674175575085986,
+            "auprc": 0.045182745286947004,
+            "brier_score": 0.15982633450214004,
+            "log_loss": 0.5099533429963404,
+            "mean_predicted_probability": 0.3583609901303645
+          },
+          "recalibrated_set_b": {
+            "auroc": 0.674175575085986,
+            "auprc": 0.045182745286947004,
+            "brier_score": 0.0139310505177083,
+            "log_loss": 0.07165552934939567,
+            "mean_predicted_probability": 0.018747119613450217
+          }
+        },
+        "temporal": {
+          "raw_set_b": {
+            "auroc": 0.7316326901069619,
+            "auprc": 0.05850958369825903,
+            "brier_score": 0.09570468631242292,
+            "log_loss": 0.3491932671097518,
+            "mean_predicted_probability": 0.258612557130815
+          },
+          "recalibrated_set_b": {
+            "auroc": 0.7316326901069619,
+            "auprc": 0.05850958369825903,
+            "brier_score": 0.013823290935457179,
+            "log_loss": 0.06918167927221587,
+            "mean_predicted_probability": 0.014199313122144406
+          }
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "patient_counts": {
+        "set_a_train": 12201,
+        "set_a_validation": 4067,
+        "set_a_unused": 4068,
+        "set_b_test": 20000
+      },
+      "row_counts": {
+        "set_a_train": 470100,
+        "set_a_validation": 160790,
+        "set_a_unused": 159325,
+        "set_b_test": 761995
+      },
+      "models": {
+        "static": {
+          "raw_set_b": {
+            "auroc": 0.6696587632549802,
+            "auprc": 0.043877865752159045,
+            "brier_score": 0.16662839228309514,
+            "log_loss": 0.5228300116271418,
+            "mean_predicted_probability": 0.3682836588676097
+          },
+          "recalibrated_set_b": {
+            "auroc": 0.6696587632549802,
+            "auprc": 0.043877865752159045,
+            "brier_score": 0.013999152504721496,
+            "log_loss": 0.07161515158023066,
+            "mean_predicted_probability": 0.018282512270767933
+          }
+        },
+        "temporal": {
+          "raw_set_b": {
+            "auroc": 0.72563598275679,
+            "auprc": 0.05645090726644643,
+            "brier_score": 0.09969502932384952,
+            "log_loss": 0.3586192206554477,
+            "mean_predicted_probability": 0.26834033872509566
+          },
+          "recalibrated_set_b": {
+            "auroc": 0.72563598275679,
+            "auprc": 0.05645090726644643,
+            "brier_score": 0.013802175582058688,
+            "log_loss": 0.06913200825228366,
+            "mean_predicted_probability": 0.013326779534731981
+          }
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "patient_counts": {
+        "set_a_train": 12201,
+        "set_a_validation": 4067,
+        "set_a_unused": 4068,
+        "set_b_test": 20000
+      },
+      "row_counts": {
+        "set_a_train": 474841,
+        "set_a_validation": 157439,
+        "set_a_unused": 157935,
+        "set_b_test": 761995
+      },
+      "models": {
+        "static": {
+          "raw_set_b": {
+            "auroc": 0.6812156282703282,
+            "auprc": 0.047423307221724914,
+            "brier_score": 0.17122250471781025,
+            "log_loss": 0.5340504124993517,
+            "mean_predicted_probability": 0.376223132952237
+          },
+          "recalibrated_set_b": {
+            "auroc": 0.6812156282703282,
+            "auprc": 0.047423307221724914,
+            "brier_score": 0.014283283035077548,
+            "log_loss": 0.07189270018761915,
+            "mean_predicted_probability": 0.019556266716150628
+          }
+        },
+        "temporal": {
+          "raw_set_b": {
+            "auroc": 0.7384639450571212,
+            "auprc": 0.059323791250797515,
+            "brier_score": 0.0962671043814491,
+            "log_loss": 0.34994451988309017,
+            "mean_predicted_probability": 0.26284964269781425
+          },
+          "recalibrated_set_b": {
+            "auroc": 0.7384639450571212,
+            "auprc": 0.05932379125079751,
+            "brier_score": 0.013865029753503505,
+            "log_loss": 0.06867437100045716,
+            "mean_predicted_probability": 0.01255837048205554
+          }
+        }
+      }
+    }
+  ],
+  "warnings": {
+    "static": "SimpleImputer reported feature index 7 (EtCO2) had no observed values.",
+    "temporal": "SimpleImputer reported indices 7, 61, 62, 63 (EtCO2 and derived EtCO2 features) had no observed values.",
+    "handling": "Warnings were retained. Runs completed; review feature handling before future model changes."
+  },
+  "reconciliation": {
+    "historical_artifact": "results/cross_cohort_validation_A_recalibration_test_B_3seed_2026-10-14.json",
+    "historical_blob_sha": "4bb8a269a7fff917cba058638ffe7a1d113defc5",
+    "raw_metrics": "Reproduced to floating-point precision; largest absolute delta approximately 1.9e-7 in AUROC.",
+    "recalibrated_metrics": "AUROC/AUPRC effectively unchanged; probability metrics differ modestly. Largest absolute delta approximately 8.31e-4 in mean predicted probability.",
+    "interpretation": "The historical artifact came from a reconstructed harness and lacked environment details. Retain it unchanged; treat this source-verified run as canonical for these source blobs. Discrepancy cannot be conclusively attributed from available metadata."
+  },
+  "limitations": [
+    "Retrospective hourly Challenge-label metrics only; not patient-level clinical event performance.",
+    "Set B is a held-out cohort within the same benchmark, not prospective or independent real-world validation.",
+    "Recalibration can improve aggregate scores without establishing clinical calibration.",
+    "Thresholds were not selected for clinical use.",
+    "No raw records, patient identifiers, caches, group vectors, or row-level predictions are included."
+  ]
+}
