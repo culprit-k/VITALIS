@@ -25,3 +25,24 @@ The script reports row-level AUROC, AUPRC, Brier score, threshold-specific sensi
 
 ## Governance
 Never commit raw data, patient-level derived tables, individual predictions, credentials, or tokens to this repository. Do not interpret model output as medical advice.
+
+
+## Supervised horizon-forecasting research branch
+
+A separate research workflow forecasts whether a future row enters the Challenge \`SepsisLabel\`-positive window within 1, 3, or 6 hours. Current-positive rows and each patient's final H rows are excluded. This target is **not independently observed biological sepsis onset**: the Challenge label itself uses a six-hour lead convention.
+
+The horizon workflow compares static and temporal logistic-regression features. Within Set A, patient groups are separated into approximately 60% model training, 20% Platt calibration, and 20% untouched operating-point development holdout. Set B has been used as a final retrospective cohort for descriptive comparisons only; it must not be reused to select thresholds or cost assumptions.
+
+### Findings that constrain intended use
+
+- Full-cohort cross-cohort metrics are documented in [the horizon results report](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md). Differences between static and temporal ranking performance are small or horizon-dependent in this evaluation; no model is selected as clinically superior.
+- Platt recalibration reduces Brier score relative to raw class-weighted scores, but calibrated Set-B Brier scores remained slightly worse than the constant-prevalence reference across model/horizon pairs. This does not establish adequate probability calibration.
+- The paired comparison reports conditional patient-cluster intervals for AUROC, AUPRC, Brier score, and log loss in [the paired results report](HORIZON_PAIRED_MODEL_COMPARISON_RESULTS_2026-10-15.md). It is descriptive retrospective evidence, not independent validation or a license to tune on Set B.
+- The cost-sensitive operating-point framework and its uncertainty analysis are described in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the utility bootstrap report](HORIZON_UTILITY_BOOTSTRAP_RESULTS_2026-10-15.md). At a 6-hour horizon and threshold 0.005, reported mean forecast-window coverage was about 99.3%, but burden was about 4.20 alerts per at-risk patient-day and row-level PPV about 1.45%. The preferred threshold changes under different assumed missed-window costs. These costs are illustrative, not clinician-elicited; no threshold is endorsed.
+- Some full-cohort artifacts were generated from a reconstructed local working copy because runtime DNS prevented a verified clean checkout. Those results are explicitly provenance-qualified and are not claimed as byte-identically reproduced from a clean source checkout.
+
+## Evidence gaps
+
+No new independent cohort with independently defined/adjudicated onset timing, prospective silent-mode study, clinical impact evaluation, or clinical utility study has been completed. Fairness, subgroup safety, real-device signal quality, workflow effects, and sensor integration are not established. The synthetic adaptive-twin demonstrations validate software behavior on constructed inputs only.
+
+**Current status:** VITALIS is a research prototype for retrospective algorithm development and education. Do not use its outputs to guide diagnosis, triage, treatment, or other patient-care decisions. Before any external/prospective study, require a frozen model/policy, a clean-checkout/fresh-cache reproduction, independent clinical/statistical review, data-governance and ethics determinations, and a genuinely new independent cohort.
