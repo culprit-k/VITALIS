@@ -66,7 +66,7 @@ For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit ru
 
 - [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.\n- `src/vitalis/stream.py` adds a timestamped input contract with unit checks, freshness handling, quality flags, out-of-order rejection, and session reset; device-specific acquisition is still future work.
 - [VITALIS-PB research specification](docs/VITALIS_PB_ALGORITHM.md) defines the separate retrospective patient-baseline feature experiment.
-- The online twin currently detects within-person deviation patterns. It does **not** yet estimate a calibrated probability of sepsis or forecast a validated 1–3 hour deterioration window.
+- The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** yet estimate a calibrated probability of sepsis or forecast a validated 1–3 hour deterioration window.
 
 ## Data safety and label semantics
 
