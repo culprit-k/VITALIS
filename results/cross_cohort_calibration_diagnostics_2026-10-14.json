@@ -1,0 +1,59 @@
+{
+  "project": "VITALIS",
+  "run_type": "descriptive_cross_cohort_calibration_train_A_test_B",
+  "date": "2026-10-14",
+  "source_provenance": "Locally reconstructed runner; exact byte identity to checked-in source has not been verified.",
+  "dataset": {
+    "training_setA": {"patients": 20336, "hourly_rows": 790215, "positive_hourly_labels": 17136},
+    "training_setB": {"patients": 20000, "hourly_rows": 761995, "positive_hourly_labels": 10780},
+    "setB_hourly_label_prevalence": 0.014147074455869133
+  },
+  "protocol": {
+    "seeds": [42, 123, 2026],
+    "split_unit": "patient",
+    "set_a_training_fraction": 0.6,
+    "set_b_test": "all patients",
+    "model": "median imputation with missingness indicators, standard scaling, balanced logistic regression",
+    "setB_calibration": "descriptive only; no recalibration or threshold tuning",
+    "reliability_bins": "10 equal-frequency bins per model and seed",
+    "patient_level_predictions_exported": false
+  },
+  "aggregate_mean_and_sample_sd_across_seeds": {
+    "static": {
+      "auroc": {"mean": 0.675016596408, "sample_sd": 0.005778811},
+      "auprc": {"mean": 0.045494636233, "sample_sd": 0.001773379},
+      "brier_score": {"mean": 0.165892410523, "sample_sd": 0.005701768},
+      "log_loss": {"mean": 0.522277922374, "sample_sd": 0.012049649},
+      "calibration_intercept_descriptive": {"mean": -4.066511479412, "sample_sd": 0.016433},
+      "calibration_slope_descriptive": {"mean": 0.574813270337, "sample_sd": 0.042800},
+      "mean_predicted_probability": {"mean": 0.367622593009, "sample_sd": 0.008931}
+    },
+    "temporal": {
+      "auroc": {"mean": 0.731910833331, "sample_sd": 0.006415},
+      "auprc": {"mean": 0.058094757282, "sample_sd": 0.001457},
+      "brier_score": {"mean": 0.097222273375, "sample_sd": 0.002111},
+      "log_loss": {"mean": 0.352585668883, "sample_sd": 0.005421},
+      "calibration_intercept_descriptive": {"mean": -3.698952622795, "sample_sd": 0.0219},
+      "calibration_slope_descriptive": {"mean": 0.681287927767, "sample_sd": 0.0444},
+      "mean_predicted_probability": {"mean": 0.263267512609, "sample_sd": 0.004865}
+    }
+  },
+  "descriptive_constant_prevalence_reference": {
+    "prevalence": 0.014147074455869133,
+    "brier_score": 0.013946934740209228,
+    "log_loss": 0.07428827275543302,
+    "note": "Uses held-out set B prevalence only as a scale reference; it is not a deployable model because test prevalence is not known at deployment."
+  },
+  "interpretation": [
+    "Temporal features retain higher ranking discrimination on set B, but the balanced-logistic-regression probabilities are severely overpredicted relative to the low hourly-label prevalence.",
+    "Mean predicted probability is approximately 26.3% for temporal and 36.8% for static, compared with 1.41% observed positive hourly-label prevalence.",
+    "Both models have substantially worse Brier and log-loss than the constant-prevalence reference computed from the test labels. This confirms that the raw probabilities should not be interpreted as calibrated risk estimates.",
+    "Calibration intercepts and slopes were estimated descriptively on set B only; they are diagnostics, not a calibration step and not evidence of deployment-ready probabilities."
+  ],
+  "limitations": [
+    "Both cohorts are from the same benchmark; set B is not prospective real-world validation.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or clinical false-alarm rates.",
+    "Fixed threshold 0.5 is not clinically selected.",
+    "No raw patient records, identifiers, or row-level predictions are included."
+  ]
+}
