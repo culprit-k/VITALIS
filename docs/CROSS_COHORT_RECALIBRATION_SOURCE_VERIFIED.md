@@ -39,6 +39,6 @@ The historical artifact came from a reconstructed harness and did not record eno
 
 ## Warnings and limitations
 
-`SimpleImputer` reported all-missing EtCO2 and derived EtCO2 features (static feature index 7; temporal indices 7, 61–63). The runs completed, but these warnings remain visible and feature handling should be reviewed before future model changes.
+`SimpleImputer` reported all-missing EtCO2 and derived EtCO2 features in set A (static feature index 7; temporal indices 7, 61–63). The availability audit found 0 finite EtCO2 rows out of 790,215 in set A, but 57,636 finite EtCO2 rows out of 761,995 in set B; derived EtCO2 features are also present in set B. Since the imputer is fit on set A, it drops these all-empty columns, so the model cannot use EtCO2 measurements available in set B. This is a concrete cross-cohort feature-availability shift and should be included in follow-up robustness work. The runs completed, but warnings remain visible and feature handling should be reviewed before future model changes.
 
 This remains retrospective evaluation against hourly challenge labels from the same benchmark. It does not establish clinical calibration, event-level sensitivity, lead time, real-world false-alarm burden, external validity, or clinical utility. VITALIS remains research-only. Raw patient records, local caches, group vectors, and row-level predictions were not committed.
