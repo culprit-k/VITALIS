@@ -1,0 +1,111 @@
+{
+  "project": "VITALIS",
+  "date": "2026-10-14",
+  "analysis": "patient-level feature availability and unadjusted association with any positive hourly SepsisLabel",
+  "method": {
+    "unit_of_analysis": "patient",
+    "feature_available": "at least one finite value anywhere in patient record",
+    "outcome": "at least one positive hourly SepsisLabel anywhere in patient record",
+    "set_b_role": "evaluation-cohort characterization only; no model fitting, feature selection, threshold selection, or tuning",
+    "model_fitted": false,
+    "causal_or_missingness_mechanism_claim": false,
+    "row_level_data_exported": false,
+    "patient_ids_exported": false
+  },
+  "cohorts": {
+    "set_a": {
+      "patients": 20336,
+      "hourly_rows": 790215,
+      "patients_with_any_positive_hourly_label": 1790,
+      "patient_positive_label_rate": 0.0880212431,
+      "median_rows_per_patient": 39,
+      "p90_rows_per_patient": 55,
+      "feature_availability_rate": {
+        "DBP": 0.6369000787,
+        "HCO3": 0.9736919748,
+        "BaseExcess": 0.6221479150,
+        "FiO2": 0.5894472856,
+        "pH": 0.6481608969,
+        "PaCO2": 0.6184598741,
+        "EtCO2": 0.0,
+        "Resp": 0.9986231314,
+        "Unit1": 0.5317663257,
+        "Glucose": 0.9799862313,
+        "Lactate": 0.3802616050
+      },
+      "positive_label_patient_rate_when_feature_present": {
+        "DBP": 0.1000617665,
+        "HCO3": 0.0844906823,
+        "BaseExcess": 0.1140531141,
+        "FiO2": 0.1199632936,
+        "pH": 0.1112965632,
+        "PaCO2": 0.1143356921,
+        "EtCO2": null,
+        "Resp": 0.0880441205,
+        "Unit1": 0.0737932310,
+        "Glucose": 0.0848512218,
+        "Lactate": 0.1525927842
+      },
+      "positive_label_patient_rate_when_feature_absent": {
+        "DBP": 0.0669014085,
+        "HCO3": 0.2186915888,
+        "BaseExcess": 0.0451587715,
+        "FiO2": 0.0421607378,
+        "pH": 0.0451432565,
+        "PaCO2": 0.0453666710,
+        "EtCO2": 0.0880212431,
+        "Resp": 0.0714285714,
+        "Unit1": 0.1041797942,
+        "Glucose": 0.2432432432,
+        "Lactate": 0.0484011743
+      }
+    },
+    "set_b": {
+      "patients": 20000,
+      "hourly_rows": 761995,
+      "patients_with_any_positive_hourly_label": 1142,
+      "patient_positive_label_rate": 0.0571,
+      "median_rows_per_patient": 38,
+      "p90_rows_per_patient": 54,
+      "feature_availability_rate": {
+        "DBP": 0.99865,
+        "HCO3": 0.0208,
+        "BaseExcess": 0.0279,
+        "FiO2": 0.2911,
+        "pH": 0.2877,
+        "PaCO2": 0.28895,
+        "EtCO2": 0.1608,
+        "Resp": 0.99785,
+        "Unit1": 0.69525,
+        "Glucose": 0.94135,
+        "Lactate": 0.238
+      },
+      "positive_label_patient_rate_when_feature_present": {
+        "DBP": 0.0571771892,
+        "HCO3": 0.1610576923,
+        "BaseExcess": 0.2132616487,
+        "FiO2": 0.1303675713,
+        "pH": 0.1317344456,
+        "PaCO2": 0.1318567226,
+        "EtCO2": 0.1638681592,
+        "Resp": 0.0566217367,
+        "Unit1": 0.0588277598,
+        "Glucose": 0.0595952621,
+        "Lactate": 0.1342436975
+      },
+      "positive_label_patient_rate_when_feature_absent": {
+        "DBP": 0.0,
+        "HCO3": 0.0548917484,
+        "BaseExcess": 0.0526180434,
+        "FiO2": 0.0270136832,
+        "pH": 0.0269549347,
+        "PaCO2": 0.0267210463,
+        "EtCO2": 0.0366420400,
+        "Resp": 0.2790697674,
+        "Unit1": 0.0531583265,
+        "Glucose": 0.0170502984,
+        "Lactate": 0.0330052493
+      }
+    }
+  }
+}
