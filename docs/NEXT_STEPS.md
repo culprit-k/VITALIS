@@ -194,3 +194,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] The analysis runner was reconstructed locally and exact source-byte identity for model fitting remains unverified; rerun from an exact repository checkout before treating the aggregate artifact as a strict reproduction.
 - [ ] Next calibration experiment: fit a pre-specified recalibrator using only a patient-disjoint validation subset of set A, freeze it, and evaluate once on set B. Do not tune on set B.
 - [ ] External/prospective validation and clinical/statistical governance review remain required before patient-facing research.
+
+
+## Cross-cohort recalibration pilot (2026-10-14)
+
+- [x] Completed one exploratory split (seed 42): split set A patients into model-training, validation-only recalibration, and unused partitions; then evaluated the frozen recalibrator on all set B patients.
+- [x] Committed aggregate-only results: [seed 42 JSON](../results/cross_cohort_validation_A_recalibration_test_B_seed42_2026-10-14.json) and [pilot report](CROSS_COHORT_RECALIBRATION_PILOT.md).
+- [x] Kept set B entirely out of model fitting, recalibrator fitting, and threshold selection.
+- [ ] Repeat the same pre-specified procedure for seeds 123 and 2026 and add uncertainty estimates; the seed-42 result alone is not enough to claim transportable calibration.
+- [ ] Exact source-byte identity for the local experimental harness remains unresolved; do not call this an exact-checkout reproduction.
+- [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
