@@ -255,5 +255,6 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Focused tests passed (7/7); GitHub Actions test run 38589529596 completed successfully.
 - [x] Added [source-verified aggregate JSON](../results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json) and [reconciliation report](CROSS_COHORT_RECALIBRATION_SOURCE_VERIFIED.md). Historical artifact remains unchanged.
 - [ ] Investigate the modest recalibrated Brier/log-loss/mean-probability discrepancy versus the prior reconstructed harness; prior environment metadata is insufficient to attribute it conclusively.
+- [ ] Address the EtCO2 feature-availability shift before interpreting cross-cohort performance: EtCO2 is absent in all set-A rows but present in 57,636 set-B rows; the set-A-fitted imputer drops EtCO2 and its derived features, so set-B values are unused. Assess a pre-specified feature policy without tuning on set B.
 - [ ] Obtain a full clean Git checkout once DNS/network access is available to close the remaining full-checkout provenance detail. Do not mislabel the current run as a full checkout.
 - [ ] Continue with pre-specified subgroup and higher-replicate uncertainty analysis; keep patient-level records, caches, group IDs, and row-level predictions outside Git. VITALIS remains research-only.
