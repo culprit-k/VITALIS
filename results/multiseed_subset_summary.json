@@ -1,0 +1,125 @@
+{
+  "project": "VITALIS",
+  "dataset_partition": "training_setA",
+  "protocol": {
+    "subset_patients": 1500,
+    "subset_sampling_seed": 2026,
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "source_patient_files": 20336,
+    "patient_level_split": true,
+    "model": "LogisticRegression(max_iter=500,class_weight=balanced,solver=lbfgs)",
+    "threshold": 0.5,
+    "temporal_features": "within-patient previous-row lag, one-row delta, trailing six-row mean; no future observations",
+    "paired_patient_cluster_bootstrap": "not completed in this run"
+  },
+  "cohort_counts": {
+    "patients": 1500,
+    "rows": 57812,
+    "positive_hourly_label_rows": 1206,
+    "positive_label_prevalence": 0.02086072095758666
+  },
+  "results_by_split_seed": [
+    {
+      "seed": 42,
+      "test_patients": 300,
+      "test_rows": 11736,
+      "positive_rows": 216,
+      "static": {
+        "auroc": 0.7543467078,
+        "auprc": 0.0919870588,
+        "brier": 0.1811006995,
+        "sensitivity": 0.6527777778,
+        "specificity": 0.7769965278,
+        "ppv": 0.0520295203,
+        "npv": 0.9916906714
+      },
+      "temporal": {
+        "auroc": 0.7662667985,
+        "auprc": 0.0827657202,
+        "brier": 0.1625026696,
+        "sensitivity": 0.6666666667,
+        "specificity": 0.7877604167,
+        "ppv": 0.0556199305,
+        "npv": 0.9921285667
+      }
+    },
+    {
+      "seed": 123,
+      "test_patients": 300,
+      "test_rows": 11537,
+      "positive_rows": 258,
+      "static": {
+        "auroc": 0.7275814764,
+        "auprc": 0.0741205723,
+        "brier": 0.1720776544,
+        "sensitivity": 0.5736434109,
+        "specificity": 0.8026420782,
+        "ppv": 0.0623420388,
+        "npv": 0.9879951981
+      },
+      "temporal": {
+        "auroc": 0.7068098703,
+        "auprc": 0.0665103116,
+        "brier": 0.1597215255,
+        "sensitivity": 0.5348837209,
+        "specificity": 0.7980317404,
+        "ppv": 0.0571192053,
+        "npv": 0.9868435479
+      }
+    },
+    {
+      "seed": 2026,
+      "test_patients": 300,
+      "test_rows": 11477,
+      "positive_rows": 237,
+      "static": {
+        "auroc": 0.7221605328,
+        "auprc": 0.0990720987,
+        "brier": 0.1776685554,
+        "sensitivity": 0.5485232068,
+        "specificity": 0.7743772242,
+        "ppv": 0.0487621905,
+        "npv": 0.987856089
+      },
+      "temporal": {
+        "auroc": 0.6880005856,
+        "auprc": 0.0897645443,
+        "brier": 0.1715816381,
+        "sensitivity": 0.5611814346,
+        "specificity": 0.7727758007,
+        "ppv": 0.0494975809,
+        "npv": 0.9881683732
+      }
+    }
+  ],
+  "across_seed_summary": {
+    "static": {
+      "auroc_mean": 0.734696239,
+      "auroc_sd": 0.0172323054,
+      "auprc_mean": 0.0883932433,
+      "auprc_sd": 0.012858122,
+      "brier_mean": 0.1769489698,
+      "brier_sd": 0.0045543593
+    },
+    "temporal": {
+      "auroc_mean": 0.7203590848,
+      "auroc_sd": 0.0408544481,
+      "auprc_mean": 0.079680192,
+      "auprc_sd": 0.011930222,
+      "brier_mean": 0.1646019444,
+      "brier_sd": 0.0062024821
+    }
+  },
+  "limitations": [
+    "Exploratory subset only; no full-cohort or external validation.",
+    "Metrics are hourly-row metrics, not event-level clinical detection metrics.",
+    "SepsisLabel used as supplied; no additional shift.",
+    "Threshold 0.5 is not clinically optimized.",
+    "Across-seed SD is not a confidence interval.",
+    "No claim of clinical utility, novelty, or patentability."
+  ]
+}
