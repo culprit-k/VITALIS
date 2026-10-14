@@ -21,13 +21,30 @@
     "challenge_label_proxy": true,
     "independently_adjudicated": false
   },
-  "horizons_hours": [1, 3, 6],
-  "thresholds": [0.005, 0.01],
-  "primary_metrics": ["TODO"],
-  "secondary_metrics": ["TODO"],
-  "subgroup_plan": ["TODO"],
-  "missing_data_plan": ["TODO"],
-  "stopping_rules": ["TODO"],
+  "horizons_hours": [
+    1,
+    3,
+    6
+  ],
+  "thresholds": [
+    0.005,
+    0.01
+  ],
+  "primary_metrics": [
+    "TODO"
+  ],
+  "secondary_metrics": [
+    "TODO"
+  ],
+  "subgroup_plan": [
+    "TODO"
+  ],
+  "missing_data_plan": [
+    "TODO"
+  ],
+  "stopping_rules": [
+    "TODO"
+  ],
   "frozen_policy": {
     "model_family": "TODO",
     "preprocessing": "TODO",
@@ -37,10 +54,41 @@
     "threshold_selection_frozen": false
   },
   "approvals": {
-    "clinical_owner": {"approved": false, "reviewer": "", "date": ""},
-    "independent_statistician": {"approved": false, "reviewer": "", "date": ""},
-    "data_governance": {"approved": false, "reviewer": "", "date": ""},
-    "ethics_determination": {"approved": false, "reviewer": "", "date": ""},
-    "software_reviewer": {"approved": false, "reviewer": "", "date": ""}
+    "clinical_owner": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "independent_statistician": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "data_governance": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "ethics_determination": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "software_reviewer": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    }
+  },
+  "utility_policy": {
+    "cost_definition": "missed_window_cost * missed_forecast_positive_windows + alert_cost * all_alerts",
+    "alert_cost": "TODO: positive numeric cost unit for one alert",
+    "missed_window_costs_relative_to_one_alert": [
+      "TODO: predeclared positive numeric scenarios"
+    ],
+    "primary_cost_scenario": "TODO: one prespecified scenario selected before outcome access",
+    "selection_rule": "TODO: exact rule for choosing a development candidate on Set A only",
+    "candidate_selection_cohort": "TODO: patient-disjoint Set A operating-point holdout; never Set B",
+    "clinical_cost_justification": "TODO: independent clinical/statistical rationale or explicitly exploratory-only status"
   }
 }
