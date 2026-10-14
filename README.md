@@ -7,34 +7,26 @@
 ## Research goals
 
 - Build a reproducible, auditable cohort pipeline.
-- Compare transparent baselines with temporal and patient-specific physiological features.
+- Compare a transparent logistic baseline with causal temporal features.
 - Prevent patient leakage and label-timing errors.
-- Evaluate discrimination, calibration, sensitivity, specificity, lead time, and alert burden.
+- Evaluate discrimination, calibration, sensitivity, specificity, and aggregate alert behavior.
 - Document uncertainty and limitations before considering any clinical translation.
 
 ## Repository layout
 
 ```text
-docs/                 Research protocol and data dictionary
-src/vitalis/          Reusable feature and validation code
+docs/                 Research protocol, data dictionary, model card, workflow
+src/vitalis/          Reusable temporal-feature and validation code
+scripts/              Dataset audit, cohort inventory, training, comparison
+configs/              Baseline experiment configuration
 tests/                Unit tests
-scripts/              Reproducible command-line workflows
-configs/              Experiment configuration examples
+ dashboard/           Optional aggregate-only Streamlit dashboard
+.github/workflows/    Automated tests
 ```
 
-## Data and privacy
+## Local workflow
 
-The PhysioNet/CinC Challenge 2019 dataset may be used locally subject to its access terms. **Do not commit raw patient data, derived patient-level records, model outputs tied to individuals, credentials, or tokens.** Keep local datasets outside this repository.
-
-The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shift it a second time. A positive label should not be described as independently observed clinical onset.
-
-## Development status
-
-The repository is being rebuilt from a clean, documented foundation. No performance, novelty, patentability, or clinical utility claim is made until the relevant analysis is independently verified.
-
-## Development setup
-
-Python 3.10 or newer is recommended.
+Install and test:
 
 ```bash
 python -m venv .venv
@@ -43,4 +35,28 @@ pip install -e ".[dev]"
 pytest
 ```
 
-See [`docs/PROJECT_CHARTER.md`](docs/PROJECT_CHARTER.md), [`docs/COHORT_PROTOCOL.md`](docs/COHORT_PROTOCOL.md), and [`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md).
+Keep the PhysioNet/CinC Challenge 2019 data outside Git and follow its access terms. Run the aggregate cohort inventory:
+
+```bash
+python scripts/build_cohort.py /path/to/psv_files --output outputs/cohort_inventory.json
+```
+
+Train the static baseline, temporal variant, or matched comparison:
+
+```bash
+python scripts/train_baseline.py /path/to/psv_files --output outputs/static_metrics.json
+python scripts/train_baseline.py /path/to/psv_files --temporal --output outputs/temporal_metrics.json
+python scripts/compare_models.py /path/to/psv_files --output outputs/model_comparison.json
+```
+
+For the dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
+
+## Data safety and label semantics
+
+**Do not commit raw patient data, derived patient-level records, individual predictions, credentials, or tokens.** Local `data/`, `outputs/`, `artifacts/`, and `.psv` files are ignored by Git.
+
+The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shift it a second time. A positive label should not be described as independently observed clinical onset.
+
+## Development status
+
+This repository contains a research scaffold and reproducible baseline workflows. Model performance has not been asserted as clinically useful or externally validated. No claim of novelty or patentability is made. See [`docs/REPRODUCIBLE_WORKFLOW.md`](docs/REPRODUCIBLE_WORKFLOW.md), [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md), and [`docs/COHORT_PROTOCOL.md`](docs/COHORT_PROTOCOL.md).
