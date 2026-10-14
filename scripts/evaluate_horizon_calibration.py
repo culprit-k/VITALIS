@@ -25,7 +25,10 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from vitalis.horizon import build_future_challenge_targets, evaluate_horizon_alerts
-from vitalis.calibration_uncertainty import patient_cluster_bootstrap_calibration_metrics
+from vitalis.calibration_uncertainty import (
+    patient_cluster_bootstrap_calibration_metrics,
+    patient_cluster_bootstrap_paired_model_metrics,
+)
 
 BASE = [
     "HR", "O2Sat", "Temp", "SBP", "MAP", "DBP", "Resp", "EtCO2",
@@ -184,6 +187,7 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
                                         "set_b_evaluation": int(target_b.targets.sum())},
                "set_b_used_for_fit_or_threshold_selection": False, "models": {}}
     feature_sets = {"static": static, "temporal": np.arange(len(columns), dtype=np.int64)}
+    set_b_calibrated_scores = {}
     for name, feature_indices in feature_sets.items():
         model = make_pipeline(SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True),
                               StandardScaler(), LogisticRegression(max_iter=100, tol=1e-2, class_weight="balanced", solver="lbfgs", random_state=seed))
@@ -229,6 +233,7 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
             # Keep patient-level alert computation tractable while preserving a
             # predeclared calibrated Set-B operating-point slice. No threshold is selected.
             if cohort_name == "set_b_final_evaluation":
+                set_b_calibrated_scores[name] = calibrated.copy()
                 variants["platt_calibrated"]["patient_alert_metrics_predeclared_subset"] = {
                     str(threshold): evaluate_horizon_alerts(
                         labels, calibrated, patients, times, threshold=threshold,
@@ -249,6 +254,11 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
         del model, raw_cal, calibrator, raw, calibrated, variants, cohorts
         gc.collect()
         print(f"horizon={horizon} seed={seed} model={name} completed", flush=True)
+    results["set_b_paired_static_vs_temporal_bootstrap_95ci"] = patient_cluster_bootstrap_paired_model_metrics(
+        target_b.targets, set_b_calibrated_scores["static"], set_b_calibrated_scores["temporal"],
+        target_b.patient_ids, n_bootstrap=bootstrap_replicates, seed=seed,
+    )
+    print(f"horizon={horizon} seed={seed} paired model bootstrap completed", flush=True)
     return results
 
 
@@ -287,7 +297,8 @@ def main() -> None:
                             "threshold_grid": list(THRESHOLDS), "thresholds_selected": False,
                             "patient_alert_metrics_thresholds": [0.005, 0.01],
                             "patient_cluster_bootstrap_replicates": args.bootstrap_replicates,
-                            "bootstrap_unit": "patient; Set-B calibrated Brier, log loss, mean probability, fixed-bin ECE, Brier-minus-prevalence-reference, and paired calibrated-minus-raw Brier difference",
+                            "bootstrap_unit": "whole patient; calibration uncertainty and paired static-versus-temporal calibrated-score differences on aligned Set-B rows",
+                            "paired_model_metrics": ["AUROC", "AUPRC", "Brier score", "log loss"],
                             "set_b": "final evaluation only; never used for fitting, calibration, or threshold selection",
                             "refractory_hours": args.refractory_hours,
                             "raw_data_or_row_level_predictions_exported": False},
