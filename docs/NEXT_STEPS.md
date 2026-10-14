@@ -350,3 +350,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Ran the checked-in paired patient-cluster bootstrap for 200 replicates per seed. Aggregate-only results are in [the JSON artifact](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json). The archives remain outside Git.
 - [ ] A 1,000-replicate run exceeded the local execution window; optimize bootstrap performance before claiming a 1,000-replicate result.
 - [ ] Recalibrated score-vector generation and 1,000-replicate exact-source bootstrap remain separate follow-up work; the existing recalibrated 20-replicate pilot is not source-identical.
+
+
+## Exact-source recalibrated-score uncertainty checkpoint (14 October 2026)
+
+- [x] Added an opt-in `--local-score-archive-dir` to `scripts/evaluate_cross_cohort_recalibration.py`. It refuses archive directories inside the repository and writes raw and Platt-recalibrated Set-B score vectors only to the requested local directory. Patient group values are replaced with synthetic contiguous indices.
+- [x] Added tests for archive path enforcement, vector validation, archive schema, and synthetic group indices. Focused tests pass locally (15 tests across recalibration and cross-cohort evaluator suites).
+- [x] Executed the updated runner for seeds 42, 123, and 2026 against the local Set-A/Set-B caches. Local runner blob SHA matches GitHub (`fe355c4b7b77b322ae5c134fe7fdc0b9cbb73200`); aggregate metrics reproduce the prior source-verified outputs to a maximum absolute difference below `1e-12` per seed. Six score archives were validated (761,995 rows, 20,000 synthetic patient groups, 10,780 positive labels each) and remain outside Git.
+- [x] Ran the checked-in bootstrap runner on the exact-source recalibrated probabilities: 200 paired patient-cluster replicates for each of seeds 42, 123, and 2026. Aggregate-only intervals are recorded in [the raw and recalibrated bootstrap JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [the report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md).
+- [ ] Optimize/checkpoint the bootstrap workflow and complete 1,000 replicates per seed and probability stream. Do not represent the 200-replicate analysis as the 1,000-replicate target.
+- [ ] Exact clean Git checkout provenance, independent methodological review, and Set-A-only justification for the exploratory feature-coverage threshold remain open. Set B stays evaluation-only; no clinical validation claim is supported.
