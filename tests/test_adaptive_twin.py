@@ -145,3 +145,50 @@ def test_scale_floor_can_be_configured_per_channel():
         t.update({"heart_rate": 70, "spo2": 98})
     result = t.update({"heart_rate": 71, "spo2": 98})
     assert result["channels"]["heart_rate"]["reference_z_score"] == 1.0
+
+
+
+def test_flatline_history_keeps_deviation_scores_finite():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "spo2", "respiratory_rate"],
+        scale_floors={"heart_rate": 1.0, "spo2": 0.5, "respiratory_rate": 0.5},
+        config=TwinConfig(min_history=3, history_window=8, min_channels=2, min_systems=2),
+    )
+    for _ in range(10):
+        result = t.update({"heart_rate": 70, "spo2": 98, "respiratory_rate": 16})
+    assert result["eligible"] is True
+    for channel in result["channels"].values():
+        if channel["z_score"] is not None:
+            assert abs(channel["z_score"]) < float("inf")
+
+
+def test_single_channel_spike_is_not_absorbed_into_rolling_baseline():
+    t = twin()
+    warm(t)
+    spike = t.update({"heart_rate": 150, "spo2": 98, "respiratory_rate": 16})
+    assert spike["channels"]["heart_rate"]["baseline_updated"] is False
+    assert spike["channels"]["heart_rate"]["baseline"] == 70
+    recovery = t.update({"heart_rate": 71, "spo2": 98, "respiratory_rate": 16})
+    assert recovery["channels"]["heart_rate"]["baseline"] == 70
+
+
+def test_correlated_channels_are_aggregated_by_system_not_counted_as_two_systems():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "systolic_bp", "spo2"],
+        config=TwinConfig(min_history=2, history_window=6, min_channels=2, min_systems=2),
+    )
+    for _ in range(2):
+        t.update({"heart_rate": 70, "systolic_bp": 120, "spo2": 98})
+    result = t.update({"heart_rate": 71, "systolic_bp": 121, "spo2": 97})
+    assert set(result["system_scores"]) == {"cardiovascular", "oxygenation"}
+    assert len(result["system_scores"]) == 2
+    assert result["eligible"] is True
+
+
+def test_custom_channels_must_have_explicit_system_mapping():
+    try:
+        AdaptivePhysiologicalTwin(channels=["unmapped_channel"])
+    except ValueError as exc:
+        assert "channel_systems" in str(exc)
+    else:
+        raise AssertionError("unmapped channel should be rejected")
