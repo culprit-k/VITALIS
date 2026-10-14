@@ -1,3 +1,5 @@
+import pytest
+
 from scripts.compare_models import compare
 
 
@@ -8,5 +10,5 @@ def test_comparison_reports_temporal_minus_static_deltas(monkeypatch, tmp_path):
 
     monkeypatch.setattr("scripts.compare_models.train_and_evaluate", fake_train)
     report = compare(tmp_path, seed=42)
-    assert report["temporal_minus_static_test_metric_delta"]["auroc"] == 0.1
+    assert report["temporal_minus_static_test_metric_delta"]["auroc"] == pytest.approx(0.1)
     assert report["temporal_minus_static_test_metric_delta"]["brier_score"] == 0.0
