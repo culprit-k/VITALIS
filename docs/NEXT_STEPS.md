@@ -163,3 +163,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Run the checked-in script from an exact repository checkout against the local caches and reconcile results; the first local analysis used a reconstructed working copy, so source-byte identity remains open.
 - [ ] Investigate calibration and cohort shift before drawing probability or clinical conclusions. Temporal features improved AUROC/AUPRC here but had lower sensitivity at the fixed 0.5 threshold; no operating point is clinically selected.
 - [ ] External/prospective validation, clinical/statistical supervision, and governance review remain required before any patient-facing research.
+
+
+## Combined A+B cohort evaluation (2026-10-14)
+
+- [x] Ran a patient-disjoint, three-seed static-versus-temporal comparison using both official training cohorts pooled together: 40,336 patients, 1,552,210 hourly rows, and 27,916 positive hourly challenge-label rows. See [combined A+B report](FULL_AB_COMBINED_RESULTS.md) and [aggregate JSON](../results/full_AB_combined_multiseed_2026-10-14.json).
+- [x] Kept the combined-cohort experiment distinct from the [train-A/test-B cross-cohort experiment](FULL_COHORT_CROSS_COHORT_RESULTS.md); the latter is the stronger cohort-shift check.
+- [x] Documented that model fitting capped training data at 500,000 sampled hourly rows per split and that the local evaluator was not byte-verified against the exact GitHub source.
+- [ ] Execute both-cohort and cross-cohort experiments from an exact repository checkout and reconcile aggregate metrics against these reports.
+- [ ] Add patient-cluster uncertainty intervals for the combined A+B held-out comparisons from securely retained local scores, if the results will be used for a formal report.
+- [ ] Investigate calibration, subgroup robustness, alert burden at clinically justified thresholds, and cohort shift under statistical/clinical supervision. No patient-facing use before external/prospective validation and governance review.
