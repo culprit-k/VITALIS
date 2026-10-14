@@ -40,3 +40,18 @@ Temporal features had a higher mean AUROC by 0.0256 and a higher mean AUPRC by 0
 - Some variables/derived features are entirely missing and are skipped by median imputation.
 - The cached local harness has not been byte-verified against the checked-in full-cohort CLI. Strict source identity and a reproducible repository-native multi-seed command remain outstanding.
 - No patient-level predictions or raw patient records were exported.
+
+
+## Repository-native rerun commands
+
+Run these sequentially from the repository root after obtaining the official dataset. Choose a cache directory outside the repository; the cache contains derived row-level patient data and must not be committed.
+
+```bash
+python scripts/build_feature_cache.py /path/to/training_setA --cache-dir /path/to/vitalis-cache --start 0 --end 5000
+python scripts/build_feature_cache.py /path/to/training_setA --cache-dir /path/to/vitalis-cache --start 5000 --end 10000
+python scripts/build_feature_cache.py /path/to/training_setA --cache-dir /path/to/vitalis-cache --start 10000 --end 15000
+python scripts/build_feature_cache.py /path/to/training_setA --cache-dir /path/to/vitalis-cache --start 15000 --end 20336
+python scripts/evaluate_cached_multiseed.py --cache-dir /path/to/vitalis-cache --seeds 42 123 2026 --output /path/to/vitalis-multiseed.json
+```
+
+Build chunks sequentially, confirm each chunk prints `complete`, and check that the metadata patient list matches the input directory. The evaluator rejects incomplete patient group vectors and emits aggregate metrics only. This repository-native command is newly added and must still be run and reconciled against the prior local summary before claiming strict reproducibility.
