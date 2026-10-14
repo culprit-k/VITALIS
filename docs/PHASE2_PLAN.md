@@ -26,3 +26,18 @@ Phase 2 investigates whether the Phase 1 ranking is stable and whether model pro
 - Added `scripts/evaluate_calibration_robustness.py` to generate matched patient-disjoint splits, train the three feature variants, fit optional recalibration on validation patients only, and export aggregate test calibration and split-specific missingness summaries.
 - GitHub Actions passed after correcting a numerical edge case where logistic recalibration could round probabilities to exactly 0 or 1.
 - The full local dataset run is still pending; CI tests validate code behavior, not empirical calibration.
+
+
+## Expanded exploratory checks (completed locally)
+
+- [x] Compared median imputation with and without missingness indicators on matched patient-disjoint splits.
+- [x] Compared raw probabilities with Platt/logistic and isotonic recalibration, with calibration fitted on validation patients only.
+- [x] Ran exploratory age/gender subgroup and missingness-stratified checks with small-cell suppression.
+- [x] Added an aggregate-only summary: [Phase 2 robustness grid](../results/phase2_robustness_grid_summary.json).
+- [x] Documented results and limitations in [Phase 2 calibration/robustness report](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md).
+
+## Phase 2 completion status
+
+The exploratory analyses and unit-tested helper implementation are complete. **The phase is not fully closed for reproducibility** until the canonical checked-in runner is executed in the same runtime as the local dataset and its output is reconciled with the local equivalent. The current local container cannot resolve GitHub source hosts, so that exact step could not be executed here. Full-cohort, external, and prospective validation are separate future phases, not Phase 2 claims.
+
+The results do not establish clinical calibration or utility. Platt recalibration's lower row-level Brier/log loss is compatible with compressing probabilities toward the low row-level prevalence; AUROC did not improve. No model is selected for patient care.
