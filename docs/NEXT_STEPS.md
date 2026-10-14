@@ -498,3 +498,17 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Obtain independent clinical/statistical justification of cost ratios and review the results before any policy choice. Do not use Set B to select a threshold; reserve a new independent cohort for final evaluation.
 - [ ] Independent clinical/statistical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
 
+
+
+## Phase 8: utility-based operating-point framework (15 October 2026)
+
+- [x] Add a cost-sensitive operating-point function that compares missed forecast-positive windows against total alert burden under explicit, configurable cost ratios: `src/vitalis/utility.py`.
+- [x] Integrate utility summaries into the horizon calibration evaluator, limited to the untouched patient-disjoint Set-A operating-point holdout. Set B remains evaluation-only and cannot rank or select thresholds.
+- [x] Add focused unit tests for required metrics, cost-scenario reporting, and invalid inputs; add an integration assertion to the evaluator test.
+- [x] Document the cost definition, illustrative scenarios, selection discipline, and limitations in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [ ] Confirm the new tests and full CI suite pass on the latest branch head; repair any failures before treating this milestone as complete.
+- [ ] Run the integrated evaluator against the authorized local Set-A/Set-B caches and commit aggregate-only results after verifying the output contains no row-level predictions or patient identifiers. Do not invent results when those local caches are unavailable.
+- [ ] Obtain independent clinical/statistical review of the relative cost scenarios. Current defaults (1, 5, 10, 20 missed-window units per alert-cost unit) are illustrative engineering assumptions, not validated utility weights.
+- [ ] Freeze any development policy before evaluation on a new independent cohort. Do not select a threshold on Set B, whose results have already been inspected.
+
+**Boundary:** the utility score is a retrospective Challenge-label proxy, not clinical utility. The target is entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. VITALIS remains research-only and must not guide patient care.
