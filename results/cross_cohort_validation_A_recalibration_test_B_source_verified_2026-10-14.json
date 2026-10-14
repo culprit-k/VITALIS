@@ -291,7 +291,8 @@
   "warnings": {
     "static": "SimpleImputer reported feature index 7 (EtCO2) had no observed values.",
     "temporal": "SimpleImputer reported indices 7, 61, 62, 63 (EtCO2 and derived EtCO2 features) had no observed values.",
-    "handling": "Warnings were retained. Runs completed; review feature handling before future model changes."
+    "handling": "Warnings were retained. Runs completed; review feature handling before future model changes.",
+    "feature_availability_shift": "EtCO2 and its derived features are all missing in set A (0/790,215 finite rows) but present in set B (EtCO2 finite in 57,636/761,995 rows). The set-A-fitted imputer drops these all-empty columns, so set-B EtCO2 measurements are not used by this model."
   },
   "reconciliation": {
     "historical_artifact": "results/cross_cohort_validation_A_recalibration_test_B_3seed_2026-10-14.json",
@@ -306,5 +307,23 @@
     "Recalibration can improve aggregate scores without establishing clinical calibration.",
     "Thresholds were not selected for clinical use.",
     "No raw records, patient identifiers, caches, group vectors, or row-level predictions are included."
-  ]
+  ],
+  "feature_availability_audit": {
+    "feature_group": "EtCO2 and derived features",
+    "training_setA": {
+      "EtCO2_finite_rows": 0,
+      "EtCO2_lag1_finite_rows": 0,
+      "EtCO2_delta1_finite_rows": 0,
+      "EtCO2_rollmean6_finite_rows": 0,
+      "total_rows": 790215
+    },
+    "training_setB": {
+      "EtCO2_finite_rows": 57636,
+      "EtCO2_lag1_finite_rows": 56837,
+      "EtCO2_delta1_finite_rows": 51766,
+      "EtCO2_rollmean6_finite_rows": 73733,
+      "total_rows": 761995
+    },
+    "interpretation": "EtCO2 is entirely absent in training set A but present in set B. Because the imputer is fit on set A, these all-empty EtCO2 columns are dropped during transformation; the model cannot use set-B EtCO2 measurements. This is a cross-cohort feature-availability shift and should be explicitly considered in follow-up robustness analyses."
+  }
 }
