@@ -101,3 +101,8 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 ## Development status
 
 VITALIS now has retrospective static/temporal research workflows plus an initial streaming adaptive deviation component. The adaptive component is a software milestone, not a complete digital twin or clinical predictor. Clean-checkout reproducibility, current-head CI, security review, independent statistical/clinical review, and future external/ prospective validation remain separate gates. No claim of novelty or patentability is made. See [release-readiness audit](docs/RELEASE_READINESS_AUDIT.md), [reproducible workflow](docs/REPRODUCIBLE_WORKFLOW.md), [model card](docs/MODEL_CARD.md), and [cohort protocol](docs/COHORT_PROTOCOL.md).
+
+
+### Utility-based operating-point analysis
+
+The Set-A-only cost-sensitivity framework is documented in [Utility operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration/operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md). The integrated evaluator reports cost-scenario rankings on the untouched Set-A holdout only; default cost ratios are illustrative, not clinical recommendations. Set B remains evaluation-only.
