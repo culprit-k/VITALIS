@@ -14,7 +14,7 @@ def test_summary_reports_mean_and_seed_sd_not_confidence_interval():
     summary = summarize([_report(1, 0.7, 0.72), _report(2, 0.8, 0.81)])
     assert summary["static"]["auroc"]["mean_across_seeds"] == 0.75
     assert summary["temporal"]["auroc"]["mean_across_seeds"] == 0.765
-    assert summary["temporal_minus_static_delta"]["auroc"]["mean_across_seeds"] == 0.015
+    assert abs(summary["temporal_minus_static_delta"]["auroc"]["mean_across_seeds"] - 0.015) < 1e-12
     assert summary["static"]["auroc"]["valid_seeds"] == 2
 
 
