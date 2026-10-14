@@ -56,14 +56,16 @@ def test_rejects_invalid_cost_grid(kwargs):
 
 
 def test_patient_cluster_bootstrap_reports_metric_intervals_and_selection_stability():
-    y, p, groups, times = fixture()
+    y, p, _, _ = fixture()
+    y, p = np.tile(y, 2), np.tile(p, 2)
+    groups, times = np.repeat(np.arange(4), 4), np.tile(np.arange(4), 4)
     result = MOD.patient_cluster_bootstrap_utility_uncertainty(
         y, p, groups, times, thresholds=[.3, .75],
         missed_window_costs=[1, 10], alert_cost=1,
         refractory_hours=1, n_bootstrap=40, seed=123,
     )
     assert result["set_b_used_for_threshold_selection"] is False
-    assert result["unique_patients"] == 2
+    assert result["unique_patients"] == 4
     assert result["requested_replicates"] == 40
     metrics = result["threshold_results"][0]["intervals"]
     assert "row_sensitivity" in metrics
@@ -78,7 +80,9 @@ def test_patient_cluster_bootstrap_reports_metric_intervals_and_selection_stabil
 
 
 def test_patient_cluster_bootstrap_is_reproducible_and_rejects_small_replicate_count():
-    y, p, groups, times = fixture()
+    y, p, _, _ = fixture()
+    y, p = np.tile(y, 2), np.tile(p, 2)
+    groups, times = np.repeat(np.arange(4), 4), np.tile(np.arange(4), 4)
     kwargs = dict(thresholds=[.3, .75], missed_window_costs=[1, 10],
                   refractory_hours=1, n_bootstrap=40, seed=7)
     first = MOD.patient_cluster_bootstrap_utility_uncertainty(y, p, groups, times, **kwargs)
