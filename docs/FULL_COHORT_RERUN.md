@@ -1,6 +1,6 @@
 # Full-cohort rerun — 14 October 2026
 
-This aggregate report records a fresh local evaluation on all of training_setA. Raw patient records and patient-level predictions were not exported.
+This aggregate report records a fresh local evaluation on all of training_setA. Raw patient records and patient-level predictions were not exported. The final rerun includes 200 whole-patient bootstrap resamples per model for AUROC, AUPRC, and Brier score.
 
 ## Cohort and protocol
 
@@ -14,9 +14,9 @@ This aggregate report records a fresh local evaluation on all of training_setA. 
 
 | Metric | Static baseline | Temporal features |
 |---|---:|---:|
-| AUROC | 0.7623 | 0.7873 |
-| Average precision (AUPRC) | 0.0777 | 0.0842 |
-| Brier score (lower is better) | 0.1903 | 0.1814 |
+| AUROC | 0.7623 (95% patient-bootstrap interval 0.7435–0.7774) | 0.7873 (0.7694–0.8062) |
+| Average precision (AUPRC) | 0.0777 (0.0665–0.0956) | 0.0842 (0.0720–0.1029) |
+| Brier score (lower is better) | 0.1903 (0.1826–0.1975) | 0.1814 (0.1729–0.1893) |
 | Sensitivity at 0.5 | 0.6341 | 0.6845 |
 | Specificity at 0.5 | 0.7564 | 0.7538 |
 | PPV at 0.5 | 0.0540 | 0.0574 |
@@ -24,10 +24,12 @@ This aggregate report records a fresh local evaluation on all of training_setA. 
 
 At this fixed threshold, the temporal variant has higher point estimates for AUROC, AUPRC, sensitivity, and NPV, with a slightly lower specificity. Positive predictive value is approximately 5.7%, so most positive hourly alerts at this threshold are not positive challenge-label rows. This is not a clinical false-alarm rate.
 
+The intervals above are **separate intervals for each model**, not a paired confidence interval for the temporal-minus-static difference. Do not infer statistical significance from the separate intervals. A paired patient-cluster bootstrap of the difference remains a useful next analysis.
+
 ## Warnings and limitations
 
 - `EtCO2` and its temporal derivatives were entirely missing and were skipped by imputation.
-- No patient-cluster bootstrap intervals were computed for this run.
+- Patient-cluster intervals are percentile intervals based on 200 resamples; only the AUROC, AUPRC, and Brier score intervals are included.
 - The threshold was fixed at 0.5, not clinically optimized.
 - Metrics are hourly-row metrics; they are not event-level clinical metrics.
 - The challenge's `SepsisLabel` was used as supplied and was not shifted again.
