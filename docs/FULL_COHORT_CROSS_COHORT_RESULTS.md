@@ -91,3 +91,6 @@ python scripts/evaluate_cross_cohort.py \
 ## Raw and recalibrated patient-cluster uncertainty checkpoint
 
 The preliminary 200-replicate checkpoint is preserved in [its aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [methods/results report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md). The higher-replicate analysis is now complete: see the [1,000-replicate report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md) and [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json). Both analyses are conditional on the benchmark Set-B cohort and are not prospective clinical validation.
+
+
+**Higher-replicate follow-up:** The preliminary 200-replicate intervals are preserved for reproducibility, and the final 1,000-replicate-per-seed raw/recalibrated analysis is available in [the aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md).
