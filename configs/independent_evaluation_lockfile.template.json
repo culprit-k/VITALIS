@@ -1,0 +1,46 @@
+{
+  "status": "TEMPLATE_NOT_APPROVED",
+  "protocol_version": "TODO",
+  "model_commit_sha": "TODO",
+  "environment_lock_hash": "TODO",
+  "feature_schema_hash": "TODO",
+  "model_artifact_hash": "TODO",
+  "population": "TODO: intended population and care setting",
+  "prediction_index_time": "TODO: exact index-time definition",
+  "event_definition": "TODO: independently defined endpoint and event time",
+  "primary_endpoint": "TODO: one prespecified primary endpoint",
+  "analysis_plan_version": "TODO",
+  "evaluation_cohort": {
+    "name": "TODO: genuinely new independent cohort",
+    "independent": false,
+    "data_manifest_sha256": "TODO"
+  },
+  "target": {
+    "definition": "TODO",
+    "claim_type": "proxy-label prediction",
+    "challenge_label_proxy": true,
+    "independently_adjudicated": false
+  },
+  "horizons_hours": [1, 3, 6],
+  "thresholds": [0.005, 0.01],
+  "primary_metrics": ["TODO"],
+  "secondary_metrics": ["TODO"],
+  "subgroup_plan": ["TODO"],
+  "missing_data_plan": ["TODO"],
+  "stopping_rules": ["TODO"],
+  "frozen_policy": {
+    "model_family": "TODO",
+    "preprocessing": "TODO",
+    "calibration": "TODO",
+    "feature_set": "TODO",
+    "refractory_hours": 6,
+    "threshold_selection_frozen": false
+  },
+  "approvals": {
+    "clinical_owner": {"approved": false, "reviewer": "", "date": ""},
+    "independent_statistician": {"approved": false, "reviewer": "", "date": ""},
+    "data_governance": {"approved": false, "reviewer": "", "date": ""},
+    "ethics_determination": {"approved": false, "reviewer": "", "date": ""},
+    "software_reviewer": {"approved": false, "reviewer": "", "date": ""}
+  }
+}
