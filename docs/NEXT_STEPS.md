@@ -124,3 +124,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] The exact checked-in evaluator source was not byte-identically executed; local implementation used a performance-optimized weighted-metric implementation. Source-byte identity remains open.
 - [ ] Port and test the optimized tie-aware weighted metrics in the checked-in evaluator, then run CI and verify numerical agreement against this aggregate artifact before claiming repository-native reproducibility.
 - [ ] These are retrospective hourly challenge-label metrics only; external validation and clinical/statistical governance review remain required.
+
+
+## Weighted-bootstrap implementation and CI (2026-10-14)
+
+- [x] Ported pre-sorted, tie-aware weighted AUROC/AUPRC and weighted Brier calculations into the checked-in evaluator to reduce bootstrap runtime.
+- [x] Added randomized tied-score parity tests against scikit-learn; corrected a zero-weight score-threshold edge case discovered by CI.
+- [x] GitHub Actions passed after the fix: https://github.com/culprit-k/VITALIS/actions/runs/38562541833.
+- [x] Re-ran the 200-replicate analysis for each split seed in separate local processes; aggregate intervals are documented in [the report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
+- [ ] A 1,000-replicate full-cohort attempt exceeded the local five-minute execution window before producing a complete artifact. Do not treat it as a result. Further optimize runtime or run the bootstrap over retained held-out score vectors before increasing repetitions.
+- [ ] Strict byte-for-byte source execution remains unverified; local evaluation files were reconstructed and are not an unchanged checkout of the repository blobs.
