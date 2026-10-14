@@ -83,3 +83,17 @@ Upload only aggregate metrics JSON. Do not upload patient-level records or predi
 - The first positive challenge label is not independently observed clinical onset.
 - Row-level AUROC/AUPRC and a fixed threshold do not establish event-level performance or clinical utility.
 - The cohort must be externally validated before any clinical translation is considered.
+
+## 9. Run a deterministic patient subset
+
+For a faster smoke-scale comparison, sample a fixed number of patient files without replacement. The script uses the same patient split strategy for both model variants and writes aggregate metrics only:
+
+```bash
+python scripts/run_subset_experiment.py /path/to/training_setA \\
+  --sample-size 1500 \\
+  --sampling-seed 2026 \\
+  --split-seed 42 \\
+  --output outputs/subset_comparison.json
+```
+
+The source files remain in place; a temporary directory of symlinks is used for the sampled cohort and removed after the run. All-missing predictors are excluded using the training fold only. This is a development experiment, not full-cohort or external validation.
