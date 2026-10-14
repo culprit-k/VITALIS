@@ -20,13 +20,13 @@ def test_alert_burden_suppresses_repeat_alerts_and_counts_label_episodes():
     # Patient p1 has one 2-hour positive-label episode and an alarm during it.
     # The refractory interval suppresses the next alarm. p2 has no positive labels.
     y = pd.Series([0, 1, 1, 0, 0, 0, 0, 0])
-    p = np.array([0.8, 0.9, 0.95, 0.1, 0.8, 0.9, 0.1, 0.1])
+    p = np.array([0.1, 0.9, 0.95, 0.1, 0.8, 0.9, 0.1, 0.1])
     patients = pd.Series(["p1", "p1", "p1", "p1", "p2", "p2", "p2", "p2"])
     result = calculate_alert_burden(
         y, p, patients, threshold=0.5, refractory_hours=3
     )
-    assert result["alerts_total"] == 3
-    assert result["alerts_outside_challenge_positive_windows"] == 2
+    assert result["alerts_total"] == 2
+    assert result["alerts_outside_challenge_positive_windows"] == 1
     assert result["challenge_positive_label_episodes"] == 1
     assert result["challenge_positive_episodes_with_alert"] == 1
     assert result["challenge_positive_episode_coverage"] == pytest.approx(1.0)
