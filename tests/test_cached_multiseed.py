@@ -61,3 +61,37 @@ def test_paired_patient_cluster_bootstrap_rejects_mismatched_inputs():
             np.asarray([0, 1]), np.asarray([0.1]), np.asarray([0.2, 0.8]),
             np.asarray([1, 2]), n_bootstrap=40
         )
+
+
+
+def test_optimized_weighted_metrics_match_sklearn_with_ties():
+    from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
+    from scripts.evaluate_cached_multiseed import _prepare_rank_metrics, _weighted_rank_metrics
+
+    rng = np.random.default_rng(20261014)
+    for n in (8, 100, 1000):
+        for _ in range(20):
+            y = rng.integers(0, 2, n)
+            p = np.round(rng.random(n), 1)
+            weights = rng.integers(0, 4, n).astype(float)
+            if weights[y == 1].sum() == 0 or weights[y == 0].sum() == 0:
+                continue
+            actual = _weighted_rank_metrics(_prepare_rank_metrics(y, p), weights)
+            expected = (
+                roc_auc_score(y, p, sample_weight=weights),
+                average_precision_score(y, p, sample_weight=weights),
+                brier_score_loss(y, p, sample_weight=weights),
+            )
+            assert np.allclose(actual, expected, atol=1e-12)
+
+
+def test_bootstrap_rejects_single_patient_cluster():
+    import pytest
+    from scripts.evaluate_cached_multiseed import paired_patient_cluster_bootstrap
+
+    with pytest.raises(ValueError, match="at least two patient groups"):
+        paired_patient_cluster_bootstrap(
+            np.asarray([0, 1, 0, 1]), np.asarray([0.1, 0.8, 0.2, 0.7]),
+            np.asarray([0.2, 0.9, 0.1, 0.8]), np.asarray([1, 1, 1, 1]),
+            n_bootstrap=20
+        )
