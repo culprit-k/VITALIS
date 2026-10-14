@@ -63,3 +63,28 @@ The two latest documentation commits' GitHub Actions runs completed successfully
 - [Roadmap update](https://github.com/culprit-k/VITALIS/actions/runs/38550254446)
 
 **Remaining reproducibility limitation:** this environment cannot resolve `raw.githubusercontent.com` or `github.com` from the local container, so I could not execute the exact checked-in repository runner in-place. The local scripts reproduce the stated sample/split/model protocol and output hashes, but that is not a byte-for-byte reconciliation against the canonical repository runner. Keep that gate open until the canonical code and local dataset are available in the same runtime.
+
+## Additional robustness grid: imputation and calibration methods
+
+A further local experiment compared median imputation **with vs without missingness indicators**, and raw vs validation-only Platt/logistic vs validation-only isotonic recalibration. The static model and patient-disjoint split seeds were held fixed (500 patients; seeds 42, 123, 2026). The held-out test set was never used to fit calibration.
+
+Mean test metrics across the six split/method combinations for each imputation setting (three split seeds per setting):
+
+| Imputation | Calibration | Brier | Log loss | AUROC | Average precision |
+|---|---|---:|---:|---:|---:|
+| Median + missingness indicators | Raw | 0.1816 | 0.5683 | 0.7244 | 0.1018 |
+| Median + missingness indicators | Platt, validation-only | 0.0219 | 0.1028 | 0.7244 | 0.1018 |
+| Median + missingness indicators | Isotonic, validation-only | 0.0225 | 0.1056 | 0.7045 | 0.0778 |
+| Median only, no indicators | Raw | 0.1855 | 0.5797 | 0.7055 | 0.1216 |
+| Median only, no indicators | Platt, validation-only | 0.0245 | 0.1108 | 0.7055 | 0.1216 |
+| Median only, no indicators | Isotonic, validation-only | 0.0280 | 0.1212 | 0.7175 | 0.1041 |
+
+**Critical interpretation:** the striking reduction in Brier score and log loss after Platt recalibration should not be read as a performance breakthrough. Test label prevalence is low, and validation-fitted logistic calibration compresses probabilities toward that low prevalence; AUROC is unchanged by Platt scaling and discrimination did not improve. The Brier/log-loss values approach what a low-risk constant predictor can achieve in a low-prevalence row-level task. Calibration quality still needs careful reliability analysis on larger independent data and clinically meaningful event-level endpoints. Isotonic recalibration was inconsistent across splits and can overfit small validation sets.
+
+Missingness indicators showed a modestly better mean AUROC in this sample, but average precision did not improve consistently. This is not sufficient to select a final imputation strategy. The results support retaining missingness indicators as the provisional baseline while testing them prospectively on a larger, independent sample.
+
+- Local aggregate grid output: `VITALIS_PHASE2_ROBUSTNESS_GRID.json`
+- Output SHA-256: `a24e02badb34dc0fde751f377e2f4b447d3b6a6a24fb2757c4739673587cfbd0`
+- Local runner: `run_vitalis_phase2_robustness_grid.py`
+
+The canonical repository calibration runner has still not been executed in the same local runtime as the dataset; the network restriction prevents downloading GitHub source from the local container. This is a reproducibility-environment limitation, not evidence that the analysis failed. Keep exact canonical-runner reconciliation as an explicit open item.
