@@ -1,0 +1,105 @@
+{
+  "project": "VITALIS",
+  "phase": "Phase 1 software and exploratory evaluation",
+  "status": "software/research foundation completed; clinical-validation and hardware-readiness gates remain open",
+  "dataset": {
+    "source": "PhysioNet/CinC Challenge 2019 training set A",
+    "source_url": "https://physionet.org/content/challenge-2019/1.0.0/",
+    "available_patient_files": 20336,
+    "sampled_patients": 500,
+    "sampling_seed": 20261014,
+    "sample_rows": 20010,
+    "positive_challenge_label_rows": 439,
+    "positive_label_prevalence": 0.02193903048475762
+  },
+  "protocol": {
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "validation_seeds": [
+      43,
+      124,
+      2027
+    ],
+    "split_unit": "patient",
+    "patients_per_split": {
+      "train": 320,
+      "validation": 80,
+      "test": 100
+    },
+    "models": [
+      "static",
+      "temporal",
+      "temporal_plus_patient_baseline"
+    ],
+    "paired_patient_cluster_bootstrap_replicates": 200,
+    "threshold_selected": false,
+    "label_handling": "SepsisLabel used as supplied; not shifted again"
+  },
+  "summary_across_splits": {
+    "static": {
+      "auroc": {
+        "mean": 0.7243600822,
+        "sd_across_splits": 0.0550738976
+      },
+      "average_precision": {
+        "mean": 0.1018057549,
+        "sd_across_splits": 0.0106954411
+      },
+      "brier_score": {
+        "mean": 0.1815536979,
+        "sd_across_splits": 0.0301126484
+      },
+      "log_loss": {
+        "mean": 0.5683355971,
+        "sd_across_splits": 0.0897141138
+      }
+    },
+    "temporal": {
+      "auroc": {
+        "mean": 0.6744686421,
+        "sd_across_splits": 0.0238430967
+      },
+      "average_precision": {
+        "mean": 0.0775993036,
+        "sd_across_splits": 0.0121293024
+      },
+      "brier_score": {
+        "mean": 0.1518062056,
+        "sd_across_splits": 0.0353301559
+      },
+      "log_loss": {
+        "mean": 0.5351546955,
+        "sd_across_splits": 0.1228787961
+      }
+    },
+    "personalized": {
+      "auroc": {
+        "mean": 0.5846559923,
+        "sd_across_splits": 0.0214763621
+      },
+      "average_precision": {
+        "mean": 0.052520139,
+        "sd_across_splits": 0.0134789601
+      },
+      "brier_score": {
+        "mean": 0.1255579289,
+        "sd_across_splits": 0.0192121903
+      },
+      "log_loss": {
+        "mean": 0.7054459665,
+        "sd_across_splits": 0.3011100318
+      }
+    }
+  },
+  "interpretation": "Static model ranked best on mean AUROC and average precision in this exploratory sample. The personalized model's lower Brier score but higher log loss is mixed evidence and does not establish better calibration or clinical usefulness.",
+  "limitations": [
+    "500-patient sampled internal evaluation only; not full-cohort or external validation.",
+    "Across-split standard deviations are not confidence intervals.",
+    "Hourly rows are correlated; no event-level clinical performance is claimed.",
+    "No operating threshold was selected.",
+    "No novelty, patentability, regulatory, efficacy, or clinical-readiness claim."
+  ]
+}
