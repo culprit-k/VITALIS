@@ -1,6 +1,6 @@
 # Utility-based horizon operating-point framework
 
-**Status (15 October 2026):** utility function, calibration-evaluator integration, CLI cost-scenario arguments, and focused tests added. Full-cohort utility results are not yet generated.
+**Status (15 October 2026):** utility function, calibration-evaluator integration, CLI cost-scenario arguments, focused tests, and an exploratory nine-run aggregate analysis are complete. Results and provenance caveats are documented in [the results report](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json).
 
 ## Purpose
 
@@ -24,15 +24,15 @@ The alert cost is expressed in units of one alert. Missed-window cost is an anal
 
 ## Implementation
 
-Pure analysis function: \`src/vitalis/utility.py\` (\`evaluate_utility_operating_points\`). It validates aligned inputs, uses patient-level alert/window semantics from \`src/vitalis/horizon.py\`, and ranks candidates under each supplied cost ratio. Its lowest-cost threshold is explicitly labeled a development candidate, not a clinical threshold.
+Pure analysis function: `src/vitalis/utility.py` (`evaluate_utility_operating_points`). It validates aligned inputs, uses patient-level alert/window semantics from `src/vitalis/horizon.py`, and ranks candidates under each supplied cost ratio. Its lowest-cost threshold is explicitly labeled a development candidate, not a clinical threshold.
 
-Focused tests: \`tests/test_utility.py\`.
+Focused tests: `tests/test_utility.py`.
 
 ## Remaining work before a full-cohort result
 
-1. Run the integrated evaluator in the authorized local environment against verified Set A/Set B caches; review captured convergence warnings and commit aggregate-only summaries, never patient-level predictions or score archives.
-2. Obtain independent clinician/statistician review of plausible cost ratios, utility assumptions, and label-window semantics before interpreting any scenario ranking.
-3. Treat Set-A candidate rankings as development-only. Freeze any policy only after the cost assumptions and selection rule are predeclared; evaluate it once on a new independent cohort. Set B results already inspected must not be reused for threshold selection.
+1. Obtain independent clinician/statistician review of plausible cost ratios, utility assumptions, and label-window semantics before interpreting any scenario ranking.
+2. Treat Set-A candidate rankings as development-only. Freeze any policy only after the cost assumptions and selection rule are predeclared; evaluate it once on a new independent cohort. Set B results already inspected must not be reused for threshold selection.
+3. When runtime/network constraints permit, rerun from a verified clean checkout and repeat the utility-focused analysis with a larger uncertainty-replicate count if uncertainty intervals are needed. The current local execution is explicitly not byte-identically verified and used 20 bootstrap replicates.
 4. Prospective evaluation, governance review, and clinical validation remain separate gates.
 
 ## Interpretation limits
