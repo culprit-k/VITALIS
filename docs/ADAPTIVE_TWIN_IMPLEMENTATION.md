@@ -109,3 +109,8 @@ The synthetic regression suite now explicitly covers:
 - per-channel stream freshness limits, missing/unknown freshness configuration, and future-dated samples.
 
 These tests establish expected software behavior on constructed examples only. They do not establish real-device signal quality, sensor-replacement handling, clinical cutoffs, or clinical validity. Sensor replacement/source-identity transitions and asynchronous multi-rate synchronization remain open engineering requirements before hardware work.
+
+
+### Identified sensor-source replacement behavior
+
+When both the prior and incoming observations identify a source and the source identifier changes for a channel, the stream adapter accepts the new observation but resets that channel's history/reference/CUSUM state and clears aggregate trajectory continuity. Other channels retain their own histories. The adapter exposes per-channel source-change counts. This is a conservative engineering behavior for an explicitly identified source change; it does not detect a physical sensor replacement when source metadata is absent or unchanged, and it does not replace device-level quality checks.
