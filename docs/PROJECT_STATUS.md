@@ -1,11 +1,10 @@
 # VITALIS — project status in plain language
 
-**Status date:** 14 October 2026  
+**Status date:** 15 October 2026  
 **Repository:** `culprit-k/VITALIS`  
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
-**Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `b4b7e66e12caeca693b0a145c2d58223fbde9637` (result provenance and report links recorded). GitHub Actions run #540 passed with 120 tests: https://github.com/culprit-k/VITALIS/actions/runs/38618088465.
+**Latest code-and-documentation head before this status update:** `6f47d6728ebd0297a8be9e62f6b58e17408ead5f`. GitHub Actions passed on that head (144 tests): https://github.com/culprit-k/VITALIS/actions/runs/38628552833.
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -150,3 +149,15 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - [Exact-source rerun reconciliation](FRESH_SOURCE_RERUN_RECONCILIATION.md)
 - [1,000-replicate paired patient-cluster bootstrap report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md)
 - [Full-cohort cross-cohort results](FULL_COHORT_CROSS_COHORT_RESULTS.md)
+- [Utility operating-point framework](UTILITY_OPERATING_POINT_FRAMEWORK.md)
+- [Utility operating-point results](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md)
+
+
+## 8. Utility-based operating-point milestone (15 October 2026)
+
+- Added a configurable cost-sensitivity framework to compare missed forecast-positive windows against alert burden on the untouched, patient-disjoint Set-A development holdout.
+- The evaluator reports row-level sensitivity/PPV, alerts per at-risk patient-day, missed and covered windows, window coverage, and label-relative warning time for static and temporal models at 1/3/6-hour horizons.
+- Completed nine seed × horizon runs using available local caches (18 model fits; 249.7 seconds summed; zero captured fit warnings). Aggregate-only report: [utility operating-point results](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md); machine-readable aggregate: [JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json).
+- Cost ratios are illustrative scenarios (1, 10, 100, 500, 1,000 missed-window cost units per alert-cost unit), not clinically elicited values. The cost-sensitive candidate threshold varies with assumed cost and sometimes across split seeds; no clinically appropriate threshold has been established.
+- Provenance caveat: the full-cohort run used a reconstructed local working copy and is not claimed as byte-identically verified execution of checked-in source. Utility-focused reruns used 20 bootstrap replicates for ancillary uncertainty summaries. Set B remained evaluation-only, and no raw data or row-level predictions were committed.
+- Remaining gates: independent clinician/statistician review, verified clean-checkout reproduction, a new independent evaluation cohort for any frozen policy, and prospective/governance validation. VITALIS remains research-only.
