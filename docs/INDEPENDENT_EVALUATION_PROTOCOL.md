@@ -63,3 +63,16 @@ Run from a clean, immutable checkout in a pinned environment. Record commit SHA,
 - Frozen model/configuration hash: ____________________
 
 **Current conclusion:** the VITALIS results available today are retrospective research evidence on Challenge-label windows. This protocol is a planning artifact, not evidence that the system is externally validated, safe, clinically useful, or ready for patient care.
+
+
+## Machine-checkable freeze gate
+
+The repository now includes a deliberately incomplete scaffold at `configs/independent_evaluation_lockfile.template.json` and a validator at `scripts/validate_evaluation_lockfile.py`. Copy the template into the approved, access-controlled study workspace (do not fill it with sensitive cohort metadata in the public repository), complete the fields, and obtain the required sign-offs before outcome access.
+
+Run:
+
+    python scripts/validate_evaluation_lockfile.py /approved/private/path/evaluation_lockfile.json
+
+The validator fails closed unless the lockfile is marked `frozen`, identifies a new independent cohort with a SHA-256 manifest hash, freezes the model and thresholds, specifies endpoints/analysis plans, and records clinical, statistical, governance, ethics-determination, and software-review approvals. It rejects Set B as the final evaluation cohort and rejects using the Challenge-label proxy for a clinical-onset claim.
+
+This is a completeness and consistency guard, not evidence that signatures are authentic, ethics approval has been granted, a cohort is truly independent, or the model is clinically valid. Never commit the completed private lockfile or patient-level data to the public repository.
