@@ -65,8 +65,13 @@ The runner stops if cohort counts or schemas do not match expectations. Keep the
 
 ## Completion checklist
 
-- [ ] Both caches built from verified official cohorts; chunk completion and metadata checked.
-- [ ] Cross-cohort CLI finishes for all nine seed × horizon combinations.
-- [ ] Aggregate-only output reviewed and archived outside Git.
-- [ ] Results and uncertainty reviewed without tuning on Set B.
+- [x] Both caches built from verified official cohorts; row, patient, label totals, and feature count checked.
+- [x] Cross-cohort runner completed all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6).
+- [x] Aggregate-only results and seed-level summaries recorded in [the result JSON](../results/horizon_cross_cohort_2026-10-14.json); detailed interpretation is in [the results report](HORIZON_CROSS_COHORT_RESULTS_2026-10-14.md).
+- [x] Results reviewed without tuning on Set B. Static models had slightly better mean AUROC/AUPRC; temporal models had lower alert burden but also lower forecast-window coverage.
 - [ ] Independent statistical/clinical review completed before any clinical claim.
+
+
+## Completed run record
+
+The 14 October 2026 full-cohort run completed in 384.8 seconds with 200 patient-cluster bootstrap replicates per model/run. See [Horizon cross-cohort results](HORIZON_CROSS_COHORT_RESULTS_2026-10-14.md). This completion marks a retrospective software/research milestone only; independent clinical review and prospective validation remain open gates.
