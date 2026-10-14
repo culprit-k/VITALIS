@@ -51,3 +51,15 @@ A separate local, aggregate-only audit was run with the same deterministic 500-p
 - These are exploratory subgroup diagnostics, not evidence of fairness, subgroup safety, or transportability. The dataset sample and positive-row counts are too limited to make such claims.
 
 Aggregate output SHA-256: `60975095429af8d9083faf8dd3469dce573d90a8c2a9f1a06706d509e77b388e`. The JSON is local-only; it contains aggregate counts and metrics, not patient-level predictions. The canonical repository runner has not yet been executed byte-for-byte in the local environment, so that exact reconciliation remains open.
+
+## Repeatability check (2026-10-14)
+
+Both local evaluation scripts were rerun against the local training-set-A files. Their aggregate outputs reproduced the same byte-level hashes:
+- Calibration/missingness output: `b18ca134e0a30a54cd5ed8e901c613570e5821843c9edfa4fb204fb6cee7d066`
+- Subgroup/missingness output: `60975095429af8d9083faf8dd3469dce573d90a8c2a9f1a06706d509e77b388e`
+
+The two latest documentation commits' GitHub Actions runs completed successfully:
+- [Subgroup results report](https://github.com/culprit-k/VITALIS/actions/runs/38550242081)
+- [Roadmap update](https://github.com/culprit-k/VITALIS/actions/runs/38550254446)
+
+**Remaining reproducibility limitation:** this environment cannot resolve `raw.githubusercontent.com` or `github.com` from the local container, so I could not execute the exact checked-in repository runner in-place. The local scripts reproduce the stated sample/split/model protocol and output hashes, but that is not a byte-for-byte reconciliation against the canonical repository runner. Keep that gate open until the canonical code and local dataset are available in the same runtime.
