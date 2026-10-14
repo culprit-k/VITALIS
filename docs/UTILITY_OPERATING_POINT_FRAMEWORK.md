@@ -1,6 +1,6 @@
 # Utility-based horizon operating-point framework
 
-**Status:** utility function and focused tests added; full-cohort utility results are not yet generated.
+**Status (15 October 2026):** utility function, calibration-evaluator integration, CLI cost-scenario arguments, and focused tests added. Full-cohort utility results are not yet generated.
 
 ## Purpose
 
@@ -30,11 +30,10 @@ Focused tests: \`tests/test_utility.py\`.
 
 ## Remaining work before a full-cohort result
 
-1. Integrate the function into the calibration evaluator for the untouched Set A holdout, using a predeclared threshold grid and explicit cost-sensitivity scenarios.
-2. Run the integrated evaluator in the authorized local environment against the verified Set A cache; commit aggregate-only summaries, never patient-level predictions or score archives.
-3. Obtain independent clinician/statistician review of plausible cost ratios and label-window semantics.
-4. Freeze any development policy, then evaluate it once on a new independent cohort. Set B results already inspected must not be reused for threshold selection.
-5. Prospective evaluation, governance review, and clinical validation remain separate gates.
+1. Run the integrated evaluator in the authorized local environment against verified Set A/Set B caches; review captured convergence warnings and commit aggregate-only summaries, never patient-level predictions or score archives.
+2. Obtain independent clinician/statistician review of plausible cost ratios, utility assumptions, and label-window semantics before interpreting any scenario ranking.
+3. Treat Set-A candidate rankings as development-only. Freeze any policy only after the cost assumptions and selection rule are predeclared; evaluate it once on a new independent cohort. Set B results already inspected must not be reused for threshold selection.
+4. Prospective evaluation, governance review, and clinical validation remain separate gates.
 
 ## Interpretation limits
 
