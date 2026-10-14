@@ -444,10 +444,19 @@ The next implementation layer has now been added on the existing research branch
 - [x] Keep Set B evaluation-only: no fitting, feature selection, calibration, or threshold tuning on Set B.
 - [x] Add synthetic-cache tests for target alignment and end-to-end Set A→Set B evaluation.
 - [x] Document cache build chunks and the full-cohort run in [Horizon cross-cohort execution](HORIZON_CROSS_COHORT_EXECUTION.md).
-- [ ] Confirm GitHub Actions passes for the cross-cohort horizon tests.
-- [ ] Build both official feature caches locally, outside Git, from verified Set A and Set B archives.
-- [ ] Run all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours) and retain aggregate-only JSON outside the repository.
-- [ ] Review model metrics, patient-level warning burden, and patient-cluster intervals without tuning on Set B.
+- [x] Confirm GitHub Actions passes for the cross-cohort horizon tests: [run #513](https://github.com/culprit-k/VITALIS/actions/runs/38616619520), 120 tests passed.
+- [x] Build both official feature caches locally, outside Git, from verified Set A and Set B archives; counts and schemas passed integrity checks.
+- [x] Run all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours) and retain aggregate-only JSON outside the repository; elapsed time 384.8 seconds.
+- [x] Review model metrics, patient-level warning burden, and patient-cluster intervals without tuning on Set B; results are recorded in [full-cohort horizon results](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md).
 - [ ] Obtain independent statistical/clinical review before any clinical claim.
 
 **Current execution boundary:** the code and synthetic tests can be validated through GitHub Actions, but the official full-cohort runs require the authorized local Set A and Set B feature caches. Those caches and any row-level predictions must not be uploaded to GitHub. The horizon target remains future Challenge-label entry, not independently observed sepsis onset.
+
+
+### Full-cohort horizon result summary (2026-10-14)
+
+- The nine seed × horizon runs completed on the full verified caches. Set B remained evaluation-only.
+- Static mean AUROC/AUPRC across seeds was 0.6634/0.00379 (1 h), 0.6813/0.01358 (3 h), and 0.6868/0.02859 (6 h). Temporal means were 0.6569/0.00317, 0.6800/0.01264, and 0.6864/0.02643, respectively.
+- At the fixed 0.5 threshold, PPV remained very low and alert burden high; neither model should be promoted as a clinical alert policy.
+- Class-weighted model probabilities were not calibrated; Brier scores were much worse than a constant-prevalence predictor. A training-only calibration protocol and independent statistical review remain required.
+- See [full results and limitations](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md). Aggregate JSON is stored outside the repository; raw caches and individual predictions were not uploaded.
