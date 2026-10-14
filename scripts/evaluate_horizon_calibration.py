@@ -161,7 +161,7 @@ def _predict(model, X, row_indices, feature_indices, chunk_rows):
     return result
 
 
-def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int):
+def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int, missed_window_costs: list[float], alert_cost: float):
     target_a = build_future_challenge_targets(ya, ga, horizon)
     target_b = build_future_challenge_targets(yb, gb, horizon)
     columns = meta_a["columns"]
@@ -234,7 +234,7 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
             if cohort_name == "set_a_untouched_holdout":
                 variants["platt_calibrated"]["utility_cost_sensitivity"] = evaluate_utility_operating_points(
                     labels, calibrated, patients, times, thresholds=THRESHOLDS,
-                    missed_window_costs=args.missed_window_costs, alert_cost=args.alert_cost,
+                    missed_window_costs=missed_window_costs, alert_cost=alert_cost,
                     refractory_hours=refractory_hours,
                 )
             # Keep patient-level alert computation tractable while preserving a
@@ -299,7 +299,8 @@ def main() -> None:
     started = time.time()
     runs = [evaluate_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon=h, seed=s,
                          chunk_rows=args.predict_chunk_rows, refractory_hours=args.refractory_hours,
-                         bootstrap_replicates=args.bootstrap_replicates)
+                         bootstrap_replicates=args.bootstrap_replicates,
+                         missed_window_costs=args.missed_window_costs, alert_cost=args.alert_cost)
             for s in args.seeds for h in args.horizons]
     summary = {"project": "VITALIS", "run_type": "set_a_only_calibration_horizon_operating_point_analysis",
                "cohorts": {"set_a": {"patients": int(ma["patient_count"]), "rows": int(ma["row_count"]), "positive_labels": int(ya.sum())},
