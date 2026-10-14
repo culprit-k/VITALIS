@@ -105,7 +105,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 
 ## Current next milestone: paired uncertainty for full-cohort model comparison
 
-- [ ] Extend the cache-backed evaluator to compute paired patient-cluster bootstrap intervals for temporal-minus-static AUROC, AUPRC, and Brier score, using matched test rows within each split seed and resampling patients (not hourly rows).
-- [ ] Keep all row-level predictions and patient group vectors local and ephemeral; commit only aggregate intervals and method metadata.
-- [ ] Add deterministic tests for paired resampling, repeated-patient row grouping, and aggregate-only output before running the full cohort.
+- [x] Added paired patient-cluster bootstrap intervals for temporal-minus-static AUROC, AUPRC, and Brier score to the cache-backed evaluator; intervals resample patients, not hourly rows. Full-cohort interval execution is pending.
+- [x] Bootstrap probabilities and group vectors remain in memory; the runner writes aggregate intervals only.
+- [x] Added deterministic tests for paired bootstrap reproducibility, input validation, and aggregate-only output. CI result is pending: https://github.com/culprit-k/VITALIS/actions/runs/38560507472.
 - [ ] Do not pool rows across split seeds as if they were independent observations. Report seed-specific intervals and summarize them transparently; they are not external validation.
