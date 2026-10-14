@@ -134,3 +134,14 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Re-ran the 200-replicate analysis for each split seed in separate local processes; aggregate intervals are documented in [the report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
 - [ ] A 1,000-replicate full-cohort attempt exceeded the local five-minute execution window before producing a complete artifact. Do not treat it as a result. Further optimize runtime or run the bootstrap over retained held-out score vectors before increasing repetitions.
 - [ ] Strict byte-for-byte source execution remains unverified; local evaluation files were reconstructed and are not an unchanged checkout of the repository blobs.
+
+
+## Batched higher-replicate bootstrap (2026-10-14)
+
+- [x] Saved held-out score vectors outside Git for split seed 42 and ran 1,000 paired patient-cluster bootstrap replicates in batches. The bootstrap-only calculation completed in ~28 seconds after scores were prepared.
+- [x] Added aggregate-only result artifact: [seed 42, 1,000 replicates](../results/full_cohort_paired_patient_cluster_bootstrap_seed42_1000_2026-10-14.json).
+- [x] Added checked-in reusable bootstrap runner: [scripts/bootstrap_heldout_scores.py](../scripts/bootstrap_heldout_scores.py). It accepts a local NPZ score archive and writes aggregate JSON only; do not commit score archives.
+- [x] Added randomized tied-score parity tests against scikit-learn and deterministic/privacy tests in [test_cached_multiseed.py](../tests/test_cached_multiseed.py). CI runs: runner https://github.com/culprit-k/VITALIS/actions/runs/38563789399 and tests https://github.com/culprit-k/VITALIS/actions/runs/38563811238 (check current status before calling them green).
+- [ ] Generate score archives and run 1,000 replicates for split seeds 123 and 2026. The attempt to fit all three seeds in a single local process exceeded the execution window after completing seed 42; split seed 42 is the only 1,000-replicate result.
+- [ ] Strict source-byte identity for held-out score generation remains open. The current seed-42 score archive came from a reconstructed local evaluator, not a byte-identical checkout of the repository model runner.
+- [ ] Once CI passes, rerun the checked-in bootstrap-only script locally on the retained seed-42 score archive and compare its aggregate output with the saved artifact; then repeat for other seeds if score preparation can finish within the execution budget.
