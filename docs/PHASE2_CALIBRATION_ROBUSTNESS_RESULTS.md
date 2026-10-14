@@ -88,3 +88,12 @@ Missingness indicators showed a modestly better mean AUROC in this sample, but a
 - Local runner: `run_vitalis_phase2_robustness_grid.py`
 
 The canonical repository calibration runner has still not been executed in the same local runtime as the dataset; the network restriction prevents downloading GitHub source from the local container. This is a reproducibility-environment limitation, not evidence that the analysis failed. Keep exact canonical-runner reconciliation as an explicit open item.
+
+
+## Reliability-bin reconciliation note (2026-10-14)
+
+A corrected local aggregate artifact was produced after aligning reliability-bin assignment with `src/vitalis/calibration.py`: bins are assigned using the original probabilities, while clipping is reserved for numerically stable log-loss/logit calculations. The corrected local artifact is not a byte-for-byte canonical source execution; strict source identity remains an open reproducibility limitation.
+
+- Local artifact: `VITALIS_PHASE2_CALIBRATION_ROBUSTNESS_BINS_FIXED.json` (kept outside the public repository because it is a local execution artifact).
+- SHA-256: `9ce51a0312f068a8c80d428d890548d03586985464c5391b8a5e56145e21e87e`.
+- Added regression coverage for probability boundaries, reliability-bin row coverage, mismatched/non-finite inputs, and empty missingness summaries.
