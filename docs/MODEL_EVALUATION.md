@@ -8,7 +8,7 @@
 
 ## Report
 - Patient and hourly-row counts per split, plus positive-label counts.
-- AUROC and AUPRC with patient-level uncertainty intervals where feasible.
+- AUROC, AUPRC, Brier score, sensitivity, specificity, PPV, and NPV with 95% patient-cluster bootstrap percentile intervals. The implementation resamples whole patients with replacement (200 replicates by default), preserving within-patient hourly correlation. AUROC/AUPRC replicates with only one label class are omitted from those interval calculations.
 - Sensitivity, specificity, PPV, NPV, and calibration at the chosen threshold.
 - Event-level sensitivity, detection lead time, and alerts per patient-day for alerting analyses.
 - Convergence warnings, missingness, software versions, random seeds, and failed runs.
