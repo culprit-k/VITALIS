@@ -244,4 +244,5 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Complete the remaining five seed/stream analyses (seed 42 recalibrated; seeds 123 and 2026 raw and recalibrated). Do not describe the 1,000-replicate cross-cohort phase as complete until all six are done.
 - [ ] Validate the optimized bootstrap implementation against the checked-in bootstrap runner on synthetic tied-score fixtures and compare its results against the existing 20-replicate pilot where applicable.
 - [ ] Exact source-byte identity for model fitting and score generation remains open; the current scores came from reconstructed local runner logic. This is not external or prospective clinical validation.
+- [x] Added an operator-facing [exact-checkout reproduction runbook](EXACT_CHECKOUT_REPRODUCTION.md) with clean-checkout checks, cache-build commands, the committed runner invocation, reconciliation criteria, and data-safety boundaries. This documents the procedure; the exact-checkout data run itself remains pending.
 
