@@ -164,7 +164,7 @@ def _predict(model, X, row_indices, feature_indices, chunk_rows):
     return result
 
 
-def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int, missed_window_costs: list[float] = (1.0, 10.0, 100.0, 500.0, 1000.0), alert_cost: float = 1.0):
+def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int, missed_window_costs: list[float] = (1.0, 10.0, 100.0, 500.0, 1000.0), alert_cost: float = 1.0, utility_bootstrap_replicates: int = 200):
     target_a = build_future_challenge_targets(ya, ga, horizon)
     target_b = build_future_challenge_targets(yb, gb, horizon)
     columns = meta_a["columns"]
@@ -313,7 +313,8 @@ def main() -> None:
     runs = [evaluate_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon=h, seed=s,
                          chunk_rows=args.predict_chunk_rows, refractory_hours=args.refractory_hours,
                          bootstrap_replicates=args.bootstrap_replicates,
-                         missed_window_costs=args.missed_window_costs, alert_cost=args.alert_cost)
+                         missed_window_costs=args.missed_window_costs, alert_cost=args.alert_cost,
+                         utility_bootstrap_replicates=args.utility_bootstrap_replicates)
             for s in args.seeds for h in args.horizons]
     summary = {"project": "VITALIS", "run_type": "set_a_only_calibration_horizon_operating_point_analysis",
                "cohorts": {"set_a": {"patients": int(ma["patient_count"]), "rows": int(ma["row_count"]), "positive_labels": int(ya.sum())},
