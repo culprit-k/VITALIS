@@ -542,7 +542,7 @@ The next implementation layer has now been added on the existing research branch
 
 ## Phase 8: utility-based operating-point framework (15 October 2026)
 
-- [x] Add \`src/vitalis/utility.py\` to compare threshold candidates under explicit missed-window versus alert-cost scenarios.
+- [x] Add `src/vitalis/utility.py` to compare threshold candidates under explicit missed-window versus alert-cost scenarios.
 - [x] Integrate cost-sensitivity summaries into the calibration evaluator for the untouched, patient-disjoint Set-A operating-point holdout only. Set B is not used for threshold selection.
 - [x] Evaluate the predeclared threshold grid across all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours), for static and temporal models; 18 fits completed with zero captured fit warnings.
 - [x] Commit aggregate-only results and report: [utility operating-point results](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json).
