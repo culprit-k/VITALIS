@@ -11,13 +11,15 @@
 ## Prioritized plan
 
 ### 1. Fix and test data/model pipeline details
-- Remove all-zero/all-missing predictors such as EtCO2 from the usable feature set per training fold, and record dropped columns.
+- [x] Exclude predictors entirely missing in the training fold and record dropped columns in the report.
+- [x] Add a deterministic subset runner and tests for sample-size validation and repeatable patient-file sampling.
 - Confirm that file ordering is chronological and that temporal features are calculated within patient only.
 - Ensure a single shared sampled cohort and identical patient splits for all model variants.
-- Add tests for missing columns, all-missing features, patient isolation, and feature alignment.
+- [ ] Add explicit regression tests for all-missing feature exclusion in the model-fitting path, feature alignment, and chronological ordering.
 
 ### 2. Rerun the baseline experiment reproducibly
-- Use the checked-in scripts/run_experiment_suite.py on the local training_setA folder with seeds 42, 123, and 2026.
+- [x] Add `scripts/run_subset_experiment.py` for a deterministic patient-level subset comparison; run it locally and keep aggregate-only outputs.
+- [ ] Use the checked-in `scripts/run_experiment_suite.py` on the local training_setA folder with seeds 42, 123, and 2026 after confirming convergence and runtime.
 - Save aggregate JSON under the ignored local outputs/ directory first.
 - Inspect cohort counts, warnings, positive-label prevalence, model convergence, and split overlap before considering results.
 - Keep patient-level predictions and raw files local; only publish aggregate metrics after review.
