@@ -76,6 +76,8 @@ class TimestampedTwinStream:
             raise ValueError("all max_age_seconds values must be finite and positive")
         self._latest: dict[str, Observation] = {}
         self._last_timestamp: dict[str, datetime] = {}
+        self._source_by_channel: dict[str, str | None] = {}
+        self.source_change_counts = {name: 0 for name in twin.channels}
         self.rejected = {"unknown_channel": 0, "bad_time": 0, "bad_unit": 0,
                          "bad_quality": 0, "bad_value": 0, "out_of_order": 0}
 
@@ -117,12 +119,20 @@ class TimestampedTwinStream:
         if previous is not None and timestamp <= previous:
             self.rejected["out_of_order"] += 1
             return False
+        previous_source = self._source_by_channel.get(channel)
+        if previous_source is not None and observation.source is not None and previous_source != observation.source:
+            # Never mix two identified sensors' histories. The replacement sample
+            # starts a fresh channel history and resets aggregate trajectory continuity.
+            self.twin.reset_channel(channel)
+            self.source_change_counts[channel] += 1
         normalized = Observation(
             channel=channel, timestamp=timestamp, value=value,
             unit=observation.unit, quality=observation.quality, source=observation.source,
         )
         self._latest[channel] = normalized
         self._last_timestamp[channel] = timestamp
+        if observation.source is not None:
+            self._source_by_channel[channel] = observation.source
         return True
 
     def score(self, at_time: datetime) -> dict[str, object]:
@@ -146,6 +156,7 @@ class TimestampedTwinStream:
         result = self.twin.update(values)
         result["channel_age_seconds"] = ages
         result["rejected_observation_counts"] = dict(self.rejected)
+        result["source_change_counts"] = dict(self.source_change_counts)
         result["stream_semantics"] = (
             "Latest fresh value per channel; unit-checked; no persistence; not clinical validation."
         )
@@ -155,6 +166,9 @@ class TimestampedTwinStream:
         """Clear buffers and patient-specific twin state before a new session."""
         self._latest.clear()
         self._last_timestamp.clear()
+        self._source_by_channel.clear()
+        for channel in self.source_change_counts:
+            self.source_change_counts[channel] = 0
         for key in self.rejected:
             self.rejected[key] = 0
         self.twin.reset()
