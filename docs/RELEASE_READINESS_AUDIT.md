@@ -47,3 +47,17 @@ This checklist assesses readiness for a **research-code release**, not for clini
 - A completed clean full-cohort reproduction from a fresh clone.
 
 **Decision:** Continue toward a research-code release after the two principal blockers—clean-checkout reproduction and independent review—are addressed. Do not merge this draft pull request based on CI success alone.
+
+## Follow-up checkpoint: utility operating-point analysis (15 October 2026)
+
+- [x] Reviewed the checked-in utility function and its integration in `scripts/evaluate_horizon_calibration.py`. Candidate rankings are computed on the patient-disjoint Set-A operating-point holdout; Set B is not passed to the utility ranking function.
+- [x] Confirmed the framework reports row-level sensitivity/PPV alongside patient-level alerts per at-risk patient-day, covered/missed future-positive windows, window coverage, and label-relative warning time.
+- [x] Reviewed the cost formula: each missed future-positive window and each generated alert is assigned an explicit relative cost, with the total normalized by eligible at-risk patient-days. The ratios remain illustrative assumptions, not clinician- or patient-elicited costs. They do not account for alarm fatigue, treatment harms, staffing, delayed treatment, patient preferences, or competing outcomes.
+- [x] Reviewed the aggregate report and provenance statement. Full-cohort utility results came from a reconstructed local working copy; they are **not** claimed as byte-identically verified execution of the current GitHub source. The utility-focused reruns used 20 bootstrap replicates for ancillary uncertainty summaries; the deterministic cost ranking does not use those intervals.
+- [x] GitHub Actions passed on the current post-cleanup PR head `a179ed437868a92ad89b4b74a1177c899f492cf2` (run [38629062663](https://github.com/culprit-k/VITALIS/actions/runs/38629062663)). This is code/test validation, not a clean full-cohort reproduction or external validation.
+- [ ] Obtain independent clinical/statistical justification for cost ratios and review the operating-point results before any policy choice. No threshold or model is endorsed.
+- [ ] Complete the clean-checkout reproduction and history-wide privacy/security review; neither is closed by this follow-up.
+- [ ] Any frozen policy needs evaluation on a new independent cohort. Set B has already been inspected and must not be reused for threshold selection.
+- [ ] Keep PR #1 draft and unmerged until the outstanding reproduction and independent-review gates are addressed.
+
+**Conclusion:** the utility framework is implemented and tested as a research sensitivity-analysis tool. Clinical utility, an appropriate cost ratio, and a clinically acceptable alert threshold remain unestablished.
