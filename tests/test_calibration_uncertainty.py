@@ -52,3 +52,31 @@ def test_rejects_patient_reappearance_and_bad_vectors():
 def test_rejects_invalid_comparison_stream():
     with pytest.raises(ValueError, match="comparison_probabilities"):
         MOD.patient_cluster_bootstrap_calibration_metrics([0, 1], [.1, .8], [1, 2], comparison_probabilities=[.1], n_bootstrap=20)
+
+
+def test_paired_model_bootstrap_matches_sklearn_point_differences():
+    from sklearn.metrics import average_precision_score, roc_auc_score
+
+    groups = np.repeat(np.arange(10), 5)
+    y = np.tile(np.array([0, 0, 1, 0, 1], dtype=np.int8), 10)
+    p_static = np.tile(np.array([0.02, 0.08, 0.25, 0.04, 0.4]), 10)
+    p_temporal = np.tile(np.array([0.01, 0.12, 0.3, 0.06, 0.55]), 10)
+    out = MOD.patient_cluster_bootstrap_paired_model_metrics(
+        y, p_static, p_temporal, groups, n_bootstrap=40, seed=23
+    )
+    expected = {
+        "auroc": roc_auc_score(y, p_temporal) - roc_auc_score(y, p_static),
+        "auprc": average_precision_score(y, p_temporal) - average_precision_score(y, p_static),
+        "brier_score": brier_score_loss(y, p_temporal) - brier_score_loss(y, p_static),
+        "log_loss": log_loss(y, p_temporal, labels=[0, 1]) - log_loss(y, p_static, labels=[0, 1]),
+    }
+    assert out["point_estimates"]["comparison_minus_reference"] == pytest.approx(expected)
+    assert out["intervals_comparison_minus_reference"]["auroc"]["valid_replicates"] == 40
+    assert "patient_ids" not in out and "predictions" not in out
+
+
+def test_paired_model_bootstrap_rejects_patient_reappearance():
+    with pytest.raises(ValueError, match="contiguous"):
+        MOD.patient_cluster_bootstrap_paired_model_metrics(
+            [0, 1, 0, 1], [.1, .8, .2, .7], [.2, .9, .3, .8], [1, 2, 1, 2], n_bootstrap=20
+        )
