@@ -129,3 +129,8 @@ CI runs \`scripts/check_repository_hygiene.py\` to reject common row-level data/
 ### Historical repository privacy audit
 
 The current-tree guard is complemented by a full-history scanner: see [Git-history privacy audit](docs/GIT_HISTORY_PRIVACY_AUDIT.md) and run python scripts/audit_git_history.py from a complete clone with all relevant refs fetched. It reports artifact paths, oversized blobs, and high-confidence credential-pattern matches without printing credential values. Findings require human triage; a clean scan is not proof of no prior exposure.
+
+
+## Clinical translation and regulatory readiness
+
+The [clinical translation and regulatory roadmap](docs/CLINICAL_TRANSLATION_AND_REGULATORY_ROADMAP.md) defines the gates for moving from retrospective research toward a possible medical-device programme: intended-use definition, target-market classification, quality/design controls, risk management, independent clinical validation, prospective studies, regulatory authorization, and post-market monitoring. It is a planning document, not proof of compliance or clinical validation. VITALIS remains research-only; do not use it to guide patient care.
