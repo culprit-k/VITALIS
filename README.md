@@ -60,7 +60,7 @@ python scripts/demo_adaptive_twin.py
 
 This script uses generated values only. It illustrates baseline warm-up, deviation scoring, multisystem aggregation, and trajectory direction; it is not clinical evidence.
 
-For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
+For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.\n\nFor the synthetic adaptive-twin sandbox: `streamlit run dashboard/twin_demo.py`. It uses generated signals only and shows heuristic trajectory behavior, not clinical predictions.
 
 ## Adaptive twin component
 
