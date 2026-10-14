@@ -160,7 +160,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Verified both local official cohorts: training_setA (20,336 patients; 790,215 rows; 17,136 positive hourly challenge-label rows) and training_setB (20,000 patients; 761,995 rows; 10,780 positive hourly challenge-label rows).
 - [x] Ran a patient-disjoint cross-cohort experiment: train on a 60% patient subset of set A and evaluate on every patient in set B, across seeds 42, 123, and 2026. Aggregate-only results: [cross-cohort report](FULL_COHORT_CROSS_COHORT_RESULTS.md), [summary JSON](../results/cross_cohort_train_A_test_B_2026-10-14.json).
 - [x] Added `scripts/evaluate_cross_cohort.py` and regression tests. This experiment evaluates both static and temporal feature sets; row-level predictions and raw patient data remain local.
-- [ ] Run the checked-in script from an exact repository checkout against the local caches and reconcile results; the first local analysis used a reconstructed working copy, so source-byte identity remains open.
+- [x] Retrieved `scripts/evaluate_cross_cohort.py` from the current branch, verified the local Git blob SHA against GitHub (`f700bf0848cd718301d9693c3dae13444a9bfe8b`), and executed the exact script against both local caches for seeds 42, 123, and 2026 (one seed per invocation). Aggregate-only exact-source results are in [the reproduction JSON](../results/cross_cohort_exact_source_reproduction_2026-10-14.json). A full Git checkout was not verified because local GitHub DNS was unavailable.
 - [ ] Investigate calibration and cohort shift before drawing probability or clinical conclusions. Temporal features improved AUROC/AUPRC here but had lower sensitivity at the fixed 0.5 threshold; no operating point is clinically selected.
 - [ ] External/prospective validation, clinical/statistical supervision, and governance review remain required before any patient-facing research.
 
@@ -317,3 +317,14 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Obtain clinical/statistical review before choosing a final minimum-coverage policy. The 5% Set-A coverage threshold remains exploratory and must not be called optimal or clinically justified.
 - [ ] Confirm CI on the latest documentation/results-only PR head; the last verified successful run covered the duration-stratified script and tests, while the newest docs/JSON commits do not yet have a confirmed CI result.
 - [ ] Do not attribute feature shifts to specific ordering workflows or missingness mechanisms without further evidence. Keep Set B evaluation-only and do not use it for feature selection, calibration, or tuning.
+
+
+## Exact-source cross-cohort evaluator reproduction (14 October 2026)
+
+- [x] Verified that the local evaluator's Git blob SHA exactly matches the checked-in GitHub source, then executed the exact script against the local Set-A and Set-B caches for seeds 42, 123, and 2026. The three seeds were run separately after the combined invocation exceeded the runtime window.
+- [x] Recorded aggregate-only results, per-seed metrics, source hashes, local output hashes, and limitations in [the exact-source JSON](../results/cross_cohort_exact_source_reproduction_2026-10-14.json); updated the [cross-cohort report](FULL_COHORT_CROSS_COHORT_RESULTS.md).
+- [x] Confirmed the exact-source mean AUROC/AUPRC/Brier scores are 0.6750/0.0455/0.1659 for static features and 0.7319/0.0581/0.0972 for temporal features. Across the three training subsamples, temporal features have higher ranking metrics but lower sensitivity at the fixed 0.5 threshold; this remains retrospective benchmark evidence only.
+- [x] Preserved the older reconstructed-harness JSON unchanged and documented that its metrics differ from the exact-source run. Do not present the historical values as reproduced by the checked-in CLI until the discrepancy is explained.
+- [x] Recorded that Set-A-all-empty EtCO2 columns are skipped by the imputer; Set-B EtCO2 values are not used by this Set-A-trained model. Set B remains evaluation-only.
+- [ ] Investigate the discrepancy between the exact-source run and historical reconstructed-harness artifact before consolidating or deleting historical results.
+- [ ] Review cross-cohort calibration/domain shift with clinical/statistical supervision. The fixed 0.5 threshold is not clinically selected, and this is not prospective validation or clinical utility evidence.
