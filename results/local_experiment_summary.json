@@ -1,0 +1,75 @@
+{
+  "project": "VITALIS",
+  "source_dataset": {
+    "name": "PhysioNet Computing in Cardiology Challenge 2019",
+    "url": "https://physionet.org/content/challenge-2019/1.0.0/",
+    "raw_patient_level_data_included": false
+  },
+  "experiments": [
+    {
+      "id": "subset_single_split",
+      "dataset_partition": "training_setA",
+      "patient_subset_size": 5000,
+      "subset_seed": 2026,
+      "split_seed": 42,
+      "split_patients": {"train": 3500, "validation": 750, "test": 750},
+      "test_rows": 28876,
+      "test_positive_hourly_labels": 614,
+      "baseline": {"auroc": 0.7678743940, "average_precision": 0.0956745579, "brier_score": 0.1710384945},
+      "temporal": {"auroc": 0.7827494567, "average_precision": 0.1003253792, "brier_score": 0.1676518738},
+      "status": "exploratory_internal_validation"
+    },
+    {
+      "id": "subset_repeated_splits",
+      "dataset_partition": "training_setA",
+      "patient_subset_size": 5000,
+      "subset_seed": 2026,
+      "split_seeds": [42, 123, 2026],
+      "split_patients_each_run": {"train": 3500, "validation": 750, "test": 750},
+      "mean_metrics": {
+        "baseline": {"auroc": 0.7621, "average_precision": 0.0847, "brier_score": 0.1812},
+        "temporal": {"auroc": 0.7730, "average_precision": 0.0871, "brier_score": 0.1771}
+      },
+      "uncertainty_note": "Reported SD is across three splits, not a confidence interval.",
+      "status": "exploratory_internal_validation"
+    },
+    {
+      "id": "patient_cluster_bootstrap",
+      "dataset_partition": "training_setA",
+      "patient_subset_size": 5000,
+      "split_seed": 42,
+      "bootstrap_replicates": 200,
+      "bootstrap_seed": 77123,
+      "test_patients": 750,
+      "test_rows": 28876,
+      "temporal_minus_baseline": {
+        "auroc": {"estimate": 0.0148750627, "percentile_95_interval": [0.0027351816, 0.0288308411]},
+        "average_precision": {"estimate": 0.0046508213, "percentile_95_interval": [-0.0029325185, 0.0114917564]},
+        "brier_score": {"estimate": -0.0033866207, "percentile_95_interval": [-0.0050359388, -0.0017290907]}
+      },
+      "status": "exploratory_conditional_on_one_split"
+    },
+    {
+      "id": "full_training_setA",
+      "dataset_partition": "training_setA",
+      "patients": 20336,
+      "hourly_rows": 790215,
+      "positive_hourly_labels": 17136,
+      "split_seed": 42,
+      "split_patients": {"train": 14235, "validation": 3050, "test": 3051},
+      "test_rows": 118689,
+      "test_positive_hourly_labels": 2367,
+      "baseline": {"auroc": 0.6838710312, "average_precision": 0.0442399617, "brier_score": 0.2513450305},
+      "temporal": {"auroc": 0.6778438244, "average_precision": 0.0461978146, "brier_score": 0.2826640325},
+      "limitation": "Both SGDClassifier models were fitted for only five iterations and emitted convergence warnings.",
+      "status": "provisional_do_not_treat_as_final_performance"
+    }
+  ],
+  "shared_limitations": [
+    "All experiments are internal retrospective evaluations on one challenge dataset.",
+    "SepsisLabel follows the challenge's existing early-warning label definition and must not be shifted again.",
+    "Metrics are hourly-row metrics, not patient-level event metrics.",
+    "No independent external validation or prospective clinical validation.",
+    "No claim of clinical utility, novelty, or patentability."
+  ]
+}
