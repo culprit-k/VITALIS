@@ -419,3 +419,19 @@ The next implementation layer has now been added on the existing research branch
 **Important boundary:** the new online component detects within-person deviation patterns; it is not yet a complete physiological digital twin, calibrated sepsis probability model, or validated time-to-deterioration predictor. Do not use it for patient care.
 
 **Hardware gate:** do not select sensor parts or claim device performance until timestamping, units, sample quality, expected sampling policies, compute requirements, and the software validation contract have been reviewed. The current stream adapter defines a software input boundary, not a hardware specification.
+
+
+## Phase 4: supervised future-label forecasting (started 2026-10-14)
+
+- [x] Add a separate target builder that predicts whether a positive Challenge SepsisLabel occurs within the next 1, 3, or 6 hourly rows, while the current label is zero.
+- [x] Exclude current-positive rows and each patient's final H rows; enforce contiguous patient blocks and never shift labels across patients.
+- [x] Add patient-disjoint train/validation/test modeling with training-only preprocessing, fixed reference threshold, aggregate-only outputs, patient-level warning burden, and patient-cluster bootstrap intervals.
+- [x] Add tests for horizon alignment, patient-boundary isolation, eligible tail rows, alert refractory periods, warning-window coverage, and bootstrap intervals.
+- [x] Document the exact target semantics and limitations in [Horizon forecasting](HORIZON_FORECASTING.md).
+- [ ] Verify GitHub Actions passes for the horizon target tests and full test suite.
+- [ ] Run the full-cohort 1/3/6-hour experiments from a clean environment using the authorized local dataset; record aggregate-only outputs and split seed.
+- [ ] Repeat on predeclared seeds and evaluate train-Set-A/test-Set-B generalization without tuning on Set B.
+- [ ] Review forecast-window coverage, alert burden per at-risk patient-day, warning time relative to challenge-label entry, and patient-cluster uncertainty before interpreting any result.
+- [ ] Obtain independent clinical/statistical review. These labels do not provide an independent onset timestamp, and no clinical alert policy is established.
+
+**Interpretation boundary:** the new model forecasts entry into the Challenge SepsisLabel-positive window. Because the challenge label already incorporates a six-hour lead convention, a 1/3/6-hour forecast here is not a claim of sepsis onset prediction within 1/3/6 hours. All threshold, refractory, and alert metrics are retrospective research settings, not clinical operating points.
