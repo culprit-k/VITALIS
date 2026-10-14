@@ -1,0 +1,26 @@
+{
+  "project": "VITALIS",
+  "audit_date_utc": "2026-10-14",
+  "partition": "PhysioNet/CinC Challenge 2019 training_setA",
+  "method": "Full partition parsed file-by-file by aggregate integrity checker; raw rows and filenames were not exported.",
+  "patient_file_count": 20336,
+  "hourly_row_count": 790215,
+  "positive_challenge_label_rows": 17136,
+  "patients_with_positive_challenge_labels": 1790,
+  "positive_label_row_fraction": 0.02168523756192935,
+  "invalid_target_rows": 0,
+  "empty_files": 0,
+  "files_with_column_set_mismatch": 0,
+  "column_count_union": 41,
+  "min_rows_per_patient": 8,
+  "max_rows_per_patient": 336,
+  "missing_cells": 22102799,
+  "target": "SepsisLabel",
+  "label_semantics": "Challenge SepsisLabel used as supplied; do not shift again.",
+  "privacy": "Aggregate only; no filenames, patient identifiers, rows, or predictions exported.",
+  "limitations": [
+    "Integrity audit only; it is not a model evaluation or clinical validation.",
+    "Patient-positive counts refer to files with at least one positive challenge-label row, not confirmed clinical sepsis cases.",
+    "No byte-level file hashes were retained in this public report."
+  ]
+}
