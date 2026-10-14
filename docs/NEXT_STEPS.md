@@ -554,3 +554,15 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Complete clean-checkout reproduction, privacy/security review, governance review, and prospective/clinical validation gates before any clinical-use claim.
 
 **Boundary:** the target is future entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. The weighted cost proxy is not clinical utility. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 11: repository data-artifact hygiene guard (15 October 2026)
+
+- [x] Add \`scripts/check_repository_hygiene.py\` to fail CI when the current working tree contains common data/cache/model-artifact extensions or files larger than 5 MiB.
+- [x] Add regression tests for forbidden extensions, oversized files, invalid inputs, and ignored Git/cache directories in \`tests/test_repository_hygiene.py\`.
+- [x] Run the guard in GitHub Actions before the test suite.
+- [ ] Confirm the new CI run passes on the latest code-bearing head.
+- [ ] Separately complete a history-wide privacy/secret audit. This guard checks the current tree only and does not prove that sensitive artifacts were never committed in earlier revisions.
+- [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before considering a research release.
+
+**Boundary:** the guard reduces the chance of accidentally adding row-level data or score archives in future commits; it is not a substitute for secret scanning, history review, data governance, or clinical validation.
