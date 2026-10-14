@@ -7,7 +7,7 @@
 ## Research goals
 
 - Build a reproducible, auditable cohort pipeline.
-- Compare a transparent logistic baseline with causal temporal features.
+- Compare static, causal temporal, and experimental patient-specific baseline-deviation features.
 - Prevent patient leakage and label-timing errors.
 - Evaluate discrimination, calibration, sensitivity, specificity, and aggregate alert behavior.
 - Document uncertainty and limitations before considering any clinical translation.
@@ -46,6 +46,7 @@ Train the static baseline, temporal variant, matched comparison, or a determinis
 ```bash
 python scripts/train_baseline.py /path/to/psv_files --output outputs/static_metrics.json
 python scripts/train_baseline.py /path/to/psv_files --temporal --output outputs/temporal_metrics.json
+python scripts/train_baseline.py /path/to/psv_files --temporal --personalized --output outputs/personalized_metrics.json
 python scripts/compare_models.py /path/to/psv_files --output outputs/model_comparison.json
 python scripts/run_subset_experiment.py /path/to/psv_files --sample-size 1500 --sampling-seed 2026 --split-seed 42 --output outputs/subset_comparison.json
 ```
@@ -67,6 +68,7 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 - [Structured historical results](results/local_experiment_summary.json) is an aggregate-only record of earlier experiments. These historical metrics are not automatically reproduced by the current workflow.
 - [Fresh subset rerun](results/current_subset_rerun.json) records an earlier 1,500-patient experiment; its results are mixed and exploratory.
 - [Three-seed subset experiment report](docs/MULTISEED_SUBSET_EXPERIMENT.md) and [aggregate metrics](results/multiseed_subset_summary.json) document a fresh comparison on the same deterministic 1,500-patient sample across split seeds 42, 123, and 2026.
+- [VITALIS-PB algorithm specification](docs/VITALIS_PB_ALGORITHM.md) defines the causal patient-baseline deviation features and their limitations.
 - [Next steps and research roadmap](docs/NEXT_STEPS.md) lists pipeline fixes, reproducible validation, external validation, and IP safeguards.
 - [Full-cohort rerun report](docs/FULL_COHORT_RERUN.md) and [aggregate JSON](results/full_cohort_rerun_2026-10-14.json) record the latest local rerun, with implementation provenance and limitations.
 
