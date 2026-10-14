@@ -11,7 +11,7 @@
 - Completed 9 seed × horizon runs, 18 model fits, and 200 whole-patient bootstrap replicates for each model/seed/horizon fit (3,600 replicates total). Summed runtime was 151.741 seconds; no model-fit warnings were captured.
 - Set B was not loaded or used in this analysis. No row-level predictions, patient identifiers, or cohort caches were exported.
 
-**Provenance caveat:** this full-cohort analysis used the available reconstructed local working copy because a clean Git checkout could not be verified in the runtime. Results are not claimed as byte-identically verified execution of the checked-in source. The committed aggregate artifact records this limitation.
+**Provenance caveat:** this full-cohort analysis used the available reconstructed local working copy because a clean Git checkout could not be verified in the runtime. Results are not claimed as byte-identically verified execution of the checked-in source. Local environment: Python 3.13.5, NumPy 2.3.5, scikit-learn 1.8.0. SHA-256 of the local reconstructed files: `scripts/evaluate_horizon_calibration.py` `784b8cfac0a2e06e5978115b855af82ab379df4a76f78c820301ff2bdb55ad64`; `src/vitalis/utility.py` `5db1f2f6cc2e12baf472b670cbdd4dec002c84d1d640acbf31597a521ace7c4f`; `src/vitalis/horizon.py` `221c9cb49e94acf80f8b55e05e19df356b9b0e9ce78e0d63967f61fa69528126`; `src/vitalis/calibration_uncertainty.py` `b5aa0d69fe3de027fcf3ef10b5202793a29bc844c79686e5dad372b69cc376c6`. Set A cache metadata SHA-256: `67a1ba90a2d89abcb06ae71a08fe4ad63f97a65d6044b0f0a49acc9b4ff4407a`. These are provenance hashes for the local working copy, not claims that the files match GitHub blobs. The committed aggregate artifact records this limitation.
 
 ## Operating-point trade-offs
 
