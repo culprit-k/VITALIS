@@ -43,3 +43,20 @@ The local runs used a reconstructed experimental harness and a local feature cac
 Both cohorts are from the PhysioNet/CinC Challenge 2019 benchmark, not prospective clinical validation. Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world clinical false-alarm rates. The threshold 0.5 is not clinically selected.
 
 VITALIS remains research-only and is not validated for diagnosis, triage, treatment, or real patient-care decisions.
+
+
+## Parameterized runner and regression tests (14 October 2026)
+
+A checked-in runner is now available at [`scripts/evaluate_cross_cohort_recalibration.py`](../scripts/evaluate_cross_cohort_recalibration.py). It builds patient-disjoint 60% training / 20% validation / 20% unused partitions within set A, fits Platt recalibration on validation predictions only, then evaluates frozen raw and recalibrated probabilities on all of set B. Set B is not used for fitting or threshold selection, and the output is aggregate-only.
+
+Example, after building local feature caches outside Git:
+
+```bash
+python scripts/evaluate_cross_cohort_recalibration.py \\
+  --set-a-cache /path/to/cache-A \\
+  --set-b-cache /path/to/cache-B \\
+  --seeds 42 123 2026 \\
+  --output /secure/local/path/cross_cohort_recalibration.json
+```
+
+Regression tests cover deterministic patient-disjoint splitting, the validation-only recalibrator API, invalid calibration inputs, and aggregate-only metric output. The first checked-in runner/test commits are undergoing GitHub Actions checks. A future exact-checkout run against the local caches is still needed to reconcile these results with the earlier reconstructed-harness artifact.
