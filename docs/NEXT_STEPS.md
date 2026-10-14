@@ -92,3 +92,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Strict byte-for-byte identity between local working copies and GitHub checked-in source blobs remains open. The local scripts were reconstructed from checked-in logic, not verified as identical bytes.
 - [ ] Paired patient-cluster uncertainty intervals from matched held-out predictions remain outstanding; existing three-seed SDs are not confidence intervals.
 - [ ] External/prospective validation and clinical/statistical governance review remain required before clinical claims.
+
+
+## Cache-backed full-cohort reconciliation (2026-10-14)
+
+- [x] Built all four local feature-cache chunks for training_setA outside the Git repository; verified the dataset totals against the integrity audit (20,336 patients, 790,215 rows, 17,136 positive hourly labels).
+- [x] Ran the cached evaluator in separate processes for seeds 42, 123, and 2026. Per-seed split counts and AUROC/AUPRC/Brier metrics matched the earlier aggregate results to displayed precision. See [reconciliation report](FULL_COHORT_MULTISEED_RESULTS.md) and [aggregate JSON](../results/full_cohort_repository_native_reconciliation_2026-10-14.json).
+- [x] Confirmed the cache builder and evaluator implementation commits passed GitHub Actions tests; the latest documentation CI passed in run https://github.com/culprit-k/VITALIS/actions/runs/38558803433.
+- [ ] Strict byte-for-byte source identity remains open: the local evaluator used for this run was reconstructed from the checked-in script logic. It was not verified as an unchanged checkout of the GitHub blob.
+- [ ] Future evaluation should retain only aggregate outputs in Git and use paired patient-cluster uncertainty intervals where matched predictions can be retained securely outside the public repository.
