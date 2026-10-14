@@ -27,7 +27,7 @@
   "source_provenance": {
     "repository": "culprit-k/VITALIS",
     "branch": "work/exact-checkout-reproduction",
-    "evaluator_script_blob_sha": "4e2d6fde4f66f9519de935e0c4861e5e40504d1e",
+    "evaluator_script_blob_sha": "dc736ef7a7fe31c477d4626971dd5b0abd255d2f",
     "evaluator_test_blob_sha": "77930cd4607653fcef6bdbb290e158f574678ad5",
     "bootstrap_script_blob_sha": "8b7f8d9d377554a5809e7d8741b0c4f277e218d2",
     "local_git_blob_shas_match_github": true,
@@ -44,7 +44,7 @@
       "positive_hourly_labels": 10780,
       "valid_replicates": 200,
       "elapsed_bootstrap_seconds": 29.68,
-      "score_archive_sha256": "80f39f3520439aa2215340ca6dc9f618a23f866de6c8874a4be59fe4d7c2f692",
+      "score_archive_sha256": "c1164a185b1518f4b33d92ff8728137ed51d36cf18ce49b19ec281e145803c8b",
       "temporal_minus_static": {
         "auroc": {
           "mean_bootstrap_difference": 0.057509,
