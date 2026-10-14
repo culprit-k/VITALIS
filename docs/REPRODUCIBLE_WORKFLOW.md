@@ -50,7 +50,23 @@ The training report includes 95% patient-cluster bootstrap intervals for held-ou
 
 The training report also includes a refractory-period alert-burden summary and coverage of contiguous challenge-positive label episodes. These are label-window analyses, not true clinical event sensitivity or false-alarm rates, because the challenge label is not independently observed onset.
 
-## 7. View aggregate results
+
+
+## 7. Run a multi-seed experiment suite
+
+For a more robust internal comparison on the complete local cohort, run the matched static/temporal evaluation with multiple patient-level split seeds:
+
+```bash
+python scripts/run_experiment_suite.py /path/to/psv_files \
+  --seeds 42 123 2026 \
+  --output outputs/multiseed_summary.json
+```
+
+This runs both models for each seed, records aggregate per-seed metrics and patient-cluster intervals, and summarizes the mean and standard deviation across seeds. The standard deviation is descriptive split-to-split variability, **not** a confidence interval. Runtime and memory use depend on the number and length of patient files; start with one seed if resources are limited. Keep the output local until you have reviewed it for aggregate-only content and checked the run logs.
+
+Before accepting a run, verify the output's cohort counts, split counts, label prevalence, and warnings. Do not compare these fixed-threshold results directly with historical runs that used validation-selected thresholds as if the protocols were identical.
+
+## 8. View aggregate results
 
 Install the optional dashboard dependency and launch:
 
