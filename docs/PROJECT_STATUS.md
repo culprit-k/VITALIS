@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `042d5d266cb418cf0a09a2a2ef49f2ef2f0aa30c` (documentation-only follow-up after CI passed on `4b3aa798af04a0819ce1523cb9bae672dcc9dddf`).
+**Latest branch head checked during this update:** `1dffbb6fefbafeea57492f7b2932c6d78a94a2e0` (documentation-only follow-up after CI passed on `c4700d33ff1e3bd84e034cb41fecea2ffff6d595`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -70,6 +70,17 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - **History-wide secret and sensitive-artifact audit:** not completed. A changed-file/path review is not a full repository-history scan.
 - **Independent clinical/statistical review:** not obtained. No submitted PR reviews or inline review threads were present at the latest review check.
 - **Clinical validation:** not performed. There is no basis to claim patient benefit, safe alert thresholds, or readiness for patient care.
+
+## New software milestone: supervised future-label forecasting (2026-10-14)
+
+- Added `src/vitalis/horizon.py` to build leakage-conscious 1-, 3-, and 6-hour future Challenge SepsisLabel targets. It excludes rows already carrying a positive current label, excludes each patient's incomplete future tail, and never shifts labels across patient boundaries.
+- Added `scripts/train_horizon_model.py` to train separate patient-disjoint logistic models with causal temporal features, training-only preprocessing, fixed reference threshold, aggregate-only output, patient-level alert burden, challenge-label forecast-window coverage, label-relative warning time, and patient-cluster bootstrap intervals.
+- Added `tests/test_horizon.py` for target alignment, patient boundary isolation, time eligibility, alert refractory logic, forecast-window coverage, and uncertainty intervals.
+- Added [Horizon forecasting protocol](HORIZON_FORECASTING.md) and documented the CLI in the README.
+- GitHub Actions passed for the horizon target and full test suite on code-bearing commit `c4700d33ff1e3bd84e034cb41fecea2ffff6d595`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38613967293). The run included 117 tests; the first run exposed one incorrect expected count in a test fixture, which was corrected and then passed.
+- The full-cohort horizon CLI has **not** yet been run in this environment because the authorized patient data are local and must not be uploaded or committed. No horizon performance results are claimed yet.
+
+**Interpretation boundary:** these targets forecast entry into the Challenge SepsisLabel-positive window. The source label already uses a six-hour lead convention, so the new 1/3/6-hour targets are not independent predictions of biological onset. Alert rates are relative to eligible at-risk hours; alerts outside forecast-positive windows are not verified clinical false alarms. Threshold and refractory settings remain research defaults.
 
 ## 6. Next steps, in order
 
