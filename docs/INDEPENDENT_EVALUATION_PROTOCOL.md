@@ -76,3 +76,8 @@ Run:
 The validator fails closed unless the lockfile is marked `frozen`, identifies a new independent cohort with a SHA-256 manifest hash, freezes the model and thresholds, specifies endpoints/analysis plans, and records clinical, statistical, governance, ethics-determination, and software-review approvals. It rejects Set B as the final evaluation cohort and rejects using the Challenge-label proxy for a clinical-onset claim.
 
 This is a completeness and consistency guard, not evidence that signatures are authentic, ethics approval has been granted, a cohort is truly independent, or the model is clinically valid. Never commit the completed private lockfile or patient-level data to the public repository.
+
+
+### Utility-cost freeze requirements
+
+The machine-checkable lockfile now requires a \`utility_policy\` section: the cost equation, positive alert-cost unit, unique positive missed-window cost scenarios, the primary scenario, the exact Set-A-only candidate-selection rule, and the clinical/statistical rationale or an explicit statement that the costs remain exploratory. The validator rejects placeholders, non-finite/non-positive costs, and a candidate-selection rule that names Set B. These checks make the assumptions auditable; they do not validate the assumptions themselves or replace independent sign-off.
