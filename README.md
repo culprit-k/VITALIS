@@ -57,6 +57,13 @@ For the dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard
 
 The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shift it a second time. A positive label should not be described as independently observed clinical onset.
 
+## Research provenance
+
+- [Local experiment history](docs/LOCAL_EXPERIMENTS.md) records prior exploratory runs and their limitations.
+- [Aggregate dataset inventory](results/dataset_inventory.json) records the verified local archive counts for training sets A and B; no raw or patient-level data are stored here.
+- [Multi-seed experiment runner](scripts/run_experiment_suite.py) supports reproducible static-versus-temporal comparisons across patient-level split seeds.
+- [Structured historical results](results/local_experiment_summary.json) is an aggregate-only record of earlier experiments. These historical metrics are not automatically reproduced by the current workflow.
+
 ## Development status
 
 This repository contains a research scaffold and reproducible baseline workflows. Model performance has not been asserted as clinically useful or externally validated. No claim of novelty or patentability is made. See [`docs/REPRODUCIBLE_WORKFLOW.md`](docs/REPRODUCIBLE_WORKFLOW.md), [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md), and [`docs/COHORT_PROTOCOL.md`](docs/COHORT_PROTOCOL.md).
