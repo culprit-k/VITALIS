@@ -15,47 +15,47 @@ The output is a **unitless deviation heuristic**, not a probability, diagnosis, 
 
 For channel (j) and time (t), use only the previous valid observations in a bounded history (H_{j,t}):
 
-[
+\[
 m_{j,t}=\operatorname{median}(H_{j,t}),\qquad
 s_{j,t}=\max(1.4826\operatorname{MAD}(H_{j,t}),\epsilon).
-]
+\]
 
 The current standardized deviation is:
 
-[
+\[
 z_{j,t}=\frac{x_{j,t}-m_{j,t}}{s_{j,t}},\qquad
 q_{j,t}=\min\left(\frac{|z_{j,t}|}{z_{\max}},1\right).
-]
+\]
 
 Here, (\epsilon) is a numerical scale floor. It is **not** a clinically established sensor noise floor. It must be chosen per measurement and validated before interpreting scores.
 
 After the first minimum-history window, the implementation freezes a robust reference center and scale, while retaining a rolling baseline. The reference-normalized deviation is
 
-\\[
-z^0_{j,t}=\\frac{x_{j,t}-m^0_j}{s^0_j}.
-\\]
+\[
+z^0_{j,t}=\frac{x_{j,t}-m^0_j}{s^0_j}.
+\]
 
 To avoid losing gradual shifts as the rolling baseline adapts, a two-sided cumulative-sum detector tracks positive and negative departures from this fixed reference:
 
-\\[
-C^+_{j,t}=\\max(0,C^+_{j,t-1}+z^0_{j,t}-k),\\qquad
-C^-_{j,t}=\\max(0,C^-_{j,t-1}-z^0_{j,t}-k).
-\\]
+\[
+C^+_{j,t}=\max(0,C^+_{j,t-1}+z^0_{j,t}-k),\qquad
+C^-_{j,t}=\max(0,C^-_{j,t-1}-z^0_{j,t}-k).
+\]
 
-A cumulative shift is flagged when \\(\\max(C^+_{j,t},C^-_{j,t})\\ge h\\). The allowance \\(k\\) and threshold \\(h\\) are configurable engineering parameters and require validation; they are not clinical alarm cutoffs. The per-channel score uses the larger absolute deviation from the rolling and frozen reference baselines, clipped to \\(z_{\\max}\\). Channel-specific scale floors can be supplied to avoid using the same absolute noise floor for measurements with different units.
+A cumulative shift is flagged when \(\max(C^+_{j,t},C^-_{j,t})\ge h\). The allowance \(k\) and threshold \(h\) are configurable engineering parameters and require validation; they are not clinical alarm cutoffs. The per-channel score uses the larger absolute deviation from the rolling and frozen reference baselines, clipped to \(z_{\max}\). Channel-specific scale floors can be supplied to avoid using the same absolute noise floor for measurements with different units.
 
 For each physiological system (g), average the available channel scores:
 
-[
+\[
 Q_{g,t}=\frac{1}{|J_{g,t}|}\sum_{j\in J_{g,t}}q_{j,t}.
-]
+\]
 
 When data coverage, scored-channel count, and system count pass the configured minimums, average systems with equal weight and smooth the result:
 
-[
+\[
 u_t=\frac{1}{|G_t|}\sum_{g\in G_t}Q_{g,t},\qquad
 S_t=\alpha u_t+(1-\alpha)S_{t-1}.
-]
+\]
 
 Equal system weighting avoids letting a system dominate merely because more channels are mapped to it. These weights are engineering defaults, not fitted medical weights. The implementation also tracks consecutive observations whose absolute z-score exceeds a configurable deviation threshold and reports the fraction of represented systems with elevated scores.
 
