@@ -86,3 +86,8 @@ python scripts/evaluate_cross_cohort.py \
 # Optional, for local paired patient-cluster bootstrap only:
 # --local-score-archive-dir /secure/local/path/heldout-score-archives
 ```
+
+
+## Raw and recalibrated patient-cluster uncertainty checkpoint
+
+The exact-source paired patient-cluster bootstrap has now been run for 200 replicates per seed on both raw and Set-A-only Platt-recalibrated probabilities (seeds 42, 123, 2026). See [combined aggregate intervals](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [methods/results report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md). The 1,000-replicate target remains incomplete. The intervals are conditional on the benchmark Set-B cohort and are not prospective clinical validation.
