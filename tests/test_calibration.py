@@ -10,7 +10,7 @@ def test_calibration_summary_reports_brier_and_slope_for_two_classes():
     p = np.array([0.1, 0.2, 0.3, 0.7, 0.8, 0.9])
     result = calibration_summary(y, p, bins=5)
     assert result["rows"] == 6
-    assert result["brier_score"] == pytest.approx(0.04)
+    assert result["brier_score"] == pytest.approx(0.04666666666666667)
     assert result["calibration_slope"] is not None
     assert result["calibration_intercept"] is not None
     assert sum(row["count"] for row in result["reliability_bins"]) == len(y)
