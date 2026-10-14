@@ -591,3 +591,17 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Obtain independent clinical/statistical review of endpoint semantics, cost assumptions, and model/threshold policy; obtain required governance/ethics determination and a genuinely new independent cohort before external/prospective evaluation.
 
 **Current decision:** the utility-analysis implementation and automated software/privacy checks are in place, but the independent-evaluation and clean-reproduction gates remain open. Keep PR #1 draft and unmerged. VITALIS remains research-only and is not clinically validated.
+
+
+## Phase 13: utility-based operating-point framework (15 October 2026)
+
+- [x] Add \`src/vitalis/utility.py\` to compare thresholds under explicit missed-window-versus-alert cost scenarios.
+- [x] Report sensitivity, PPV, alerts per at-risk patient-day, forecast-positive-window coverage, missed windows, label-relative warning time, and alerts outside target-positive windows.
+- [x] Integrate cost sensitivity into \`scripts/evaluate_horizon_calibration.py\` on the untouched patient-disjoint Set-A operating-point holdout only; default illustrative missed-window cost ratios are 1, 5, 10, and 20 per alert-cost unit, with CLI overrides.
+- [x] Add focused utility input/metric tests and an evaluator integration assertion; document the method in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the operating-point protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [ ] Confirm GitHub Actions passes on the final code-bearing head and fix any regressions before marking the milestone complete.
+- [ ] Run the integrated full-cohort cost-sensitivity analysis against the authorized local Set-A cache; commit aggregate-only output, never patient-level scores or cache data.
+- [ ] Obtain independent clinical/statistical justification for cost ratios. Current defaults are illustrative research assumptions, not clinical valuations.
+- [ ] Freeze any development policy before testing it on a genuinely new independent cohort. Set B has already been inspected and remains evaluation-only; do not use it to select thresholds.
+
+**Interpretation boundary:** this is a retrospective Challenge-label utility proxy, not clinical utility. The label's six-hour lead convention means the target is future entry into the Challenge SepsisLabel-positive window, not independently observed sepsis onset. Alerts outside those windows are not verified clinical false alarms. VITALIS remains research-only, and PR #1 remains draft/unmerged.
