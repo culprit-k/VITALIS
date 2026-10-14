@@ -537,3 +537,18 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Complete the lockfile privately only after the cohort, event definition, cost assumptions, model policy, and reviewers are identified; do not put a completed lockfile containing sensitive study metadata in public Git.
 - [ ] Obtain a genuinely new cohort, data-governance/ethics determination, and independent clinical/statistical approval. Set B remains unavailable for threshold selection.
 - [ ] Complete clean-checkout reproduction and history-wide privacy/security review. The project remains research-only; this validation helper does not confer clinical validity or authorize a prospective study.
+
+
+## Phase 8: utility-based operating-point framework (15 October 2026)
+
+- [x] Add \`src/vitalis/utility.py\` to compare threshold candidates under explicit missed-window versus alert-cost scenarios.
+- [x] Report sensitivity, PPV, alerts per at-risk patient-day, forecast-positive-window coverage, missed windows, alerts outside target-positive windows, and warning time relative to Challenge-label entry.
+- [x] Integrate cost-sensitivity summaries into the calibration evaluator for the untouched patient-disjoint Set-A operating-point holdout only. Default illustrative missed-window cost ratios are 1, 5, 10, and 20 per alert-cost unit; both cost inputs are configurable.
+- [x] Add focused unit tests and an end-to-end synthetic evaluator assertion. The scenario ranking is labeled a development candidate, not a clinical threshold.
+- [x] Document assumptions and reproduction options in [the utility operating-point framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [ ] Confirm the GitHub Actions result for the latest code-bearing commit and fix any failures before proceeding.
+- [ ] Run the integrated cost-sensitivity evaluator on the authorized local Set-A/Set-B caches, preserving Set B as evaluation-only; commit aggregate-only output after validating it contains no row-level data.
+- [ ] Obtain independent clinician/statistician review of cost ratios, alert burden, and target semantics. These ratios are illustrative and not clinically elicited.
+- [ ] Freeze any development candidate only after review, then evaluate once on a new independent cohort. Do not reuse inspected Set B for threshold selection.
+
+**Boundary:** the target is future entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. This weighted cost proxy is not clinical utility. VITALIS remains research-only and must not guide patient care.
