@@ -240,6 +240,12 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
                     missed_window_costs=missed_window_costs, alert_cost=alert_cost,
                     refractory_hours=refractory_hours,
                 )
+                variants["platt_calibrated"]["utility_cost_sensitivity_bootstrap_95ci"] = patient_cluster_bootstrap_utility_uncertainty(
+                    labels, calibrated, patients, times, thresholds=THRESHOLDS,
+                    missed_window_costs=missed_window_costs, alert_cost=alert_cost,
+                    refractory_hours=refractory_hours, n_bootstrap=utility_bootstrap_replicates,
+                    seed=seed + horizon * 100 + (0 if name == "static" else 1),
+                )
             # Keep patient-level alert computation tractable while preserving a
             # predeclared calibrated Set-B operating-point slice. No threshold is selected.
             if cohort_name == "set_b_final_evaluation":
