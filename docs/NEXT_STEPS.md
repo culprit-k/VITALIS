@@ -293,5 +293,16 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Recorded aggregate results and interpretation limits: [patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and [aggregate JSON](../results/patient_level_feature_availability_audit_2026-10-14.json).
 - [x] Observed marked patient-level coverage shifts: DBP 63.69% of Set-A patients vs 99.87% Set B; HCO3 97.37% vs 2.08%; BaseExcess 62.21% vs 2.79%; EtCO2 0% vs 16.08%. Respiratory rate availability was similar (~99.8%) across both cohorts.
 - [x] Reported unadjusted differences in patient-level any-positive-label rates by feature availability as descriptive only; these do not identify missingness mechanisms or establish causality.
-- [ ] Investigate source documentation and cohort/site workflow context before attributing the shifts to measurement practices, severity, or missingness mechanisms. Do not use Set B to tune models or select features.
+- [x] Reviewed the official PhysioNet/CinC 2019 documentation and added duration-stratified patient-level availability summaries. The broad record-duration strata show availability gradients, but large cohort differences persist; workflow/severity explanations remain hypotheses, not findings. See [patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and [aggregate JSON](../results/patient_level_feature_availability_audit_2026-10-14.json).
 - [ ] Confirm GitHub Actions for the latest branch head. No patient-level records, identifiers, or predictions are committed; VITALIS remains research-only.
+
+
+## Duration-stratified missingness and source-provenance follow-up (14 October 2026)
+
+- [x] Reviewed the official PhysioNet/CinC Challenge 2019 documentation for cohort provenance, hourly data semantics, variable definitions, missing-value meaning, and six-hour label timing: https://physionet.org/content/challenge-2019/1.0.0/.
+- [x] Extended `scripts/audit_patient_level_availability.py` to report patient-level availability overall and within record-duration bands (1–24, 25–48, 49–72, and 73+ hours), including descriptive availability by ever-positive challenge-label status.
+- [x] Added regression coverage for duration-stratified output and updated the aggregate-only results and report.
+- [x] Found that longer records generally have higher availability for FiO2, pH, and lactate in both cohorts, but broad duration stratification does not remove the large cross-cohort differences in DBP, HCO3/BaseExcess, or EtCO2.
+- [x] Documented that positive-label status and availability are associated in several strata, while explicitly noting that the outcome is any positive label over the full record and feature availability can include post-label measurements. This is not prospective predictive evidence or causal adjustment.
+- [ ] Confirm CI for the latest branch head and rerun the audit CLI against the local caches from the committed source; do not treat the aggregate artifact as source-reproduced until checked.
+- [ ] If additional explanation is needed, seek cohort-specific metadata or primary documentation before attributing shifts to site workflows. Do not tune or select features using Set B.
