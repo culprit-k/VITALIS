@@ -75,3 +75,43 @@ def test_timestamped_stream_drives_twin_after_warmup():
     assert result["channels"]["heart_rate"]["baseline"] == 70
     assert result["trajectory_score"] is not None
     assert result["channel_age_seconds"]["spo2"] == 0
+
+
+
+def test_per_channel_freshness_limits_are_respected_independently():
+    twin = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "spo2"],
+        config=TwinConfig(min_history=2, history_window=4, min_channels=1, min_systems=1),
+    )
+    stream = TimestampedTwinStream(twin, max_age_seconds={"heart_rate": 5, "spo2": 30})
+    now = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    assert stream.ingest(Observation("heart_rate", now, 70, "bpm"))
+    assert stream.ingest(Observation("spo2", now, 98, "%"))
+    result = stream.score(now + timedelta(seconds=10))
+    assert result["channels"] == {"spo2": {"value": 98.0, "baseline": None,
+        "reference_baseline": None, "z_score": None, "reference_z_score": None,
+        "cusum_score": 0.0, "cusum_triggered": False, "history_count": 0,
+        "baseline_updated": True}}
+    assert result["coverage"] == 0.5
+    assert result["channel_age_seconds"]["heart_rate"] == 10
+    assert result["channel_age_seconds"]["spo2"] == 10
+
+
+def test_per_channel_freshness_mapping_must_match_twin_channels():
+    twin = AdaptivePhysiologicalTwin(channels=["heart_rate", "spo2"])
+    try:
+        TimestampedTwinStream(twin, max_age_seconds={"heart_rate": 10})
+    except ValueError as exc:
+        assert "missing: spo2" in str(exc)
+    else:
+        raise AssertionError("missing channel freshness policy should be rejected")
+
+
+def test_future_dated_sample_is_not_used_until_stream_time_catches_up():
+    stream = make_stream(max_age=10)
+    now = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    future = now + timedelta(seconds=5)
+    assert stream.ingest(Observation("heart_rate", future, 80, "bpm"))
+    result = stream.score(now)
+    assert result["coverage"] == 0
+    assert result["channel_age_seconds"]["heart_rate"] == -5
