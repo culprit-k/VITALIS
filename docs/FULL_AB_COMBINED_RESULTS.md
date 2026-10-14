@@ -48,3 +48,18 @@ These are complementary, not interchangeable, experiments. Neither is prospectiv
 - VITALIS remains a research prototype. Do not use it for diagnosis, triage, or treatment.
 
 Aggregate-only results: [JSON summary](../results/full_AB_combined_multiseed_2026-10-14.json).
+
+
+## Paired patient-cluster uncertainty analysis (200 replicates per split)
+
+A follow-up paired bootstrap resampled **patients**, preserving each sampled patient's full set of hourly rows through multiplicity weights. This estimates uncertainty conditional on each fixed held-out split; it does not estimate external-validation uncertainty.
+
+| Split seed | Temporal − static AUROC (95% CI) | Temporal − static AUPRC (95% CI) | Temporal − static Brier (95% CI) |
+|---|---:|---:|---:|
+| 42 | +0.0346 [0.0267, 0.0420] | +0.0124 [0.0062, 0.0191] | −0.0149 [−0.0162, −0.0131] |
+| 123 | +0.0391 [0.0302, 0.0500] | +0.0081 [0.0043, 0.0121] | −0.0142 [−0.0155, −0.0131] |
+| 2026 | +0.0376 [0.0310, 0.0459] | +0.0108 [0.0073, 0.0162] | −0.0130 [−0.0143, −0.0116] |
+
+Across these three fixed splits, all 200-replicate percentile intervals were above zero for AUROC and AUPRC differences and below zero for Brier differences. The point estimates and intervals are conditional on the held-out split and depend on the reconstructed local fitting/scoring implementation. They do not establish clinical usefulness, reliable probabilities, or external generalization.
+
+**Source provenance remains open:** the feature-cache and score-generation scripts used locally were reconstructed from checked-in logic, not verified as byte-identical source. The bootstrap calculation was likewise run from a local reconstructed copy. See [aggregate-only bootstrap JSON](../results/full_AB_combined_paired_bootstrap_200x3_2026-10-14.json). All patient-level score archives remain outside Git.
