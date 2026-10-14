@@ -2,11 +2,18 @@
 from __future__ import annotations
 
 import random
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 import streamlit as st
 
 from vitalis.adaptive_twin import AdaptivePhysiologicalTwin, TwinConfig
+from vitalis.stream import Observation, TimestampedTwinStream
+
+UNITS = {
+    "heart_rate": "bpm", "spo2": "%", "respiratory_rate": "breaths/min",
+    "systolic_bp": "mmHg", "temperature": "degC",
+}
 
 st.set_page_config(page_title="VITALIS Twin Sandbox", page_icon="🧬", layout="wide")
 st.title("VITALIS · Adaptive Physiological Twin Sandbox")
@@ -23,6 +30,8 @@ rng = random.Random(seed)
 twin = AdaptivePhysiologicalTwin(
     config=TwinConfig(min_history=5, history_window=24, min_channels=2, min_systems=2)
 )
+stream = TimestampedTwinStream(twin, max_age_seconds=120)
+start = datetime(2026, 10, 14, tzinfo=timezone.utc)
 rows = []
 for step in range(36):
     drift = max(0, step - 23)
@@ -33,7 +42,10 @@ for step in range(36):
         "systolic_bp": rng.gauss(122 - 1.5 * drift, 3.0),
         "temperature": rng.gauss(36.8 + 0.06 * drift, 0.08),
     }
-    result = twin.update(observations)
+    timestamp = start + timedelta(minutes=step)
+    for channel, value in observations.items():
+        stream.ingest(Observation(channel, timestamp, value, UNITS[channel]))
+    result = stream.score(timestamp)
     rows.append({
         "step": step + 1,
         **observations,
