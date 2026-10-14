@@ -11,6 +11,7 @@
 - Each run uses patient-disjoint Set A partitions: approximately 60% train, 20% Platt calibration, 20% untouched Set A holdout. The model and preprocessing are fit on train only; Platt calibration is fit on the calibration partition only.
 - Set B is final evaluation only; no fitting, calibration, feature selection, or threshold selection on Set B. Thresholds 0.001, 0.005, 0.01, 0.05, 0.5 were predeclared descriptive points. Patient alert metrics are reported at calibrated thresholds 0.005 and 0.01.
 - Run time summed across nine independent invocations: 217.7 seconds. Captured model-fit warnings: 0.
+- **Source provenance limitation:** the runtime could not complete a clean Git checkout because GitHub DNS/network access was unavailable. This run used a locally reconstructed working copy of the runner, not a byte-identically verified checkout. CI validates the committed code/tests, but the full-cohort run is not claimed as an exact-source reproduction.
 - Raw data, caches, row-level predictions, and per-patient scores remain local. The committed JSON contains aggregate metrics only.
 
 ## Set B probability calibration
