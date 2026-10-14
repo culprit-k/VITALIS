@@ -97,3 +97,15 @@ The state cutoffs and persistence rules are configurable demonstration defaults.
 6. Only then specify hardware sampling rates, sensor interfaces, synchronization, compute, power, and enclosure requirements.
 
 All work remains research-only. Do not use this module for patient care.
+
+
+## Edge-case regression coverage (15 October 2026)
+
+The synthetic regression suite now explicitly covers:
+- flatline-like constant histories with channel-specific scale floors;
+- a single-channel spike that must not be absorbed into the rolling baseline;
+- multiple correlated channels mapped to one physiological system, ensuring aggregation remains system-weighted rather than channel-count-weighted;
+- rejection of channels without a system mapping;
+- per-channel stream freshness limits, missing/unknown freshness configuration, and future-dated samples.
+
+These tests establish expected software behavior on constructed examples only. They do not establish real-device signal quality, sensor-replacement handling, clinical cutoffs, or clinical validity. Sensor replacement/source-identity transitions and asynchronous multi-rate synchronization remain open engineering requirements before hardware work.
