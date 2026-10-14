@@ -34,3 +34,25 @@ def test_missingness_summary_is_aggregate_and_sorted():
     assert result["feature_count"] == 2
     assert result["overall_cell_missingness"] == pytest.approx(0.5)
     assert result["features"][0]["feature"] == "Lactate"
+
+
+def test_reliability_bins_use_original_probability_boundaries():
+    y = np.array([0, 1, 0, 1])
+    p = np.array([0.0, 1.0, 0.1, 0.9])
+    result = calibration_summary(y, p, bins=10)
+    assert result["brier_score"] == pytest.approx(0.005)
+    assert sum(row["count"] for row in result["reliability_bins"]) == len(y)
+    assert result["reliability_bins"][0]["bin_lower"] == 0.0
+    assert result["reliability_bins"][-1]["bin_upper"] == 1.0
+
+
+def test_calibration_summary_rejects_mismatched_lengths_and_nonfinite_values():
+    with pytest.raises(ValueError):
+        calibration_summary([0, 1], [0.2])
+    with pytest.raises(ValueError):
+        calibration_summary([0, 1], [0.2, np.nan])
+
+
+def test_missingness_summary_rejects_empty_frame():
+    with pytest.raises(ValueError):
+        missingness_summary(pd.DataFrame())
