@@ -226,3 +226,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Add paired patient-cluster uncertainty intervals for cross-cohort results using held-out set-B predictions, while keeping score vectors and patient group IDs outside Git. Preserve split-specific results and avoid treating three seed SDs as confidence intervals.
 - [ ] Audit subgroup performance and calibration without using set B to tune model or recalibrator. Suppress small cells and frame results as exploratory.
 - [ ] Document the final pre-specified evaluation protocol and obtain statistical/clinical governance review before any prospective or patient-facing study. VITALIS remains research-only.
+
+
+## Cross-cohort paired uncertainty pilot (14 October 2026)
+
+- [x] Generated local-only held-out Set B score archives for seeds 42, 123, and 2026; archives include labels, patient groups, and raw/recalibrated model scores and remain outside Git.
+- [x] Ran an exploratory paired patient-cluster bootstrap comparing temporal vs static models for raw and Set-A-validation-recalibrated probabilities (20 replicates per seed/stream).
+- [x] Committed aggregate-only pilot intervals: [JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_20x3_2026-10-14.json) and [report](CROSS_COHORT_RECALIBRATION_PILOT.md).
+- [ ] Upgrade the bootstrap to at least 1,000 replicates per seed/stream using an optimized implementation; current 20-replicate intervals are rough pilot estimates only.
+- [ ] Run score generation from an exact repository checkout and reconcile the aggregate results; current score-generation source identity remains unverified.
+- [ ] Continue with a pre-specified subgroup robustness audit, suppress small cells, and keep Set B out of all model/recalibrator/threshold tuning.
