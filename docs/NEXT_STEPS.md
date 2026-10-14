@@ -628,6 +628,6 @@ The next implementation layer has now been added on the existing research branch
 - [x] Extend \`scripts/validate_evaluation_lockfile.py\` to reject missing/placeholding cost policy, non-positive or non-finite costs, duplicate scenarios, and a candidate-selection rule that names Set B.
 - [x] Add regression tests for incomplete utility policy, Set-B threshold-selection language, and invalid cost assumptions.
 - [x] Update the independent evaluation protocol and README to describe the additional freeze requirements.
-- [ ] Confirm GitHub Actions passes after these changes and triage any failures before treating the gate as verified.
+- [x] GitHub Actions passed on code-bearing commit `4076ded6390ca7e63962ed024aa70ab41251f9fb` (run [38637843985](https://github.com/culprit-k/VITALIS/actions/runs/38637843985)): **167 tests passed**, repository-artifact hygiene passed, and the reachable-history scanner reported zero configured-pattern findings. The first run exposed an overly broad Set-B phrase check; it was corrected and the passing run verifies the fix.
 
 **Boundary:** the validator checks completeness and simple invariants only. It cannot establish that cost weights are medically defensible, that approvals are authentic, or that a model is safe. Keep the completed study lockfile private; do not use Set B for threshold selection. Independent review, a new cohort, clean-checkout reproduction, and governance approvals remain open.
