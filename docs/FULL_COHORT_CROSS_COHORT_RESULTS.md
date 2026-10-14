@@ -37,6 +37,28 @@ The exact-source run emitted expected scikit-learn warnings for Set-A-all-empty 
 
 The historical-versus-exact-source metric discrepancy and the independent recalibration-runner rerun are tracked in the [cross-cohort reproducibility reconciliation](CROSS_COHORT_REPRODUCIBILITY_RECONCILIATION.md). The root cause of the historical discrepancy remains unresolved because the prior reconstructed harness did not preserve sufficient source/split provenance; both result artifacts remain available and the historical file has not been overwritten.
 
+## Exact-source paired patient-cluster bootstrap
+
+The checked-in evaluator now supports an opt-in `--local-score-archive-dir` flag. When requested, it writes paired row-level Set-B labels, synthetic patient-group indices, and static/temporal probabilities to compressed NPZ files in a directory that is validated to be **outside the repository**. The default remains aggregate-only JSON output. These NPZ archives are local-only and must never be committed.
+
+The exact checked-in evaluator source was verified by Git blob SHA and run for seeds 42, 123, and 2026 to generate local-only held-out scores. The checked-in `scripts/bootstrap_heldout_scores.py` was then executed against each score archive for 200 paired patient-cluster bootstrap replicates per seed. Aggregate-only results are in [the exact-source bootstrap JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json).
+
+| Set-A training split | Metric | Mean bootstrap difference (temporal − static) | 95% percentile interval |
+|---:|---|---:|---:|
+| 42 | AUROC | +0.05751 | +0.05008 to +0.06419 |
+| 42 | AUPRC | +0.01347 | +0.01120 to +0.01613 |
+| 42 | Brier score | −0.06412 | −0.06511 to −0.06316 |
+| 123 | AUROC | +0.05568 | +0.04785 to +0.06355 |
+| 123 | AUPRC | +0.01266 | +0.01030 to +0.01533 |
+| 123 | Brier score | −0.06693 | −0.06803 to −0.06609 |
+| 2026 | AUROC | +0.05731 | +0.05092 to +0.06400 |
+| 2026 | AUPRC | +0.01203 | +0.00999 to +0.01504 |
+| 2026 | Brier score | −0.07495 | −0.07597 to −0.07404 |
+
+These are conditional, split-specific intervals over Set B patients. The bootstrap resamples patients rather than individual hourly rows, preserving within-patient row clustering. **Only 200 replicates were completed per split**; the exact-source 1,000-replicate attempt exceeded the execution window, so no 1,000-replicate result is claimed. The 200-replicate intervals are preliminary and should be treated as such.
+
+Across these three splits, the temporal model had higher AUROC and AUPRC and lower Brier score in this benchmark experiment. This does not establish clinical benefit, clinical calibration, lead time, patient-event sensitivity, or real-world alert burden. Set B remains evaluation-only. Score archives and all row-level outputs remain outside Git.
+
 ## Interpretation
 
 In this first cross-cohort experiment, temporal features ranked positive hourly challenge-label rows better than static features on set B (higher AUROC and AUPRC). At the fixed 0.5 threshold, however, the temporal model had **lower sensitivity** and higher specificity; neither threshold was selected for clinical use. The Brier scores also differ substantially and require calibration and distribution-shift analysis before they can be interpreted as reliable probabilities. These results are a reason to investigate further, not proof of clinical utility.
@@ -59,5 +81,8 @@ python scripts/evaluate_cross_cohort.py \
   --set-a-cache /path/to/cache-A \
   --set-b-cache /path/to/cache-B \
   --seeds 42 123 2026 \
-  --output /path/to/cross-cohort-results.json
+  --output /secure/local/path/cross-cohort-results.json
+
+# Optional, for local paired patient-cluster bootstrap only:
+# --local-score-archive-dir /secure/local/path/heldout-score-archives
 ```
