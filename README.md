@@ -61,6 +61,8 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 
 ## Research provenance
 
+- [Plain-language project status](docs/PROJECT_STATUS.md) summarizes the current stage, what the retrospective results do and do not show, the remaining release gates, and the next steps.
+
 - [Local experiment history](docs/LOCAL_EXPERIMENTS.md) records prior exploratory runs and their limitations.
 - [Aggregate dataset inventory](results/dataset_inventory.json) records the verified local archive counts for training sets A and B; no raw or patient-level data are stored here.
 - [Multi-seed experiment runner](scripts/run_experiment_suite.py) supports reproducible static-versus-temporal comparisons across patient-level split seeds.
