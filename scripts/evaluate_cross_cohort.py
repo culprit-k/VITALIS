@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Cross-cohort VITALIS evaluation: train on Challenge 2019 set A, test on set B.
 
-Input caches are local derived data. Only aggregate metrics are written to output.
+Input caches are local derived data. Default JSON output is aggregate-only.
+Optional row-level score archives are allowed only in a caller-selected directory
+outside the repository; never commit those local NPZ archives.
 """
 from __future__ import annotations
 import argparse, json, time, warnings
@@ -123,6 +125,6 @@ def main():
             aggregate[name][metric]={'mean':float(np.mean(vals)),'sample_sd_across_seeds':float(np.std(vals,ddof=1)) if len(vals)>1 else None,'by_seed':{str(r['seed']):r['models'][name]['test_metrics'][metric] for r in runs}}
     result={'project':'VITALIS','run_type':'cross_cohort_train_A_test_B','dataset':{'training_setA':{'patients':ma['patient_count'],'hourly_rows':ma['row_count'],'positive_hourly_labels':int(ya.sum())},'training_setB':{'patients':mb['patient_count'],'hourly_rows':mb['row_count'],'positive_hourly_labels':int(yb.sum())}},
         'protocol':{'seeds':args.seeds,'split_unit':'patient','set_a_train_fraction':0.6,'set_a_holdout_fraction':0.4,'set_b_test':'all patients in training_setB','feature_sets':['static baseline fields','temporal lag/delta/trailing-six-row features'],'model':'median imputation with missingness indicators, standard scaling, balanced logistic regression (max_iter=150, tol=1e-3)','threshold':0.5,'threshold_note':'fixed research comparison only; not clinically selected','sd_note':'Across A training subsamples, not a confidence interval','test_predictions_exported':False,'local_score_archive_written':score_archive_dir is not None,'local_score_archive_note':'Optional paired row-level scores are written only to a caller-selected directory outside the repository; the JSON remains aggregate-only'},
-        'runs':runs,'aggregate_metrics':aggregate,'elapsed_seconds':round(time.time()-started,3),'limitations':['Retrospective evaluation on the official Challenge 2019 training cohorts; set B is a separate cohort but not external prospective clinical validation','Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world clinical false-alarm rates','A patient-level 60/40 training/unused-holdout split is used; no calibration or threshold tuning is performed','The fixed 0.5 threshold is not a clinically selected operating point','No patient-level predictions, IDs, or raw patient data are written to output']}
+        'runs':runs,'aggregate_metrics':aggregate,'elapsed_seconds':round(time.time()-started,3),'limitations':['Retrospective evaluation on the official Challenge 2019 training cohorts; set B is a separate cohort but not external prospective clinical validation','Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world clinical false-alarm rates','A patient-level 60/40 training/unused-holdout split is used; no calibration or threshold tuning is performed','The fixed 0.5 threshold is not a clinically selected operating point','Aggregate JSON contains no patient-level predictions, IDs, or raw patient data; optional NPZ score archives are local-only and outside the repository']}
     args.output.parent.mkdir(parents=True,exist_ok=True); args.output.write_text(json.dumps(result,indent=2)+'\n'); print('Wrote aggregate-only output',args.output,flush=True)
 if __name__=='__main__': main()
