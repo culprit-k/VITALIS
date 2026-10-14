@@ -19,6 +19,8 @@ In the 500-patient exploratory sample, the static model had the best mean AUROC 
 
 ## Phase 2 status: exploratory analysis complete; exact runner reconciliation open
 
+Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). The analytical work is complete; the exact canonical-runner comparison remains a documented reproducibility exception.
+
 - [x] Added aggregate calibration and predictor-missingness helper functions with unit tests: [Phase 2 plan](PHASE2_PLAN.md).
 - [x] GitHub Actions passed for the Phase 2 helper tests and runner (latest verified run: https://github.com/culprit-k/VITALIS/actions/runs/38549292731).
 - [ ] Execute the canonical repository runner on the local dataset and reconcile its output with the committed aggregate artifact; the local environment cannot resolve GitHub source hosts, so the equivalent local run is not an exact reconciliation.
