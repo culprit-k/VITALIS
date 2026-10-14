@@ -125,3 +125,16 @@ The source-run output remained outside the repository at `/mnt/data/vitalis-loca
 Reconciliation against the existing aggregate artifact found exact agreement for cohort counts and record-length summaries, and agreement within (10^{-12}) for all 11 features' overall patient availability and unadjusted ever-positive-label rates by feature availability. The duration-stratum patient counts and positive-label rates also matched; displayed duration-specific availability rates matched at the report's stated precision. The aggregate JSON records this reproduction check and its provenance.
 
 This closes the **local exact-source reproduction** item for the patient-level audit. It does not establish a full Git checkout of the repository, explain the cause of cohort shifts, or provide inferential or clinical validation. Set B remained evaluation-cohort characterization only. The source-run output, caches, patient identifiers, and row-level data remain outside Git.
+
+
+## Cohort provenance clarified from the original Challenge paper
+
+The original Challenge paper identifies the public cohorts as two distinct hospital systems using different electronic medical record (EMR) systems: hospital system A is Beth Israel Deaconess Medical Center, and hospital system B is Emory University Hospital. A third, unidentified hospital system supplied censored data for hidden testing. The paper reports 20,336 patients from system A and 20,000 from system B, matching the Set A and Set B cohort sizes in this audit. See the [original Challenge paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC6964870/) and the [official PhysioNet dataset page](https://physionet.org/content/challenge-2019/1.0.0/).
+
+The paper also reports that hourly records were derived from EMR data, that missing and erroneous values were intentionally retained, and that measurement density/distributions were examined across the shared hospital systems. It describes exclusions for very short ICU records and sepsis timing near ICU admission, and truncation after ICU discharge or at two weeks. These documented cohort and preprocessing choices make hospital/system domain shift a well-grounded concern, rather than a purely speculative possibility.
+
+**What this clarifies:** Set A and Set B are not interchangeable random splits from one hospital population; they represent different hospital systems/EMR environments. The observed DBP, HCO3/BaseExcess, and EtCO2 availability differences are consistent with cohort/site measurement differences.
+
+**What it still does not establish:** the exact clinical ordering or documentation practice responsible for each feature shift, whether patient-mix differences explain some of the shift, or whether any feature's missingness mechanism is MCAR, MAR, or MNAR. Our analysis is descriptive and unadjusted. We do not claim a causal hospital effect, independent prediction from availability, or clinical utility.
+
+This source review does not change the evaluation protocol: Set A may inform training-fold-only feature eligibility, while Set B remains evaluation-only. A final policy must be frozen without using Set B metrics to choose features or settings.
