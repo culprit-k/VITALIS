@@ -15,7 +15,8 @@
 - [x] Add a deterministic subset runner and tests for sample-size validation and repeatable patient-file sampling.
 - Confirm that file ordering is chronological and that temporal features are calculated within patient only.
 - Ensure a single shared sampled cohort and identical patient splits for all model variants.
-- [ ] Add explicit regression tests for all-missing feature exclusion in the model-fitting path, feature alignment, and chronological ordering.
+- [x] Add regression tests for training-fold all-missing feature exclusion and deterministic subset sampling.
+- [ ] Add further explicit tests for feature alignment and chronological ordering.
 
 ### 2. Rerun the baseline experiment reproducibly
 - [x] Add `scripts/run_subset_experiment.py` for a deterministic patient-level subset comparison; run it locally and keep aggregate-only outputs.
