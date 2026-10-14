@@ -112,3 +112,16 @@ These are crude comparisons, not adjusted associations. â€œEver-positive labelâ€
 5. Do not describe this analysis as clinical validation, a missingness-mechanism test, or evidence of clinical utility.
 
 The aggregate JSON contains only cohort-level counts and rates. Raw records, patient IDs, caches, and row-level predictions remain outside Git.
+
+
+## Exact-source reproduction check (14 October 2026)
+
+The duration-stratified audit was rerun against the local Set A and Set B feature caches using the exact checked-in script bytes. The local script's Git blob SHA was verified as `d745b47febb2bb0f28edb36fb289a51ae4523b1d`, matching the source blob on `work/exact-checkout-reproduction`. The committed regression test file's blob SHA was also verified as `f8ff12908c845460c38bc4c45710ddc6de076aea`; the exact checked-in tests passed locally (3 passed).
+
+The source-run output remained outside the repository at `/mnt/data/vitalis-local/patient_level_audit_committed_script_rerun.json` (SHA-256 `dadc3d1ce8c4950f7221861e038ac8151c7d121ce7a6febc8b8ec007497e4629`). It reproduced the cohort totals:
+- Set A: 20,336 patients, 790,215 hourly rows, 1,790 patients with any positive hourly challenge label; median/p90 record lengths 39/55 hours.
+- Set B: 20,000 patients, 761,995 hourly rows, 1,142 patients with any positive hourly challenge label; median/p90 record lengths 38/54 hours.
+
+Reconciliation against the existing aggregate artifact found exact agreement for cohort counts and record-length summaries, and agreement within (10^{-12}) for all 11 features' overall patient availability and unadjusted ever-positive-label rates by feature availability. The duration-stratum patient counts and positive-label rates also matched; displayed duration-specific availability rates matched at the report's stated precision. The aggregate JSON records this reproduction check and its provenance.
+
+This closes the **local exact-source reproduction** item for the patient-level audit. It does not establish a full Git checkout of the repository, explain the cause of cohort shifts, or provide inferential or clinical validation. Set B remained evaluation-cohort characterization only. The source-run output, caches, patient identifiers, and row-level data remain outside Git.
