@@ -205,3 +205,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Add a parameterized checked-in runner for the exact train/validation/test protocol and regression tests proving patient separation and that set B is never used to fit calibration.
 - [ ] Run that committed runner from an exact repository checkout and reconcile aggregate results; current local harness source identity is unverified.
 - [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
+
+
+
+## Cross-cohort recalibration runner implementation (14 October 2026)
+
+- [x] Added `scripts/evaluate_cross_cohort_recalibration.py` with explicit cache/seed/output arguments, patient-disjoint 60/20/20 set-A partitions, validation-only Platt fitting, chunked set-B scoring, and aggregate-only output.
+- [x] Added `tests/test_cross_cohort_recalibration.py` for patient isolation, deterministic splits, validation-only recalibrator inputs, invalid-input handling, and aggregate-only metrics.
+- [x] Documented the reproduction command in [the cross-cohort recalibration report](CROSS_COHORT_RECALIBRATION_PILOT.md).
+- [ ] GitHub Actions checks for the new runner and tests are pending; confirm both are green before treating the implementation milestone as complete.
+- [ ] Execute the checked-in runner from an exact repository checkout against local set-A/set-B caches and reconcile its aggregate output against the prior reconstructed-harness artifact. Do not claim exact source reproduction until that run is performed.
