@@ -566,3 +566,16 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before considering a research release.
 
 **Boundary:** the guard reduces the chance of accidentally adding row-level data or score archives in future commits; it is not a substitute for secret scanning, history review, data governance, or clinical validation.
+
+
+## Phase 12: historical repository privacy audit (15 October 2026)
+
+- [x] Add scripts/audit_git_history.py to scan all commits/blobs reachable from local refs for historical data/artifact paths, oversized blobs, and high-confidence credential patterns without printing matched secret values.
+- [x] Add regression tests for a deleted data-file path, a synthetic credential pattern, an oversized historical blob, shallow-clone rejection, and invalid repository roots.
+- [x] Configure CI checkout to fetch full history and run the audit alongside the current-tree hygiene guard.
+- [x] Document scope, safe triage, and incident-response boundaries in [Git-history privacy audit](GIT_HISTORY_PRIVACY_AUDIT.md).
+- [ ] Confirm CI audit output and triage any findings before claiming the history is clean. A scan failure may represent historical paths or oversized files requiring review, not necessarily a credential leak.
+- [ ] Complete a separate manual/GitHub security review; the scanner is heuristic and does not replace provider secret scanning.
+- [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before any research release.
+
+**Boundary:** this tooling is a preventive/detection gate. It does not prove that sensitive data was never exposed, and it does not change or rewrite repository history automatically.
