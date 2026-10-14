@@ -71,6 +71,8 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 - [VITALIS-PB algorithm specification](docs/VITALIS_PB_ALGORITHM.md) defines the causal patient-baseline deviation features and their limitations.
 - [Next steps and research roadmap](docs/NEXT_STEPS.md) lists pipeline fixes, reproducible validation, external validation, and IP safeguards.
 - [Full-cohort rerun report](docs/FULL_COHORT_RERUN.md) and [aggregate JSON](results/full_cohort_rerun_2026-10-14.json) record the latest local rerun, with implementation provenance and limitations.
+- [Combined A+B cohort evaluation](docs/FULL_AB_COMBINED_RESULTS.md) reports a patient-disjoint three-seed comparison using all 40,336 patients from both official training sets; [aggregate results](results/full_AB_combined_multiseed_2026-10-14.json).
+- [Train-A/test-B cross-cohort evaluation](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) separately tests generalization across the benchmark's two cohorts.
 
 ## Development status
 
