@@ -115,3 +115,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 
 - [x] Committed aggregate-only paired patient-cluster bootstrap results for seeds 42, 123, and 2026. Temporal AUROC differences were positive across all three seeds; Brier differences were negative; AUPRC interval crossed zero for seed 123. See [report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
 - [ ] Increase bootstrap replicates to at least 200–1,000 and verify the checked-in source bytes are the ones actually executed before treating the intervals as final research results.
+
+
+## 200-replicate paired bootstrap milestone (2026-10-14)
+
+- [x] Completed 200 paired patient-cluster bootstrap replicates for each held-out split seed 42, 123, and 2026 using an optimized local working copy and the full-cohort feature cache.
+- [x] Updated [the bootstrap report](FULL_COHORT_PAIRED_BOOTSTRAP.md) and [aggregate JSON](../results/full_cohort_paired_patient_cluster_bootstrap_2026-10-14.json). Temporal-minus-static AUROC intervals were above zero for all three seeds; Brier differences were below zero; AUPRC interval crossed zero for seed 123.
+- [ ] The exact checked-in evaluator source was not byte-identically executed; local implementation used a performance-optimized weighted-metric implementation. Source-byte identity remains open.
+- [ ] Port and test the optimized tie-aware weighted metrics in the checked-in evaluator, then run CI and verify numerical agreement against this aggregate artifact before claiming repository-native reproducibility.
+- [ ] These are retrospective hourly challenge-label metrics only; external validation and clinical/statistical governance review remain required.
