@@ -91,3 +91,45 @@ def test_invalid_configuration_is_rejected():
         pass
     else:
         raise AssertionError("ewma_alpha=0 should be rejected")
+
+
+def test_cusum_detects_gradual_multisystem_shift():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "spo2", "respiratory_rate"],
+        config=TwinConfig(
+            min_history=3, history_window=12, min_channels=2, min_systems=2,
+            min_coverage=0.5, cusum_allowance=0.25, cusum_threshold=2.0,
+        ),
+    )
+    for heart_rate, spo2, respiratory_rate in [(68, 97, 14), (70, 98, 15), (72, 99, 16)]:
+        t.update({
+            "heart_rate": heart_rate,
+            "spo2": spo2,
+            "respiratory_rate": respiratory_rate,
+        })
+    result = None
+    for heart_rate, spo2, respiratory_rate in [
+        (73, 97.7, 16.5), (74, 97.4, 17), (75, 97.1, 17.5),
+    ]:
+        result = t.update({
+            "heart_rate": heart_rate,
+            "spo2": spo2,
+            "respiratory_rate": respiratory_rate,
+        })
+    assert result is not None
+    assert result["channels"]["heart_rate"]["cusum_triggered"] is True
+    assert result["channels"]["respiratory_rate"]["cusum_triggered"] is True
+    assert result["state"] == "cumulative_multisystem_shift"
+    assert result["channels"]["heart_rate"]["baseline_updated"] is False
+
+
+def test_reference_baseline_remains_separate_from_rolling_baseline():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "spo2"],
+        config=TwinConfig(min_history=2, history_window=4, min_channels=2, min_systems=2),
+    )
+    t.update({"heart_rate": 68, "spo2": 97})
+    t.update({"heart_rate": 72, "spo2": 99})
+    result = t.update({"heart_rate": 70, "spo2": 98})
+    assert result["channels"]["heart_rate"]["reference_baseline"] == 70
+    assert result["channels"]["heart_rate"]["baseline"] == 70
