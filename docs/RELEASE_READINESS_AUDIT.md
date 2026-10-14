@@ -73,3 +73,18 @@ This checklist assesses readiness for a **research-code release**, not for clini
 - [ ] Obtain independent clinical/statistical review of label semantics, cost scenarios, calibration interpretation, and any proposed frozen policy. A new independent cohort and applicable governance/ethics approvals are required before external or prospective evaluation.
 
 **Decision remains unchanged:** research-code gates are improving, but clean-checkout reproduction and independent review remain open. Keep PR #1 draft and unmerged; do not interpret CI success as clinical validation.
+
+
+## Follow-up checkpoint: utility bootstrap and current CI (15 October 2026)
+
+- [x] Completed the Set-A-only utility-bootstrap uncertainty run: 9 seed × horizon runs, 18 static/temporal model fits, 200 patient-cluster replicates per fit (3,600 total), 151.741 seconds summed runtime, and zero captured fit warnings.
+- [x] Added [utility bootstrap results](HORIZON_UTILITY_BOOTSTRAP_RESULTS_2026-10-15.md) and [aggregate-only summary](../results/horizon_utility_bootstrap_summary_2026-10-15.json). Set B was not loaded or used in this run; no row-level predictions were committed.
+- [x] Recorded the reconstructed local runner/module/cache-metadata SHA-256 values and environment versions. This improves traceability but does **not** establish byte-identical execution of checked-in source.
+- [x] Verified GitHub Actions on code-bearing PR head 86776762479dd450e20821da8e6f0b50c482e21d (run [38639673606](https://github.com/culprit-k/VITALIS/actions/runs/38639673606)): 170 tests passed, compile succeeded, repository-artifact hygiene passed, and the synthetic stream smoke test passed.
+- [x] The reachable-history scanner reported zero configured-pattern findings across 563 commits and 544 unique blobs in the refs fetched by that CI run. This is a heuristic scan of fetched refs, not proof that sensitive data was never exposed; independent provider secret scanning and manual triage remain appropriate.
+- [x] The available reconstructed local suite passed 28 tests with \`PYTHONPATH=src\`; the aggregate-only output was schema-checked and verified to contain 9 runs, 18 fits, 3,600 replicates, zero fit warnings, and no Set-B use.
+- [ ] Complete a clean local checkout and fresh-cache full-cohort reproduction. Runtime DNS/network failure still prevents this; the CI checkout does not substitute for reproducing official-cohort results from fresh local caches.
+- [ ] Obtain independent qualified clinical/statistical review of target semantics, cost assumptions, calibration, and alert burden. No clinical threshold is approved.
+- [ ] Obtain applicable governance/ethics and data-protection determinations and a genuinely new independent cohort with independently defined/adjudicated event timing before external or prospective evaluation.
+
+**Decision:** the software and automated repository gates have advanced, but clean-checkout reproducibility, independent review, independent-cohort evaluation, and governance remain open. Keep PR #1 draft and unmerged. VITALIS remains research-only and must not guide patient care.
