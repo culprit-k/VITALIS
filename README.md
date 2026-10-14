@@ -124,3 +124,8 @@ The independent-evaluation protocol now has a machine-checkable scaffold: `confi
 ### Repository data-artifact hygiene
 
 CI runs \`scripts/check_repository_hygiene.py\` to reject common row-level data/cache/model-artifact file extensions and files larger than 5 MiB in the current working tree. This is a preventive current-tree check only; it does not scan Git history or replace secret scanning, data-governance review, or a manual privacy audit.
+
+
+### Historical repository privacy audit
+
+The current-tree guard is complemented by a full-history scanner: see [Git-history privacy audit](docs/GIT_HISTORY_PRIVACY_AUDIT.md) and run python scripts/audit_git_history.py from a complete clone with all relevant refs fetched. It reports artifact paths, oversized blobs, and high-confidence credential-pattern matches without printing credential values. Findings require human triage; a clean scan is not proof of no prior exposure.
