@@ -363,3 +363,14 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Completed 1,000 valid paired patient-cluster bootstrap replicates for each of seeds 42, 123, and 2026, for both raw and Set-A-validation-Platt-recalibrated probabilities. Aggregate-only results: [1,000-replicate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md). Row-level score archives and chunk differences remain outside Git.
 - [x] GitHub Actions test workflow passed on code-bearing head `da7d33a43c363f24c48f77eb6ca79576175fdce9` (run https://github.com/culprit-k/VITALIS/actions/runs/38606538416), including the accelerated bootstrap tests. Audit the complete PR diff before marking it ready for review.
 - [ ] Exact clean Git checkout provenance, independent methodological review, and Set-A-only justification for the exploratory feature-coverage threshold remain open. Set B stays evaluation-only; no clinical validation claim is supported.
+
+
+## Release-readiness checkpoint after 1,000-replicate analysis (14 October 2026)
+
+- [x] Exact-source raw and recalibrated uncertainty analysis completed at 1,000 replicates for each of seeds 42, 123, and 2026; aggregate JSON and interpretation report are committed.
+- [x] GitHub Actions test workflow passed on code-bearing commit `da7d33a43c363f24c48f77eb6ca79576175fdce9` (run https://github.com/culprit-k/VITALIS/actions/runs/38606538416). Subsequent changes are documentation-only.
+- [x] Repository-diff privacy audit: 34 changed files consist of scripts, tests, docs, workflow configuration, and aggregate JSON. No raw score archives, patient-level cache files, or PSV/CSV/parquet data files are included.
+- [x] README links the final cross-cohort report and uncertainty analysis and explains the optional acceleration dependency.
+- [ ] Obtain a full clean Git checkout and rerun the reproduction commands from that checkout when network/DNS access permits; current source-byte identity was verified through Git blob hashes, not a successful full clone.
+- [ ] Obtain independent clinical/statistical review of the cross-cohort interpretation and exploratory Set-A feature-coverage policy. Do not call the 5% cutoff optimal or clinically justified.
+- [ ] Keep PR #1 draft and unmerged until the clean-checkout/release review is complete. VITALIS remains research-only; prospective external validation and clinical oversight would be required before any clinical-use claim.
