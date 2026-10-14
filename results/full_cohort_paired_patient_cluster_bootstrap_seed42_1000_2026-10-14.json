@@ -1,0 +1,59 @@
+{
+  "project": "VITALIS",
+  "run_type": "full_cohort_paired_patient_cluster_bootstrap_seed42_1000",
+  "dataset": {
+    "patients": 20336,
+    "hourly_rows": 790215,
+    "positive_hourly_labels": 17136
+  },
+  "split": {
+    "seed": 42,
+    "train_patients": 13014,
+    "validation_patients": 3254,
+    "test_patients": 4068,
+    "test_rows": 159102,
+    "positive_test_hourly_labels": 3411
+  },
+  "method": "Paired patient-cluster percentile bootstrap with patient multiplicity weights; batched exact tie-aware weighted AUROC, average precision, and Brier score.",
+  "bootstrap": {
+    "replicates_requested": 1000,
+    "replicates_valid": 1000,
+    "seed": 90042
+  },
+  "temporal_minus_static": {
+    "auroc": {
+      "mean_bootstrap_difference": 0.025002562812489967,
+      "ci_95_percentile": [
+        0.015042657485109398,
+        0.03513852284625876
+      ]
+    },
+    "auprc": {
+      "mean_bootstrap_difference": 0.0070074911163042495,
+      "ci_95_percentile": [
+        0.002192494794686528,
+        0.01543206461386218
+      ]
+    },
+    "brier_score": {
+      "mean_bootstrap_difference": -0.008856331719573077,
+      "ci_95_percentile": [
+        -0.010750265406178362,
+        -0.00706440161527564
+      ]
+    }
+  },
+  "elapsed_bootstrap_seconds": 28.187007665634155,
+  "provenance": {
+    "heldout_scores_generated_by": "local working copy reconstructed from checked-in evaluator logic; not byte-identical source checkout",
+    "bootstrap_method": "batched implementation; metric parity spot-checked against checked-in weighted metric function on tied-score samples",
+    "score_vectors_committed": false,
+    "patient_level_predictions_committed": false
+  },
+  "interpretation": "Conditional uncertainty for this held-out split and retrospective hourly challenge labels only; not external validation or clinical event-level performance.",
+  "limitations": [
+    "Only seed 42 has 1,000 completed bootstrap replicates in this artifact; seeds 123 and 2026 remain at 200 replicates each.",
+    "Source-byte identity for model fitting and held-out score generation remains unverified.",
+    "No external/prospective validation; threshold 0.5 is not a clinically selected operating point."
+  ]
+}
