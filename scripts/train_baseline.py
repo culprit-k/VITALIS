@@ -20,7 +20,7 @@ from sklearn.model_selection import GroupShuffleSplit
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from vitalis.features import add_temporal_features
+from vitalis.features import add_patient_baseline_features
 from vitalis.validation import assert_disjoint_patient_splits
 
 TARGET = "SepsisLabel"
@@ -39,7 +39,7 @@ MEASUREMENTS = [
 ]
 
 
-def load_patient_rows(data_dir: Path, temporal: bool) -> tuple[pd.DataFrame, pd.Series, pd.Series, list[str]]:
+def load_patient_rows(data_dir: Path, temporal: bool, personalized: bool = False) -> tuple[pd.DataFrame, pd.Series, pd.Series, list[str]]:
     """Load per-patient PSV files into a preallocated float32 matrix.
 
     Preallocation avoids retaining tens of thousands of separate DataFrames,
@@ -55,6 +55,13 @@ def load_patient_rows(data_dir: Path, temporal: bool) -> tuple[pd.DataFrame, pd.
     if temporal:
         for column in temporal_sources:
             feature_names.extend([f"{column}_lag1", f"{column}_delta1", f"{column}_rollmean6"])
+    if personalized:
+        for column in temporal_sources:
+            feature_names.extend([
+                f"{column}_personal_baseline",
+                f"{column}_personal_deviation",
+                f"{column}_personal_z",
+            ])
 
     # Count rows without parsing each file into a DataFrame first.
     row_counts = []
@@ -90,6 +97,21 @@ def load_patient_rows(data_dir: Path, temporal: bool) -> tuple[pd.DataFrame, pd.
         local = np.full((len(frame), len(feature_names)), np.nan, dtype=np.float32)
         for column in present:
             local[:, feature_names.index(column)] = x[column].to_numpy(dtype=np.float32)
+
+        if personalized:
+            available_personal_sources = [column for column in temporal_sources if column in x.columns]
+            if available_personal_sources:
+                personal_input = x[available_personal_sources].copy()
+                personal_input["__patient__"] = patient_code
+                personal_features = add_patient_baseline_features(
+                    personal_input,
+                    patient_col="__patient__",
+                    value_cols=available_personal_sources,
+                )
+                for column in available_personal_sources:
+                    for suffix in ("personal_baseline", "personal_deviation", "personal_z"):
+                        name = f"{column}_{suffix}"
+                        local[:, feature_names.index(name)] = personal_features[name].to_numpy(dtype=np.float32)
 
         if temporal:
             for column in temporal_sources:
@@ -286,8 +308,8 @@ def observed_training_features(X_train: pd.DataFrame) -> tuple[list[str], list[s
     return observed, dropped
 
 
-def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[str, object]:
-    X, y, groups, features = load_patient_rows(data_dir, temporal)
+def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42, personalized: bool = False) -> dict[str, object]:
+    X, y, groups, features = load_patient_rows(data_dir, temporal, personalized)
     first_split = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=seed)
     train_val_idx, test_idx = next(first_split.split(X, y, groups))
     X_train_val, y_train_val, groups_train_val = X.iloc[train_val_idx], y.iloc[train_val_idx], groups.iloc[train_val_idx]
@@ -319,7 +341,13 @@ def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[s
     return {
         "project": "VITALIS",
         "model": "logistic_regression_with_median_imputation_and_standard_scaling",
-        "feature_mode": "temporal" if temporal else "static_baseline",
+        "feature_mode": (
+            "personalized_baseline_deviation" if personalized
+            else "temporal" if temporal
+            else "static_baseline"
+        ),
+        "personal_baseline_features_enabled": personalized,
+        "personal_baseline_min_history": 3 if personalized else None,
         "seed": seed,
         "patient_counts": {"train": len(train_groups), "validation": len(val_groups), "test": len(test_groups)},
         "row_counts": {"train": int(len(train_idx)), "validation": int(len(val_idx)), "test": int(len(test_idx))},
@@ -347,10 +375,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("data_dir", type=Path, help="Local directory of per-patient PSV files")
     parser.add_argument("--temporal", action="store_true", help="Add causal lag/delta/trailing mean features")
+    parser.add_argument(
+        "--personalized",
+        action="store_true",
+        help="Add causal patient-baseline deviation features (experimental research only)",
+    )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--output", type=Path, required=True, help="Aggregate metrics JSON path")
     args = parser.parse_args()
-    report = train_and_evaluate(args.data_dir, args.temporal, args.seed)
+    report = train_and_evaluate(args.data_dir, args.temporal, args.seed, args.personalized)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in report.items() if k != "features" and k != "limitations"}, indent=2))
