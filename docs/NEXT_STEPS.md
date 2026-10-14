@@ -285,3 +285,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Confirm GitHub Actions on the current PR head before treating this step as CI-verified.
 - [ ] When feasible, compare the CLI's aggregate output against the previously recorded audit JSON using local caches; keep raw caches and all row-level data outside Git.
 - [ ] This audit is descriptive only. Do not use Set B to select features, tune models, or choose thresholds; no clinical validity or utility claim follows.
+
+## Patient-level feature-availability and missingness-pattern audit (14 October 2026)
+
+- [x] Added `scripts/audit_patient_level_availability.py` to aggregate feature availability by patient from local caches; it validates dimensions, group counts, and contiguous patient slices.
+- [x] Added regression tests for patient-level aggregation and invalid cache layouts: `tests/test_patient_level_availability_audit.py`.
+- [x] Recorded aggregate results and interpretation limits: [patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and [aggregate JSON](../results/patient_level_feature_availability_audit_2026-10-14.json).
+- [x] Observed marked patient-level coverage shifts: DBP 63.69% of Set-A patients vs 99.87% Set B; HCO3 97.37% vs 2.08%; BaseExcess 62.21% vs 2.79%; EtCO2 0% vs 16.08%. Respiratory rate availability was similar (~99.8%) across both cohorts.
+- [x] Reported unadjusted differences in patient-level any-positive-label rates by feature availability as descriptive only; these do not identify missingness mechanisms or establish causality.
+- [ ] Investigate source documentation and cohort/site workflow context before attributing the shifts to measurement practices, severity, or missingness mechanisms. Do not use Set B to tune models or select features.
+- [ ] Confirm GitHub Actions for the latest branch head. No patient-level records, identifiers, or predictions are committed; VITALIS remains research-only.
