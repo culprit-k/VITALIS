@@ -9,6 +9,8 @@
 - On this one held-out sample, temporal features increased AUROC by about 0.0119 and lowered Brier score by about 0.0186, but average precision decreased by about 0.0092. This mixed result does not establish that temporal features are better overall.
 - The run was executed locally against the current intended protocol, but it is not an execution from GitHub Actions and not a full-cohort evaluation.
 
+- [x] Implemented the first VITALIS-PB patient-baseline deviation feature generator and integrated a third model into the matched comparison. See [algorithm specification](VITALIS_PB_ALGORITHM.md). CI and data-backed model evaluation are still required before interpreting performance.
+
 ## Prioritized plan
 
 ### 1. Fix and test data/model pipeline details
@@ -39,6 +41,8 @@
 - Seek clinical/statistical supervision and an appropriate ethics/data-governance review before any prospective or patient-facing study.
 
 ### 5. Innovation and IP
+- [x] Define and implement a first mathematical patient-baseline deviation hypothesis as an experimental feature generator.
+- [ ] Evaluate whether it adds value over static and temporal baselines on identical splits with paired patient-cluster uncertainty.
 - Keep the patient-specific baseline concept as a hypothesis until prior-art review and technical differentiation are documented.
 - Do not make novelty, patentability, regulatory approval, or clinical efficacy claims based on these internal experiments.
 
