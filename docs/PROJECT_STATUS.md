@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `d0139876e6e958ca31cc463fc5950fc495e00638` (duplicate report removed; full-cohort aggregate JSON and report links recorded). The patient-bootstrap performance optimization passed CI with 120 tests.
+**Latest branch head checked during this update:** `b4b7e66e12caeca693b0a145c2d58223fbde9637` (result provenance and report links recorded). GitHub Actions run #540 passed with 120 tests: https://github.com/culprit-k/VITALIS/actions/runs/38618088465.
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
