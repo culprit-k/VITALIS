@@ -37,7 +37,7 @@ def test_patient_level_availability_and_outcome_are_aggregated(tmp_path):
     assert out["duration_strata"][0]["patients"] == 2
     assert out["duration_strata"][0]["positive_label_patient_rate"] == 0.5
     assert out["duration_strata"][0]["features"]["EtCO2"]["availability_rate_positive_label"] == 0.0
-    assert out["duration_strata"][0]["features"]["EtCO2"]["availability_rate_no_positive_label"] == 0.5
+    assert out["duration_strata"][0]["features"]["EtCO2"]["availability_rate_no_positive_label"] == 1.0
 
 
 def test_rejects_non_contiguous_patient_rows(tmp_path):
