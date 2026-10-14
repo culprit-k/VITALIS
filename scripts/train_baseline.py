@@ -40,54 +40,86 @@ MEASUREMENTS = [
 
 
 def load_patient_rows(data_dir: Path, temporal: bool) -> tuple[pd.DataFrame, pd.Series, pd.Series, list[str]]:
+    """Load per-patient PSV files into a preallocated float32 matrix.
+
+    Preallocation avoids retaining tens of thousands of separate DataFrames,
+    which can exhaust memory on the full Challenge 2019 cohort. Patient groups
+    are represented by integer codes internally; no identifiers are exported.
+    """
     paths = sorted(data_dir.glob("*.psv"))
     if not paths:
         raise FileNotFoundError(f"No .psv files found in {data_dir}")
-    frames: list[pd.DataFrame] = []
-    labels: list[pd.Series] = []
-    groups: list[pd.Series] = []
-    used_features: list[str] | None = None
 
-    for index, path in enumerate(paths):
-        frame = pd.read_csv(path, sep="|")
+    feature_names = list(CANDIDATE_FEATURES)
+    temporal_sources = [c for c in MEASUREMENTS if c in CANDIDATE_FEATURES]
+    if temporal:
+        for column in temporal_sources:
+            feature_names.extend([f"{column}_lag1", f"{column}_delta1", f"{column}_rollmean6"])
+
+    # Count rows without parsing each file into a DataFrame first.
+    row_counts = []
+    for path in paths:
+        with path.open("r", encoding="utf-8") as handle:
+            row_count = sum(1 for _ in handle) - 1
+        if row_count < 1:
+            raise ValueError(f"{path.name} has no data rows")
+        row_counts.append(row_count)
+
+    total_rows = sum(row_counts)
+    X_values = np.full((total_rows, len(feature_names)), np.nan, dtype=np.float32)
+    y_values = np.empty(total_rows, dtype=np.int8)
+    group_values = np.empty(total_rows, dtype=np.int32)
+    offset = 0
+
+    for patient_code, (path, expected_rows) in enumerate(zip(paths, row_counts, strict=True)):
+        frame = pd.read_csv(
+            path,
+            sep="|",
+            usecols=lambda column: column == TARGET or column in CANDIDATE_FEATURES,
+        )
         if TARGET not in frame.columns:
             raise ValueError(f"{path.name} lacks {TARGET}")
         y = pd.to_numeric(frame[TARGET], errors="coerce")
         if y.isna().any() or not y.isin([0, 1]).all():
             raise ValueError(f"{path.name} has missing or non-binary {TARGET} values")
-        features = [c for c in CANDIDATE_FEATURES if c in frame.columns]
-        if not features:
-            raise ValueError(f"No supported predictors found in {path.name}")
-        x = frame[features].apply(pd.to_numeric, errors="coerce")
-        if temporal:
-            temporal_cols = [c for c in MEASUREMENTS if c in x.columns]
-            temp = add_temporal_features(
-                pd.concat([pd.Series([index] * len(frame), name="_patient"), x], axis=1),
-                patient_col="_patient", value_cols=temporal_cols, window=6,
-            ).drop(columns="_patient")
-            x = pd.concat([x, temp[[c for c in temp.columns if c not in x.columns]]], axis=1)
-        if used_features is None:
-            used_features = list(x.columns)
-        else:
-            # Align files with differing column availability without inventing values.
-            for column in used_features:
-                if column not in x:
-                    x[column] = np.nan
-            new_columns = [column for column in x.columns if column not in used_features]
-            if new_columns:
-                for previous in frames:
-                    for column in new_columns:
-                        previous[column] = np.nan
-                used_features.extend(new_columns)
-        x = x.reindex(columns=used_features)
-        frames.append(x)
-        labels.append(y.reset_index(drop=True))
-        groups.append(pd.Series([path.stem] * len(frame), name="patient_id"))
+        if len(frame) != expected_rows:
+            raise ValueError(f"{path.name} changed while being read; expected {expected_rows} rows")
 
-    X = pd.concat(frames, ignore_index=True).reindex(columns=used_features)
-    y_all = pd.concat(labels, ignore_index=True).astype(int)
-    group_all = pd.concat(groups, ignore_index=True)
-    return X, y_all, group_all, used_features or []
+        present = [column for column in CANDIDATE_FEATURES if column in frame.columns]
+        x = frame[present].apply(pd.to_numeric, errors="coerce")
+        local = np.full((len(frame), len(feature_names)), np.nan, dtype=np.float32)
+        for column in present:
+            local[:, feature_names.index(column)] = x[column].to_numpy(dtype=np.float32)
+
+        if temporal:
+            for column in temporal_sources:
+                if column not in x.columns:
+                    continue
+                values = x[column].to_numpy(dtype=np.float32)
+                lag = np.full(len(values), np.nan, dtype=np.float32)
+                if len(values) > 1:
+                    lag[1:] = values[:-1]
+                delta = values - lag
+                rolling = (
+                    pd.Series(values, copy=False)
+                    .rolling(window=6, min_periods=1)
+                    .mean()
+                    .to_numpy(dtype=np.float32)
+                )
+                local[:, feature_names.index(f"{column}_lag1")] = lag
+                local[:, feature_names.index(f"{column}_delta1")] = delta
+                local[:, feature_names.index(f"{column}_rollmean6")] = rolling
+
+        next_offset = offset + len(frame)
+        X_values[offset:next_offset] = local
+        y_values[offset:next_offset] = y.to_numpy(dtype=np.int8)
+        group_values[offset:next_offset] = patient_code
+        offset = next_offset
+
+    X = pd.DataFrame(X_values, columns=feature_names, copy=False)
+    y_all = pd.Series(y_values, name=TARGET)
+    group_all = pd.Series(group_values, name="patient_code")
+    return X, y_all, group_all, feature_names
 
 
 def calculate_metrics(y_true: pd.Series, probability: np.ndarray, threshold: float) -> dict[str, object]:
