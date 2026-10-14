@@ -8,6 +8,7 @@
 
 - Build a reproducible, auditable cohort pipeline.
 - Compare static, causal temporal, and experimental patient-specific baseline-deviation features.
+- Implement an online adaptive physiological deviation layer while keeping deviation detection separate from supervised clinical-outcome prediction.
 - Prevent patient leakage and label-timing errors.
 - Evaluate discrimination, calibration, sensitivity, specificity, and aggregate alert behavior.
 - Document uncertainty and limitations before considering any clinical translation.
@@ -15,12 +16,12 @@
 ## Repository layout
 
 ```text
-docs/                 Research protocol, data dictionary, model card, workflow
-src/vitalis/          Reusable temporal-feature and validation code
-scripts/              Dataset audit, cohort inventory, training, comparison
+docs/                 Research protocol, algorithm specs, model card, workflow
+src/vitalis/          Reusable temporal features, validation, adaptive twin
+scripts/              Dataset audit, training, comparisons, synthetic twin demo
 configs/              Baseline experiment configuration
-tests/                Unit tests
- dashboard/           Optional aggregate-only Streamlit dashboard
+tests/                Unit and regression tests
+dashboard/            Aggregate-only Streamlit evaluation dashboard
 .github/workflows/    Automated tests
 ```
 
@@ -51,7 +52,21 @@ python scripts/compare_models.py /path/to/psv_files --output outputs/model_compa
 python scripts/run_subset_experiment.py /path/to/psv_files --sample-size 1500 --sampling-seed 2026 --split-seed 42 --output outputs/subset_comparison.json
 ```
 
-For the dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
+Run the synthetic streaming demonstration of the adaptive physiological twin:
+
+```bash
+python scripts/demo_adaptive_twin.py
+```
+
+This script uses generated values only. It illustrates baseline warm-up, deviation scoring, multisystem aggregation, and trajectory direction; it is not clinical evidence.
+
+For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
+
+## Adaptive twin component
+
+- [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.
+- [VITALIS-PB research specification](docs/VITALIS_PB_ALGORITHM.md) defines the separate retrospective patient-baseline feature experiment.
+- The online twin currently detects within-person deviation patterns. It does **not** yet estimate a calibrated probability of sepsis or forecast a validated 1–3 hour deterioration window.
 
 ## Data safety and label semantics
 
@@ -61,8 +76,7 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 
 ## Research provenance
 
-- [Plain-language project status](docs/PROJECT_STATUS.md) summarizes the current stage, what the retrospective results do and do not show, the remaining release gates, and the next steps.
-
+- [Plain-language project status](docs/PROJECT_STATUS.md) summarizes the current stage, findings, limitations, remaining release gates, and next steps.
 - [Local experiment history](docs/LOCAL_EXPERIMENTS.md) records prior exploratory runs and their limitations.
 - [Aggregate dataset inventory](results/dataset_inventory.json) records the verified local archive counts for training sets A and B; no raw or patient-level data are stored here.
 - [Multi-seed experiment runner](scripts/run_experiment_suite.py) supports reproducible static-versus-temporal comparisons across patient-level split seeds.
@@ -73,7 +87,6 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 - [Structured historical results](results/local_experiment_summary.json) is an aggregate-only record of earlier experiments. These historical metrics are not automatically reproduced by the current workflow.
 - [Fresh subset rerun](results/current_subset_rerun.json) records an earlier 1,500-patient experiment; its results are mixed and exploratory.
 - [Three-seed subset experiment report](docs/MULTISEED_SUBSET_EXPERIMENT.md) and [aggregate metrics](results/multiseed_subset_summary.json) document a fresh comparison on the same deterministic 1,500-patient sample across split seeds 42, 123, and 2026.
-- [VITALIS-PB algorithm specification](docs/VITALIS_PB_ALGORITHM.md) defines the causal patient-baseline deviation features and their limitations.
 - [Next steps and research roadmap](docs/NEXT_STEPS.md) lists pipeline fixes, reproducible validation, external validation, and IP safeguards.
 - [Full-cohort rerun report](docs/FULL_COHORT_RERUN.md) and [aggregate JSON](results/full_cohort_rerun_2026-10-14.json) record the latest local rerun, with implementation provenance and limitations.
 - [Combined A+B cohort evaluation](docs/FULL_AB_COMBINED_RESULTS.md) reports a patient-disjoint three-seed comparison using all 40,336 patients from both official training sets; [aggregate results](results/full_AB_combined_multiseed_2026-10-14.json).
@@ -81,4 +94,4 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 
 ## Development status
 
-This repository contains a research scaffold and reproducible baseline workflows. Model performance has not been asserted as clinically useful or externally validated. No claim of novelty or patentability is made. See [`docs/REPRODUCIBLE_WORKFLOW.md`](docs/REPRODUCIBLE_WORKFLOW.md), [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md), and [`docs/COHORT_PROTOCOL.md`](docs/COHORT_PROTOCOL.md).
+VITALIS now has retrospective static/temporal research workflows plus an initial streaming adaptive deviation component. The adaptive component is a software milestone, not a complete digital twin or clinical predictor. Clean-checkout reproducibility, current-head CI, security review, independent statistical/clinical review, and future external/ prospective validation remain separate gates. No claim of novelty or patentability is made. See [release-readiness audit](docs/RELEASE_READINESS_AUDIT.md), [reproducible workflow](docs/REPRODUCIBLE_WORKFLOW.md), [model card](docs/MODEL_CARD.md), and [cohort protocol](docs/COHORT_PROTOCOL.md).
