@@ -10,6 +10,7 @@
 - For each seed/horizon, models were trained on Set A training patients and Platt recalibration was fitted on disjoint Set A calibration patients. All bootstrap calculations were performed on Set B only after predictions were frozen.
 - Whole patients were resampled with replacement. Per-patient sufficient statistics were used to calculate percentile intervals for calibrated Brier score, log loss, mean predicted probability, fixed-bin ECE, Brier score minus a prevalence-reference score, and paired calibrated-minus-raw Brier difference.
 - 200 replicates × 18 model/horizon/seed combinations; summed runtime 235.5 seconds. Captured model-fit warnings: 0.
+- **Source provenance limitation:** the runtime could not complete a clean Git checkout because GitHub DNS/network access was unavailable. The full-cohort run used a locally reconstructed working copy of the runner and helper, not a byte-identically verified checkout. The committed code and tests passed GitHub Actions, but this run is not claimed as an exact-source reproduction.
 - Results contain aggregate metrics only. Raw records, feature caches, patient IDs, and individual scores remain local.
 
 ## Key results
