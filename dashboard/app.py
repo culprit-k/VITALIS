@@ -46,6 +46,13 @@ for col, label, value in zip(
 ):
     col.metric(label, "—" if value is None else (f"{value:.3f}" if isinstance(value, float) else str(value)))
 
+st.subheader("Alert burden against challenge-label windows")
+alert_metrics = report.get("test_alert_burden")
+if alert_metrics:
+    st.json(alert_metrics)
+else:
+    st.info("This report predates alert-burden evaluation.")
+
 st.subheader("Test-set metrics")
 metric_names = ["auroc", "auprc", "brier_score", "sensitivity", "specificity", "ppv", "npv"]
 metric_frame = pd.DataFrame(
