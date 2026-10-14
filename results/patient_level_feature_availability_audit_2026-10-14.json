@@ -432,5 +432,55 @@
       ]
     ],
     "duration_strata_are_descriptive_only": true
+  },
+  "source_execution_reconciliation": {
+    "date": "2026-10-14",
+    "status": "completed",
+    "source_script": {
+      "path": "scripts/audit_patient_level_availability.py",
+      "branch": "work/exact-checkout-reproduction",
+      "blob_sha": "d745b47febb2bb0f28edb36fb289a51ae4523b1d",
+      "commit": "f32c78c55501f8dc2a269f0bbebcac1747f933a8",
+      "local_git_blob_sha_verified": true
+    },
+    "source_test": {
+      "path": "tests/test_patient_level_availability_audit.py",
+      "blob_sha": "f8ff12908c845460c38bc4c45710ddc6de076aea",
+      "commit": "e5abaca342141cee3cbfb3fd27a598d85b47eb24",
+      "local_git_blob_sha_verified": true,
+      "local_test_result": "3 passed"
+    },
+    "local_rerun": {
+      "output_path_outside_repository": "/mnt/data/vitalis-local/patient_level_audit_committed_script_rerun.json",
+      "output_sha256": "dadc3d1ce8c4950f7221861e038ac8151c7d121ce7a6febc8b8ec007497e4629",
+      "output_bytes": 32245,
+      "set_a": {
+        "patients": 20336,
+        "hourly_rows": 790215,
+        "patients_with_any_positive_hourly_label": 1790,
+        "median_rows_per_patient": 39,
+        "p90_rows_per_patient": 55
+      },
+      "set_b": {
+        "patients": 20000,
+        "hourly_rows": 761995,
+        "patients_with_any_positive_hourly_label": 1142,
+        "median_rows_per_patient": 38,
+        "p90_rows_per_patient": 54
+      }
+    },
+    "reconciliation": {
+      "cohort_totals_match_existing_aggregate_artifact": true,
+      "all_11_features_patient_availability_and_unadjusted_label_association_metrics_match_within_1e_12": true,
+      "duration_strata_patient_counts_and_positive_label_rates_match": true,
+      "displayed_duration_availability_rates_match_at_reported_precision": true,
+      "set_b_used_for_fitting_feature_selection_or_tuning": false,
+      "patient_level_records_identifiers_or_row_level_predictions_committed": false
+    },
+    "limitations": [
+      "The ever-positive outcome is any positive challenge label anywhere in the full patient record.",
+      "Feature availability is calculated over the full record and can include measurements after a positive label.",
+      "This is a descriptive reproduction, not causal adjustment, a missingness-mechanism test, prospective prediction evidence, or clinical validation."
+    ]
   }
 }
