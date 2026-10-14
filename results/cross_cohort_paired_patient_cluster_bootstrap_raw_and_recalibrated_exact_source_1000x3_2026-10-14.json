@@ -1,0 +1,230 @@
+{
+  "project": "VITALIS",
+  "analysis": "Paired patient-cluster percentile bootstrap: temporal minus static model metrics",
+  "date": "2026-10-14",
+  "method": "Numba-accelerated exact tie-aware weighted AUROC, average precision, and Brier score. Bootstrap draws use NumPy default_rng(model split seed + 90000); chunked results preserve draw order.",
+  "model_split_seeds": [
+    42,
+    123,
+    2026
+  ],
+  "replicates_per_seed_and_probability_stream": 1000,
+  "test_cohort": {
+    "patients": 20000,
+    "rows": 761995,
+    "positive_hourly_labels": 10780
+  },
+  "bootstrap_implementation": {
+    "path": "scripts/bootstrap_heldout_scores_fast.py",
+    "source_blob_sha": "92b41af5f96f251ce39a222d026c23fd9102a15b",
+    "optional_dependency": "numba>=0.59 via bootstrap-accelerated extra"
+  },
+  "score_generation": {
+    "raw_runner": "scripts/evaluate_cross_cohort.py",
+    "raw_runner_blob_sha": "dc736ef7a7fe31c477d4626971dd5b0abd255d2f",
+    "recalibration_runner": "scripts/evaluate_cross_cohort_recalibration.py",
+    "recalibration_runner_blob_sha": "fe355c4b7b77b322ae5c134fe7fdc0b9cbb73200",
+    "set_b_used_for_fit_or_recalibration": false
+  },
+  "validation": {
+    "synthetic_tied_score_fixtures_matched_sklearn": 25,
+    "checked_in_bootstrap_runner_comparison": "For all six seed/stream combinations, the first 200 replicates matched the checked-in bootstrap runner's stored means and percentile endpoints within 4e-14 absolute difference.",
+    "focused_tests": "7 passed for the new accelerated runner; local focused test run.",
+    "privacy": "NPZ score archives and chunk-level bootstrap differences remain outside Git; only aggregate JSON is committed."
+  },
+  "results": [
+    {
+      "model_split_seed": 42,
+      "bootstrap_seed": 90042,
+      "probability_stream": "raw",
+      "replicates_requested": 1000,
+      "replicates_valid": 1000,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.05736926577501266,
+          "ci_95_percentile": [
+            0.049637300357037804,
+            0.06419232935662911
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.013443633949326673,
+          "ci_95_percentile": [
+            0.01085911859995041,
+            0.016310881789186382
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.06409820254812236,
+          "ci_95_percentile": [
+            -0.06505530749106005,
+            -0.0631534274961765
+          ]
+        }
+      },
+      "score_archive_sha256": "c1164a185b1518f4b33d92ff8728137ed51d36cf18ce49b19ec281e145803c8b"
+    },
+    {
+      "model_split_seed": 42,
+      "bootstrap_seed": 90042,
+      "probability_stream": "recalibrated",
+      "replicates_requested": 1000,
+      "replicates_valid": 1000,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.05736920973493309,
+          "ci_95_percentile": [
+            0.0496372425117958,
+            0.06419226202425714
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.013443633910935256,
+          "ci_95_percentile": [
+            0.010859118492160504,
+            0.016310881828213004
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.00010725903781074731,
+          "ci_95_percentile": [
+            -0.000149291429068057,
+            -0.00006611630534225743
+          ]
+        }
+      },
+      "score_archive_sha256": "81381ec0a6ec95133c58dd107b5271c64a669d3a71a2e6c3e1d0fd25520ac903"
+    },
+    {
+      "model_split_seed": 123,
+      "bootstrap_seed": 90123,
+      "probability_stream": "raw",
+      "replicates_requested": 1000,
+      "replicates_valid": 1000,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.0557620689772609,
+          "ci_95_percentile": [
+            0.048219881138145244,
+            0.06318476586562365
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.012646275932572042,
+          "ci_95_percentile": [
+            0.01015331102611027,
+            0.015547072623897823
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.06694950098742523,
+          "ci_95_percentile": [
+            -0.0678750776606726,
+            -0.06609487123200143
+          ]
+        }
+      },
+      "score_archive_sha256": "2ac8b7525cf642fd0457ddabc4dc17c58b2865472004716028bc9dc21db4c4f8"
+    },
+    {
+      "model_split_seed": 123,
+      "bootstrap_seed": 90123,
+      "probability_stream": "recalibrated",
+      "replicates_requested": 1000,
+      "replicates_valid": 1000,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.05576206504649349,
+          "ci_95_percentile": [
+            0.04821987685277045,
+            0.06318474887903809
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.01264627505351034,
+          "ci_95_percentile": [
+            0.01015331085097506,
+            0.015547071128469812
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.00019576127386590846,
+          "ci_95_percentile": [
+            -0.00029924512076584406,
+            -0.00009847973363516641
+          ]
+        }
+      },
+      "score_archive_sha256": "522feeeee51363c3addb25b571a781fedac0f591821428d5239771f99847490b"
+    },
+    {
+      "model_split_seed": 2026,
+      "bootstrap_seed": 92026,
+      "probability_stream": "raw",
+      "replicates_requested": 1000,
+      "replicates_valid": 1000,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.0573963910549748,
+          "ci_95_percentile": [
+            0.05079737818202301,
+            0.06462331861881444
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.012055680192089547,
+          "ci_95_percentile": [
+            0.009830851324893686,
+            0.01496179439808372
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.07496022044359282,
+          "ci_95_percentile": [
+            -0.07588516041918855,
+            -0.0740605436330395
+          ]
+        }
+      },
+      "score_archive_sha256": "26d864e677eb4a56e5cd173b497a16b230688138bae817bfc3cc06308ca39231"
+    },
+    {
+      "model_split_seed": 2026,
+      "bootstrap_seed": 92026,
+      "probability_stream": "recalibrated",
+      "replicates_requested": 1000,
+      "replicates_valid": 1000,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.0573963910549748,
+          "ci_95_percentile": [
+            0.05079737818202301,
+            0.06462331861881444
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.012055680192089547,
+          "ci_95_percentile": [
+            0.009830851324893686,
+            0.01496179439808372
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.00042040565760961135,
+          "ci_95_percentile": [
+            -0.0005957550358671417,
+            -0.00026562459115957805
+          ]
+        }
+      },
+      "score_archive_sha256": "709b010b6965f53b65f74fa0f0f1a7389d0d40c8037207e91dc688c33461df3a"
+    }
+  ],
+  "limitations": [
+    "Intervals are conditional on the fixed Set-B cohort and each model split; they are not prospective clinical validation.",
+    "Challenge labels are retrospective hourly labels, not adjudicated event-level clinical outcomes.",
+    "Three split-specific intervals are not a pooled confidence interval or independent external validation.",
+    "Platt recalibration is monotonic and therefore preserves ranking up to numerical precision; Brier differences reflect probability changes.",
+    "Feature policy, clinical utility, and clinically valid thresholds remain unresolved."
+  ]
+}
