@@ -145,3 +145,11 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Prepared score archives separately and completed 1,000 replicates for seeds 42, 123, and 2026. Aggregate-only artifact: [1,000 × 3 seed results](../results/full_cohort_paired_patient_cluster_bootstrap_1000x3_2026-10-14.json); interpretation in [the report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
 - [ ] Strict source-byte identity for held-out score generation remains open. The current seed-42 score archive came from a reconstructed local evaluator, not a byte-identical checkout of the repository model runner.
 - [ ] Execute the exact checked-in bootstrap-only script against each retained local score archive and reconcile its output numerically against the aggregate artifact. The checked-in implementation's CI tests passed, but the committed local results were produced by a reconstructed implementation.
+
+
+## Bootstrap output reconciliation (2026-10-14)
+
+- [x] Re-ran the local batched bootstrap runner on each retained local score archive: seeds 42, 123, and 2026, with 1,000 replicates each.
+- [x] Reconciled the means and both interval endpoints for AUROC, AUPRC, and Brier score against the committed 1,000 × 3 aggregate artifact; all nine comparisons match within 1e-12. See [reconciliation JSON](../results/full_cohort_bootstrap_output_reconciliation_2026-10-14.json).
+- [x] Updated the [bootstrap report](FULL_COHORT_PAIRED_BOOTSTRAP.md). Score archives remain outside Git.
+- [ ] Exact source-byte identity for model fitting and held-out score generation remains open. Numerical agreement of a reconstructed local runner is not equivalent to execution from an exact repository checkout.
