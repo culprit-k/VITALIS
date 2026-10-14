@@ -49,11 +49,70 @@ def metrics(y_true: np.ndarray, probability: np.ndarray) -> dict:
     }
 
 
+
+def paired_patient_cluster_bootstrap(
+    y_true: np.ndarray,
+    probability_static: np.ndarray,
+    probability_temporal: np.ndarray,
+    groups: np.ndarray,
+    *,
+    n_bootstrap: int = 200,
+    seed: int = 20261014,
+) -> dict:
+    """Paired percentile intervals by resampling patients, retaining all their rows.
+
+    Predictions are supplied in memory and are never returned or written. Each bootstrap
+    replicate uses the same sampled patients for both models. This estimates uncertainty
+    conditional on the held-out split; it is not external-validation uncertainty.
+    """
+    y_true = np.asarray(y_true)
+    p_static = np.asarray(probability_static)
+    p_temporal = np.asarray(probability_temporal)
+    groups = np.asarray(groups)
+    if not (len(y_true) == len(p_static) == len(p_temporal) == len(groups)):
+        raise ValueError("labels, probabilities, and patient groups must have equal lengths")
+    if n_bootstrap < 20:
+        raise ValueError("n_bootstrap must be at least 20")
+    unique_groups = np.unique(groups)
+    if len(unique_groups) < 2:
+        raise ValueError("at least two patient groups are required")
+    by_group = {group: np.flatnonzero(groups == group) for group in unique_groups}
+    rng = np.random.default_rng(seed)
+    deltas = {"auroc": [], "auprc": [], "brier_score": []}
+    for _ in range(n_bootstrap):
+        sampled = rng.choice(unique_groups, size=len(unique_groups), replace=True)
+        indices = np.concatenate([by_group[group] for group in sampled])
+        y = y_true[indices]
+        if np.unique(y).size < 2:
+            continue
+        ps, pt = p_static[indices], p_temporal[indices]
+        deltas["auroc"].append(roc_auc_score(y, pt) - roc_auc_score(y, ps))
+        deltas["auprc"].append(average_precision_score(y, pt) - average_precision_score(y, ps))
+        deltas["brier_score"].append(brier_score_loss(y, pt) - brier_score_loss(y, ps))
+    if len(deltas["auroc"]) < max(20, int(0.8 * n_bootstrap)):
+        raise ValueError("too few valid bootstrap replicates; inspect event distribution")
+    return {
+        "method": "paired patient-cluster percentile bootstrap; resample patients with replacement and retain all hourly rows",
+        "replicates_requested": n_bootstrap,
+        "replicates_valid": len(deltas["auroc"]),
+        "seed": seed,
+        "temporal_minus_static": {
+            name: {
+                "mean_bootstrap_difference": float(np.mean(values)),
+                "ci_95_percentile": [float(np.quantile(values, 0.025)), float(np.quantile(values, 0.975))],
+            }
+            for name, values in deltas.items()
+        },
+        "interpretation": "Conditional on this held-out split; not external-validation uncertainty.",
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--cache-dir", type=Path, required=True)
     ap.add_argument("--seeds", type=int, nargs="+", default=[42, 123, 2026])
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--bootstrap-replicates", type=int, default=200)
     args = ap.parse_args()
     meta = json.loads((args.cache_dir / "meta.json").read_text(encoding="utf-8"))
     X = np.load(args.cache_dir / "X.npy", mmap_mode="r")
@@ -91,6 +150,7 @@ def main() -> None:
             "positive_rows": {"train": int(y[train].sum()), "validation": int(y[validation].sum()), "test": int(y[test].sum())},
             "models": {},
         }
+        test_probabilities = {}
         for name, indices in (("static", static_index), ("temporal", np.arange(X.shape[1]))):
             model = make_pipeline(
                 SimpleImputer(strategy="median", add_indicator=True),
@@ -103,6 +163,7 @@ def main() -> None:
                 model.fit(X[np.ix_(train, indices)], y[train])
                 fit_seconds = time.time() - fit_started
             probability = model.predict_proba(X[np.ix_(test, indices)])[:, 1]
+            test_probabilities[name] = probability
             seed_result["models"][name] = {
                 "features_available": int(len(indices)),
                 "fit_seconds": fit_seconds,
@@ -114,6 +175,10 @@ def main() -> None:
                 f"AUPRC={seed_result['models'][name]['test_metrics']['auprc']:.4f}",
                 flush=True,
             )
+        seed_result["paired_patient_cluster_bootstrap"] = paired_patient_cluster_bootstrap(
+            test_labels, test_probabilities["static"], test_probabilities["temporal"],
+            groups[test], n_bootstrap=args.bootstrap_replicates, seed=seed + 90000,
+        )
         seed_result["elapsed_seconds"] = time.time() - split_started
         runs.append(seed_result)
     aggregate = {}
@@ -135,7 +200,7 @@ def main() -> None:
             "patient_disjoint_splits": True,
             "model": "LogisticRegression with median imputation, missingness indicators, standard scaling, class_weight=balanced",
             "threshold": 0.5,
-            "uncertainty_note": "SD is across split seeds, not a confidence interval. This runner does not export row-level predictions.",
+            "uncertainty_note": "SD is across split seeds, not a confidence interval. Paired patient-cluster bootstrap intervals are conditional on each held-out split; row-level predictions are not exported.",
             "temporal_assumption": "Rows in each patient file are treated as chronological hourly observations.",
         },
         "runs": runs,
