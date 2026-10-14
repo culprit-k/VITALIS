@@ -176,6 +176,66 @@ def calculate_alert_burden(
     }
 
 
+
+def patient_cluster_bootstrap_intervals(
+    y_true: pd.Series,
+    probability: np.ndarray,
+    patient_ids: pd.Series,
+    threshold: float = 0.5,
+    n_bootstrap: int = 200,
+    seed: int = 42,
+) -> dict[str, object]:
+    """Percentile intervals from resampling whole patients with replacement.
+
+    These intervals quantify between-patient sampling uncertainty for row-level
+    metrics. They do not convert correlated hourly metrics into event-level metrics.
+    Replicates containing only one label class are skipped for AUROC/AUPRC.
+    """
+    if n_bootstrap < 20:
+        raise ValueError("n_bootstrap must be at least 20")
+    frame = pd.DataFrame({
+        "patient": patient_ids.reset_index(drop=True).astype(str),
+        "label": y_true.reset_index(drop=True).astype(int),
+        "probability": np.asarray(probability, dtype=float),
+    })
+    patient_rows = {
+        patient: group[["label", "probability"]].to_numpy()
+        for patient, group in frame.groupby("patient", sort=True)
+    }
+    patients = np.asarray(list(patient_rows), dtype=object)
+    if len(patients) < 2:
+        raise ValueError("At least two unique patients are required")
+    rng = np.random.default_rng(seed)
+    metric_names = ("auroc", "auprc", "brier_score", "sensitivity", "specificity", "ppv", "npv")
+    values: dict[str, list[float]] = {name: [] for name in metric_names}
+    for _ in range(n_bootstrap):
+        sampled = rng.choice(patients, size=len(patients), replace=True)
+        sampled_rows = [patient_rows[patient] for patient in sampled]
+        labels = np.concatenate([rows[:, 0].astype(int) for rows in sampled_rows])
+        scores = np.concatenate([rows[:, 1].astype(float) for rows in sampled_rows])
+        result = calculate_metrics(pd.Series(labels), scores, threshold)
+        for name in metric_names:
+            value = result[name]
+            if value is not None and np.isfinite(value):
+                values[name].append(float(value))
+    intervals: dict[str, object] = {}
+    for name in metric_names:
+        metric_values = values[name]
+        intervals[name] = {
+            "lower_95": float(np.percentile(metric_values, 2.5)) if metric_values else None,
+            "upper_95": float(np.percentile(metric_values, 97.5)) if metric_values else None,
+            "valid_replicates": len(metric_values),
+            "requested_replicates": n_bootstrap,
+        }
+    return {
+        "method": "patient-cluster percentile bootstrap",
+        "confidence_level": 0.95,
+        "seed": seed,
+        "unique_patients": int(len(patients)),
+        "intervals": intervals,
+        "interpretation_note": "Intervals resample patients, retaining each sampled patient's hourly rows together. Metrics remain row-level and are not event-level clinical performance.",
+    }
+
 def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[str, object]:
     X, y, groups, features = load_patient_rows(data_dir, temporal)
     first_split = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=seed)
@@ -213,6 +273,10 @@ def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[s
         "threshold_selection": "fixed 0.5; not tuned on test data",
         "validation_metrics": calculate_metrics(y_train_val.iloc[val_idx], validation_probability, threshold),
         "test_metrics": calculate_metrics(test_y_ordered, test_probability, threshold),
+        "test_metric_patient_bootstrap_95ci": patient_cluster_bootstrap_intervals(
+            test_y_ordered, test_probability, test_groups_ordered,
+            threshold=threshold, n_bootstrap=200, seed=seed,
+        ),
         "test_alert_burden": calculate_alert_burden(test_y_ordered, test_probability, test_groups_ordered, threshold=threshold),
         "limitations": [
             "Retrospective challenge dataset only; no external or prospective validation.",
