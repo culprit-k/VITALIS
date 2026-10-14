@@ -80,3 +80,28 @@ def test_paired_model_bootstrap_rejects_patient_reappearance():
         MOD.patient_cluster_bootstrap_paired_model_metrics(
             [0, 1, 0, 1], [.1, .8, .2, .7], [.2, .9, .3, .8], [1, 2, 1, 2], n_bootstrap=20
         )
+
+
+def test_paired_model_bootstrap_intervals_match_explicit_patient_resampling():
+    from sklearn.metrics import average_precision_score, roc_auc_score
+
+    groups = np.repeat(np.arange(8), 4)
+    y = np.tile(np.array([0, 0, 1, 0], dtype=np.int8), 8)
+    p_static = np.tile(np.array([0.01, 0.08, 0.3, 0.04]), 8)
+    p_temporal = np.tile(np.array([0.03, 0.12, 0.4, 0.02]), 8)
+    reps, seed = 40, 19
+    out = MOD.patient_cluster_bootstrap_paired_model_metrics(
+        y, p_static, p_temporal, groups, n_bootstrap=reps, seed=seed
+    )
+    rng = np.random.default_rng(seed)
+    differences = {name: [] for name in ("auroc", "auprc", "brier_score", "log_loss")}
+    blocks = [np.flatnonzero(groups == g) for g in np.unique(groups)]
+    for sample in rng.integers(0, len(blocks), size=(reps, len(blocks))):
+        idx = np.concatenate([blocks[g] for g in sample])
+        differences["auroc"].append(roc_auc_score(y[idx], p_temporal[idx]) - roc_auc_score(y[idx], p_static[idx]))
+        differences["auprc"].append(average_precision_score(y[idx], p_temporal[idx]) - average_precision_score(y[idx], p_static[idx]))
+        differences["brier_score"].append(brier_score_loss(y[idx], p_temporal[idx]) - brier_score_loss(y[idx], p_static[idx]))
+        differences["log_loss"].append(log_loss(y[idx], p_temporal[idx], labels=[0, 1]) - log_loss(y[idx], p_static[idx], labels=[0, 1]))
+    for name, values in differences.items():
+        assert out["intervals_comparison_minus_reference"][name]["lower_95"] == pytest.approx(np.percentile(values, 2.5))
+        assert out["intervals_comparison_minus_reference"][name]["upper_95"] == pytest.approx(np.percentile(values, 97.5))
