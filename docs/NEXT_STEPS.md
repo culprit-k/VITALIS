@@ -17,14 +17,23 @@
 
 In the 500-patient exploratory sample, the static model had the best mean AUROC (0.7244) and average precision (0.1018). The temporal model had lower discrimination, while the personalized model had the lowest mean AUROC (0.5847) and average precision (0.0525). The personalized model's lower Brier score but higher log loss is mixed evidence, not proof of good calibration. These results do not justify advancing the personalized model as the default or claiming clinical benefit.
 
+## Phase 2 status: started
+
+- [x] Added aggregate calibration and predictor-missingness helper functions with unit tests: [Phase 2 plan](PHASE2_PLAN.md).
+- [ ] Confirm GitHub Actions passes for the new helper tests.
+- [ ] Execute the canonical Phase 1 runner on the local dataset and reconcile its output with the committed aggregate artifact; do not assume the local equivalent is identical.
+- [ ] Run held-out calibration and split-specific missingness diagnostics; keep recalibration fit on validation data only.
+- [ ] Conduct prespecified robustness checks and exploratory subgroup analysis with small-cell safeguards.
+- [ ] Consider full-cohort execution only after reproducibility and memory/runtime checks; external validation remains separate.
+- [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
+
 ## Next software/research actions
 
-1. Execute the canonical repository runner on the same sample and compare its aggregate output with the [recorded reproducibility manifest](../results/phase1_local_reproducibility_manifest.json).
-2. Investigate feature generation, missingness, scaling, and class weighting before changing the algorithm.
-3. Add calibration curves/slope/intercept and carefully designed subgroup/missingness analyses.
-4. Prespecify how any threshold is chosen on validation data only; keep test data untouched.
-5. Run a larger/full-cohort analysis after memory and runtime checks; external validation is a separate later requirement.
-6. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
+1. Confirm CI and test the new calibration helpers.
+2. Reconcile the canonical runner with the recorded Phase 1 artifact.
+3. Add the held-out calibration/missingness runner with validation-only recalibration, then execute it locally.
+4. Conduct prespecified robustness checks before considering a larger/full-cohort run.
+5. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
 
 ## Hardware gate
 
