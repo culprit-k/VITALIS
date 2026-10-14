@@ -620,3 +620,14 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical review. A new independently defined/adjudicated cohort is still required for external clinical evidence.
 
 **Gate status:** this is a planning milestone, not approval. No patient-level Uzbek data should be received or processed until required permissions and determinations are in place. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 15: utility-policy freeze gate hardening (15 October 2026)
+
+- [x] Extend \`configs/independent_evaluation_lockfile.template.json\` with explicit utility cost definition, alert-cost unit, missed-window cost scenarios, primary scenario, Set-A-only candidate-selection rule, and independent rationale/exploratory status.
+- [x] Extend \`scripts/validate_evaluation_lockfile.py\` to reject missing/placeholding cost policy, non-positive or non-finite costs, duplicate scenarios, and a candidate-selection rule that names Set B.
+- [x] Add regression tests for incomplete utility policy, Set-B threshold-selection language, and invalid cost assumptions.
+- [x] Update the independent evaluation protocol and README to describe the additional freeze requirements.
+- [ ] Confirm GitHub Actions passes after these changes and triage any failures before treating the gate as verified.
+
+**Boundary:** the validator checks completeness and simple invariants only. It cannot establish that cost weights are medically defensible, that approvals are authentic, or that a model is safe. Keep the completed study lockfile private; do not use Set B for threshold selection. Independent review, a new cohort, clean-checkout reproduction, and governance approvals remain open.
