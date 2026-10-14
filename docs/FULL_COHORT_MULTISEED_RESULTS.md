@@ -55,3 +55,12 @@ python scripts/evaluate_cached_multiseed.py --cache-dir /path/to/vitalis-cache -
 ```
 
 Build chunks sequentially, confirm each chunk prints `complete`, and check that the metadata patient list matches the input directory. The evaluator rejects incomplete patient group vectors and emits aggregate metrics only. This repository-native command is newly added and must still be run and reconciled against the prior local summary before claiming strict reproducibility.
+
+
+## Repository-native cache-runner reconciliation (14 October 2026)
+
+The chunked cache builder completed all four patient ranges (0–5,000; 5,000–10,000; 10,000–15,000; 15,000–20,336). The evaluator was run one seed per process to stay within execution limits. For seeds 42, 123, and 2026, the local run reproduced the previously recorded split patient counts, test-row counts, positive label-row counts, and AUROC/AUPRC/Brier values to the displayed precision. Aggregate results are recorded in [the reconciliation JSON](../results/full_cohort_repository_native_reconciliation_2026-10-14.json).
+
+**Provenance qualification:** the local evaluator used for this execution was reconstructed from the checked-in `scripts/evaluate_cached_multiseed.py` logic; byte-for-byte source checkout identity was not verified. This is a successful local cache/evaluator reconciliation, not a claim that the exact repository blob was executed unchanged. The cache and all row-level derived arrays remained outside Git. The evaluator produced aggregate-only outputs and did not export row-level predictions.
+
+The mean metrics across the three split seeds were AUROC 0.7628 static versus 0.7884 temporal, AUPRC 0.0846 versus 0.0886, and Brier score 0.1894 versus 0.1816. Standard deviations are across split seeds, not confidence intervals. This is exploratory internal evidence only.
