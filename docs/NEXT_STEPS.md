@@ -513,3 +513,15 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Freeze any development policy only after cost assumptions and selection rules are reviewed and predeclared. Do not select a threshold on Set B, whose results have already been inspected; a new independent cohort is required.
 
 **Boundary:** the utility score is a retrospective Challenge-label proxy, not clinical utility. The target is entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 9: independent-evaluation readiness (15 October 2026)
+
+- [x] Draft the [independent-cohort evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md), including model freeze, independent event definition, predeclared metrics, reproducibility requirements, and staged evaluation boundaries.
+- [x] Link the protocol and [utility-cost review checklist](UTILITY_COST_REVIEW_CHECKLIST.md) from the README.
+- [ ] Obtain independent clinical/statistical review of the utility assumptions and endpoint semantics; record the reviewer's decision and required changes.
+- [ ] Complete a clean-checkout, pinned-environment reproduction and history-wide privacy/secret audit; runtime DNS limitations have prevented a verified clean clone so far.
+- [ ] Obtain data-governance/ethics approval and a genuinely new independent cohort with clinically defined/adjudicated event timing before external validation. Set B is already inspected and must not be reused for threshold selection.
+- [ ] Freeze the model, calibration, threshold, refractory policy, endpoints, and analysis plan before accessing independent-cohort outcomes. Prospective silent-mode and clinical-impact studies require separate approvals and are not authorized by this protocol.
+
+**Boundary:** these are project-readiness tasks, not evidence of clinical readiness. VITALIS remains research-only and must not guide patient care.
