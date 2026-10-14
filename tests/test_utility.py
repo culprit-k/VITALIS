@@ -53,3 +53,38 @@ def test_rejects_invalid_cost_grid(kwargs):
     y, p, groups, times = fixture()
     with pytest.raises(ValueError):
         MOD.evaluate_utility_operating_points(y, p, groups, times, **kwargs)
+
+
+def test_patient_cluster_bootstrap_reports_metric_intervals_and_selection_stability():
+    y, p, groups, times = fixture()
+    result = MOD.patient_cluster_bootstrap_utility_uncertainty(
+        y, p, groups, times, thresholds=[.3, .75],
+        missed_window_costs=[1, 10], alert_cost=1,
+        refractory_hours=1, n_bootstrap=40, seed=123,
+    )
+    assert result["set_b_used_for_threshold_selection"] is False
+    assert result["unique_patients"] == 2
+    assert result["requested_replicates"] == 40
+    metrics = result["threshold_results"][0]["intervals"]
+    assert "row_sensitivity" in metrics
+    assert "row_ppv" in metrics
+    assert "alerts_per_at_risk_patient_day" in metrics
+    assert "future_positive_window_coverage" in metrics
+    assert "weighted_cost_per_patient_day__miss_cost_10" in metrics
+    for scenario in result["cost_scenario_selection_stability"]:
+        assert scenario["valid_replicates"] > 0
+        assert sum(x["selected_replicates"] for x in scenario["selection_frequency_by_threshold"]) == scenario["valid_replicates"]
+        assert sum(x["selection_fraction"] or 0 for x in scenario["selection_frequency_by_threshold"]) == pytest.approx(1.0)
+
+
+def test_patient_cluster_bootstrap_is_reproducible_and_rejects_small_replicate_count():
+    y, p, groups, times = fixture()
+    kwargs = dict(thresholds=[.3, .75], missed_window_costs=[1, 10],
+                  refractory_hours=1, n_bootstrap=40, seed=7)
+    first = MOD.patient_cluster_bootstrap_utility_uncertainty(y, p, groups, times, **kwargs)
+    second = MOD.patient_cluster_bootstrap_utility_uncertainty(y, p, groups, times, **kwargs)
+    assert first == second
+    with pytest.raises(ValueError):
+        MOD.patient_cluster_bootstrap_utility_uncertainty(
+            y, p, groups, times, thresholds=[.5], missed_window_costs=[1], n_bootstrap=19,
+        )
