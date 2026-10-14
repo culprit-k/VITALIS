@@ -25,6 +25,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from vitalis.horizon import build_future_challenge_targets, evaluate_horizon_alerts
+from vitalis.calibration_uncertainty import patient_cluster_bootstrap_calibration_metrics
 
 BASE = [
     "HR", "O2Sat", "Temp", "SBP", "MAP", "DBP", "Resp", "EtCO2",
@@ -156,7 +157,7 @@ def _predict(model, X, row_indices, feature_indices, chunk_rows):
     return result
 
 
-def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int):
+def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int):
     target_a = build_future_challenge_targets(ya, ga, horizon)
     target_b = build_future_challenge_targets(yb, gb, horizon)
     columns = meta_a["columns"]
@@ -234,6 +235,10 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
                         refractory_hours=refractory_hours)
                     for threshold in (0.005, 0.01)
                 }
+                variants["platt_calibrated"]["patient_cluster_bootstrap_95ci"] = patient_cluster_bootstrap_calibration_metrics(
+                    labels, calibrated, patients, comparison_probabilities=raw,
+                    n_bootstrap=bootstrap_replicates, seed=seed,
+                )
             cohorts[cohort_name] = variants
         results["models"][name] = {"feature_count": int(len(feature_indices)),
                                    "fit_warnings": [str(w.message) for w in caught],
@@ -255,12 +260,13 @@ def main() -> None:
     parser.add_argument("--seeds", type=int, nargs="+", default=[42, 123, 2026])
     parser.add_argument("--predict-chunk-rows", type=int, default=50000)
     parser.add_argument("--refractory-hours", type=int, default=6)
+    parser.add_argument("--bootstrap-replicates", type=int, default=200)
     parser.add_argument("--output", type=Path, required=True, help="Aggregate-only JSON output")
     args = parser.parse_args()
     if not args.horizons or any(h < 1 for h in args.horizons) or len(set(args.horizons)) != len(args.horizons):
         parser.error("--horizons must contain unique positive integers")
-    if not args.seeds or len(set(args.seeds)) != len(args.seeds) or args.predict_chunk_rows < 1 or args.refractory_hours < 1:
-        parser.error("seeds must be unique; chunk rows and refractory hours must be positive")
+    if not args.seeds or len(set(args.seeds)) != len(args.seeds) or args.predict_chunk_rows < 1 or args.refractory_hours < 1 or args.bootstrap_replicates < 20:
+        parser.error("seeds must be unique; chunk rows and refractory hours must be positive; bootstrap replicates must be >=20")
     ma, Xa, ya, ga = load_cache(args.set_a_cache, "A")
     mb, Xb, yb, gb = load_cache(args.set_b_cache, "B")
     validate_official_cohort(ma, ya, ga, "A")
@@ -269,7 +275,8 @@ def main() -> None:
         parser.error("Set A and Set B feature schemas differ")
     started = time.time()
     runs = [evaluate_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon=h, seed=s,
-                         chunk_rows=args.predict_chunk_rows, refractory_hours=args.refractory_hours)
+                         chunk_rows=args.predict_chunk_rows, refractory_hours=args.refractory_hours,
+                         bootstrap_replicates=args.bootstrap_replicates)
             for s in args.seeds for h in args.horizons]
     summary = {"project": "VITALIS", "run_type": "set_a_only_calibration_horizon_operating_point_analysis",
                "cohorts": {"set_a": {"patients": int(ma["patient_count"]), "rows": int(ma["row_count"]), "positive_labels": int(ya.sum())},
@@ -279,6 +286,8 @@ def main() -> None:
                             "set_a_split": "patient-disjoint 60% model training / 20% Platt calibration / 20% untouched operating-point holdout",
                             "threshold_grid": list(THRESHOLDS), "thresholds_selected": False,
                             "patient_alert_metrics_thresholds": [0.005, 0.01],
+                            "patient_cluster_bootstrap_replicates": args.bootstrap_replicates,
+                            "bootstrap_unit": "patient; Set-B calibrated Brier, log loss, mean probability, fixed-bin ECE, Brier-minus-prevalence-reference, and paired calibrated-minus-raw Brier difference",
                             "set_b": "final evaluation only; never used for fitting, calibration, or threshold selection",
                             "refractory_hours": args.refractory_hours,
                             "raw_data_or_row_level_predictions_exported": False},
