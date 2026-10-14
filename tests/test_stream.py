@@ -115,3 +115,36 @@ def test_future_dated_sample_is_not_used_until_stream_time_catches_up():
     result = stream.score(now)
     assert result["coverage"] == 0
     assert result["channel_age_seconds"]["heart_rate"] == -5
+
+
+
+def test_identified_sensor_replacement_resets_only_that_channel_history():
+    stream = make_stream(max_age=60)
+    start = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    for i in range(3):
+        timestamp = start + timedelta(seconds=i)
+        assert stream.ingest(Observation("heart_rate", timestamp, 70, "bpm", source="sensor-A"))
+        assert stream.ingest(Observation("spo2", timestamp, 98, "%", source="oximeter-A"))
+        stream.score(timestamp)
+    assert len(stream.twin.states["heart_rate"].values) >= 2
+    assert len(stream.twin.states["spo2"].values) >= 2
+
+    replacement_time = start + timedelta(seconds=3)
+    assert stream.ingest(Observation("heart_rate", replacement_time, 82, "bpm", source="sensor-B"))
+    result = stream.score(replacement_time)
+    assert stream.source_change_counts["heart_rate"] == 1
+    assert stream.source_change_counts["spo2"] == 0
+    assert result["channels"]["heart_rate"]["history_count"] == 0
+    assert result["channels"]["heart_rate"]["reference_baseline"] is None
+    assert len(stream.twin.states["spo2"].values) >= 2
+    assert result["trajectory_direction"] is None
+
+
+def test_session_reset_clears_sensor_source_identity():
+    stream = make_stream()
+    now = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    assert stream.ingest(Observation("heart_rate", now, 70, "bpm", source="sensor-A"))
+    stream.reset()
+    later = now + timedelta(seconds=1)
+    assert stream.ingest(Observation("heart_rate", later, 72, "bpm", source="sensor-B"))
+    assert stream.source_change_counts["heart_rate"] == 0
