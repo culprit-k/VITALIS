@@ -132,8 +132,11 @@ def validate_lockfile(data: dict[str, Any]) -> list[str]:
         ) or len(set(missed_costs)) != len(missed_costs):
             errors.append("utility_policy.missed_window_costs_relative_to_one_alert must be a nonempty list of unique positive finite numbers")
         cohort_rule = utility.get("candidate_selection_cohort")
-        if isinstance(cohort_rule, str) and "set b" in cohort_rule.lower():
-            errors.append("utility_policy.candidate_selection_cohort cannot use Set B for threshold selection")
+        if isinstance(cohort_rule, str):
+            normalized_rule = " ".join(cohort_rule.lower().replace("-", " ").split())
+            prohibited_phrases = ("use set b", "using set b", "set b to select", "select on set b", "select thresholds on set b", "set b as the threshold")
+            if any(phrase in normalized_rule for phrase in prohibited_phrases):
+                errors.append("utility_policy.candidate_selection_cohort cannot use Set B for threshold selection")
 
     approvals = data.get("approvals")
     if not isinstance(approvals, dict):
