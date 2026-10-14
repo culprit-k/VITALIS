@@ -606,3 +606,17 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Determine and satisfy all applicable jurisdiction-specific regulatory submission, authorization, labeling, and post-market requirements before any clinical marketing or deployment.
 
 **Gate status:** this roadmap and repository changes are planning artifacts only. They do not establish QMS conformity, regulatory classification, ethics approval, clinical validity, or authorization. Keep PR #1 draft/unmerged; keep VITALIS research-only and out of patient-care decisions.
+
+
+## Phase 14: Uzbekistan research-readiness gate (15 October 2026)
+
+- [x] Confirmed the first target market as Uzbekistan and the intended first deployment category as research.
+- [x] Added the [Uzbekistan research-readiness dossier](UZBEKISTAN_RESEARCH_READINESS.md) and machine-readable [readiness register](../configs/regulatory/uzbekistan_research_readiness.json).
+- [x] Recorded the initial boundary as offline retrospective analysis of authorized, de-identified data only; no patient-care influence, live feeds, prospective silent mode, or clinical marketing.
+- [x] Reviewed official starting points for Uzbekistan's Personal Data Law and current medical-equipment registration procedure, plus published context on ethics-review pathway uncertainty. The document explicitly distinguishes binding legal sources from secondary research and lists authority questions instead of inferring an exemption.
+- [ ] Obtain written host-institution ethics/governance and data-protection determinations before accessing Uzbekistan patient-level data.
+- [ ] Obtain written classification/pathway advice from the Center for Pharmaceutical Product Safety / Committee on New Medical Technology for the exact intended use and scope-change triggers.
+- [ ] Name the host institution, principal investigator, data controller/custodian, and qualified Uzbekistan regulatory/legal contact; approve the study-specific data-management plan.
+- [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical review. A new independently defined/adjudicated cohort is still required for external clinical evidence.
+
+**Gate status:** this is a planning milestone, not approval. No patient-level Uzbek data should be received or processed until required permissions and determinations are in place. VITALIS remains research-only and must not guide patient care.
