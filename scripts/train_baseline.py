@@ -277,6 +277,15 @@ def patient_cluster_bootstrap_intervals(
         "interpretation_note": "Intervals resample patients, retaining each sampled patient's hourly rows together. Metrics remain row-level and are not event-level clinical performance.",
     }
 
+def observed_training_features(X_train: pd.DataFrame) -> tuple[list[str], list[str]]:
+    """Return columns observed at least once in training and the all-missing columns."""
+    observed = X_train.columns[X_train.notna().any(axis=0)].tolist()
+    dropped = [column for column in X_train.columns if column not in observed]
+    if not observed:
+        raise ValueError("No predictors have observed values in the training fold")
+    return observed, dropped
+
+
 def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[str, object]:
     X, y, groups, features = load_patient_rows(data_dir, temporal)
     first_split = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=seed)
@@ -292,10 +301,7 @@ def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[s
     # Drop predictors entirely missing in the training fold; learn this
     # selection from training data only and apply it unchanged to validation/test.
     X_train = X_train_val.iloc[train_idx]
-    observed_features = X_train.columns[X_train.notna().any(axis=0)].tolist()
-    dropped_all_missing = [column for column in X.columns if column not in observed_features]
-    if not observed_features:
-        raise ValueError("No predictors have observed values in the training fold")
+    observed_features, dropped_all_missing = observed_training_features(X_train)
     model = make_pipeline(
         SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True),
         StandardScaler(),
