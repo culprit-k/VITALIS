@@ -1,60 +1,40 @@
 {
   "project": "VITALIS",
-  "run_type": "full_cohort_paired_patient_cluster_bootstrap",
+  "run_type": "full_cohort_paired_patient_cluster_bootstrap_200_replicates",
   "dataset": {
     "patients": 20336,
     "hourly_rows": 790215,
     "positive_hourly_labels": 17136
   },
-  "protocol": {
-    "split_seeds": [
-      42,
-      123,
-      2026
-    ],
-    "bootstrap_replicates_per_seed": 20,
-    "patient_disjoint_splits": true,
-    "threshold": 0.5,
-    "bootstrap": "Paired patient-cluster percentile bootstrap using patient multiplicity weights; retain all hourly rows.",
-    "warning": "Only 20 replicates per seed completed due execution limits. Tail quantiles are coarse and intervals are preliminary, not suitable for final inferential claims. Intervals are conditional on each held-out split, not external validation. Local runner copies were not byte-identical to GitHub source."
-  },
-  "runs": [
+  "method": "Paired patient-cluster percentile bootstrap; resample patients with replacement using multiplicity weights, retaining all hourly rows. Optimized local implementation uses tie-aware weighted AUROC and average precision; Brier score is weighted by patient multiplicity.",
+  "replicates_per_split": 200,
+  "split_seed_results": [
     {
       "seed": 42,
       "test_rows": 159102,
       "positive_label_rows": 3411,
-      "static": {
-        "auroc": 0.7623354697524292,
-        "auprc": 0.07767507764572511,
-        "brier_score": 0.19027581116186243
-      },
-      "temporal": {
-        "auroc": 0.7872536751127859,
-        "auprc": 0.084196978821625,
-        "brier_score": 0.18138944740778012
-      },
-      "bootstrap": {
-        "valid": 20,
-        "seed": 90042,
+      "replicates": 200,
+      "bootstrap_seed": 90042,
+      "differences": {
         "auroc": {
-          "mean": 0.024220967626145135,
+          "mean": 0.025331245385324542,
           "ci95": [
-            0.015332087648533888,
-            0.035122162728421495
+            0.014888053002878982,
+            0.03589950435896576
           ]
         },
         "auprc": {
-          "mean": 0.007682092261884083,
+          "mean": 0.007056329639519688,
           "ci95": [
-            0.003741993728245616,
-            0.01724743278474707
+            0.002389000601933667,
+            0.015108167330122326
           ]
         },
         "brier_score": {
-          "mean": -0.008812484118982476,
+          "mean": -0.008784237956665546,
           "ci95": [
-            -0.010441123104153962,
-            -0.007137712818195757
+            -0.01033553521800565,
+            -0.0069190404097373495
           ]
         }
       }
@@ -63,38 +43,28 @@
       "seed": 123,
       "test_rows": 160217,
       "positive_label_rows": 3557,
-      "static": {
-        "auroc": 0.7643256217136895,
-        "auprc": 0.09413823232238272,
-        "brier_score": 0.1927850517230081
-      },
-      "temporal": {
-        "auroc": 0.7906037675497662,
-        "auprc": 0.09521671532932847,
-        "brier_score": 0.18617547397820808
-      },
-      "bootstrap": {
-        "valid": 20,
-        "seed": 90123,
+      "replicates": 200,
+      "bootstrap_seed": 90123,
+      "differences": {
         "auroc": {
-          "mean": 0.026786539844786267,
+          "mean": 0.02677722227702966,
           "ci95": [
-            0.0189778966076097,
-            0.03754110148533095
+            0.01686985752090244,
+            0.03686886007404414
           ]
         },
         "auprc": {
-          "mean": 0.0012345110407199467,
+          "mean": 0.001284048060793544,
           "ci95": [
-            -0.0026749509084547317,
-            0.006503537258331038
+            -0.003620794921785789,
+            0.00697370281199877
           ]
         },
         "brier_score": {
-          "mean": -0.006687947132819752,
+          "mean": -0.00658533186705633,
           "ci95": [
-            -0.00826048066688174,
-            -0.004863506632175463
+            -0.008624961809756629,
+            -0.004779549722900815
           ]
         }
       }
@@ -103,49 +73,38 @@
       "seed": 2026,
       "test_rows": 155703,
       "positive_label_rows": 3470,
-      "static": {
-        "auroc": 0.7618504934353718,
-        "auprc": 0.0819798075147334,
-        "brier_score": 0.18525034473927318
-      },
-      "temporal": {
-        "auroc": 0.7873873132174097,
-        "auprc": 0.08628558149138209,
-        "brier_score": 0.17733285260066486
-      },
-      "bootstrap": {
-        "valid": 20,
-        "seed": 92026,
+      "replicates": 200,
+      "bootstrap_seed": 92026,
+      "differences": {
         "auroc": {
-          "mean": 0.025451026754170464,
+          "mean": 0.025303984200854713,
           "ci95": [
-            0.017487213246969967,
-            0.03260003311279757
+            0.013989703302027902,
+            0.036794805526830524
           ]
         },
         "auprc": {
-          "mean": 0.003946419394651224,
+          "mean": 0.004318983155143504,
           "ci95": [
-            0.0001848904665035856,
-            0.007494028280093757
+            0.0004015055079989165,
+            0.008796053694123132
           ]
         },
         "brier_score": {
-          "mean": -0.008087314681717328,
+          "mean": -0.008019458271524293,
           "ci95": [
-            -0.009385462237805684,
-            -0.0060439777891723515
+            -0.009870556869408015,
+            -0.005909051310197895
           ]
         }
       }
     }
   ],
   "limitations": [
-    "Exploratory retrospective internal evaluation only.",
-    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or clinical false-alarm rates.",
-    "Twenty bootstrap replicates per seed are insufficient for stable tail quantiles; rerun with at least 200–1000 after runtime optimization.",
-    "No external or prospective validation.",
-    "Not for diagnosis, triage, or treatment.",
-    "The local evaluator copy was reconstructed and modified from checked-in logic, not verified byte-identical to the GitHub blob."
-  ]
+    "Intervals are conditional on each held-out split, not external-validation uncertainty.",
+    "Local working copy was reconstructed from checked-in evaluator logic and is not byte-identical to GitHub source.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world false-alarm rates.",
+    "No external or prospective validation; not for diagnosis, triage, or treatment."
+  ],
+  "provenance": "Computed locally against the verified full-cohort feature cache. No row-level predictions, raw patient records, or patient identifiers included."
 }
