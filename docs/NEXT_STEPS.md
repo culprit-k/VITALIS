@@ -532,7 +532,8 @@ The next implementation layer has now been added on the existing research branch
 - [x] Added an intentionally incomplete machine-readable lockfile scaffold: `configs/independent_evaluation_lockfile.template.json`.
 - [x] Added `scripts/validate_evaluation_lockfile.py` to reject unfrozen policies, missing endpoint/configuration fields, Set B reuse, Challenge-proxy labels used for clinical-onset claims, invalid thresholds/horizons, and missing independent reviewer/governance sign-offs.
 - [x] Added synthetic unit tests in `tests/test_evaluation_lockfile.py` and documented the workflow in [the independent-evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md) and README.
-- [ ] Run the focused and full CI suite and review any failures before treating this guard as verified.
+- [x] Strengthen the freeze-gate validator to require hexadecimal commit/artifact hashes with the expected lengths; add regression coverage for malformed hashes in `tests/test_evaluation_lockfile.py`.
+- [x] GitHub Actions passed after the validator/hash regression changes (run https://github.com/culprit-k/VITALIS/actions/runs/38632635525; compile, synthetic stream smoke test, and full test suite succeeded).
 - [ ] Complete the lockfile privately only after the cohort, event definition, cost assumptions, model policy, and reviewers are identified; do not put a completed lockfile containing sensitive study metadata in public Git.
 - [ ] Obtain a genuinely new cohort, data-governance/ethics determination, and independent clinical/statistical approval. Set B remains unavailable for threshold selection.
 - [ ] Complete clean-checkout reproduction and history-wide privacy/security review. The project remains research-only; this validation helper does not confer clinical validity or authorize a prospective study.
