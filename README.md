@@ -106,3 +106,8 @@ VITALIS now has retrospective static/temporal research workflows plus an initial
 ### Utility-based operating-point analysis
 
 The Set-A-only cost-sensitivity framework is documented in [Utility operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration/operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md). Exploratory nine-run results and the source-provenance caveat are in [the utility results report](docs/HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate-only JSON](results/horizon_utility_operating_point_aggregate_2026-10-15.json). Cost ratios are illustrative, not clinical recommendations. Set B remains evaluation-only.
+
+
+### Independent evaluation gate
+
+The next external evidence stage is specified in the [independent-cohort evaluation protocol](docs/INDEPENDENT_EVALUATION_PROTOCOL.md). It requires a frozen model/policy, a genuinely new cohort, an independently defined event time, and clinical/statistical and governance sign-off. This is a planning protocol only; no external or prospective validation has occurred. The [utility cost review checklist](docs/UTILITY_COST_REVIEW_CHECKLIST.md) is available for independent review.
