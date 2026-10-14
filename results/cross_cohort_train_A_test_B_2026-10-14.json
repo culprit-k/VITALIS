@@ -1,0 +1,54 @@
+{
+  "project": "VITALIS",
+  "run_type": "cross_cohort_train_A_test_B",
+  "date": "2026-10-14",
+  "dataset": {
+    "training_setA": {"patients": 20336, "hourly_rows": 790215, "positive_hourly_labels": 17136},
+    "training_setB": {"patients": 20000, "hourly_rows": 761995, "positive_hourly_labels": 10780}
+  },
+  "protocol": {
+    "seeds": [42, 123, 2026],
+    "split_unit": "patient",
+    "set_a_train_fraction": 0.6,
+    "set_a_holdout_fraction": 0.4,
+    "set_b_test": "all patients in training_setB",
+    "model": "median imputation with missingness indicators, standard scaling, balanced logistic regression",
+    "threshold": 0.5,
+    "threshold_note": "fixed research comparison only; not clinically selected",
+    "sd_note": "Across A training subsamples, not a confidence interval",
+    "test_predictions_exported": false
+  },
+  "aggregate_metrics_mean_and_sample_sd": {
+    "static": {
+      "auroc": [0.6780926383, 0.0014873237],
+      "auprc": [0.0463924587, 0.0002495695],
+      "brier_score": [0.1648990958, 0.0018313397],
+      "sensitivity": [0.4777674706, 0.0055226627],
+      "specificity": [0.7996104089, 0.0055047357],
+      "ppv": [0.0330908201, 0.0005186770],
+      "npv": [0.9907150069, 0.0000357155]
+    },
+    "temporal": {
+      "auroc": [0.7356862716, 0.0028352577],
+      "auprc": [0.0597446551, 0.0010063208],
+      "brier_score": [0.0968801959, 0.0023530585],
+      "sensitivity": [0.3848484848, 0.0079822297],
+      "specificity": [0.9250272337, 0.0027954448],
+      "ppv": [0.0686438583, 0.0018449548],
+      "npv": [0.9905473718, 0.0001061048]
+    }
+  },
+  "per_seed_metrics": {
+    "42": {"static": {"auroc": 0.6771639534, "auprc": 0.0461116761, "brier_score": 0.1628964484, "sensitivity": 0.4715213358, "specificity": 0.8055816244, "ppv": 0.0336326282, "npv": 0.9906738347}, "temporal": {"auroc": 0.7370912349, "auprc": 0.0603777464, "brier_score": 0.0964108528, "sensitivity": 0.3926716141, "specificity": 0.9246553916, "ppv": 0.0695839429, "npv": 0.9906626429}},
+    "123": {"static": {"auroc": 0.6773058652, "auprc": 0.0464766733, "brier_score": 0.1664885160, "sensitivity": 0.4820037106, "specificity": 0.7947378580, "ppv": 0.0325988757, "npv": 0.9907335344}, "temporal": {"auroc": 0.7324228830, "auprc": 0.0585842621, "brier_score": 0.0994325543, "sensitivity": 0.3851576994, "specificity": 0.9224363198, "ppv": 0.0665182076, "npv": 0.9905256898}},
+    "2026": {"static": {"auroc": 0.6798080962, "auprc": 0.0465890266, "brier_score": 0.1653123229, "sensitivity": 0.4797773655, "specificity": 0.7985117443, "ppv": 0.0330409562, "npv": 0.9907376516}, "temporal": {"auroc": 0.7375446969, "auprc": 0.0602719566, "brier_score": 0.0947971807, "sensitivity": 0.3767161410, "specificity": 0.9279899896, "ppv": 0.0698294243, "npv": 0.9904537828}}
+  },
+  "limitations": [
+    "Retrospective evaluation on the official Challenge 2019 training cohorts; set B is a separate cohort but not external prospective clinical validation",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world clinical false-alarm rates",
+    "A patient-level 60/40 training/unused-holdout split is used; no calibration or threshold tuning is performed",
+    "The fixed 0.5 threshold is not a clinically selected operating point",
+    "No patient-level predictions, IDs, or raw patient data are written to output",
+    "The checked-in script has not yet been byte-verified as the exact source executed locally"
+  ]
+}
