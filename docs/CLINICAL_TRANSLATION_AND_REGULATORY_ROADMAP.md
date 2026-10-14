@@ -27,7 +27,26 @@ Do not infer a regulatory class from the algorithm alone. Intended purpose, clai
 
 ## 2. Target-market regulatory assessment — BLOCKING
 
-Choose the first target market before making jurisdiction-specific compliance claims. Obtain written advice from a qualified regulatory professional and, where available, early feedback from the relevant authority.
+The first target market is now **Uzbekistan**, with **research only** as the intended first deployment category. The market-specific gate register is in [Uzbekistan research readiness](UZBEKISTAN_RESEARCH_READINESS.md) and [its machine-readable checklist](../configs/regulatory/uzbekistan_research_readiness.json). This selection is a project planning decision, not an official classification or authorization. Obtain written advice from qualified Uzbekistan regulatory counsel and written feedback from the competent authority before any local patient-data access, prospective study, clinical workflow use, distribution, or marketing.
+
+
+
+### Uzbekistan (selected first market; research-only initial scope)
+
+The first intended activity is offline retrospective research using only authorized, de-identified data, with no output shown to treating clinicians and no influence on patient care. See the [Uzbekistan research-readiness dossier](UZBEKISTAN_RESEARCH_READINESS.md) for the current legal-source review, open determinations, questions for the host institution and competent authority, and explicit stop conditions.
+
+Current source checks indicate:
+- The current consolidated Personal Data Law (ZRU-547) contains research anonymization requirements and rules relevant to health data and cross-border transfers; the actual processing design needs written institutional/legal review.
+- Cabinet of Ministers Resolution No. 738 took effect on 26 February 2026 and replaced the prior registration procedure under Resolution No. 213. Software-specific classification and requirements must be confirmed against the current binding rules; do not infer that research-only use is exempt.
+- A 2024 peer-reviewed description reports uncertainty/gaps in biomedical research ethics review for non-clinical studies. This is secondary context, not binding law; obtain a written determination from the responsible institution and competent ethics authority.
+
+Official starting points:
+- Personal Data Law, current consolidated text: https://lex.uz/en/acts/4396428
+- Cabinet of Ministers Resolution No. 738: https://lex.uz/en/docs/7861699
+- Center for Pharmaceutical Product Safety: https://www.uzpharm-control.uz/en/
+- Committee on New Medical Technology: https://en.regmed.uz/department_cnmt.php
+
+Do not begin a local human-data study or prospective silent-mode activity until the applicable data-access, privacy, ethics, site, and authority requirements have been confirmed in writing. This subsection is a planning aid, not legal advice or a regulatory decision.
 
 ### India (if selected)
 
