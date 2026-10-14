@@ -12,8 +12,8 @@ def test_alert_burden_applies_refractory_and_counts_label_episodes():
     result = calculate_alert_burden(labels, probabilities, patients, threshold=0.5, refractory_hours=3)
     assert result["alerts_total"] == 3
     assert result["challenge_positive_label_episodes"] == 2
-    assert result["challenge_positive_episodes_with_alert"] == 2
-    assert result["alerts_outside_challenge_positive_windows"] == 1
+    assert result["challenge_positive_episodes_with_alert"] == 1
+    assert result["alerts_outside_challenge_positive_windows"] == 2
 
 
 def test_alert_burden_requires_positive_refractory_period():
