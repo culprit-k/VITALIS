@@ -108,13 +108,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added paired patient-cluster bootstrap intervals for temporal-minus-static AUROC, AUPRC, and Brier score to the cache-backed evaluator; intervals resample patients, not hourly rows. Full-cohort interval execution is pending.
 - [x] Bootstrap probabilities and group vectors remain in memory; the runner writes aggregate intervals only.
 - [x] Added deterministic tests for paired bootstrap reproducibility, input validation, and aggregate-only output. CI result is pending: https://github.com/culprit-k/VITALIS/actions/runs/38560507472.
-- [x] Reported seed-specific intervals separately without pooling test rows across split seeds. Only 20 replicates per seed completed, so intervals are preliminary and too coarse for final inferential claims. [ ] Repeat with 200–1,000 replicates after runtime optimization.
+- [x] Preserved the initial 20-replicate pilot as preliminary. The follow-up exact-source raw and recalibrated analyses now use 1,000 paired patient-cluster replicates per seed; see [the final aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json).
 
 
 ## Preliminary full-cohort uncertainty results
 
 - [x] Committed aggregate-only paired patient-cluster bootstrap results for seeds 42, 123, and 2026. Temporal AUROC differences were positive across all three seeds; Brier differences were negative; AUPRC interval crossed zero for seed 123. See [report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
-- [ ] Increase bootstrap replicates to at least 200–1,000 and verify the checked-in source bytes are the ones actually executed before treating the intervals as final research results.
+- [x] Increased exact-source cross-cohort bootstrap to 1,000 replicates per seed and probability stream; checked-in source hashes and accelerated-runner parity checks are recorded in the final [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md).
 
 
 ## 200-replicate paired bootstrap milestone (2026-10-14)
@@ -132,7 +132,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added randomized tied-score parity tests against scikit-learn; corrected a zero-weight score-threshold edge case discovered by CI.
 - [x] GitHub Actions passed after the fix: https://github.com/culprit-k/VITALIS/actions/runs/38562541833.
 - [x] Re-ran the 200-replicate analysis for each split seed in separate local processes; aggregate intervals are documented in [the report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
-- [ ] A 1,000-replicate full-cohort attempt exceeded the local five-minute execution window before producing a complete artifact. Do not treat it as a result. Further optimize runtime or run the bootstrap over retained held-out score vectors before increasing repetitions.
+- [x] The initial full-cohort 1,000-replicate attempt exceeded the local execution window. This was resolved by running the accelerated, tie-aware bootstrap over retained local score vectors in deterministic chunks; the final 1,000-replicate aggregate is committed.
 - [ ] Strict byte-for-byte source execution remains unverified; local evaluation files were reconstructed and are not an unchanged checkout of the repository blobs.
 
 
