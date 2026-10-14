@@ -1,51 +1,37 @@
 # VITALIS next steps and current status
 
-## Current verified state
+## Phase 1 closeout
 
-- The public repository contains the research scaffold, automated tests, dataset inventory, historical experiment register, and multi-seed runner.
-- An earlier local rerun on a deterministic 1,500-patient sample is recorded in [current_subset_rerun.json](../results/current_subset_rerun.json).
-- [x] Completed a fresh three-seed comparison on the same deterministic 1,500-patient sample; see [multi-seed report](MULTISEED_SUBSET_EXPERIMENT.md) and [aggregate results](../results/multiseed_subset_summary.json).
-- The rerun used 960 train, 240 validation, and 300 test patients with no patient overlap. The model fit emitted warnings because EtCO2 had no observed values and was dropped by the imputer.
-- On this one held-out sample, temporal features increased AUROC by about 0.0119 and lowered Brier score by about 0.0186, but average precision decreased by about 0.0092. This mixed result does not establish that temporal features are better overall.
-- The run was executed locally against the current intended protocol, but it is not an execution from GitHub Actions and not a full-cohort evaluation.
+- [x] Established research repository, dataset protocol, model card, baseline pipeline, tests, and reproducible workflow.
+- [x] Implemented and tested static, temporal, and first patient-baseline deviation feature sets.
+- [x] Added the Phase 1 closeout report and aggregate-only three-seed evaluation: [Phase 1 report](PHASE1_CLOSEOUT.md), [summary JSON](../results/phase1_500_patient_three_seed_summary.json).
+- [x] Evaluated a deterministic 500-patient sample using three patient-disjoint split seeds and paired patient-cluster bootstrap comparisons.
+- [x] Documented the negative/mixed findings without claiming that VITALIS-PB improves the baseline.
+- [x] Confirmed the latest main-branch GitHub Actions run for the algorithm integration passed.
+- [ ] Full-cohort canonical rerun and external validation remain future work; neither is claimed complete.
 
-- [x] Implemented the first VITALIS-PB patient-baseline deviation feature generator and integrated a third model into the matched comparison. See [algorithm specification](VITALIS_PB_ALGORITHM.md). CI and data-backed model evaluation are still required before interpreting performance.
+## Main finding
 
-## Prioritized plan
+In the 500-patient exploratory sample, the static model had the best mean AUROC (0.7244) and average precision (0.1018). The temporal model had lower discrimination, while the personalized model had the lowest mean AUROC (0.5847) and average precision (0.0525). The personalized model's lower Brier score but higher log loss is mixed evidence, not proof of good calibration. These results do not justify advancing the personalized model as the default or claiming clinical benefit.
 
-### 1. Fix and test data/model pipeline details
-- [x] Exclude predictors entirely missing in the training fold and record dropped columns in the report.
-- [x] Add a deterministic subset runner and tests for sample-size validation and repeatable patient-file sampling.
-- Confirm that file ordering is chronological and that temporal features are calculated within patient only.
-- Ensure a single shared sampled cohort and identical patient splits for all model variants.
-- [x] Add regression tests for training-fold all-missing feature exclusion and deterministic subset sampling.
-- [ ] Add further explicit tests for feature alignment and chronological ordering.
+## Next software/research actions
 
-### 2. Rerun the baseline experiment reproducibly
-- [x] Add `scripts/run_subset_experiment.py` for a deterministic patient-level subset comparison; run it locally and keep aggregate-only outputs.
-- [x] Run static-versus-temporal comparisons on split seeds 42, 123, and 2026; the checked-in multi-seed report records results and limitations.
-- [x] Review and publish aggregate-only metrics after checking counts, split overlap, and model warnings.
-- [x] Inspect cohort counts, positive-label prevalence, convergence warnings, and patient-level split separation.
-- Keep patient-level predictions and raw files local; only publish aggregate metrics after review.
+1. Investigate the feature generator, missingness, scaling, and class weighting before changing the algorithm.
+2. Add calibration curves/slope/intercept and carefully designed subgroup/missingness analyses.
+3. Run the canonical repository runner on a larger sample or full cohort with convergence and integrity checks, and preserve aggregate-only outputs.
+4. Prespecify how any threshold is chosen on validation data only; keep test data untouched.
+5. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
 
-### 3. Improve evaluation before claiming model benefit
-- Treat AUROC, average precision, Brier score, calibration, sensitivity, and alert burden as complementary metrics.
-- Select any operational threshold on validation data only, then freeze it before test evaluation.
-- Add patient-level event/episode evaluation only when a defensible episode definition and timing target are prespecified.
-- Use patient-cluster uncertainty estimates; do not treat hourly rows as independent observations.
-- Keep full-cohort evaluation provisional until models converge and the results reproduce.
+## Hardware gate
 
-### 4. External validation and clinical research
-- Identify a distinct suitable cohort and document its permissions, population, label definition, and preprocessing differences.
-- Freeze model and threshold before external evaluation.
-- Seek clinical/statistical supervision and an appropriate ethics/data-governance review before any prospective or patient-facing study.
+No custom hardware purchases are recommended from these results alone. Sensor selection and interface planning can be drafted, but hardware prototyping should follow a clearer software signal specification and research justification. VITALIS remains research-only, not a medical device or clinical decision tool.
 
-### 5. Innovation and IP
-- [x] Define and implement a first mathematical patient-baseline deviation hypothesis as an experimental feature generator.
-- [ ] Evaluate whether it adds value over static and temporal baselines on identical splits with paired patient-cluster uncertainty.
-- Keep the patient-specific baseline concept as a hypothesis until prior-art review and technical differentiation are documented.
-- Do not make novelty, patentability, regulatory approval, or clinical efficacy claims based on these internal experiments.
+## Innovation and IP
+
+- [x] Defined and implemented a mathematical patient-baseline deviation hypothesis as an experimental feature generator.
+- [x] Evaluated it against static and temporal feature sets on matched patient-level splits with paired patient-cluster uncertainty estimates.
+- [ ] Improve or reject the hypothesis based on further analysis; no novelty or patentability claim is supported without separate prior-art and IP review.
 
 ## Safety boundary
 
-VITALIS is a research prototype. It is not validated for diagnosis, triage, treatment, or any real patient-care decision. No patient-level records or predictions belong in this public repository.
+VITALIS is not validated for diagnosis, triage, treatment, or real patient-care decisions. No patient-level records or predictions belong in this public repository.
