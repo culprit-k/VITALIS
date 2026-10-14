@@ -87,7 +87,7 @@ The evaluator output must remain aggregate-only. The cost proxy omits treatment 
 
 ## Utility-based operating-point cost sensitivity (15 October 2026)
 
-The calibration evaluator computes cost-sensitivity summaries on the **untouched, patient-disjoint Set-A operating-point holdout** using Platt-calibrated probabilities. The CLI's illustrative scenario grid assigns missed forecast-positive-window costs of 1, 10, 100, 500, and 1,000 units relative to an alert cost of 1 unit. Both inputs are configurable through \`--missed-window-costs\` and \`--alert-cost\`. These values are sensitivity-analysis assumptions, not clinician-elicited or clinically justified costs.
+The calibration evaluator computes cost-sensitivity summaries on the **untouched, patient-disjoint Set-A operating-point holdout** using Platt-calibrated probabilities. The CLI's illustrative scenario grid assigns missed forecast-positive-window costs of 1, 10, 100, 500, and 1,000 units relative to an alert cost of 1 unit. Both inputs are configurable through `--missed-window-costs` and `--alert-cost`. These values are sensitivity-analysis assumptions, not clinician-elicited or clinically justified costs.
 
 For each threshold, the aggregate-only output reports row sensitivity/PPV, total alerts, alerts per at-risk patient-day, forecast-positive-window coverage, missed windows, and label-relative warning time. Each scenario ranks candidate thresholds by weighted cost per at-risk patient-day. Any lowest-cost threshold is a **development candidate only**; no threshold is selected from Set B, which remains evaluation-only.
 
