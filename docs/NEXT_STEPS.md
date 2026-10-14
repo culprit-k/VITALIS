@@ -153,3 +153,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Reconciled the means and both interval endpoints for AUROC, AUPRC, and Brier score against the committed 1,000 × 3 aggregate artifact; all nine comparisons match within 1e-12. See [reconciliation JSON](../results/full_cohort_bootstrap_output_reconciliation_2026-10-14.json).
 - [x] Updated the [bootstrap report](FULL_COHORT_PAIRED_BOOTSTRAP.md). Score archives remain outside Git.
 - [ ] Exact source-byte identity for model fitting and held-out score generation remains open. Numerical agreement of a reconstructed local runner is not equivalent to execution from an exact repository checkout.
+
+
+## Both-cohort cross-cohort evaluation (2026-10-14)
+
+- [x] Verified both local official cohorts: training_setA (20,336 patients; 790,215 rows; 17,136 positive hourly challenge-label rows) and training_setB (20,000 patients; 761,995 rows; 10,780 positive hourly challenge-label rows).
+- [x] Ran a patient-disjoint cross-cohort experiment: train on a 60% patient subset of set A and evaluate on every patient in set B, across seeds 42, 123, and 2026. Aggregate-only results: [cross-cohort report](FULL_COHORT_CROSS_COHORT_RESULTS.md), [summary JSON](../results/cross_cohort_train_A_test_B_2026-10-14.json).
+- [x] Added `scripts/evaluate_cross_cohort.py` and regression tests. This experiment evaluates both static and temporal feature sets; row-level predictions and raw patient data remain local.
+- [ ] Run the checked-in script from an exact repository checkout against the local caches and reconcile results; the first local analysis used a reconstructed working copy, so source-byte identity remains open.
+- [ ] Investigate calibration and cohort shift before drawing probability or clinical conclusions. Temporal features improved AUROC/AUPRC here but had lower sensitivity at the fixed 0.5 threshold; no operating point is clinically selected.
+- [ ] External/prospective validation, clinical/statistical supervision, and governance review remain required before any patient-facing research.
