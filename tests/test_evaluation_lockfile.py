@@ -94,3 +94,17 @@ def test_rejects_unfrozen_threshold_policy():
     data["frozen_policy"]["threshold_selection_frozen"] = False
     errors = MOD.validate_lockfile(data)
     assert any("threshold_selection_frozen must be true" in error for error in errors)
+
+
+
+def test_rejects_malformed_model_commit_and_artifact_hashes():
+    data = valid_lockfile()
+    data["model_commit_sha"] = "g" * 40
+    data["environment_lock_hash"] = "a" * 63
+    data["feature_schema_hash"] = "z" * 64
+    data["model_artifact_hash"] = "not-a-hash"
+    errors = MOD.validate_lockfile(data)
+    assert any("model_commit_sha must be a 40-character hexadecimal digest" in e for e in errors)
+    assert any("environment_lock_hash must be a 64-character hexadecimal digest" in e for e in errors)
+    assert any("feature_schema_hash must be a 64-character hexadecimal digest" in e for e in errors)
+    assert any("model_artifact_hash must be a 64-character hexadecimal digest" in e for e in errors)
