@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `83688f5debab67f7836608e96e77c145e09b1502` (documentation-only follow-up after CI passed on `013d7fe5050eb0424b51b139e408b05df490a8f2`).
+**Latest branch head checked during this update:** `9602c45be2334bd9bfc787c736ea4661ec0d944c` (documentation follow-up after full-cohort results were recorded; CI passed on the performance-optimization commit `03ffc595a6f388b16a7bf2a5bcf8b6113e120d8e`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -93,6 +93,18 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - **Official full-cohort execution remains pending.** It requires verified local Set A and Set B caches. No new horizon performance results are claimed until that run completes.
 
 **Interpretation boundary:** the targets forecast entry into the Challenge SepsisLabel-positive window; the source label already incorporates a six-hour lead convention. These metrics are not independent sepsis-onset predictions, verified clinical false-alarm rates, or clinical validation. Raw data, caches, and row-level predictions must remain outside Git.
+
+## Full-cohort horizon evaluation completed (2026-10-14)
+
+- Verified and processed all official Set A and Set B rows using local caches; no raw records, caches, or individual predictions were committed.
+- Completed 9 seed × horizon runs (seeds 42, 123, 2026; horizons 1, 3, 6 hours) comparing static and temporal logistic regression. Set B was evaluation-only.
+- Full results and limitations are in [Full-cohort horizon cross-cohort results](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md).
+- Mean AUROC was 0.663/0.681/0.687 for static and 0.657/0.680/0.686 for temporal across the 1/3/6-hour horizons. Static AUPRC was also slightly higher at each horizon.
+- Temporal models had lower Brier scores and somewhat fewer alerts, but probabilities remain poorly calibrated, PPV at the fixed 0.5 threshold was very low, and window coverage was lower than static models. Neither is suitable for clinical use.
+- Fixed threshold 0.5 and six-hour refractory interval are exploratory reference settings, not clinical operating points.
+- Performance fix: patient-level warning metrics now iterate contiguous patient blocks instead of rescanning the full Set B vector for every patient. [CI run #513](https://github.com/culprit-k/VITALIS/actions/runs/38616619520) passed with 120 tests.
+
+**Interpretation boundary:** targets forecast entry into the Challenge SepsisLabel-positive window, not independent biological onset. The source label already incorporates a six-hour lead convention. No clinical validation or patient benefit is established.
 
 ## 6. Next steps, in order
 
