@@ -121,7 +121,6 @@ def patient_cluster_bootstrap_utility_uncertainty(
     Selection frequency is descriptive stability, not a probability that a
     threshold is clinically optimal.
     """
-    from vitalis.horizon import _patient_summaries
 
     y, p, groups, times = map(np.asarray, (labels, probabilities, patient_ids, patient_time_indices))
     # Reuse the validated deterministic calculation for common input checks.
@@ -158,14 +157,14 @@ def patient_cluster_bootstrap_utility_uncertainty(
             patient_tp.append(np.sum(pred & (yp == 1)))
             patient_fp.append(np.sum(pred & (yp == 0)))
             patient_fn.append(np.sum(~pred & (yp == 1)))
-            summary = _patient_summaries(
+            summary = evaluate_horizon_alerts(
                 yp, pp, groups[start:end], times[start:end],
                 threshold=float(threshold), refractory_hours=refractory_hours,
-            )[0]
+            )
             patient_hours.append(summary["hours"])
-            patient_alerts.append(summary["alerts"])
-            patient_windows.append(summary["windows"])
-            patient_covered.append(summary["covered"])
+            patient_alerts.append(summary["alerts_total"])
+            patient_windows.append(summary["future_positive_windows"])
+            patient_covered.append(summary["covered_future_positive_windows"])
         arrays = [np.asarray(v, dtype=np.float64) for v in (
             patient_tp, patient_fp, patient_fn, patient_hours, patient_alerts,
             patient_windows, patient_covered,
