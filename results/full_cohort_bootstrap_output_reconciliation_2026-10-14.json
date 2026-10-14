@@ -1,0 +1,117 @@
+{
+  "project": "VITALIS",
+  "task": "local_batched_bootstrap_output_reconciliation",
+  "reconciled_on": "2026-10-14",
+  "replicates_per_seed": 1000,
+  "scores_remain_local": true,
+  "patient_level_predictions_published": false,
+  "source_identity_status": "not verified; local runner is reconstructed and not byte-identical to the checked-in GitHub file",
+  "outputs": [
+    {
+      "seed": 42,
+      "bootstrap_seed": 90042,
+      "replicates_valid": 1000,
+      "test_rows": 159102,
+      "test_patients": 4068,
+      "positive_hourly_labels": 3411,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.025002562812489967,
+          "ci_95_percentile": [
+            0.015042657485109398,
+            0.03513852284625876
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.0070074911163042495,
+          "ci_95_percentile": [
+            0.002192494794686528,
+            0.01543206461386218
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.008856331719573077,
+          "ci_95_percentile": [
+            -0.010750265406178362,
+            -0.00706440161527564
+          ]
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "bootstrap_seed": 90123,
+      "replicates_valid": 1000,
+      "test_rows": 160217,
+      "test_patients": 4068,
+      "positive_hourly_labels": 3557,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.026426040495783253,
+          "ci_95_percentile": [
+            0.01688104951339863,
+            0.036822354898945295
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.0011108356157639317,
+          "ci_95_percentile": [
+            -0.0040920776055404975,
+            0.00669571782243407
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.0066250267981754355,
+          "ci_95_percentile": [
+            -0.008669489340875827,
+            -0.004712566612543625
+          ]
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "bootstrap_seed": 92026,
+      "replicates_valid": 1000,
+      "test_rows": 155703,
+      "test_patients": 4068,
+      "positive_hourly_labels": 3470,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.025668398619566993,
+          "ci_95_percentile": [
+            0.01447502619343555,
+            0.036779842372239656
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.004211292730238304,
+          "ci_95_percentile": [
+            -0.0001852642451640969,
+            0.00895236459607319
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.007939720383310837,
+          "ci_95_percentile": [
+            -0.009846117732986685,
+            -0.0060996120731062675
+          ]
+        }
+      }
+    }
+  ],
+  "comparison": {
+    "reference": "results/full_cohort_paired_patient_cluster_bootstrap_1000x3_2026-10-14.json",
+    "comparison_count": 9,
+    "each_comparison_includes_mean_and_both_ci_endpoints": true,
+    "all_metrics_match_within_1e_12": true,
+    "max_absolute_difference": 0
+  },
+  "local_score_archive_sha256": {
+    "42": "f2be10cbb3476c14387047213817d8db5da6b51e4ceb9ea31e4fed2d75051320",
+    "123": "63bf17fd3d7c9700185d6373ed21d13465d86b7da24cfaf8d37fe9b5f42b949f",
+    "2026": "de8e3af93d1ce524627f961acf28342462f17592137bd0f6afaaf55f4cee73bd"
+  },
+  "caveat": "Exact numeric reconciliation of local batched bootstrap output is not proof that the GitHub source bytes were executed. Held-out score vectors and raw patient data remain outside Git."
+}
