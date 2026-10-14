@@ -98,3 +98,144 @@ def evaluate_utility_operating_points(labels: Sequence[int] | np.ndarray,
             "The lowest-cost threshold is only a development candidate and needs independent evaluation.",
         ],
     }
+
+
+def patient_cluster_bootstrap_utility_uncertainty(
+    labels: Sequence[int] | np.ndarray,
+    probabilities: Sequence[float] | np.ndarray,
+    patient_ids: Sequence[object] | np.ndarray,
+    patient_time_indices: Sequence[int] | np.ndarray,
+    *,
+    thresholds: Sequence[float],
+    missed_window_costs: Sequence[float],
+    alert_cost: float = 1.0,
+    refractory_hours: int = 6,
+    n_bootstrap: int = 200,
+    seed: int = 42,
+) -> dict[str, object]:
+    """Estimate patient-cluster uncertainty and candidate-selection stability.
+
+    Whole patient blocks are resampled. For each predeclared threshold and cost
+    scenario, percentile intervals cover row sensitivity/PPV, alerts per
+    at-risk patient-day, forecast-window coverage, and weighted cost/day.
+    Selection frequency is descriptive stability, not a probability that a
+    threshold is clinically optimal.
+    """
+    from vitalis.horizon import _patient_summaries
+
+    y, p, groups, times = map(np.asarray, (labels, probabilities, patient_ids, patient_time_indices))
+    # Reuse the validated deterministic calculation for common input checks.
+    base = evaluate_utility_operating_points(
+        y, p, groups, times, thresholds=thresholds,
+        missed_window_costs=missed_window_costs, alert_cost=alert_cost,
+        refractory_hours=refractory_hours,
+    )
+    if isinstance(n_bootstrap, bool) or not isinstance(n_bootstrap, int) or n_bootstrap < 20:
+        raise ValueError("n_bootstrap must be an integer >= 20")
+    boundaries = np.r_[0, np.flatnonzero(groups[1:] != groups[:-1]) + 1, len(groups)]
+    if len(boundaries) < 4:
+        raise ValueError("at least three patient blocks are required")
+    # Reappearing patient IDs would invalidate the cluster unit and time-window logic.
+    block_ids = [groups[start] for start in boundaries[:-1]]
+    if len(set(x.item() if hasattr(x, "item") else x for x in block_ids)) != len(block_ids):
+        raise ValueError("patient rows must be contiguous and each patient must appear once")
+    n_patients = len(boundaries) - 1
+    rng = np.random.default_rng(seed)
+    sampled = rng.integers(0, n_patients, size=(n_bootstrap, n_patients))
+    threshold_values = np.asarray(base["thresholds"], dtype=np.float64)
+    sorted_order = np.argsort(threshold_values, kind="stable")
+    threshold_values_sorted = threshold_values[sorted_order]
+    costs = np.asarray(base["missed_window_cost_scenarios"], dtype=np.float64)
+
+    per_threshold = []
+    for threshold in threshold_values:
+        patient_tp, patient_fp, patient_fn = [], [], []
+        patient_hours, patient_alerts, patient_windows, patient_covered = [], [], [], []
+        for start, end in zip(boundaries[:-1], boundaries[1:]):
+            yp = y[start:end].astype(np.int8, copy=False)
+            pp = p[start:end]
+            pred = pp >= threshold
+            patient_tp.append(np.sum(pred & (yp == 1)))
+            patient_fp.append(np.sum(pred & (yp == 0)))
+            patient_fn.append(np.sum(~pred & (yp == 1)))
+            summary = _patient_summaries(
+                yp, pp, groups[start:end], times[start:end],
+                threshold=float(threshold), refractory_hours=refractory_hours,
+            )[0]
+            patient_hours.append(summary["hours"])
+            patient_alerts.append(summary["alerts"])
+            patient_windows.append(summary["windows"])
+            patient_covered.append(summary["covered"])
+        arrays = [np.asarray(v, dtype=np.float64) for v in (
+            patient_tp, patient_fp, patient_fn, patient_hours, patient_alerts,
+            patient_windows, patient_covered,
+        )]
+        boot = [values[sampled].sum(axis=1) for values in arrays]
+        tp, fp, fn, hours, alerts, windows, covered = boot
+        days = hours / 24.0
+        metrics = {
+            "row_sensitivity": np.divide(tp, tp + fn, out=np.full(n_bootstrap, np.nan), where=(tp + fn) > 0),
+            "row_ppv": np.divide(tp, tp + fp, out=np.full(n_bootstrap, np.nan), where=(tp + fp) > 0),
+            "alerts_per_at_risk_patient_day": np.divide(alerts, days, out=np.full(n_bootstrap, np.nan), where=days > 0),
+            "future_positive_window_coverage": np.divide(covered, windows, out=np.full(n_bootstrap, np.nan), where=windows > 0),
+        }
+        for cost in costs:
+            cost_day = np.divide(cost * (windows - covered) + alert_cost * alerts, days,
+                                 out=np.full(n_bootstrap, np.nan), where=days > 0)
+            metrics[f"weighted_cost_per_patient_day__miss_cost_{cost:g}"] = cost_day
+        per_threshold.append(metrics)
+
+    def interval(values):
+        finite = values[np.isfinite(values)]
+        return {
+            "lower_95": float(np.percentile(finite, 2.5)) if len(finite) else None,
+            "upper_95": float(np.percentile(finite, 97.5)) if len(finite) else None,
+            "valid_replicates": int(len(finite)),
+            "requested_replicates": n_bootstrap,
+        }
+
+    threshold_results = []
+    for i, threshold in enumerate(threshold_values):
+        threshold_results.append({
+            "threshold": float(threshold),
+            "intervals": {name: interval(values) for name, values in per_threshold[i].items()},
+        })
+
+    scenarios = []
+    for cost in costs:
+        key = f"weighted_cost_per_patient_day__miss_cost_{cost:g}"
+        matrix = np.column_stack([per_threshold[i][key] for i in range(len(threshold_values))])
+        matrix_sorted = matrix[:, sorted_order]
+        valid_rows = np.isfinite(matrix_sorted).all(axis=1)
+        chosen = np.argmin(np.where(np.isfinite(matrix_sorted), matrix_sorted, np.inf), axis=1)
+        counts = np.bincount(chosen[valid_rows], minlength=len(threshold_values))
+        denom = int(valid_rows.sum())
+        scenarios.append({
+            "missed_window_cost_relative_to_one_alert": float(cost),
+            "selection_frequency_by_threshold": [
+                {"threshold": float(threshold_values_sorted[j]),
+                 "selected_replicates": int(counts[j]),
+                 "selection_fraction": float(counts[j] / denom) if denom else None}
+                for j in range(len(threshold_values_sorted))
+            ],
+            "valid_replicates": denom,
+            "requested_replicates": n_bootstrap,
+            "interpretation": "Resampling stability of the minimum-cost development candidate under this assumed cost ratio; not clinical optimality.",
+        })
+    return {
+        "method": "patient-cluster percentile bootstrap of operating-point metrics and cost-ranking stability",
+        "confidence_level": 0.95,
+        "seed": seed,
+        "unique_patients": n_patients,
+        "requested_replicates": n_bootstrap,
+        "threshold_results": threshold_results,
+        "cost_scenario_selection_stability": scenarios,
+        "set_b_used_for_threshold_selection": False,
+        "limitations": [
+            "Conditional retrospective uncertainty on the Set-A development partition.",
+            "Selection frequency measures resampling stability under assumed costs, not a probability of clinical optimality.",
+            "Cost ratios are illustrative unless independently elicited and justified.",
+            "Challenge-label windows are not independently observed biological onset.",
+            "A new independent cohort is required for final evaluation.",
+        ],
+    }
