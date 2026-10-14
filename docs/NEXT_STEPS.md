@@ -649,3 +649,15 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Keep Set B unavailable for threshold selection. A frozen development candidate requires a new independent cohort with independently defined/adjudicated event timing plus governance/ethics approval before external or prospective evaluation.
 
 **Boundary:** bootstrap intervals are conditional on this development cohort and the chosen model/cost assumptions. They do not include uncertainty in the cost ratios, model selection process, domain shift, or label validity. VITALIS remains research-only and must not guide patient care.
+
+
+## Adaptive-twin edge hardening checkpoint (15 October 2026)
+
+- [x] Added synthetic tests for flatline-like histories, single-channel spike suppression, correlated channels grouped by physiological system, and explicit channel-to-system mapping.
+- [x] Added per-channel freshness policy validation, stale/future timestamp tests, and regression coverage for identified sensor-source replacement.
+- [x] Implemented a source-replacement safeguard: when an identified source changes, reset that channel's history/reference/CUSUM and clear aggregate trajectory continuity while preserving other channel histories. Source-change counts are surfaced in stream outputs.
+- [x] Documented behavior and remaining limitations in [Adaptive twin implementation](ADAPTIVE_TWIN_IMPLEMENTATION.md).
+- [x] GitHub Actions passed on commit \`4d21df9985a523414113ebc8b2455ca384b80c9d\` (run [38642262376](https://github.com/culprit-k/VITALIS/actions/runs/38642262376)): compile, repository artifact hygiene, reachable-history audit, synthetic stream smoke test, and **179 tests passed**.
+- [ ] Validate source-change metadata against real device adapters; replacement cannot be detected if source identifiers are absent or unreliable. Multi-rate synchronization, real-device quality flags, and any hardware-specific protocol remain open.
+
+**Boundary:** these are synthetic software regressions, not medical-device verification or clinical evidence. No hardware purchases or patient-care use are justified by these tests.
