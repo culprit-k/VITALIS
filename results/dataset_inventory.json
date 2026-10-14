@@ -1,0 +1,32 @@
+{
+  "project": "VITALIS",
+  "audit_date": "2026-10-14",
+  "source_dataset": "PhysioNet Computing in Cardiology Challenge 2019",
+  "source_url": "https://physionet.org/content/challenge-2019/1.0.0/",
+  "audit_method": "Counted per-patient PSV files and parsed only the SepsisLabel column from each file in the local downloaded archive.",
+  "raw_patient_data_uploaded": false,
+  "partitions": {
+    "training_setA": {
+      "patient_files": 20336,
+      "hourly_rows": 790215,
+      "positive_hourly_labels": 17136,
+      "files_with_read_or_label_errors": 0
+    },
+    "training_setB": {
+      "patient_files": 20000,
+      "hourly_rows": 761995,
+      "positive_hourly_labels": 10780,
+      "files_with_read_or_label_errors": 0
+    }
+  },
+  "combined": {
+    "patient_files": 40336,
+    "hourly_rows": 1552210,
+    "positive_hourly_labels": 27916
+  },
+  "limitations": [
+    "This is an inventory check, not a clinical validation.",
+    "Positive labels are hourly challenge labels and must not be interpreted as independently observed onset events.",
+    "No patient identifiers, hourly records, or patient-level predictions are included in this file."
+  ]
+}
