@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -19,6 +21,8 @@ jobs:
         run: python -m compileall -q src scripts dashboard tests
       - name: Check repository data-artifact hygiene
         run: python scripts/check_repository_hygiene.py
+      - name: Audit reachable Git history for data artifacts and high-confidence secrets
+        run: python scripts/audit_git_history.py --json-output /tmp/vitalis-history-audit.json
       - name: Smoke-test synthetic timestamped twin stream
         run: python scripts/demo_adaptive_twin.py --seed 2026 > /tmp/vitalis-twin-demo.jsonl
       - name: Run tests
