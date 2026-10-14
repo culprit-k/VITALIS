@@ -289,18 +289,25 @@ def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[s
     test_groups = set(groups.iloc[test_idx])
     assert_disjoint_patient_splits(train_groups, val_groups, test_groups)
 
+    # Drop predictors entirely missing in the training fold; learn this
+    # selection from training data only and apply it unchanged to validation/test.
+    X_train = X_train_val.iloc[train_idx]
+    observed_features = X_train.columns[X_train.notna().any(axis=0)].tolist()
+    dropped_all_missing = [column for column in X.columns if column not in observed_features]
+    if not observed_features:
+        raise ValueError("No predictors have observed values in the training fold")
     model = make_pipeline(
-        SimpleImputer(strategy="median", add_indicator=True),
+        SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True),
         StandardScaler(),
         LogisticRegression(max_iter=500, class_weight="balanced", solver="lbfgs", random_state=seed),
     )
-    model.fit(X_train_val.iloc[train_idx], y_train_val.iloc[train_idx])
-    validation_probability = model.predict_proba(X_train_val.iloc[val_idx])[:, 1]
+    model.fit(X_train[observed_features], y_train_val.iloc[train_idx])
+    validation_probability = model.predict_proba(X_train_val.iloc[val_idx][observed_features])[:, 1]
     # Fixed, predeclared threshold: no test-set threshold tuning.
     threshold = 0.5
     # Sort held-out row indices back into source patient/time order for alert analysis.
     test_idx_ordered = np.sort(test_idx)
-    test_probability = model.predict_proba(X.iloc[test_idx_ordered])[:, 1]
+    test_probability = model.predict_proba(X.iloc[test_idx_ordered][observed_features])[:, 1]
     test_y_ordered = y.iloc[test_idx_ordered]
     test_groups_ordered = groups.iloc[test_idx_ordered]
     return {
@@ -310,7 +317,8 @@ def train_and_evaluate(data_dir: Path, temporal: bool, seed: int = 42) -> dict[s
         "seed": seed,
         "patient_counts": {"train": len(train_groups), "validation": len(val_groups), "test": len(test_groups)},
         "row_counts": {"train": int(len(train_idx)), "validation": int(len(val_idx)), "test": int(len(test_idx))},
-        "features": features,
+        "features": observed_features,
+        "dropped_all_missing_training_features": dropped_all_missing,
         "threshold_selection": "fixed 0.5; not tuned on test data",
         "validation_metrics": calculate_metrics(y_train_val.iloc[val_idx], validation_probability, threshold),
         "test_metrics": calculate_metrics(test_y_ordered, test_probability, threshold),
