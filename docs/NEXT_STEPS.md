@@ -11,7 +11,7 @@
 - [x] Latest main-branch GitHub Actions checks passed.
 - [x] Reconcile aggregate outputs from a locally mirrored checked-in runner against the previous local artifact; strict source-byte identity remains open.
 - [x] Run exploratory held-out calibration and split-specific missingness diagnostics on a deterministic 500-patient local sample; see [Phase 2 results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md).
-- [ ] Full-cohort and external validation remain future work, not completed milestones.
+- [x] Full-cohort internal exploratory evaluation is now documented across three patient-disjoint split seeds; external validation remains future work.
 
 ## Main finding
 
@@ -26,20 +26,20 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). Aggregate-metric
 - [x] Execute runner logic mirrored from checked-in source on the local dataset and reconcile aggregate outputs; split counts and feature counts match, with small metric differences documented in the closeout report. The repository helper assigns reliability bins using original probabilities; the corrected local aggregate artifact records that convention. Strict byte-for-byte source verification remains blocked by local DNS.
 - [x] Run held-out calibration and split-specific missingness diagnostics; recalibration was fit on validation data only. Results are exploratory and show unstable recalibration.
 - [x] Run an exploratory age/gender and missingness-stratified audit with small-cell suppression; see the Phase 2 results report. Results are unstable and not fairness/safety evidence.
-- [ ] Consider full-cohort execution only after exact runner reconciliation and memory/runtime checks; external validation remains separate.
+- [x] Full-cohort cache-backed evaluation completed locally across three split seeds; aggregate reconciliation is documented. Strict source-byte identity remains open; external validation remains separate.
 - [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
 
 ## Leakage/evaluation audit (2026-10-14)
 
 - [x] Reviewed patient-level split isolation, training-only preprocessing/feature selection, fixed threshold handling, label timing, temporal feature assumptions, and alert-burden interpretation. See [leakage and evaluation audit](LEAKAGE_EVALUATION_AUDIT.md).
-- [x] Added regression tests for overlapping patient splits and threshold/alert-burden calculations; CI verification pending for the latest commits.
+- [x] Added regression tests for overlapping patient splits and threshold/alert-burden calculations; CI passed for the relevant commits.
 - [ ] Revisit the chronological-row assumption if any new data loader or dataset format is introduced.
 
 ## Full-cohort data-integrity gate (2026-10-14)
 
 - [x] Added an aggregate-only dataset integrity checker and unit tests: `scripts/check_dataset_integrity.py` and `tests/test_dataset_integrity.py`.
 - [x] Ran the checker over all 20,336 `training_setA` patient files: 790,215 rows; 17,136 positive challenge-label rows; zero invalid target rows, empty files, or column-set mismatches. See [integrity audit JSON](../results/phase3_training_setA_integrity_audit.json).
-- [ ] Direct execution of the checked-in full-cohort model CLI and strict source-byte verification remain open. A full-cohort calibration run exceeded the five-minute execution window without an artifact; a second full-cohort seed-123 static/temporal attempt also timed out before completing and is not counted as a result. The existing seed-42 full-cohort result remains a separate optimized local harness run, not a checked-in CLI execution.
+- [x] Full-cohort static/temporal evaluation completed for seeds 42, 123, and 2026 with a cache-backed local harness; see [repository-runner reconciliation](REPOSITORY_RUNNER_RECONCILIATION.md). [ ] Strict source-byte verification remains open: local working copies were reconstructed from checked-in logic and were not byte-identical to GitHub blobs.
 
 ## Next software/research actions
 
@@ -69,7 +69,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Evaluated static and temporal logistic-regression models on all of training_setA using local optimized/cached-feature harnesses for split seeds 42, 123, and 2026. Aggregate report: [full-cohort multi-seed results](FULL_COHORT_MULTISEED_RESULTS.md), [aggregate JSON](../results/full_cohort_multiseed_summary_2026-10-14.json).
 - [x] Recorded the mean and sample standard deviation across three split seeds; these SDs are not confidence intervals.
 - [x] Recorded the source-provenance caveat: these are not byte-verified executions of the checked-in full-cohort CLI.
-- [ ] Build and test a repository-native, cache-backed multi-seed runner with explicit seed/output arguments, bounded memory, and aggregate-only output; then verify it against these local results.
+- [x] Built and tested a repository-native, cache-backed multi-seed runner with explicit seed/output arguments, bounded memory, and aggregate-only output; local results are reconciled in [the runner report](REPOSITORY_RUNNER_RECONCILIATION.md).
 - [ ] Add paired patient-cluster uncertainty intervals across matched test predictions from each seed; current multi-seed summary cannot estimate paired differences because only aggregate outputs were retained for seeds 123 and 2026.
 - [ ] Perform external validation and obtain clinical/statistical supervision before any prospective or patient-facing study.
 
@@ -79,8 +79,8 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added `scripts/build_feature_cache.py` to build a local memory-mapped feature cache in patient-index chunks; raw dataset and cache must remain outside Git.
 - [x] Added `scripts/evaluate_cached_multiseed.py` to evaluate patient-disjoint splits and write aggregate-only results for multiple seeds.
 - [x] Added metric tests for the cached evaluator: `tests/test_cached_multiseed.py`; GitHub Actions passed for the test and runner commits (runs 38558602303, 38558586454, and 38558571408).
-- [ ] Run the repository-native scripts against the full local dataset and compare their outputs with [the prior exploratory summary](FULL_COHORT_MULTISEED_RESULTS.md). Prior results came from local optimized harnesses; source-level equivalence has not yet been verified. The latest documentation CI run passed: https://github.com/culprit-k/VITALIS/actions/runs/38558700926.
-- [ ] Ensure the cache is complete before evaluation: every chunk marker must exist, and metadata must match the dataset file list. Do not commit cache files, row-level predictions, or patient identifiers.
+- [x] Ran the cache-backed evaluator locally against the full dataset for seeds 42, 123, and 2026 and compared aggregate outputs with [the prior exploratory summary](FULL_COHORT_MULTISEED_RESULTS.md). Source-byte identity is still not verified.
+- [x] Verified all four cache chunks, dimensions, and patient group vectors before evaluation. Cache files remain outside Git; no row-level predictions or patient identifiers were committed.
 
 
 ## Repository-runner full-cohort reconciliation (2026-10-14)
@@ -101,3 +101,11 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Confirmed the cache builder and evaluator implementation commits passed GitHub Actions tests; the latest documentation CI passed in run https://github.com/culprit-k/VITALIS/actions/runs/38558803433.
 - [ ] Strict byte-for-byte source identity remains open: the local evaluator used for this run was reconstructed from the checked-in script logic. It was not verified as an unchanged checkout of the GitHub blob.
 - [ ] Future evaluation should retain only aggregate outputs in Git and use paired patient-cluster uncertainty intervals where matched predictions can be retained securely outside the public repository.
+
+
+## Current next milestone: paired uncertainty for full-cohort model comparison
+
+- [ ] Extend the cache-backed evaluator to compute paired patient-cluster bootstrap intervals for temporal-minus-static AUROC, AUPRC, and Brier score, using matched test rows within each split seed and resampling patients (not hourly rows).
+- [ ] Keep all row-level predictions and patient group vectors local and ephemeral; commit only aggregate intervals and method metadata.
+- [ ] Add deterministic tests for paired resampling, repeated-patient row grouping, and aggregate-only output before running the full cohort.
+- [ ] Do not pool rows across split seeds as if they were independent observations. Report seed-specific intervals and summarize them transparently; they are not external validation.
