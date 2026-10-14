@@ -24,7 +24,7 @@ This aggregate report records a fresh local evaluation on all of training_setA. 
 
 At this fixed threshold, the temporal variant has higher point estimates for AUROC, AUPRC, sensitivity, and NPV, with a slightly lower specificity. Positive predictive value is approximately 5.7%, so most positive hourly alerts at this threshold are not positive challenge-label rows. This is not a clinical false-alarm rate.
 
-The intervals above are **separate intervals for each model**, not a paired confidence interval for the temporal-minus-static difference. Do not infer statistical significance from the separate intervals. A paired patient-cluster bootstrap of the difference remains a useful next analysis.
+A paired patient-cluster bootstrap using the same 200 resampled test-patient sets for both models produced the following temporal-minus-static differences (95% percentile intervals): AUROC +0.0249 (0.0155 to 0.0331), AUPRC +0.00652 (0.00257 to 0.01446), and Brier score −0.00889 (−0.01068 to −0.00704). These intervals are conditional on this single held-out split and the challenge dataset; they do not establish external validity or clinical benefit.
 
 ## Warnings and limitations
 
