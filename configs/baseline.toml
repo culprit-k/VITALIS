@@ -1,0 +1,22 @@
+[experiment]
+name = "baseline-logistic-regression"
+seed = 42
+purpose = "Research baseline only; not for clinical use"
+
+[data]
+format = "one PSV file per patient"
+target_column = "SepsisLabel"
+patient_split_required = true
+include_raw_data_in_repository = false
+
+[features]
+use_temporal_features = false
+imputation = "fit on training split only"
+scaling = "fit on training split only"
+
+[validation]
+split_unit = "patient"
+report_auroc = true
+report_auprc = true
+report_calibration = true
+report_alert_burden = true
