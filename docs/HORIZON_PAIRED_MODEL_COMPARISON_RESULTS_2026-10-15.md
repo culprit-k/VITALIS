@@ -35,6 +35,10 @@ Point differences are temporal minus static. Values are mean ± sample SD across
 
 Define a utility-based operating-point protocol on a patient-disjoint development partition. It must state the relative costs of missed forecast windows and alert burden before threshold selection, and report sensitivity, PPV, alerts per at-risk patient-day, and forecast-window coverage together. Do not select a threshold using Set B; reserve a new independent cohort for final evaluation.
 
+## Provenance note
+
+The official-cohort analysis was executed in the available local reconstructed working copy because a clean Git checkout could not be verified in the runtime due to network/DNS limitations. The checked-in code-bearing PR head passed GitHub Actions (137 tests), but this full-cohort run is **not claimed as byte-identically verified exact-source reproduction**. Raw data, caches, and individual predictions stayed local.
+
 ## Limitations
 
 - The target forecasts entry into the Challenge SepsisLabel-positive window, not independently observed biological onset; the Challenge label already incorporates a six-hour lead convention.
