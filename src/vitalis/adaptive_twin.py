@@ -48,6 +48,8 @@ class TwinConfig:
             raise ValueError("z_clip and scale_floor must be positive")
         if self.persistence_steps < 1:
             raise ValueError("persistence_steps must be positive")
+        if not 0 < self.deviation_z <= self.high_deviation_z:
+            raise ValueError("deviation thresholds must be positive and ordered")
 
 
 @dataclass
@@ -105,11 +107,14 @@ class AdaptivePhysiologicalTwin:
             if isfinite(value):
                 valid[name] = value
 
+        # A missing/non-finite sample breaks the persistence streak for that channel.
+        for name in set(self.channels).difference(valid):
+            self.states[name].consecutive_deviations = 0
+
         coverage = len(valid) / len(self.channels)
         channel_results: dict[str, dict[str, object]] = {}
         system_values: dict[str, list[float]] = {}
         scored = 0
-        active = 0
 
         for name, value in valid.items():
             state = self.states[name]
@@ -123,9 +128,7 @@ class AdaptivePhysiologicalTwin:
                     state.consecutive_deviations + 1
                     if abs(z_score) >= self.config.deviation_z else 0
                 )
-                active += abs(z_score) >= self.config.deviation_z
                 scored += 1
-
             channel_results[name] = {
                 "value": value, "baseline": baseline, "z_score": z_score,
                 "history_count": len(state.values), "baseline_updated": False,
@@ -146,15 +149,25 @@ class AdaptivePhysiologicalTwin:
             and scored >= self.config.min_channels
             and len(system_scores) >= self.config.min_systems
         )
-        trajectory_score = concordance = None
+        trajectory_score = concordance = trajectory_delta = None
+        trajectory_direction = None
         persistent_channels = 0
         if eligible:
             instantaneous = sum(system_scores.values()) / len(system_scores)
+            previous_score = self._trajectory_score
             trajectory_score = (
-                instantaneous if self._trajectory_score is None else
+                instantaneous if previous_score is None else
                 self.config.ewma_alpha * instantaneous
-                + (1 - self.config.ewma_alpha) * self._trajectory_score
+                + (1 - self.config.ewma_alpha) * previous_score
             )
+            if previous_score is not None:
+                trajectory_delta = trajectory_score - previous_score
+                if trajectory_delta > 0.02:
+                    trajectory_direction = "rising"
+                elif trajectory_delta < -0.02:
+                    trajectory_direction = "falling"
+                else:
+                    trajectory_direction = "stable"
             self._trajectory_score = trajectory_score
             concordance = sum(
                 score >= self.config.deviation_z / self.config.z_clip
@@ -179,6 +192,7 @@ class AdaptivePhysiologicalTwin:
         return {
             "step": self.steps, "state": label, "coverage": coverage,
             "eligible": eligible, "trajectory_score": trajectory_score,
+            "trajectory_delta": trajectory_delta, "trajectory_direction": trajectory_direction,
             "score_semantics": "unitless heuristic; not a probability or clinical risk",
             "cross_system_concordance": concordance, "system_scores": system_scores,
             "persistent_channels": persistent_channels, "channels": channel_results,
