@@ -103,3 +103,6 @@ This exact-source raw-score analysis is distinct from the earlier 20-replicate r
 ## Exact-source paired uncertainty follow-up (14 October 2026)
 
 Exact-source raw and Platt-recalibrated score vectors were generated for seeds 42, 123, and 2026 using the checked-in runner. The checked-in patient-cluster bootstrap was run for 200 replicates per seed for each stream. See [the combined aggregate-only results](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [the methods/results report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md). The score archives remain outside Git. The 1,000-replicate target remains pending; these intervals are conditional on the held-out benchmark cohort and do not establish clinical calibration or utility.
+
+
+**Higher-replicate follow-up:** The preliminary 200-replicate uncertainty results above have been superseded by the 1,000-replicate-per-seed analysis for both raw and recalibrated scores. See [the 1,000-replicate aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md).
