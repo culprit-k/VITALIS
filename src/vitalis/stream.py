@@ -54,9 +54,24 @@ class TimestampedTwinStream:
             raise ValueError("Provide units for channels: " + ", ".join(sorted(missing)))
         self.channel_units = {name: units[name] for name in twin.channels}
         if isinstance(max_age_seconds, Mapping):
-            self.max_age = {name: float(max_age_seconds[name]) for name in twin.channels}
+            missing_age_channels = set(twin.channels).difference(max_age_seconds)
+            unknown_age_channels = set(max_age_seconds).difference(twin.channels)
+            if missing_age_channels or unknown_age_channels:
+                details = []
+                if missing_age_channels:
+                    details.append("missing: " + ", ".join(sorted(missing_age_channels)))
+                if unknown_age_channels:
+                    details.append("unknown: " + ", ".join(sorted(unknown_age_channels)))
+                raise ValueError("max_age_seconds channel mapping mismatch (" + "; ".join(details) + ")")
+            try:
+                self.max_age = {name: float(max_age_seconds[name]) for name in twin.channels}
+            except (TypeError, ValueError) as exc:
+                raise ValueError("all max_age_seconds values must be numeric") from exc
         else:
-            self.max_age = {name: float(max_age_seconds) for name in twin.channels}
+            try:
+                self.max_age = {name: float(max_age_seconds) for name in twin.channels}
+            except (TypeError, ValueError) as exc:
+                raise ValueError("max_age_seconds must be numeric or a per-channel mapping") from exc
         if any(not isfinite(age) or age <= 0 for age in self.max_age.values()):
             raise ValueError("all max_age_seconds values must be finite and positive")
         self._latest: dict[str, Observation] = {}
