@@ -398,3 +398,24 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Verified GitHub Actions `tests` workflow passed on current PR head `a0103df503a574f097045a34062e5f3abf229b60` (run https://github.com/culprit-k/VITALIS/actions/runs/38608383356, completed 14 October 2026 17:39 UTC). This confirms CI for the current head but does not close the clean-clone, fresh-cache, history-wide audit, or independent-review gates.
 - [ ] Complete a fresh clone and fresh cache build from authorized source data when network/DNS access permits; run the full current PR test suite from that checkout and record the checkout commit and clean status.
 - [ ] Obtain independent clinical/statistical review and perform a history-wide sensitive-artifact/secret audit before deciding whether to mark PR #1 ready or merge it.
+
+
+## Phase 3: online adaptive twin software (started 2026-10-14)
+
+The next implementation layer has now been added on the existing research branch:
+
+- [x] Add `src/vitalis/adaptive_twin.py`: causal robust personal baselines, normalized deviation, equal-weight physiological-system aggregation, EWMA trajectory score, missingness coverage, persistence, and rising/falling/stable trajectory direction.
+- [x] Add `src/vitalis/stream.py`: timestamp-aware observations, expected-unit validation, quality-flag rejection, per-channel freshness, out-of-order sample rejection, and session reset.
+- [x] Add focused tests for baseline causality, baseline-update suppression during large deviations, multisystem persistence, missing data, trajectory direction, session reset, unit checks, timestamps, freshness, and out-of-order samples.
+- [x] Add `scripts/demo_adaptive_twin.py`, a deterministic synthetic-data demonstration that does not read or generate real patient records.
+- [x] Document the mathematical definition, output semantics, and validation boundaries in [Adaptive twin implementation](ADAPTIVE_TWIN_IMPLEMENTATION.md).
+- [ ] Confirm the GitHub Actions run for the new adaptive-twin and stream tests passes on the latest code-bearing commit; a run was still in progress at the latest check.
+- [ ] Run the full suite from a clean checkout and verify the demo from a fresh environment.
+- [ ] Add edge-case tests for flatline, spikes, gradual drift, sensor replacement, irregular sampling, and conflicting or correlated channels.
+- [ ] Build a supervised, leakage-safe future-outcome model with a clearly defined prediction horizon. The current challenge label's six-hour lead convention is not evidence for a calibrated 1–3 hour forecast.
+- [ ] Add explicit directionality and per-channel noise/freshness configuration with evidence-based settings; current score weights and cutoffs are engineering defaults, not clinical thresholds.
+- [ ] Complete independent statistical/clinical review and all repository security/reproducibility gates before considering any prospective study.
+
+**Important boundary:** the new online component detects within-person deviation patterns; it is not yet a complete physiological digital twin, calibrated sepsis probability model, or validated time-to-deterioration predictor. Do not use it for patient care.
+
+**Hardware gate:** do not select sensor parts or claim device performance until timestamping, units, sample quality, expected sampling policies, compute requirements, and the software validation contract have been reviewed. The current stream adapter defines a software input boundary, not a hardware specification.
