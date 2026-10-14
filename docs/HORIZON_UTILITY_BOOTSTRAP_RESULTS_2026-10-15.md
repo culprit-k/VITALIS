@@ -52,7 +52,7 @@ The candidate changes when the assumed cost ratio changes. This is evidence that
 - Alerts outside a forecast-positive window are not verified clinical false alarms.
 - The bootstrap is conditional on the fitted model, split, endpoint, threshold grid, refractory interval, and assumed cost ratio. It does not account for model-selection uncertainty, domain shift, endpoint validity, or uncertainty in the costs.
 - Set A is development data. Set B has already been inspected for earlier experiments and must not be reused for threshold selection. A genuinely new independent cohort with independently defined/adjudicated event timing is required for final evaluation.
-- The run's reconstructed-source provenance remains a reproducibility limitation. A fresh clean checkout and cache rebuild are still required when network access permits.
+- The run's reconstructed-source provenance remains a reproducibility limitation. A fresh shallow/filtered clone was retried on 15 October 2026 and failed with `Could not resolve host: github.com`; no partial checkout was left behind. A clean checkout and fresh cache rebuild remain required when network access permits.
 - Independent clinical/statistical review, governance/ethics determinations, and any prospective study approvals remain outstanding.
 
 Machine-readable aggregate summary: [utility bootstrap summary](../results/horizon_utility_bootstrap_summary_2026-10-15.json).
