@@ -59,11 +59,11 @@ def paired_patient_cluster_bootstrap(
     n_bootstrap: int = 200,
     seed: int = 20261014,
 ) -> dict:
-    """Paired percentile intervals by resampling patients, retaining all their rows.
+    """Paired percentile intervals via patient-cluster bootstrap weights.
 
-    Predictions are supplied in memory and are never returned or written. Each bootstrap
-    replicate uses the same sampled patients for both models. This estimates uncertainty
-    conditional on the held-out split; it is not external-validation uncertainty.
+    Sampling patients with replacement is represented by per-row sample weights equal
+    to each patient's bootstrap multiplicity. This preserves all rows per sampled patient
+    while avoiding repeated large row-array concatenations. Predictions remain in memory.
     """
     y_true = np.asarray(y_true)
     p_static = np.asarray(probability_static)
@@ -73,26 +73,33 @@ def paired_patient_cluster_bootstrap(
         raise ValueError("labels, probabilities, and patient groups must have equal lengths")
     if n_bootstrap < 20:
         raise ValueError("n_bootstrap must be at least 20")
-    unique_groups = np.unique(groups)
+    unique_groups, group_index = np.unique(groups, return_inverse=True)
     if len(unique_groups) < 2:
         raise ValueError("at least two patient groups are required")
-    by_group = {group: np.flatnonzero(groups == group) for group in unique_groups}
     rng = np.random.default_rng(seed)
     deltas = {"auroc": [], "auprc": [], "brier_score": []}
     for _ in range(n_bootstrap):
-        sampled = rng.choice(unique_groups, size=len(unique_groups), replace=True)
-        indices = np.concatenate([by_group[group] for group in sampled])
-        y = y_true[indices]
-        if np.unique(y).size < 2:
+        sampled = rng.integers(0, len(unique_groups), size=len(unique_groups))
+        multiplicity = np.bincount(sampled, minlength=len(unique_groups))
+        weights = multiplicity[group_index]
+        if not np.any(weights[y_true == 0]) or not np.any(weights[y_true == 1]):
             continue
-        ps, pt = p_static[indices], p_temporal[indices]
-        deltas["auroc"].append(roc_auc_score(y, pt) - roc_auc_score(y, ps))
-        deltas["auprc"].append(average_precision_score(y, pt) - average_precision_score(y, ps))
-        deltas["brier_score"].append(brier_score_loss(y, pt) - brier_score_loss(y, ps))
+        deltas["auroc"].append(
+            roc_auc_score(y_true, p_temporal, sample_weight=weights)
+            - roc_auc_score(y_true, p_static, sample_weight=weights)
+        )
+        deltas["auprc"].append(
+            average_precision_score(y_true, p_temporal, sample_weight=weights)
+            - average_precision_score(y_true, p_static, sample_weight=weights)
+        )
+        deltas["brier_score"].append(
+            brier_score_loss(y_true, p_temporal, sample_weight=weights)
+            - brier_score_loss(y_true, p_static, sample_weight=weights)
+        )
     if len(deltas["auroc"]) < max(20, int(0.8 * n_bootstrap)):
         raise ValueError("too few valid bootstrap replicates; inspect event distribution")
     return {
-        "method": "paired patient-cluster percentile bootstrap; resample patients with replacement and retain all hourly rows",
+        "method": "paired patient-cluster percentile bootstrap; resample patients with replacement using patient multiplicity weights, retaining all hourly rows",
         "replicates_requested": n_bootstrap,
         "replicates_valid": len(deltas["auroc"]),
         "seed": seed,
