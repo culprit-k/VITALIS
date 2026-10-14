@@ -374,3 +374,15 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Obtain a full clean Git checkout and rerun the reproduction commands from that checkout when network/DNS access permits; current source-byte identity was verified through Git blob hashes, not a successful full clone.
 - [ ] Obtain independent clinical/statistical review of the cross-cohort interpretation and exploratory Set-A feature-coverage policy. Do not call the 5% cutoff optimal or clinically justified.
 - [ ] Keep PR #1 draft and unmerged until the clean-checkout/release review is complete. VITALIS remains research-only; prospective external validation and clinical oversight would be required before any clinical-use claim.
+
+
+## Release-readiness audit (14 October 2026)
+
+- [x] Inspected PR #1 metadata, full base-to-head changed-path summary, latest available CI run, and existing review submissions/threads. The PR is open, draft, and unmerged; no submitted review or inline review thread was present at audit time.
+- [x] Added [the research-release readiness audit](RELEASE_READINESS_AUDIT.md), separating verified gates from outstanding blockers and explicitly limiting release claims to retrospective research evidence.
+- [x] Latest available GitHub Actions run at audit start (run [38606955158](https://github.com/culprit-k/VITALIS/actions/runs/38606955158)) passed the install and test steps. This does not replace a clean local full-cohort reproduction.
+- [x] Performed a changed-path privacy review: no raw cohort files, row-level NPZ score archives, or cache arrays appear in the 34-file PR diff. This is not a full repository-history or secret scan.
+- [ ] Complete the fresh-clone reproduction runbook with authorized local data and record the actual checkout/environment/source hashes and reconciliation results.
+- [ ] Obtain independent clinical/statistical review of split and label semantics, calibration interpretation, domain shift, bootstrap estimand, and the exploratory 5% feature-coverage rule.
+- [ ] Review full repository history for accidentally committed sensitive artifacts/secrets, address all reviewer findings, and rerun CI after any code changes.
+- [ ] Keep PR #1 draft and unmerged until the outstanding release gates are completed and an explicit merge decision is made. VITALIS remains research-only and is not clinically validated.
