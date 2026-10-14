@@ -1,0 +1,128 @@
+{
+  "project": "VITALIS",
+  "phase": "Phase 2",
+  "sample": {
+    "patients": 500,
+    "sampling_seed": 20261014,
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "split_unit": "patient"
+  },
+  "output_sha256": "c9b3117cd7a32e825b0d859da37480b2c0102e751656e3af733bd82be4078a86",
+  "splits": [
+    {
+      "seed": 42,
+      "patients": {
+        "train": 320,
+        "validation": 80,
+        "test": 100
+      },
+      "rows": {
+        "train": 12892,
+        "validation": 3153,
+        "test": 3965
+      },
+      "positive_label_rows": {
+        "train": 298,
+        "validation": 47,
+        "test": 94
+      }
+    },
+    {
+      "seed": 123,
+      "patients": {
+        "train": 320,
+        "validation": 80,
+        "test": 100
+      },
+      "rows": {
+        "train": 12684,
+        "validation": 3194,
+        "test": 4132
+      },
+      "positive_label_rows": {
+        "train": 276,
+        "validation": 66,
+        "test": 97
+      }
+    },
+    {
+      "seed": 2026,
+      "patients": {
+        "train": 320,
+        "validation": 80,
+        "test": 100
+      },
+      "rows": {
+        "train": 12547,
+        "validation": 3212,
+        "test": 4251
+      },
+      "positive_label_rows": {
+        "train": 250,
+        "validation": 103,
+        "test": 86
+      }
+    }
+  ],
+  "mean_test_metrics_across_three_splits": {
+    "static": {
+      "raw": {
+        "brier_score": 0.181559,
+        "log_loss": 0.568367,
+        "calibration_slope": 0.574878,
+        "calibration_intercept": -3.699998
+      },
+      "validation_recalibrated": {
+        "brier_score": 0.021907,
+        "log_loss": 0.102838,
+        "calibration_slope": 0.948429,
+        "calibration_intercept": -0.127766
+      }
+    },
+    "temporal": {
+      "raw": {
+        "brier_score": 0.151797,
+        "log_loss": 0.534243,
+        "calibration_slope": 0.226326,
+        "calibration_intercept": -3.519042
+      },
+      "validation_recalibrated": {
+        "brier_score": 0.021927,
+        "log_loss": 0.105234,
+        "calibration_slope": 0.945494,
+        "calibration_intercept": -0.131106
+      }
+    },
+    "personalized": {
+      "raw": {
+        "brier_score": 0.125518,
+        "log_loss": 0.654658,
+        "calibration_slope": 0.072104,
+        "calibration_intercept": -3.478255
+      },
+      "validation_recalibrated": {
+        "brier_score": 0.022068,
+        "log_loss": 0.110273,
+        "calibration_slope": 0.588148,
+        "calibration_intercept": -1.506174
+      }
+    }
+  },
+  "comparison_to_prior_local_equivalent": {
+    "split_patient_row_and_positive_counts": "exact match",
+    "feature_counts": "exact match",
+    "max_absolute_differences": {
+      "brier_score": 0.0000839782,
+      "log_loss": 0.0007039868,
+      "calibration_intercept": 0.0098293245,
+      "calibration_slope": 0.0023800771
+    },
+    "reliability_bins": "not identical; prior local equivalent clipped probabilities before binning, whereas repository helper bins original probabilities"
+  },
+  "reproducibility_note": "The checked-in runner's logic was mirrored into the local runtime from source retrieved through the GitHub connector because the local container cannot resolve GitHub hosts. Exact blob-hash verification of every mirrored source/dependency file was not possible in that runtime. This is a strong protocol/result reconciliation, but not a byte-for-byte checkout verification.",
+  "safety_note": "Aggregate only. No raw patient rows or patient-level predictions. Hourly challenge labels do not establish event-level clinical utility."
+}
