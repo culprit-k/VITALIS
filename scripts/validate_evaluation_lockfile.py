@@ -37,6 +37,22 @@ def validate_lockfile(data: dict[str, Any]) -> list[str]:
         }:
             errors.append(f"{key} must be a specific non-placeholder string")
 
+    # Freeze-gate identifiers must be actual immutable content identifiers,
+    # not merely nonempty strings. This is syntax validation, not verification
+    # that the referenced artifact or environment is trustworthy.
+    hash_lengths = {
+        "model_commit_sha": 40,
+        "environment_lock_hash": 64,
+        "feature_schema_hash": 64,
+        "model_artifact_hash": 64,
+    }
+    for key, length in hash_lengths.items():
+        value = data.get(key)
+        if isinstance(value, str) and value.strip().lower() not in {
+            "todo", "tbd", "placeholder", "fill me", "unknown"
+        } and (len(value) != length or any(c not in "0123456789abcdefABCDEF" for c in value)):
+            errors.append(f"{key} must be a {length}-character hexadecimal digest")
+
     cohort = data.get("evaluation_cohort")
     if not isinstance(cohort, dict):
         errors.append("evaluation_cohort must be an object")
