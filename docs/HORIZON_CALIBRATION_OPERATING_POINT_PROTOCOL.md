@@ -94,12 +94,3 @@ For each threshold, the aggregate-only output reports row sensitivity/PPV, total
 The completed exploratory nine-run analysis is documented in [the utility results report](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate-only JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json). It used a reconstructed local working copy, not a byte-identically verified clean checkout; ancillary bootstrap summaries used 20 replicates and are preliminary.
 
 The cost ratios need independent clinician/statistician review before they are treated as meaningful. The framework does not model treatment harms, alarm fatigue, staffing constraints, or verified clinical false alarms. A frozen policy needs evaluation on a new independent cohort; Set B has already been inspected and must not be reused for threshold selection.
-
-
-## Utility-based operating-point cost sensitivity (15 October 2026)
-
-The calibration evaluator now computes cost-sensitivity summaries on the untouched, patient-disjoint Set-A operating-point holdout only. It uses the existing predeclared threshold grid (0.001, 0.005, 0.01, 0.05, 0.5) and default illustrative missed-window cost ratios of 1, 5, 10, and 20 relative to one alert. Both the missed-window cost grid and alert cost can be passed as CLI arguments; they are assumptions for sensitivity analysis, not clinically elicited values.
-
-For each threshold the evaluator reports row sensitivity/PPV, total alerts, alerts per at-risk patient-day, forecast-positive-window coverage, missed forecast-positive windows, and warning time relative to Challenge-label entry. The scenario score is missed-window cost × missed windows + alert cost × all alerts, normalized by eligible at-risk patient-days. It ranks candidate thresholds separately under each scenario and explicitly labels them development candidates, not clinical thresholds.
-
-Set B is not used for the utility ranking. The Set-B result stream remains final retrospective evaluation only and has already been inspected, so it must not be reused for threshold selection. A genuinely new independent cohort is required for final evaluation after any development policy is frozen. The default cost ratios are illustrative pending independent clinical/statistical justification. The implementation and limitations are described in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md).
