@@ -82,6 +82,7 @@ def test_evaluate_one_reports_paired_static_temporal_bootstrap_on_set_b():
     out = MOD.evaluate_one(
         meta_a, Xa, labels, groups, meta_b, Xb, labels.copy(), groups.copy(),
         horizon=1, seed=17, chunk_rows=128, refractory_hours=6, bootstrap_replicates=20,
+        missed_window_costs=[1.0, 5.0], alert_cost=1.0,
     )
     paired = out["set_b_paired_static_vs_temporal_bootstrap_95ci"]
     assert paired["reference_model"] == "static"
