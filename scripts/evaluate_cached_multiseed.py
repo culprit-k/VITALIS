@@ -61,8 +61,8 @@ def main() -> None:
     groups = np.load(args.cache_dir / "g.npy", mmap_mode="r")
     if X.shape[0] != meta["row_count"] or y.shape[0] != X.shape[0] or groups.shape[0] != X.shape[0]:
         ap.error("Feature cache dimensions do not match metadata")
-    if len(np.unique(groups)) != meta["patient_count"]:
-        ap.error("Feature cache has an incomplete or corrupt patient group vector")
+    if len(np.unique(groups)) != meta["patient_count"] or int(groups.min()) != 1 or int(groups.max()) != meta["patient_count"]:
+        ap.error("Feature cache has an incomplete or corrupt patient group vector; rebuild missing chunks before evaluation")
     columns = meta["columns"]
     col_index = {name: i for i, name in enumerate(columns)}
     static_index = np.asarray([col_index[name] for name in BASE], dtype=int)
