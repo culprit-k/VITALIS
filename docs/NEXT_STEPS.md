@@ -1,14 +1,17 @@
 # VITALIS next steps and current status
 
-## Phase 1 closeout
+## Phase 1 status: completed within exploratory scope
 
 - [x] Established research repository, dataset protocol, model card, baseline pipeline, tests, and reproducible workflow.
 - [x] Implemented and tested static, temporal, and first patient-baseline deviation feature sets.
 - [x] Added the Phase 1 closeout report and aggregate-only three-seed evaluation: [Phase 1 report](PHASE1_CLOSEOUT.md), [summary JSON](../results/phase1_500_patient_three_seed_summary.json).
 - [x] Evaluated a deterministic 500-patient sample using three patient-disjoint split seeds and paired patient-cluster bootstrap comparisons.
-- [x] Documented the negative/mixed findings without claiming that VITALIS-PB improves the baseline.
-- [x] Confirmed the latest main-branch GitHub Actions run for the algorithm integration passed.
-- [ ] Full-cohort canonical rerun and external validation remain future work; neither is claimed complete.
+- [x] Repeated the local evaluation and verified byte-for-byte reproducibility of the aggregate output; see [reproducibility manifest](../results/phase1_local_reproducibility_manifest.json).
+- [x] Documented negative/mixed findings without claiming that VITALIS-PB improves the baseline.
+- [x] Latest main-branch GitHub Actions checks passed.
+- [ ] Execute the canonical repository runner against the local dataset and reconcile its output with the recorded artifact.
+- [ ] Calibration and missingness/subgroup robustness analyses.
+- [ ] Full-cohort and external validation remain future work, not completed milestones.
 
 ## Main finding
 
@@ -16,11 +19,12 @@ In the 500-patient exploratory sample, the static model had the best mean AUROC 
 
 ## Next software/research actions
 
-1. Investigate the feature generator, missingness, scaling, and class weighting before changing the algorithm.
-2. Add calibration curves/slope/intercept and carefully designed subgroup/missingness analyses.
-3. Run the canonical repository runner on a larger sample or full cohort with convergence and integrity checks, and preserve aggregate-only outputs.
+1. Execute the canonical repository runner on the same sample and compare its aggregate output with the [recorded reproducibility manifest](../results/phase1_local_reproducibility_manifest.json).
+2. Investigate feature generation, missingness, scaling, and class weighting before changing the algorithm.
+3. Add calibration curves/slope/intercept and carefully designed subgroup/missingness analyses.
 4. Prespecify how any threshold is chosen on validation data only; keep test data untouched.
-5. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
+5. Run a larger/full-cohort analysis after memory and runtime checks; external validation is a separate later requirement.
+6. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
 
 ## Hardware gate
 
