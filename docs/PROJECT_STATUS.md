@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `64171dde269bbac4f07f6659777540bb8419c184` (documentation-only follow-up after CI passed on code-bearing commit `01e2083bbce6bfdc32c2c15831ba69f4d5a30c28`).
+**Latest branch head checked during this update:** `042d5d266cb418cf0a09a2a2ef49f2ef2f0aa30c` (documentation-only follow-up after CI passed on `4b3aa798af04a0819ce1523cb9bae672dcc9dddf`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -33,7 +33,7 @@ PR #1 remains **open, draft, and unmerged**. It should stay that way until the o
 - Re-ran the checked-in recalibration runner against existing local feature caches and reconciled its aggregate metrics with the previous source-verified artifact to floating-point precision.
 - Added reports explaining the experiment, uncertainty, provenance, privacy boundary, and remaining release blockers.
 - Added an initial streaming adaptive physiological twin (`src/vitalis/adaptive_twin.py`) with causal rolling and frozen-reference baselines, two-sided CUSUM for gradual drift, multisystem deviation aggregation, an EWMA trajectory score and direction, coverage checks, persistence, channel-specific scale floors, and suppression of baseline updates for large deviations. Added a timestamped/unit-checked stream adapter (`src/vitalis/stream.py`), a deterministic CLI demo, an interactive synthetic-only Streamlit sandbox (`dashboard/twin_demo.py`), focused tests, and algorithm documentation. CI now compiles Python source/demo files before running tests. These are software components for research, not clinical prediction or a validated digital twin.
-- GitHub Actions passed on code-bearing commit `01e2083bbce6bfdc32c2c15831ba69f4d5a30c28`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38612586742). This includes the compile step and full test suite, including CUSUM and stream-to-twin integration tests. Later commits are documentation-only. Clean-checkout reproduction from the user's local authorized dataset remains pending.
+- GitHub Actions passed on commit `4b3aa798af04a0819ce1523cb9bae672dcc9dddf`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38612764680). This includes Python compilation, the synthetic timestamped-stream smoke test, and the full test suite including CUSUM and stream-to-twin integration tests. The latest commit is documentation-only. Clean-checkout reproduction from the user's local authorized dataset remains pending.
 - Verified a successful GitHub Actions test run on code-bearing commit `a0103df503a574f097045a34062e5f3abf229b60`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38608383356). A later documentation-only commit (`ce824a6d01bc463600ba2ef65b73bce23bc43647`) recorded that result. This does **not** mean CI has been verified on every subsequent documentation commit.
 
 ## 4. What do the results mean?
