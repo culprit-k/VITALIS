@@ -222,7 +222,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Confirmed the latest main-branch workflow run for `Track checked-in cross-cohort recalibration runner` completed successfully: https://github.com/culprit-k/VITALIS/actions/runs/38583831584.
 - [x] Confirmed the preceding documentation update workflow also passed: https://github.com/culprit-k/VITALIS/actions/runs/38583816179.
 - [x] The checked-in runner uses patient-disjoint 60/20/20 partitions in set A, fits Platt recalibration on set-A validation predictions only, scores set B in chunks, and writes aggregate-only results. Set B is not used for fitting or threshold selection.
-- [ ] Run `scripts/evaluate_cross_cohort_recalibration.py` from a byte-identical checkout against the local set-A and set-B caches; compare the resulting aggregate JSON against `results/cross_cohort_validation_A_recalibration_test_B_3seed_2026-10-14.json`. Current local network DNS has prevented establishing source-byte identity, so do not claim exact reproduction yet.
+- [x] Retrieved the cache builder, recalibration runner, and focused test source from `main` commit `90ce87677b1e1692c3a6f04f7394f9ce59cf7481`; each local blob hash matched the GitHub blob SHA. Built local-only caches and ran seeds 42, 123, and 2026 against all 20,000 set-B patients. Focused tests passed (7/7); aggregate-only output is in [the source-verified JSON](../results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json) and [report](CROSS_COHORT_RECALIBRATION_SOURCE_VERIFIED.md). A full `git clone` still could not resolve `github.com` DNS, so this is byte-identical-source execution, not a verified full checkout. Raw metrics reconcile to floating-point precision; recalibrated probability metrics have small but nonzero discrepancies versus the historical reconstructed-harness artifact, which is retained unchanged.
 - [ ] Add paired patient-cluster uncertainty intervals for cross-cohort results using held-out set-B predictions, while keeping score vectors and patient group IDs outside Git. Preserve split-specific results and avoid treating three seed SDs as confidence intervals.
 - [ ] Audit subgroup performance and calibration without using set B to tune model or recalibrator. Suppress small cells and frame results as exploratory.
 - [ ] Document the final pre-specified evaluation protocol and obtain statistical/clinical governance review before any prospective or patient-facing study. VITALIS remains research-only.
@@ -246,3 +246,14 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Exact source-byte identity for model fitting and score generation remains open; the current scores came from reconstructed local runner logic. This is not external or prospective clinical validation.
 - [x] Added an operator-facing [exact-checkout reproduction runbook](EXACT_CHECKOUT_REPRODUCTION.md) with clean-checkout checks, cache-build commands, the committed runner invocation, reconciliation criteria, and data-safety boundaries. This documents the procedure; the exact-checkout data run itself remains pending.
 
+
+
+## Source-verified cross-cohort recalibration run (14 October 2026)
+
+- [x] Validated the local archive aggregate totals: set A 20,336 patients / 790,215 rows / 17,136 positive hourly labels; set B 20,000 patients / 761,995 rows / 10,780 positive hourly labels. Both schemas had 41 columns with no schema-mismatch or empty patient files.
+- [x] Executed the byte-identical checked-in cache builder and recalibration runner source blobs for seeds 42, 123, and 2026; the set-B cohort was evaluation-only and output was aggregate-only.
+- [x] Focused tests passed (7/7); GitHub Actions test run 38589529596 completed successfully.
+- [x] Added [source-verified aggregate JSON](../results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json) and [reconciliation report](CROSS_COHORT_RECALIBRATION_SOURCE_VERIFIED.md). Historical artifact remains unchanged.
+- [ ] Investigate the modest recalibrated Brier/log-loss/mean-probability discrepancy versus the prior reconstructed harness; prior environment metadata is insufficient to attribute it conclusively.
+- [ ] Obtain a full clean Git checkout once DNS/network access is available to close the remaining full-checkout provenance detail. Do not mislabel the current run as a full checkout.
+- [ ] Continue with pre-specified subgroup and higher-replicate uncertainty analysis; keep patient-level records, caches, group IDs, and row-level predictions outside Git. VITALIS remains research-only.
