@@ -428,7 +428,7 @@ The next implementation layer has now been added on the existing research branch
 - [x] Add patient-disjoint train/validation/test modeling with training-only preprocessing, fixed reference threshold, aggregate-only outputs, patient-level warning burden, and patient-cluster bootstrap intervals.
 - [x] Add tests for horizon alignment, patient-boundary isolation, eligible tail rows, alert refractory periods, warning-window coverage, and bootstrap intervals.
 - [x] Document the exact target semantics and limitations in [Horizon forecasting](HORIZON_FORECASTING.md).
-- [x] GitHub Actions passed with the horizon target tests and full suite on commit `c4700d33ff1e3bd84e034cb41fecea2ffff6d595`: https://github.com/culprit-k/VITALIS/actions/runs/38613967293.
+- [x] GitHub Actions passed on commit `2b56ad2a91ede9081ae56e51ed72b9dcfaf4aa6e`: https://github.com/culprit-k/VITALIS/actions/runs/38614183618. All 118 tests passed, including an end-to-end synthetic-PSV horizon training test.
 - [ ] Run the full-cohort 1/3/6-hour experiments from a clean environment using the authorized local dataset; record aggregate-only outputs and split seed.
 - [ ] Repeat on predeclared seeds and evaluate train-Set-A/test-Set-B generalization without tuning on Set B.
 - [ ] Review forecast-window coverage, alert burden per at-risk patient-day, warning time relative to challenge-label entry, and patient-cluster uncertainty before interpreting any result.
