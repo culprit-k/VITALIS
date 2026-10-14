@@ -412,7 +412,8 @@ The next implementation layer has now been added on the existing research branch
 - [x] GitHub Actions passed on commit `4b3aa798af04a0819ce1523cb9bae672dcc9dddf`, including `compileall`, the synthetic timestamped-stream smoke test, and the full pytest suite: https://github.com/culprit-k/VITALIS/actions/runs/38612764680.
 - [ ] Run the full suite from a clean checkout and verify the demo from a fresh environment.
 - [x] Add synthetic edge-case tests for flatline-like histories, spike suppression, gradual drift/CUSUM, per-channel freshness and future timestamps, and correlated channels grouped by physiological system.
-- [ ] Define and test sensor replacement/source-identity transitions before hardware integration; the stream adapter currently does not reset or re-baseline automatically on a source change.
+- [x] Add an explicit identified-source replacement rule: reset the affected channel history/reference/CUSUM and aggregate trajectory continuity, preserve other channels, and count source changes. Add regression tests and document the behavior.
+- [ ] Validate replacement detection against real device/source metadata and define behavior when source identity is absent or unreliable; hardware-specific validation remains open.
 - [ ] Build a supervised, leakage-safe future-outcome model with a clearly defined prediction horizon. The current challenge label's six-hour lead convention is not evidence for a calibrated 1–3 hour forecast.
 - [ ] Add explicit directionality and per-channel noise/freshness configuration with evidence-based settings; current score weights and cutoffs are engineering defaults, not clinical thresholds.
 - [ ] Complete independent statistical/clinical review and all repository security/reproducibility gates before considering any prospective study.
