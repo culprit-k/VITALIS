@@ -258,3 +258,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Address the EtCO2 feature-availability shift before interpreting cross-cohort performance: EtCO2 is absent in all set-A rows but present in 57,636 set-B rows; the set-A-fitted imputer drops EtCO2 and its derived features, so set-B values are unused. Assess a pre-specified feature policy without tuning on set B.
 - [ ] Obtain a full clean Git checkout once DNS/network access is available to close the remaining full-checkout provenance detail. Do not mislabel the current run as a full checkout.
 - [ ] Continue with pre-specified subgroup and higher-replicate uncertainty analysis; keep patient-level records, caches, group IDs, and row-level predictions outside Git. VITALIS remains research-only.
+
+## Cross-cohort feature-availability audit (14 October 2026)
+
+- [x] Audited finite-value availability across all 109 cached feature columns in Set A (20,336 patients / 790,215 hourly rows) and Set B (20,000 patients / 761,995 hourly rows); aggregate-only report: [feature availability audit](CROSS_COHORT_FEATURE_AVAILABILITY_AUDIT.md) and [JSON](../results/cross_cohort_feature_availability_audit_2026-10-14.json).
+- [x] Found four features entirely missing in Set A but observed in Set B: EtCO2 and its lag, delta, and rolling-mean derivatives. Also found 45 features with at least a 5-percentage-point difference in finite hourly-row rate.
+- [x] Pre-specified the analysis boundary: Set-A training data determines feature eligibility; freeze the feature list before validation/test; Set B remains evaluation-only and must not be used for feature selection or tuning.
+- [ ] Before a new performance experiment, inspect the existing cache-builder temporal feature semantics and measurement conventions; define a Set-A-only minimum-coverage rule and document it before fitting.
+- [ ] Run a sensitivity analysis with the frozen eligible-feature policy and compare it to the existing baseline; report performance and missingness separately, without selecting the policy based on Set-B metrics.
+- [ ] Feature availability alone does not prove measurement comparability or explain causality. VITALIS remains research-only; no clinical validity or utility claim follows from this audit.
+
