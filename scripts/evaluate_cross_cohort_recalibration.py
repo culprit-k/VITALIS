@@ -92,6 +92,45 @@ def validate_local_score_archive_dir(directory: Path, repository_root: Path) -> 
     return resolved
 
 
+def write_local_score_archives(
+    directory: Path,
+    seed: int,
+    labels: np.ndarray,
+    patient_groups: np.ndarray,
+    static_raw: np.ndarray,
+    temporal_raw: np.ndarray,
+    static_recalibrated: np.ndarray,
+    temporal_recalibrated: np.ndarray,
+) -> list[Path]:
+    """Write paired raw/recalibrated vectors using synthetic group indices."""
+    y = np.asarray(labels, dtype=np.int8)
+    groups = np.asarray(patient_groups)
+    vectors = (static_raw, temporal_raw, static_recalibrated, temporal_recalibrated)
+    if any(np.asarray(vector).ndim != 1 or len(vector) != len(y) for vector in vectors):
+        raise ValueError("labels and all score vectors must be aligned one-dimensional arrays")
+    if groups.ndim != 1 or len(groups) != len(y):
+        raise ValueError("patient groups must align with labels")
+    if not np.isin(y, [0, 1]).all():
+        raise ValueError("labels must be binary")
+    if any(not np.isfinite(vector).all() or np.any((np.asarray(vector) < 0) | (np.asarray(vector) > 1)) for vector in vectors):
+        raise ValueError("score vectors must be finite and in [0, 1]")
+    directory.mkdir(parents=True, exist_ok=True)
+    _, synthetic_groups = np.unique(groups, return_inverse=True)
+    outputs = []
+    for stream, static, temporal in (
+        ("raw", static_raw, temporal_raw),
+        ("recalibrated", static_recalibrated, temporal_recalibrated),
+    ):
+        path = directory / f"heldout_scores_seed_{seed}_{stream}.npz"
+        np.savez_compressed(
+            path, y=y, groups=synthetic_groups.astype(np.int32, copy=False),
+            p_static=np.asarray(static, dtype=np.float64),
+            p_temporal=np.asarray(temporal, dtype=np.float64),
+        )
+        outputs.append(path)
+    return outputs
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--set-a-cache", type=Path, required=True)
@@ -189,18 +228,13 @@ def main() -> None:
                 flush=True,
             )
         if args.local_score_archive_dir is not None:
-            # Cache patient identifiers are replaced with synthetic contiguous group indices.
-            _, synthetic_groups = np.unique(gb, return_inverse=True)
-            for stream in ("raw", "recalibrated"):
-                archive_path = args.local_score_archive_dir / f"heldout_scores_seed_{seed}_{stream}.npz"
-                np.savez_compressed(
-                    archive_path,
-                    y=np.asarray(yb, dtype=np.int8),
-                    groups=synthetic_groups.astype(np.int32, copy=False),
-                    p_static=score_vectors["static"][stream],
-                    p_temporal=score_vectors["temporal"][stream],
-                )
-                print(f"wrote local-only {stream} score archive: {archive_path}", flush=True)
+            archive_paths = write_local_score_archives(
+                args.local_score_archive_dir, seed, yb, gb,
+                score_vectors["static"]["raw"], score_vectors["temporal"]["raw"],
+                score_vectors["static"]["recalibrated"], score_vectors["temporal"]["recalibrated"],
+            )
+            for archive_path in archive_paths:
+                print(f"wrote local-only score archive: {archive_path}", flush=True)
         runs.append(run)
 
     aggregate = {}
