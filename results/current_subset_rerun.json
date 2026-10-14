@@ -1,0 +1,64 @@
+{
+  "project": "VITALIS",
+  "run_date_utc": "2026-10-14",
+  "run_type": "fresh current-protocol subset rerun",
+  "dataset_partition": "training_setA",
+  "cohort": {
+    "sampled_patient_files": 1500,
+    "sampling_seed": 2026,
+    "sampling": "Uniform sample without replacement from sorted training_setA filenames"
+  },
+  "protocol": {
+    "split_seed": 42,
+    "split_unit": "patient",
+    "threshold": 0.5,
+    "model": "LogisticRegression(max_iter=500,class_weight=balanced,lbfgs)",
+    "temporal_features": "Within-patient one-row lag, one-row delta, trailing six-row mean",
+    "feature_alignment": "Union of feature columns across sampled files; missing columns represented as missing"
+  },
+  "results": {
+    "static": {
+      "feature_mode": "static_baseline",
+      "patient_counts": {"train": 960, "validation": 240, "test": 300},
+      "row_counts": {"train": 36252, "validation": 9824, "test": 11736},
+      "features": 40,
+      "test_metrics": {
+        "rows": 11736, "positive_label_rows": 216, "threshold": 0.5,
+        "auroc": 0.7543467078189301, "auprc": 0.09198705879977048, "brier_score": 0.18110069954845143,
+        "sensitivity": 0.6527777777777778, "specificity": 0.7769965277777777,
+        "ppv": 0.052029520295202955, "npv": 0.9916906713937513,
+        "confusion_matrix": {"tn": 8951, "fp": 2569, "fn": 75, "tp": 141}
+      },
+      "fit_seconds": 1.19,
+      "warnings": ["EtCO2 had no observed values and was skipped by the median imputer."]
+    },
+    "temporal": {
+      "feature_mode": "temporal",
+      "patient_counts": {"train": 960, "validation": 240, "test": 300},
+      "row_counts": {"train": 36252, "validation": 9824, "test": 11736},
+      "features": 109,
+      "test_metrics": {
+        "rows": 11736, "positive_label_rows": 216, "threshold": 0.5,
+        "auroc": 0.7662667984825102, "auprc": 0.08276572023577992, "brier_score": 0.16250266740530833,
+        "sensitivity": 0.6666666666666666, "specificity": 0.7877604166666666,
+        "ppv": 0.055619930475086905, "npv": 0.9921285667431945,
+        "confusion_matrix": {"tn": 9075, "fp": 2445, "fn": 72, "tp": 144}
+      },
+      "fit_seconds": 4.26,
+      "warnings": ["EtCO2 and its temporal derivatives had no observed values and were skipped by the median imputer."]
+    }
+  },
+  "temporal_minus_static": {
+    "auroc": 0.0119200906635801,
+    "auprc": -0.00922133856399056,
+    "brier_score": -0.0185980321431431
+  },
+  "limitations": [
+    "Fresh internal subset rerun only; not full-cohort or external validation.",
+    "Metrics are hourly-row metrics, not patient-level event metrics.",
+    "Threshold 0.5 is a fixed reference threshold, not clinically selected.",
+    "Results are specific to this protocol and must not be directly compared with older runs using different subsets or thresholds.",
+    "Positive predictive value is low at this fixed threshold; alert burden needs careful analysis.",
+    "No clinical utility, novelty, or patentability claim."
+  ]
+}
