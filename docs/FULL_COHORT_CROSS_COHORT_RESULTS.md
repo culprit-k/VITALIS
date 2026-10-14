@@ -55,7 +55,7 @@ The exact checked-in evaluator source was verified by Git blob SHA and run for s
 | 2026 | AUPRC | +0.01203 | +0.00999 to +0.01504 |
 | 2026 | Brier score | −0.07495 | −0.07597 to −0.07404 |
 
-These are conditional, split-specific intervals over Set B patients. The bootstrap resamples patients rather than individual hourly rows, preserving within-patient row clustering. **Only 200 replicates were completed per split**; the exact-source 1,000-replicate attempt exceeded the execution window, so no 1,000-replicate result is claimed. The 200-replicate intervals are preliminary and should be treated as such.
+These are conditional, split-specific intervals over Set B patients. The bootstrap resamples patients rather than individual hourly rows, preserving within-patient row clustering. This table is the historical 200-replicate checkpoint. A 1,000-replicate analysis for all three seeds and both raw/recalibrated probability streams has since completed; see the [1,000-replicate report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md) and [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json). Use that higher-replicate analysis for the current uncertainty summary.
 
 Across these three splits, the temporal model had higher AUROC and AUPRC and lower Brier score in this benchmark experiment. This does not establish clinical benefit, clinical calibration, lead time, patient-event sensitivity, or real-world alert burden. Set B remains evaluation-only. Score archives and all row-level outputs remain outside Git.
 
@@ -90,4 +90,4 @@ python scripts/evaluate_cross_cohort.py \
 
 ## Raw and recalibrated patient-cluster uncertainty checkpoint
 
-The exact-source paired patient-cluster bootstrap has now been run for 200 replicates per seed on both raw and Set-A-only Platt-recalibrated probabilities (seeds 42, 123, 2026). See [combined aggregate intervals](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [methods/results report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md). The 1,000-replicate target remains incomplete. The intervals are conditional on the benchmark Set-B cohort and are not prospective clinical validation.
+The preliminary 200-replicate checkpoint is preserved in [its aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [methods/results report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md). The higher-replicate analysis is now complete: see the [1,000-replicate report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md) and [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json). Both analyses are conditional on the benchmark Set-B cohort and are not prospective clinical validation.
