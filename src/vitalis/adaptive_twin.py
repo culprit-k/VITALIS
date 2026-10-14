@@ -82,6 +82,7 @@ class AdaptivePhysiologicalTwin:
         channels: Sequence[str] | None = None,
         *,
         channel_systems: Mapping[str, str] | None = None,
+        scale_floors: Mapping[str, float] | None = None,
         config: TwinConfig | None = None,
     ):
         self.config = config or TwinConfig()
@@ -94,14 +95,21 @@ class AdaptivePhysiologicalTwin:
         if unknown:
             raise ValueError("Provide channel_systems for: " + ", ".join(sorted(unknown)))
         self.channel_systems = {key: systems[key] for key in self.channels}
+        self.scale_floors = {key: self.config.scale_floor for key in self.channels}
+        for name, floor in (scale_floors or {}).items():
+            if name not in self.scale_floors:
+                raise ValueError(f"Scale floor supplied for unknown channel: {name}")
+            if not isfinite(float(floor)) or float(floor) <= 0:
+                raise ValueError(f"Scale floor for {name} must be finite and positive")
+            self.scale_floors[name] = float(floor)
         self.states = {key: ChannelState() for key in self.channels}
         self.steps = 0
         self._trajectory_score: float | None = None
 
-    def _reference(self, history: list[float]) -> tuple[float, float]:
+    def _reference(self, history: list[float], channel: str) -> tuple[float, float]:
         center = median(history)
         mad = median([abs(x - center) for x in history])
-        return center, max(1.4826 * mad, self.config.scale_floor)
+        return center, max(1.4826 * mad, self.scale_floors[channel])
 
     def update(self, observations: Mapping[str, float | int | None]) -> dict[str, object]:
         """Return a unitless deviation summary for one synchronized time step."""
@@ -132,7 +140,7 @@ class AdaptivePhysiologicalTwin:
             baseline = z_score = reference_z = None
             cusum_triggered = False
             if len(state.values) >= self.config.min_history:
-                baseline, adaptive_scale = self._reference(state.values)
+                baseline, adaptive_scale = self._reference(state.values, name)
                 if state.reference_center is None:
                     state.reference_center, state.reference_scale = baseline, adaptive_scale
                 z_score = (value - baseline) / adaptive_scale
@@ -180,7 +188,7 @@ class AdaptivePhysiologicalTwin:
                 if len(state.values) > self.config.history_window:
                     state.values.pop(0)
                 if state.reference_center is None and len(state.values) >= self.config.min_history:
-                    state.reference_center, state.reference_scale = self._reference(state.values)
+                    state.reference_center, state.reference_scale = self._reference(state.values, name)
                 channel_results[name]["baseline_updated"] = True
 
         system_scores = {
