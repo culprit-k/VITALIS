@@ -631,3 +631,18 @@ The next implementation layer has now been added on the existing research branch
 - [x] GitHub Actions passed on code-bearing commit `c6c70ec5609e4fffe0e93744f068ed1919268682` (run [38638008891](https://github.com/culprit-k/VITALIS/actions/runs/38638008891)): **168 tests passed**, repository-artifact hygiene passed, and the reachable-history scanner reported zero configured-pattern findings. CI caught two issues during development: the Set-B phrase guard initially matched a valid prohibition, and the primary scenario needed numeric membership validation; both were corrected before this passing run.
 
 **Boundary:** the validator checks completeness and simple invariants only. It cannot establish that cost weights are medically defensible, that approvals are authentic, or that a model is safe. Keep the completed study lockfile private; do not use Set B for threshold selection. Independent review, a new cohort, clean-checkout reproduction, and governance approvals remain open.
+
+
+## Phase 16: utility-ranking uncertainty and stability (15 October 2026)
+
+- [x] Add patient-cluster percentile-bootstrap intervals for row sensitivity, row PPV, alerts per at-risk patient-day, forecast-positive-window coverage, and weighted cost per at-risk patient-day at each predeclared threshold.
+- [x] Add per-cost-scenario selection-frequency summaries to show how often each threshold is the minimum-cost candidate when whole patients are resampled.
+- [x] Integrate the uncertainty calculation only on the untouched patient-disjoint Set-A operating-point holdout; Set B remains evaluation-only.
+- [x] Add focused reproducibility, interval-schema, selection-frequency, invalid-replicate-count, and evaluator-integration tests.
+- [x] Document the uncertainty estimand and limitations in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md).
+- [ ] Confirm GitHub Actions passes on the latest code-bearing head; investigate and fix any test failures before interpreting results.
+- [ ] Run the full nine seed × horizon utility analysis with the default 200 patient-cluster replicates from an exact clean checkout when runtime/network access permits. Retain aggregate-only results and source/environment hashes; do not commit patient-level bootstrap outputs.
+- [ ] Obtain independent clinical/statistical review of cost ratios, target-window definition, and interpretation. Selection frequency is not clinical optimality.
+- [ ] Keep Set B unavailable for threshold selection. A frozen development candidate requires a new independent cohort with independently defined/adjudicated event timing plus governance/ethics approval before external or prospective evaluation.
+
+**Boundary:** bootstrap intervals are conditional on this development cohort and the chosen model/cost assumptions. They do not include uncertainty in the cost ratios, model selection process, domain shift, or label validity. VITALIS remains research-only and must not guide patient care.
