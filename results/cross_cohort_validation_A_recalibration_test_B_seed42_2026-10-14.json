@@ -1,0 +1,96 @@
+{
+  "project": "VITALIS",
+  "run_type": "cross_cohort_validation_A_recalibration_test_B",
+  "date": "2026-10-14",
+  "source_provenance": "Exploratory local run using a reconstructed harness and local feature cache; exact byte identity to checked-in source is not asserted.",
+  "dataset": {
+    "training_setA": {
+      "patients": 20336,
+      "rows": 790215,
+      "positive_hourly_labels": 17136
+    },
+    "training_setB": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780
+    }
+  },
+  "protocol": {
+    "seed": 42,
+    "split_unit": "patient",
+    "set_a_split": {
+      "model_training_patients": 12201,
+      "calibration_validation_patients": 4067,
+      "unused_patients": 4068,
+      "model_training_rows": 473301,
+      "validation_rows": 159106,
+      "training_positive_rows": 10474,
+      "validation_positive_rows": 3449
+    },
+    "set_b_test": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780,
+      "prevalence": 0.014147074455869133
+    },
+    "models": "static and temporal logistic regression with median imputation, missingness indicators, standard scaling, balanced class weights",
+    "recalibration": "one-dimensional logistic (Platt) recalibration fitted only on patient-disjoint set A validation predictions; then applied once to all set B",
+    "row_level_predictions_exported": false
+  },
+  "results": {
+    "static": {
+      "raw": {
+        "auroc": 0.6741753875728123,
+        "auprc": 0.045182737675295466,
+        "brier_score": 0.1598263345432699,
+        "log_loss": 0.5099533429963651,
+        "mean_predicted_probability": 0.3583609893934243
+      },
+      "recalibrated": {
+        "auroc": 0.674175575085986,
+        "auprc": 0.045182745286947004,
+        "brier_score": 0.013935074233845409,
+        "log_loss": 0.07158791407387954,
+        "mean_predicted_probability": 0.018451742018127378
+      },
+      "recalibrator": {
+        "intercept": -3.780217840789497,
+        "slope": 0.5580835958498809
+      }
+    },
+    "temporal": {
+      "raw": {
+        "auroc": 0.7316325582241371,
+        "auprc": 0.058509576126196054,
+        "brier_score": 0.09570468637139355,
+        "log_loss": 0.3491932671097003,
+        "mean_predicted_probability": 0.258612556471534
+      },
+      "recalibrated": {
+        "auroc": 0.7316326901069619,
+        "auprc": 0.05850958369825903,
+        "brier_score": 0.013827964185748647,
+        "log_loss": 0.06917062665227551,
+        "mean_predicted_probability": 0.013868659244045204
+      },
+      "recalibrator": {
+        "intercept": -3.765671547161142,
+        "slope": 0.5792006049372282
+      }
+    }
+  },
+  "interpretation": [
+    "In this single seed, temporal discrimination exceeded static discrimination on set B; recalibration did not materially change ranking metrics.",
+    "The A-validation-trained Platt recalibrator substantially reduced Brier score and log loss on set B in this one split. This is an exploratory result only and may not transport across seeds or cohort shifts.",
+    "The validation cohort's hourly label prevalence was 2.17%, while set B prevalence was 1.41%; the difference highlights that calibration transport is a substantive risk.",
+    "Do not infer clinical calibration, clinical utility, or deployment readiness from one split."
+  ],
+  "limitations": [
+    "Only seed 42 completed in this pilot; no cross-seed uncertainty interval is available.",
+    "Both cohorts are from the PhysioNet/CinC Challenge 2019 benchmark, not prospective clinical validation.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world false-alarm rates.",
+    "The threshold 0.5 is not clinically selected.",
+    "Exact checked-in source-byte identity has not been verified; local harness was reconstructed.",
+    "No raw records, identifiers, or row-level predictions are included."
+  ]
+}
