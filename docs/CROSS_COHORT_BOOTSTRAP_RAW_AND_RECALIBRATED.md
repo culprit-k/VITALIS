@@ -2,6 +2,8 @@
 
 Date: 14 October 2026
 
+> Historical 200-replicate checkpoint. The higher-replicate analysis is now complete; see the [1,000-replicate report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md) and [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json). This page and its original 200-replicate artifact are retained for audit history.
+
 ## Scope and method
 
 - Set B: 20,000 patients, 761,995 hourly rows, 10,780 positive hourly labels.
@@ -29,8 +31,8 @@ All intervals are 95% percentile intervals from 200 paired patient-cluster repli
 - Platt recalibration is a monotonic transformation for each model, so it preserves ranking except for numerical/tie effects. The recalibrated AUROC/AUPRC contrasts therefore closely track the raw-score contrasts.
 - The recalibrated Brier-score differences are much smaller than raw-score differences; all three 200-replicate intervals are below zero in this experiment. This is evidence about aggregate probability scores on this held-out benchmark cohort, not proof of clinical calibration or utility.
 - The bootstrap is conditional on Set B and each split. Three split-specific intervals do not amount to independent external validation or a pooled confidence interval.
-- The higher target of 1,000 replicates per seed and stream remains unfinished. Do not describe this phase as complete.
+- This 200-replicate analysis is retained as a preliminary checkpoint and is superseded for the current uncertainty summary by the separate 1,000-replicate analysis linked above.
 
 ## Reproduction
 
-Generate local recalibrated archives with `scripts/evaluate_cross_cohort_recalibration.py --local-score-archive-dir <outside-repository-directory>`, then run `scripts/bootstrap_heldout_scores.py --scores <local-npz> --replicates 200 --batch-size 8 --seed <42|123|2026> --output <aggregate-json>`. Keep the NPZ archives and all row-level vectors outside Git.
+Generate local recalibrated archives with `scripts/evaluate_cross_cohort_recalibration.py --local-score-archive-dir <outside-repository-directory>`, then run the checked-in `scripts/bootstrap_heldout_scores.py` for this historical 200-replicate checkpoint or `scripts/bootstrap_heldout_scores_fast.py --scores <local-npz> --replicates 1000 --batch-size 8 --seed <42|123|2026> --output <aggregate-json>` for the completed higher-replicate analysis. Keep NPZ archives and all row-level vectors outside Git.
