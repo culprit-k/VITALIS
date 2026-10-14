@@ -3,11 +3,24 @@
   "run_type": "paired_patient_cluster_static_vs_temporal_model_comparison",
   "run_date": "2026-10-15",
   "protocol": {
-    "horizons_hours": [1, 3, 6],
-    "seeds": [42, 123, 2026],
+    "horizons_hours": [
+      1,
+      3,
+      6
+    ],
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
     "bootstrap_replicates_per_seed_horizon": 200,
     "comparison": "Platt-calibrated temporal minus Platt-calibrated static probabilities on identical eligible Set-B rows",
-    "metrics": ["AUROC", "AUPRC", "Brier score", "log loss"],
+    "metrics": [
+      "AUROC",
+      "AUPRC",
+      "Brier score",
+      "log loss"
+    ],
     "bootstrap_unit": "whole patient",
     "set_b_used_for_fit_calibration_or_threshold_selection": false,
     "ci_summary": "Point differences are mean and sample SD across three seeds. The 95% CI envelope is the minimum lower and maximum upper endpoint across three seed-specific patient-cluster intervals; it is not a pooled confidence interval.",
@@ -19,28 +32,112 @@
     {
       "horizon_hours": 1,
       "metrics": {
-        "auroc": {"mean_difference": 0.0156659, "sd_across_seeds": 0.0059, "seed_interval_envelope": [0.000546524, 0.0327357]},
-        "auprc": {"mean_difference": -0.0000983387, "sd_across_seeds": 0.00011, "seed_interval_envelope": [-0.000572522, 0.000230718]},
-        "brier_score": {"mean_difference": -0.00000143294, "sd_across_seeds": 0.0000024, "seed_interval_envelope": [-0.0000157151, 0.0000154319]},
-        "log_loss": {"mean_difference": -0.000186174, "sd_across_seeds": 0.000047, "seed_interval_envelope": [-0.000306219, -0.000118202]}
+        "auroc": {
+          "mean_difference": 0.0156659,
+          "sd_across_seeds": 0.0059,
+          "seed_interval_envelope": [
+            0.000546524,
+            0.0327357
+          ]
+        },
+        "auprc": {
+          "mean_difference": -0.0000983387,
+          "sd_across_seeds": 0.00011,
+          "seed_interval_envelope": [
+            -0.000572522,
+            0.000230718
+          ]
+        },
+        "brier_score": {
+          "mean_difference": -0.00000143294,
+          "sd_across_seeds": 0.0000024,
+          "seed_interval_envelope": [
+            -0.0000157151,
+            0.0000154319
+          ]
+        },
+        "log_loss": {
+          "mean_difference": -0.000186174,
+          "sd_across_seeds": 0.000047,
+          "seed_interval_envelope": [
+            -0.000306219,
+            -0.000118202
+          ]
+        }
       }
     },
     {
       "horizon_hours": 3,
       "metrics": {
-        "auroc": {"mean_difference": 0.0117639, "sd_across_seeds": 0.0091, "seed_interval_envelope": [-0.00192196, 0.0309285]},
-        "auprc": {"mean_difference": -0.000248548, "sd_across_seeds": 0.00054, "seed_interval_envelope": [-0.00111261, 0.00106874]},
-        "brier_score": {"mean_difference": -0.0000297219, "sd_across_seeds": 0.000031, "seed_interval_envelope": [-0.000101044, 0.00000632893]},
-        "log_loss": {"mean_difference": -0.000424258, "sd_across_seeds": 0.000071, "seed_interval_envelope": [-0.000651727, -0.000292487]}
+        "auroc": {
+          "mean_difference": 0.0117639,
+          "sd_across_seeds": 0.0091,
+          "seed_interval_envelope": [
+            -0.00192196,
+            0.0309285
+          ]
+        },
+        "auprc": {
+          "mean_difference": -0.000248548,
+          "sd_across_seeds": 0.00054,
+          "seed_interval_envelope": [
+            -0.00111261,
+            0.00106874
+          ]
+        },
+        "brier_score": {
+          "mean_difference": -0.0000297219,
+          "sd_across_seeds": 0.000031,
+          "seed_interval_envelope": [
+            -0.000101044,
+            0.00000632893
+          ]
+        },
+        "log_loss": {
+          "mean_difference": -0.000424258,
+          "sd_across_seeds": 0.000071,
+          "seed_interval_envelope": [
+            -0.000651727,
+            -0.000292487
+          ]
+        }
       }
     },
     {
       "horizon_hours": 6,
       "metrics": {
-        "auroc": {"mean_difference": 0.0166293, "sd_across_seeds": 0.0069, "seed_interval_envelope": [0.00423847, 0.030675]},
-        "auprc": {"mean_difference": -0.0000583229, "sd_across_seeds": 0.00086, "seed_interval_envelope": [-0.00181054, 0.00163496]},
-        "brier_score": {"mean_difference": -0.0000594498, "sd_across_seeds": 0.000042, "seed_interval_envelope": [-0.000153115, -0.00000667869]},
-        "log_loss": {"mean_difference": -0.000802942, "sd_across_seeds": 0.00014, "seed_interval_envelope": [-0.00114629, -0.000531725]}
+        "auroc": {
+          "mean_difference": 0.0166293,
+          "sd_across_seeds": 0.0069,
+          "seed_interval_envelope": [
+            0.00423847,
+            0.030675
+          ]
+        },
+        "auprc": {
+          "mean_difference": -0.0000583229,
+          "sd_across_seeds": 0.00086,
+          "seed_interval_envelope": [
+            -0.00181054,
+            0.00163496
+          ]
+        },
+        "brier_score": {
+          "mean_difference": -0.0000594498,
+          "sd_across_seeds": 0.000042,
+          "seed_interval_envelope": [
+            -0.000153115,
+            -0.00000667869
+          ]
+        },
+        "log_loss": {
+          "mean_difference": -0.000802942,
+          "sd_across_seeds": 0.00014,
+          "seed_interval_envelope": [
+            -0.00114629,
+            -0.000531725
+          ]
+        }
       }
     }
   ],
@@ -56,6 +153,7 @@
     "Set B is a second Challenge training cohort, not prospective external clinical validation.",
     "The target forecasts Challenge-label-window entry, not independently observed biological onset.",
     "No threshold was selected and no clinical utility, safety, or patient benefit is established.",
-    "VITALIS remains research-only and is not clinically validated."
+    "VITALIS remains research-only and is not clinically validated.",
+    "Full-cohort paired comparison ran in a reconstructed local working copy because a clean Git checkout could not be verified due to runtime DNS/network limitations; it is not claimed as byte-identically verified exact-source reproduction."
   ]
 }
