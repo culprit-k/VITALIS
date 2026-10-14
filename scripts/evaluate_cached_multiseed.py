@@ -50,6 +50,48 @@ def metrics(y_true: np.ndarray, probability: np.ndarray) -> dict:
 
 
 
+def _prepare_rank_metrics(y_true: np.ndarray, probability: np.ndarray) -> dict:
+    """Pre-sort scores once so many bootstrap replicates need only weighted reductions."""
+    y = np.asarray(y_true, dtype=np.int8)
+    p = np.asarray(probability, dtype=np.float64)
+    order_desc = np.argsort(-p, kind="mergesort")
+    desc = p[order_desc]
+    ends_desc = np.r_[np.flatnonzero(desc[1:] != desc[:-1]), len(p) - 1]
+    order_asc = np.argsort(p, kind="mergesort")
+    asc = p[order_asc]
+    ends_asc = np.r_[np.flatnonzero(asc[1:] != asc[:-1]), len(p) - 1]
+    return {"y": y, "p": p, "order_desc": order_desc, "ends_desc": ends_desc,
+            "order_asc": order_asc, "ends_asc": ends_asc}
+
+
+def _weighted_rank_metrics(prepared: dict, row_weights: np.ndarray) -> tuple[float, float, float] | None:
+    """Exact tie-aware weighted AUROC, average precision, and Brier score."""
+    y = prepared["y"]
+    w = np.asarray(row_weights, dtype=np.float64)
+    pos_total = np.sum(w * y)
+    neg_total = np.sum(w * (1 - y))
+    if pos_total <= 0 or neg_total <= 0:
+        return None
+
+    order = prepared["order_asc"]
+    yy, ww = y[order], w[order]
+    group_starts = np.r_[0, prepared["ends_asc"][:-1] + 1]
+    group_pos = np.add.reduceat(ww * yy, group_starts)
+    group_neg = np.add.reduceat(ww * (1 - yy), group_starts)
+    neg_before = np.cumsum(group_neg) - group_neg
+    auc = np.sum(group_pos * (neg_before + 0.5 * group_neg)) / (pos_total * neg_total)
+
+    order = prepared["order_desc"]
+    yy, ww = y[order], w[order]
+    group_starts = np.r_[0, prepared["ends_desc"][:-1] + 1]
+    group_pos = np.add.reduceat(ww * yy, group_starts)
+    group_total = np.add.reduceat(ww, group_starts)
+    cum_pos, cum_total = np.cumsum(group_pos), np.cumsum(group_total)
+    ap = np.sum((group_pos / pos_total) * (cum_pos / cum_total))
+    brier = np.sum(w * (prepared["p"] - y) ** 2) / np.sum(w)
+    return float(auc), float(ap), float(brier)
+
+
 def paired_patient_cluster_bootstrap(
     y_true: np.ndarray,
     probability_static: np.ndarray,
@@ -59,56 +101,48 @@ def paired_patient_cluster_bootstrap(
     n_bootstrap: int = 200,
     seed: int = 20261014,
 ) -> dict:
-    """Paired percentile intervals via patient-cluster bootstrap weights.
-
-    Sampling patients with replacement is represented by per-row sample weights equal
-    to each patient's bootstrap multiplicity. This preserves all rows per sampled patient
-    while avoiding repeated large row-array concatenations. Predictions remain in memory.
-    """
-    y_true = np.asarray(y_true)
-    p_static = np.asarray(probability_static)
-    p_temporal = np.asarray(probability_temporal)
+    """Paired patient-cluster percentile intervals using patient multiplicity weights."""
+    y = np.asarray(y_true, dtype=np.int8)
     groups = np.asarray(groups)
-    if not (len(y_true) == len(p_static) == len(p_temporal) == len(groups)):
+    p_static = np.asarray(probability_static, dtype=np.float64)
+    p_temporal = np.asarray(probability_temporal, dtype=np.float64)
+    if not (len(y) == len(p_static) == len(p_temporal) == len(groups)):
         raise ValueError("labels, probabilities, and patient groups must have equal lengths")
     if n_bootstrap < 20:
         raise ValueError("n_bootstrap must be at least 20")
     unique_groups, group_index = np.unique(groups, return_inverse=True)
     if len(unique_groups) < 2:
         raise ValueError("at least two patient groups are required")
+
+    static = _prepare_rank_metrics(y, p_static)
+    temporal = _prepare_rank_metrics(y, p_temporal)
     rng = np.random.default_rng(seed)
-    deltas = {"auroc": [], "auprc": [], "brier_score": []}
+    differences = {"auroc": [], "auprc": [], "brier_score": []}
     for _ in range(n_bootstrap):
         sampled = rng.integers(0, len(unique_groups), size=len(unique_groups))
         multiplicity = np.bincount(sampled, minlength=len(unique_groups))
         weights = multiplicity[group_index]
-        if not np.any(weights[y_true == 0]) or not np.any(weights[y_true == 1]):
+        static_metrics = _weighted_rank_metrics(static, weights)
+        temporal_metrics = _weighted_rank_metrics(temporal, weights)
+        if static_metrics is None or temporal_metrics is None:
             continue
-        deltas["auroc"].append(
-            roc_auc_score(y_true, p_temporal, sample_weight=weights)
-            - roc_auc_score(y_true, p_static, sample_weight=weights)
-        )
-        deltas["auprc"].append(
-            average_precision_score(y_true, p_temporal, sample_weight=weights)
-            - average_precision_score(y_true, p_static, sample_weight=weights)
-        )
-        deltas["brier_score"].append(
-            brier_score_loss(y_true, p_temporal, sample_weight=weights)
-            - brier_score_loss(y_true, p_static, sample_weight=weights)
-        )
-    if len(deltas["auroc"]) < max(20, int(0.8 * n_bootstrap)):
+        for name, index in (("auroc", 0), ("auprc", 1), ("brier_score", 2)):
+            differences[name].append(temporal_metrics[index] - static_metrics[index])
+
+    valid = len(differences["auroc"])
+    if valid < max(20, int(0.8 * n_bootstrap)):
         raise ValueError("too few valid bootstrap replicates; inspect event distribution")
     return {
-        "method": "paired patient-cluster percentile bootstrap; resample patients with replacement using patient multiplicity weights, retaining all hourly rows",
+        "method": "paired patient-cluster percentile bootstrap; patient multiplicity weights; exact tie-aware weighted AUROC and average precision",
         "replicates_requested": n_bootstrap,
-        "replicates_valid": len(deltas["auroc"]),
+        "replicates_valid": valid,
         "seed": seed,
         "temporal_minus_static": {
             name: {
                 "mean_bootstrap_difference": float(np.mean(values)),
                 "ci_95_percentile": [float(np.quantile(values, 0.025)), float(np.quantile(values, 0.975))],
             }
-            for name, values in deltas.items()
+            for name, values in differences.items()
         },
         "interpretation": "Conditional on this held-out split; not external-validation uncertainty.",
     }
