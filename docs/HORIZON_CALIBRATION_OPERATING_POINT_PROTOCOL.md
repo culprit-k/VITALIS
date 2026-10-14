@@ -82,3 +82,19 @@ python scripts/evaluate_horizon_calibration.py \\
 ```
 
 The evaluator output must remain aggregate-only. The cost proxy omits treatment harms, alarm fatigue, staffing, delayed treatment, patient preferences, and competing outcomes. Cost ratios need independent clinical/statistical justification. Set A holdout rankings are development evidence only; after a policy is frozen, a **new independent cohort** is needed for final evaluation. Previously inspected Set B results must not be reused to select a threshold.
+
+
+## Utility-based operating-point cost sensitivity (15 October 2026)
+
+The calibration evaluator now runs a cost-sensitivity analysis on the **untouched, patient-disjoint Set-A operating-point holdout** using Platt-calibrated probabilities. The default illustrative scenario grid assigns missed forecast-positive windows costs of 1, 5, 10, and 20 units relative to a cost of 1 unit per alert. Both costs can be overridden with \`--missed-window-costs\` and \`--alert-cost\`. These are sensitivity-analysis assumptions, not clinician-elicited or clinically justified values.
+
+For each threshold, the aggregate-only output reports row sensitivity/PPV, total alerts, alerts per at-risk patient-day, forecast-positive-window coverage, missed windows, and label-relative warning time. Each cost scenario ranks candidate thresholds by weighted cost per at-risk patient-day. Any lowest-cost threshold is explicitly a **development candidate only**; no threshold is selected from Set B, and Set B remains evaluation-only.
+
+Reproduction arguments may be added to the existing command:
+
+\`\`\`bash
+  --missed-window-costs 1 5 10 20 \\
+  --alert-cost 1
+\`\`\`
+
+The cost ratios must be reviewed independently before they are treated as meaningful. The framework does not model treatment harms, alarm fatigue, staffing constraints, or verified clinical false alarms. A frozen policy needs evaluation on a new independent cohort; Set B has already been inspected and must not be reused for threshold selection.
