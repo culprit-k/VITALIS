@@ -94,3 +94,12 @@ For each threshold, the aggregate-only output reports row sensitivity/PPV, total
 The completed exploratory nine-run analysis is documented in [the utility results report](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate-only JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json). It used a reconstructed local working copy, not a byte-identically verified clean checkout; ancillary bootstrap summaries used 20 replicates and are preliminary.
 
 The cost ratios need independent clinician/statistician review before they are treated as meaningful. The framework does not model treatment harms, alarm fatigue, staffing constraints, or verified clinical false alarms. A frozen policy needs evaluation on a new independent cohort; Set B has already been inspected and must not be reused for threshold selection.
+
+
+## Dedicated utility uncertainty follow-up (15 October 2026)
+
+A separate Set-A-only run completed 200 whole-patient bootstrap replicates for each of the 18 model × seed × horizon fits (3,600 total). It estimates conditional intervals for sensitivity, PPV, alert burden, forecast-window coverage, and weighted cost per at-risk patient-day, and summarizes threshold-selection stability under the illustrative cost grid. The run did not load Set B.
+
+Results and selected operating-point trade-offs are in [the utility bootstrap report](HORIZON_UTILITY_BOOTSTRAP_RESULTS_2026-10-15.md); the aggregate-only machine-readable summary is [here](../results/horizon_utility_bootstrap_summary_2026-10-15.json). The run used a reconstructed local working copy and is not claimed as byte-identically verified execution of the checked-in source. Local source hashes and environment versions are recorded in the report.
+
+The interval envelopes in the report summarize run-specific intervals and are not pooled confidence intervals. Cost-selection frequencies are resampling stability summaries under assumed cost ratios, not evidence of clinical optimality. Set B remains evaluation-only; a new independent cohort and independent clinical/statistical review remain required.
