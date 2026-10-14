@@ -1,6 +1,7 @@
 # Adaptive physiological twin: algorithm and validation contract
 
 **Implementation:** `src/vitalis/adaptive_twin.py`  
+**Timestamped input adapter:** `src/vitalis/stream.py`  
 **Demonstration:** `python scripts/demo_adaptive_twin.py`  
 **Status:** streaming research component; not a clinical prediction model.
 
@@ -67,7 +68,7 @@ The state cutoffs and persistence rules are configurable demonstration defaults.
 
 - It does not estimate sepsis probability or predict a 1–3 hour deterioration window.
 - It does not infer whether a high or low value is directionally dangerous for a particular channel.
-- It does not ingest device protocols, align timestamps, or perform signal-quality/artifact filtering.
+- The timestamped adapter validates units, timestamps, sample quality flags, freshness, and out-of-order samples. It does not implement device-specific protocols, sophisticated multi-rate synchronization, or signal-quality/artifact detection.
 - It does not integrate laboratory results, fluid balance, medication, or movement data into a unified online model.
 - It does not establish novelty, patentability, prospective validity, or clinical utility.
 
