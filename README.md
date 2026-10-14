@@ -134,3 +134,12 @@ The current-tree guard is complemented by a full-history scanner: see [Git-histo
 ## Clinical translation and regulatory readiness
 
 The [clinical translation and regulatory roadmap](docs/CLINICAL_TRANSLATION_AND_REGULATORY_ROADMAP.md) defines the gates for moving from retrospective research toward a possible medical-device programme: intended-use definition, target-market classification, quality/design controls, risk management, independent clinical validation, prospective studies, regulatory authorization, and post-market monitoring. It is a planning document, not proof of compliance or clinical validation. VITALIS remains research-only; do not use it to guide patient care.
+
+
+## Uzbekistan research-readiness gate
+
+- [Uzbekistan research-readiness dossier](docs/UZBEKISTAN_RESEARCH_READINESS.md) records the proposed offline retrospective research boundary, current legal/regulatory source checks, data-protection and ethics questions, and stop conditions.
+- [Machine-readable Uzbekistan readiness register](configs/regulatory/uzbekistan_research_readiness.json) tracks the evidence gates without implying approvals.
+- Initial market: **Uzbekistan**. Initial intended deployment: **research only**, beginning with offline retrospective analysis of authorized, de-identified data.
+- No live hospital feed, prospective patient monitoring, clinician-facing score, patient-care influence, or clinical marketing is authorized by this project status. The pathway for software-specific registration and study governance requires written confirmation from the competent Uzbekistan authorities and host institution.
+- This documentation is a planning aid, not legal advice, medical-device classification, ethics approval, data-processing permission, regulatory authorization, or clinical validation.
