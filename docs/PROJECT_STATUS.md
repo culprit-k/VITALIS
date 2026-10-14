@@ -106,6 +106,18 @@ An older reconstructed evaluation harness produced different metrics from the ch
 
 **Interpretation boundary:** targets forecast entry into the Challenge SepsisLabel-positive window, not independent biological onset. The source label already incorporates a six-hour lead convention. No clinical validation or patient benefit is established.
 
+## Horizon calibration milestone completed (2026-10-15)
+
+- Completed all nine horizon × seed combinations (1/3/6 h; seeds 42, 123, 2026), fitting 18 static/temporal models on verified local full-cohort caches. Summed runtime was 217.7 seconds; no model-fit warnings were captured.
+- Added the patient-disjoint Set A 60/20/20 train/calibration/untouched-holdout protocol. Platt recalibration was fit only on Set A calibration patients; Set B remained final evaluation-only.
+- Results: [calibration and operating-point report](HORIZON_CALIBRATION_RESULTS_2026-10-15.md), [aggregate-only summary JSON](../results/horizon_calibration_summary_2026-10-15.json), and [protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- Platt recalibration substantially reduced Brier scores versus raw class-weighted scores, but Set-B calibrated Brier scores remained slightly worse than the constant-prevalence reference for all six model/horizon combinations. Adequate calibration is not established.
+- At a calibrated threshold of 0.005, 6-hour forecast-window coverage was approximately 97–98% with about 4 alerts per at-risk patient-day. This trade-off is descriptive and does not establish a clinical alarm policy.
+- Focused local suite passed: 9 tests. GitHub Actions run #564 is pending at [the current PR head](https://github.com/culprit-k/VITALIS/actions/runs/38622090252).
+- Next research milestone: patient-cluster uncertainty intervals for calibrated probability metrics and a predeclared utility-based operating-point framework using development data. Do not select thresholds on Set B.
+
+**Interpretation boundary:** the Challenge label uses a six-hour lead convention, so forecasts concern Challenge-label-window entry rather than independently observed biological sepsis onset. VITALIS remains research-only, not clinically validated, and not for patient care.
+
 ## 6. Next steps, in order
 
 1. **Obtain a clean checkout** of the exact PR head once network/DNS works; record the checkout SHA and clean working-tree status.
