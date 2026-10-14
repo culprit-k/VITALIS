@@ -15,5 +15,7 @@ jobs:
           cache: pip
       - name: Install package and development dependencies
         run: python -m pip install -e ".[dev,bootstrap-accelerated]"
+      - name: Compile Python source and demo scripts
+        run: python -m compileall -q src scripts dashboard tests
       - name: Run tests
         run: pytest
