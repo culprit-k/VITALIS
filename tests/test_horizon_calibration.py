@@ -64,3 +64,28 @@ def test_threshold_metrics_fixed_boundary_and_confusion_counts():
 def test_threshold_grid_is_predeclared_and_not_empty():
     assert MOD.THRESHOLDS == (.001, .005, .01, .05, .5)
     assert all(0 < x <= 1 for x in MOD.THRESHOLDS)
+
+
+def test_evaluate_one_reports_paired_static_temporal_bootstrap_on_set_b():
+    rng = np.random.default_rng(17)
+    n_patients, hours = 60, 10
+    columns = list(MOD.BASE) + ["SyntheticExtra"]
+    groups = np.repeat(np.arange(n_patients), hours)
+    labels = np.zeros(n_patients * hours, dtype=np.int8)
+    labels[np.arange(n_patients) * hours + 8] = 1
+    Xa = rng.normal(size=(len(labels), len(columns)))
+    Xb = rng.normal(size=(len(labels), len(columns)))
+    Xa[:, columns.index("HR")] += np.repeat(rng.normal(size=n_patients), hours)
+    Xb[:, columns.index("HR")] += np.repeat(rng.normal(size=n_patients), hours)
+    meta_a = {"columns": columns}
+    meta_b = {"columns": columns}
+    out = MOD.evaluate_one(
+        meta_a, Xa, labels, groups, meta_b, Xb, labels.copy(), groups.copy(),
+        horizon=1, seed=17, chunk_rows=128, refractory_hours=6, bootstrap_replicates=20,
+    )
+    paired = out["set_b_paired_static_vs_temporal_bootstrap_95ci"]
+    assert paired["reference_model"] == "static"
+    assert paired["comparison_model"] == "temporal"
+    assert paired["rows"] == (hours - 1) * n_patients - n_patients
+    assert set(paired["intervals_comparison_minus_reference"]) == {"auroc", "auprc", "brier_score", "log_loss"}
+    assert out["set_b_used_for_fit_or_threshold_selection"] is False
