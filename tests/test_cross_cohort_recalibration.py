@@ -54,3 +54,54 @@ def test_probability_metrics_are_aggregate_only():
     assert out["auroc"] == 1.0
     assert "predictions" not in out
     assert "patient_ids" not in out
+
+
+
+def test_local_score_archive_directory_must_be_outside_repository(tmp_path):
+    repository = tmp_path / "repo"
+    repository.mkdir()
+    with pytest.raises(ValueError, match="outside the repository"):
+        MOD.validate_local_score_archive_dir(repository / "scores", repository)
+    with pytest.raises(ValueError, match="outside the repository"):
+        MOD.validate_local_score_archive_dir(repository, repository)
+    outside = tmp_path / "private-scores"
+    assert MOD.validate_local_score_archive_dir(outside, repository) == outside.resolve()
+
+
+def test_local_score_archives_contain_only_aligned_vectors_and_synthetic_groups(tmp_path):
+    labels = np.array([0, 1, 0, 1], dtype=np.int8)
+    patient_groups = np.array([900, 900, 12, 12])
+    raw_static = np.array([.1, .7, .2, .8])
+    raw_temporal = np.array([.2, .8, .3, .9])
+    recal_static = np.array([.05, .6, .1, .7])
+    recal_temporal = np.array([.1, .7, .2, .8])
+    paths = MOD.write_local_score_archives(
+        tmp_path / "private", 42, labels, patient_groups,
+        raw_static, raw_temporal, recal_static, recal_temporal,
+    )
+    assert [p.name for p in paths] == [
+        "heldout_scores_seed_42_raw.npz",
+        "heldout_scores_seed_42_recalibrated.npz",
+    ]
+    with np.load(paths[0], allow_pickle=False) as data:
+        assert set(data.files) == {"y", "groups", "p_static", "p_temporal"}
+        assert np.array_equal(data["y"], labels)
+        assert np.array_equal(data["groups"], np.array([1, 1, 0, 0], dtype=np.int32))
+        assert np.array_equal(data["p_static"], raw_static)
+        assert np.array_equal(data["p_temporal"], raw_temporal)
+    with np.load(paths[1], allow_pickle=False) as data:
+        assert np.array_equal(data["p_static"], recal_static)
+        assert np.array_equal(data["p_temporal"], recal_temporal)
+
+
+def test_local_score_archive_writer_rejects_misaligned_or_invalid_vectors(tmp_path):
+    with pytest.raises(ValueError, match="aligned"):
+        MOD.write_local_score_archives(
+            tmp_path, 1, np.array([0, 1]), np.array([1, 1]),
+            np.array([.1]), np.array([.2, .3]), np.array([.2, .3]), np.array([.3, .4]),
+        )
+    with pytest.raises(ValueError, match="finite and in"):
+        MOD.write_local_score_archives(
+            tmp_path, 1, np.array([0, 1]), np.array([1, 1]),
+            np.array([.1, np.nan]), np.array([.2, .3]), np.array([.2, .3]), np.array([.3, .4]),
+        )
