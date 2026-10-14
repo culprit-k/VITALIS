@@ -236,3 +236,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Upgrade the bootstrap to at least 1,000 replicates per seed/stream using an optimized implementation; current 20-replicate intervals are rough pilot estimates only.
 - [ ] Run score generation from an exact repository checkout and reconcile the aggregate results; current score-generation source identity remains unverified.
 - [ ] Continue with a pre-specified subgroup robustness audit, suppress small cells, and keep Set B out of all model/recalibrator/threshold tuning.
+
+## Cross-cohort 1,000-replicate uncertainty work — partial checkpoint (14 October 2026)
+
+- [x] Started upgrading the Set-B paired patient-cluster bootstrap beyond the 20-replicate pilot. A Numba-accelerated local implementation completed 1,000 valid patient-cluster replicates for seed 42 using raw probabilities.
+- [x] Added the aggregate-only partial result: [seed 42 raw stream, 1,000 replicates](../results/cross_cohort_paired_bootstrap_seed42_raw_1000_2026-10-14.json). Temporal-minus-static AUROC difference was +0.0575 (95% percentile interval +0.0497 to +0.0647), AUPRC difference +0.0135 (+0.0111 to +0.0167), and Brier difference -0.0641 (-0.0650 to -0.0632).
+- [ ] Complete the remaining five seed/stream analyses (seed 42 recalibrated; seeds 123 and 2026 raw and recalibrated). Do not describe the 1,000-replicate cross-cohort phase as complete until all six are done.
+- [ ] Validate the optimized bootstrap implementation against the checked-in bootstrap runner on synthetic tied-score fixtures and compare its results against the existing 20-replicate pilot where applicable.
+- [ ] Exact source-byte identity for model fitting and score generation remains open; the current scores came from reconstructed local runner logic. This is not external or prospective clinical validation.
+
