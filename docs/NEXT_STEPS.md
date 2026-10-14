@@ -23,7 +23,7 @@ In the 500-patient exploratory sample, the static model had the best mean AUROC 
 - [x] GitHub Actions passed for the Phase 2 helper tests and runner (latest verified run: https://github.com/culprit-k/VITALIS/actions/runs/38549292731).
 - [ ] Execute the canonical Phase 1 runner on the local dataset and reconcile its output with the committed aggregate artifact; do not assume the local equivalent is identical.
 - [x] Run held-out calibration and split-specific missingness diagnostics; recalibration was fit on validation data only. Results are exploratory and show unstable recalibration.
-- [ ] Conduct prespecified robustness checks and exploratory subgroup analysis with small-cell safeguards.
+- [x] Run an exploratory age/gender and missingness-stratified audit with small-cell suppression; see the Phase 2 results report. Results are unstable and not fairness/safety evidence.
 - [ ] Consider full-cohort execution only after reproducibility and memory/runtime checks; external validation remains separate.
 - [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
 
@@ -32,7 +32,7 @@ In the 500-patient exploratory sample, the static model had the best mean AUROC 
 1. Confirm CI and test the new calibration helpers.
 2. Reconcile the canonical runner with the recorded Phase 1 artifact.
 3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); the local equivalent runner completed, but the canonical repository runner still needs an exact local reconciliation.
-4. Conduct prespecified robustness and subgroup checks before considering a larger/full-cohort run.
+4. Design stronger prespecified robustness checks (including alternate missingness handling and calibration methods) before considering a larger/full-cohort run.
 5. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
 
 ## Hardware gate
