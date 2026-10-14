@@ -268,3 +268,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Run a sensitivity analysis with the frozen eligible-feature policy and compare it to the existing baseline; report performance and missingness separately, without selecting the policy based on Set-B metrics.
 - [ ] Feature availability alone does not prove measurement comparability or explain causality. VITALIS remains research-only; no clinical validity or utility claim follows from this audit.
 
+## Cross-cohort feature-coverage sensitivity analysis (14 October 2026)
+
+- [x] Completed a Set-A-training-only 5% finite-coverage sensitivity rule across seeds 42, 123, and 2026; Set B remained evaluation-only. See [coverage sensitivity report](CROSS_COHORT_COVERAGE_SENSITIVITY.md) and [aggregate JSON](../results/cross_cohort_coverage_sensitivity_2026-10-14.json).
+- [x] Static ranking metrics decreased slightly under the filter (mean AUROC 0.6750 to 0.6687; AUPRC 0.0455 to 0.0436); temporal ranking metrics were similar/slightly higher (AUROC 0.7319 to 0.7335; AUPRC 0.0581 to 0.0583). This is a descriptive sensitivity result, not evidence that the 5% cutoff is optimal.
+- [x] The eligibility list was derived only from each Set-A training partition; recalibration used the disjoint Set-A validation partition. Set B was not used for feature eligibility, fitting, recalibration, or threshold selection.
+- [ ] The 5% cutoff is an exploratory policy, not clinically justified. Before adopting any feature-coverage cutoff, obtain domain/statistical justification or specify it externally and freeze it before final evaluation.
+- [ ] Further investigate large availability shifts among features retained by the policy; finite-value rates alone do not establish comparable measurement practice or missingness mechanisms.
+- [ ] Full clean-checkout provenance remains open because GitHub DNS was unavailable during local execution; the sensitivity wrapper itself is local-only and is not a checked-in CLI. VITALIS remains research-only.
+
