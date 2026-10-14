@@ -111,3 +111,8 @@ The Set-A-only cost-sensitivity framework is documented in [Utility operating-po
 ### Independent evaluation gate
 
 The next external evidence stage is specified in the [independent-cohort evaluation protocol](docs/INDEPENDENT_EVALUATION_PROTOCOL.md). It requires a frozen model/policy, a genuinely new cohort, an independently defined event time, and clinical/statistical and governance sign-off. This is a planning protocol only; no external or prospective validation has occurred. The [utility cost review checklist](docs/UTILITY_COST_REVIEW_CHECKLIST.md) is available for independent review.
+
+
+### Independent evaluation freeze gate
+
+The independent-evaluation protocol now has a machine-checkable scaffold: `configs/independent_evaluation_lockfile.template.json`, validated by `scripts/validate_evaluation_lockfile.py`. It refuses draft/unfrozen policies, Set B reuse, proxy-label/clinical-onset mismatches, and missing reviewer/governance sign-offs. The template is intentionally invalid until independently completed. Keep the completed lockfile and any cohort-identifying information in an approved private workspace; this validator is not an ethics approval or clinical-validity check.
