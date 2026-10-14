@@ -640,8 +640,8 @@ The next implementation layer has now been added on the existing research branch
 - [x] Integrate the uncertainty calculation only on the untouched patient-disjoint Set-A operating-point holdout; Set B remains evaluation-only.
 - [x] Add focused reproducibility, interval-schema, selection-frequency, invalid-replicate-count, and evaluator-integration tests.
 - [x] Document the uncertainty estimand and limitations in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md).
-- [ ] Confirm GitHub Actions passes on the latest code-bearing head; investigate and fix any test failures before interpreting results.
-- [ ] Run the full nine seed × horizon utility analysis with the default 200 patient-cluster replicates from an exact clean checkout when runtime/network access permits. Retain aggregate-only results and source/environment hashes; do not commit patient-level bootstrap outputs.
+- [x] GitHub Actions passed on code-bearing head `f486b1cdc3cc6bd40a3196d2a3fdd87dc2171294` (run [38639195327](https://github.com/culprit-k/VITALIS/actions/runs/38639195327)): compile, repository-artifact hygiene, reachable-history audit, synthetic stream smoke test, and full test suite all passed.
+- [ ] Complete the full nine seed × horizon utility-bootstrap analysis with 200 patient-cluster replicates. A reconstructed local attempt timed out while fitting the 6-hour model; no partial bootstrap artifact was committed. Rerun with a bounded, reproducible environment and record exact source/environment hashes. The current deterministic utility results remain the only full-cohort utility results.
 - [ ] Obtain independent clinical/statistical review of cost ratios, target-window definition, and interpretation. Selection frequency is not clinical optimality.
 - [ ] Keep Set B unavailable for threshold selection. A frozen development candidate requires a new independent cohort with independently defined/adjudicated event timing plus governance/ethics approval before external or prospective evaluation.
 
