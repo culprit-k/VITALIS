@@ -8,8 +8,15 @@ from __future__ import annotations
 import argparse
 import json
 import random
+from datetime import datetime, timedelta, timezone
 
 from vitalis.adaptive_twin import AdaptivePhysiologicalTwin, TwinConfig
+from vitalis.stream import Observation, TimestampedTwinStream
+
+UNITS = {
+    "heart_rate": "bpm", "spo2": "%", "respiratory_rate": "breaths/min",
+    "systolic_bp": "mmHg", "temperature": "degC",
+}
 
 
 def synthetic_stream(seed: int = 2026):
@@ -32,16 +39,22 @@ def main() -> None:
     twin = AdaptivePhysiologicalTwin(
         config=TwinConfig(min_history=5, history_window=24, min_channels=2, min_systems=2)
     )
-    for step, observation in enumerate(synthetic_stream(args.seed), start=1):
-        result = twin.update(observation)
+    stream = TimestampedTwinStream(twin, max_age_seconds=120)
+    start = datetime(2026, 10, 14, tzinfo=timezone.utc)
+    for step, observations in enumerate(synthetic_stream(args.seed)):
+        timestamp = start + timedelta(minutes=step)
+        for channel, value in observations.items():
+            stream.ingest(Observation(channel, timestamp, value, UNITS[channel]))
+        result = stream.score(timestamp)
         print(json.dumps({
-            "step": step,
+            "step": step + 1,
             "state": result["state"],
             "coverage": round(float(result["coverage"]), 3),
             "trajectory_score": (
                 None if result["trajectory_score"] is None
                 else round(float(result["trajectory_score"]), 4)
             ),
+            "trajectory_direction": result["trajectory_direction"],
             "cross_system_concordance": result["cross_system_concordance"],
         }, sort_keys=True))
     print(json.dumps({
