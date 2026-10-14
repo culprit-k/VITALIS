@@ -9,13 +9,9 @@ The existing VITALIS models classify the current hourly Challenge 2019 SepsisLab
 
 For patient i and hourly row t:
 
-[
-Y^{(H)}_{i,t} =
-mathbb{1}left[
-Y_{i,t}=0 ;land;
-max_{k=1,ldots,H}Y_{i,t+k}=1
-ight].
-]
+\[
+Y^{(H)}_{i,t} = \\mathbb{1}\\left[Y_{i,t}=0 \\land \\max_{k=1,\\ldots,H}Y_{i,t+k}=1\\right].
+\]
 
 Rows with a current positive label are excluded because this is a forecast/warning task, not detection after the positive window has already started. The last H rows of each patient are excluded because their complete future window is unavailable. The target is never shifted across patient boundaries.
 
