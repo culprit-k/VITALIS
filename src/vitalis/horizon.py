@@ -192,7 +192,7 @@ def patient_cluster_bootstrap_horizon_alerts(
     targets, probabilities, patient_ids, patient_time_indices, *,
     threshold=0.5, refractory_hours=6, n_bootstrap=200, seed=42,
 ) -> dict[str, object]:
-    """Patient-cluster percentile intervals for horizon-specific alert metrics."""
+    """Patient-cluster percentile intervals, vectorized over bootstrap replicates."""
     if n_bootstrap < 20:
         raise ValueError("n_bootstrap must be at least 20")
     summaries = _patient_summaries(
@@ -200,33 +200,64 @@ def patient_cluster_bootstrap_horizon_alerts(
     )
     if len(summaries) < 2:
         raise ValueError("at least two unique patients are required")
-    getters = {
-        "alerts_per_at_risk_patient_day": lambda s: sum(x["alerts"] for x in s) / (sum(x["hours"] for x in s) / 24) if sum(x["hours"] for x in s) else np.nan,
-        "alerts_outside_future_positive_windows_per_at_risk_patient_day": lambda s: sum(x["outside"] for x in s) / (sum(x["hours"] for x in s) / 24) if sum(x["hours"] for x in s) else np.nan,
-        "future_positive_window_coverage": lambda s: sum(x["covered"] for x in s) / sum(x["windows"] for x in s) if sum(x["windows"] for x in s) else np.nan,
-        "fraction_of_patients_with_at_least_one_alert": lambda s: sum(x["any_alert"] for x in s) / len(s) if s else np.nan,
-        "mean_warning_lead_hours_to_challenge_label_entry": lambda s: float(np.mean([lead for x in s for lead in x["leads"]])) if any(x["leads"] for x in s) else np.nan,
-    }
+
+    # Each row of the bootstrap index matrix resamples whole patient summaries.
+    # Pre-aggregate per-patient sufficient statistics so each replicate uses
+    # NumPy reductions rather than repeated Python loops over all patients.
+    hours = np.asarray([x["hours"] for x in summaries], dtype=np.float64)
+    alerts = np.asarray([x["alerts"] for x in summaries], dtype=np.float64)
+    outside = np.asarray([x["outside"] for x in summaries], dtype=np.float64)
+    windows = np.asarray([x["windows"] for x in summaries], dtype=np.float64)
+    covered = np.asarray([x["covered"] for x in summaries], dtype=np.float64)
+    any_alert = np.asarray([x["any_alert"] for x in summaries], dtype=np.float64)
+    lead_sums = np.asarray([sum(x["leads"]) for x in summaries], dtype=np.float64)
+    lead_counts = np.asarray([len(x["leads"]) for x in summaries], dtype=np.float64)
+
     rng = np.random.default_rng(seed)
-    values = {name: [] for name in getters}
-    for _ in range(n_bootstrap):
-        selected = rng.integers(0, len(summaries), size=len(summaries))
-        sample = [summaries[int(i)] for i in selected]
-        for name, getter in getters.items():
-            value = float(getter(sample))
-            if np.isfinite(value):
-                values[name].append(value)
-    intervals = {
-        name: {
-            "lower_95": float(np.percentile(v, 2.5)) if v else None,
-            "upper_95": float(np.percentile(v, 97.5)) if v else None,
-            "valid_replicates": len(v),
+    indices = rng.integers(0, len(summaries), size=(n_bootstrap, len(summaries)))
+    def sampled_sum(values):
+        return values[indices].sum(axis=1)
+
+    sampled_hours = sampled_sum(hours)
+    sampled_alerts = sampled_sum(alerts)
+    sampled_outside = sampled_sum(outside)
+    sampled_windows = sampled_sum(windows)
+    sampled_covered = sampled_sum(covered)
+    sampled_any_alert = sampled_sum(any_alert)
+    sampled_lead_sums = sampled_sum(lead_sums)
+    sampled_lead_counts = sampled_sum(lead_counts)
+    sampled_patients = np.full(n_bootstrap, len(summaries), dtype=np.float64)
+
+    series = {
+        "alerts_per_at_risk_patient_day": np.divide(
+            sampled_alerts * 24, sampled_hours,
+            out=np.full(n_bootstrap, np.nan), where=sampled_hours > 0,
+        ),
+        "alerts_outside_future_positive_windows_per_at_risk_patient_day": np.divide(
+            sampled_outside * 24, sampled_hours,
+            out=np.full(n_bootstrap, np.nan), where=sampled_hours > 0,
+        ),
+        "future_positive_window_coverage": np.divide(
+            sampled_covered, sampled_windows,
+            out=np.full(n_bootstrap, np.nan), where=sampled_windows > 0,
+        ),
+        "fraction_of_patients_with_at_least_one_alert": sampled_any_alert / sampled_patients,
+        "mean_warning_lead_hours_to_challenge_label_entry": np.divide(
+            sampled_lead_sums, sampled_lead_counts,
+            out=np.full(n_bootstrap, np.nan), where=sampled_lead_counts > 0,
+        ),
+    }
+    intervals = {}
+    for name, values in series.items():
+        valid = values[np.isfinite(values)]
+        intervals[name] = {
+            "lower_95": float(np.percentile(valid, 2.5)) if len(valid) else None,
+            "upper_95": float(np.percentile(valid, 97.5)) if len(valid) else None,
+            "valid_replicates": int(len(valid)),
             "requested_replicates": n_bootstrap,
         }
-        for name, v in values.items()
-    }
     return {
-        "method": "patient-cluster percentile bootstrap",
+        "method": "patient-cluster percentile bootstrap (vectorized sufficient statistics)",
         "confidence_level": 0.95,
         "seed": seed,
         "unique_patients": len(summaries),
