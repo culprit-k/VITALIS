@@ -38,3 +38,12 @@ Focused tests: `tests/test_utility.py`.
 ## Interpretation limits
 
 The target forecasts entry into the Challenge SepsisLabel-positive window, whose construction includes a six-hour lead convention; it is not independently observed biological onset. An alert outside a forecast-positive window is not necessarily a clinical false alarm. This cost proxy does not encode treatment harms, alarm fatigue, staffing, delayed treatment, patient preferences, or competing outcomes. VITALIS remains research-only and must not guide patient care.
+
+
+## Patient-cluster uncertainty and selection stability
+
+The evaluator also bootstraps whole patients from the untouched Set-A operating-point holdout. For each threshold it reports percentile intervals for row sensitivity, row PPV, alerts per at-risk patient-day, future-positive-window coverage, and weighted cost per at-risk patient-day under each cost scenario. For each cost ratio it reports how often each threshold is the minimum-cost candidate across bootstrap replicates.
+
+These are conditional intervals and resampling-stability summaries for the current development partition. A high selection frequency means only that a threshold tends to minimize this particular proxy under the supplied costs and observed cohort structure; it is **not** the probability that a threshold is clinically optimal. The bootstrap does not account for uncertainty in the cost ratios, model development choices, site/domain shift, or the validity of the Challenge-label proxy. A new independent cohort and independent cost/endpoint review remain necessary.
+
+The default is 200 patient-cluster replicates, configured with \`--utility-bootstrap-replicates\` (minimum 20). The aggregate-only report contains no patient-level resamples or predictions.
