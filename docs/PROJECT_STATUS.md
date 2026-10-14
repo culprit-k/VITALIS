@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `fa22a87a778de8a6e6b593ea560cef4d281d9072` (includes the CI compile step and follows the adaptive twin, stream adapter, tests, and synthetic dashboard additions).
+**Latest branch head checked during this update:** `c6e30fc1f9535a197713327d49c75f6d9ad237e0` (documentation-only follow-up after CI passed on `fa22a87a778de8a6e6b593ea560cef4d281d9072`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
