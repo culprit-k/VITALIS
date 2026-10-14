@@ -1,0 +1,151 @@
+{
+  "project": "VITALIS",
+  "run_type": "full_cohort_paired_patient_cluster_bootstrap",
+  "dataset": {
+    "patients": 20336,
+    "hourly_rows": 790215,
+    "positive_hourly_labels": 17136
+  },
+  "protocol": {
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "bootstrap_replicates_per_seed": 20,
+    "patient_disjoint_splits": true,
+    "threshold": 0.5,
+    "bootstrap": "Paired patient-cluster percentile bootstrap using patient multiplicity weights; retain all hourly rows.",
+    "warning": "Only 20 replicates per seed completed due execution limits. Tail quantiles are coarse and intervals are preliminary, not suitable for final inferential claims. Intervals are conditional on each held-out split, not external validation. Local runner copies were not byte-identical to GitHub source."
+  },
+  "runs": [
+    {
+      "seed": 42,
+      "test_rows": 159102,
+      "positive_label_rows": 3411,
+      "static": {
+        "auroc": 0.7623354697524292,
+        "auprc": 0.07767507764572511,
+        "brier_score": 0.19027581116186243
+      },
+      "temporal": {
+        "auroc": 0.7872536751127859,
+        "auprc": 0.084196978821625,
+        "brier_score": 0.18138944740778012
+      },
+      "bootstrap": {
+        "valid": 20,
+        "seed": 90042,
+        "auroc": {
+          "mean": 0.024220967626145135,
+          "ci95": [
+            0.015332087648533888,
+            0.035122162728421495
+          ]
+        },
+        "auprc": {
+          "mean": 0.007682092261884083,
+          "ci95": [
+            0.003741993728245616,
+            0.01724743278474707
+          ]
+        },
+        "brier_score": {
+          "mean": -0.008812484118982476,
+          "ci95": [
+            -0.010441123104153962,
+            -0.007137712818195757
+          ]
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "test_rows": 160217,
+      "positive_label_rows": 3557,
+      "static": {
+        "auroc": 0.7643256217136895,
+        "auprc": 0.09413823232238272,
+        "brier_score": 0.1927850517230081
+      },
+      "temporal": {
+        "auroc": 0.7906037675497662,
+        "auprc": 0.09521671532932847,
+        "brier_score": 0.18617547397820808
+      },
+      "bootstrap": {
+        "valid": 20,
+        "seed": 90123,
+        "auroc": {
+          "mean": 0.026786539844786267,
+          "ci95": [
+            0.0189778966076097,
+            0.03754110148533095
+          ]
+        },
+        "auprc": {
+          "mean": 0.0012345110407199467,
+          "ci95": [
+            -0.0026749509084547317,
+            0.006503537258331038
+          ]
+        },
+        "brier_score": {
+          "mean": -0.006687947132819752,
+          "ci95": [
+            -0.00826048066688174,
+            -0.004863506632175463
+          ]
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "test_rows": 155703,
+      "positive_label_rows": 3470,
+      "static": {
+        "auroc": 0.7618504934353718,
+        "auprc": 0.0819798075147334,
+        "brier_score": 0.18525034473927318
+      },
+      "temporal": {
+        "auroc": 0.7873873132174097,
+        "auprc": 0.08628558149138209,
+        "brier_score": 0.17733285260066486
+      },
+      "bootstrap": {
+        "valid": 20,
+        "seed": 92026,
+        "auroc": {
+          "mean": 0.025451026754170464,
+          "ci95": [
+            0.017487213246969967,
+            0.03260003311279757
+          ]
+        },
+        "auprc": {
+          "mean": 0.003946419394651224,
+          "ci95": [
+            0.0001848904665035856,
+            0.007494028280093757
+          ]
+        },
+        "brier_score": {
+          "mean": -0.008087314681717328,
+          "ci95": [
+            -0.009385462237805684,
+            -0.0060439777891723515
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Exploratory retrospective internal evaluation only.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or clinical false-alarm rates.",
+    "Twenty bootstrap replicates per seed are insufficient for stable tail quantiles; rerun with at least 200–1000 after runtime optimization.",
+    "No external or prospective validation.",
+    "Not for diagnosis, triage, or treatment.",
+    "The local evaluator copy was reconstructed and modified from checked-in logic, not verified byte-identical to the GitHub blob."
+  ]
+}
