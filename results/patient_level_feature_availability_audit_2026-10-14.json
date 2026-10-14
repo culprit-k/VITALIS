@@ -406,7 +406,9 @@
       "The public challenge data are hourly records from two hospital systems; a third hospital-system cohort was withheld for scoring.",
       "NaN means no measurement was recorded for that hour.",
       "The official challenge label is shifted six hours before the defined sepsis time.",
-      "The public documentation defines variable meanings but does not establish the cause of Set A/Set B feature-availability differences."
+      "The public documentation defines variable meanings but does not establish the cause of Set A/Set B feature-availability differences.",
+      "The original Challenge paper identifies public Set A as hospital system A (Beth Israel Deaconess Medical Center; 20,336 patients) and Set B as hospital system B (Emory University Hospital; 20,000 patients); the third system was held out.",
+      "The three systems used different EMR systems; the paper reports retaining missing/erroneous values and examining measurement density/distributions across the public hospital systems."
     ],
     "interpretations_not_established": [
       "specific hospital workflow caused a particular feature shift",
@@ -431,7 +433,21 @@
         null
       ]
     ],
-    "duration_strata_are_descriptive_only": true
+    "duration_strata_are_descriptive_only": true,
+    "hospital_system_mapping": {
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6964870/",
+      "set_a": "Hospital system A; Beth Israel Deaconess Medical Center; 20,336 patients",
+      "set_b": "Hospital system B; Emory University Hospital; 20,000 patients",
+      "hidden_test_system": "Hospital system C; identity not disclosed in the paper",
+      "mapping_basis": "The original paper's per-system patient counts match the public Set A and Set B cohort sizes.",
+      "documented_context": [
+        "The three hospital systems used three different EMR systems.",
+        "Hourly records were derived from EMR data; missing and erroneous values were intentionally retained.",
+        "The paper reports examining measurement density and variable distributions across the two public hospital systems.",
+        "The paper describes cohort exclusions for short ICU records and early sepsis timing, and truncation after ICU discharge or at two weeks."
+      ],
+      "interpretation": "Hospital/EMR domain shift is a well-grounded concern; this audit does not establish the exact cause of any individual feature shift or a causal hospital effect."
+    }
   },
   "source_execution_reconciliation": {
     "date": "2026-10-14",
