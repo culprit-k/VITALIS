@@ -101,5 +101,143 @@
     "Hourly rows are correlated; no event-level clinical performance is claimed.",
     "No operating threshold was selected.",
     "No novelty, patentability, regulatory, efficacy, or clinical-readiness claim."
-  ]
+  ],
+  "paired_patient_cluster_bootstrap_intervals_by_split": [
+    {
+      "seed": 42,
+      "temporal_minus_static": {
+        "auroc": {
+          "lower_95": -0.2274,
+          "upper_95": 0.0312
+        },
+        "average_precision": {
+          "lower_95": -0.0558,
+          "upper_95": 0.0401
+        },
+        "brier_score": {
+          "lower_95": -0.0461,
+          "upper_95": -0.0138
+        }
+      },
+      "personalized_minus_temporal": {
+        "auroc": {
+          "lower_95": -0.2322,
+          "upper_95": -0.0079
+        },
+        "average_precision": {
+          "lower_95": -0.0978,
+          "upper_95": -0.0032
+        },
+        "brier_score": {
+          "lower_95": -0.0363,
+          "upper_95": 0.0078
+        }
+      },
+      "personalized_minus_static": {
+        "auroc": {
+          "lower_95": -0.335,
+          "upper_95": -0.0569
+        },
+        "average_precision": {
+          "lower_95": -0.1116,
+          "upper_95": -0.0079
+        },
+        "brier_score": {
+          "lower_95": -0.0698,
+          "upper_95": -0.0214
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "temporal_minus_static": {
+        "auroc": {
+          "lower_95": -0.1379,
+          "upper_95": 0.0852
+        },
+        "average_precision": {
+          "lower_95": -0.0749,
+          "upper_95": 0.0346
+        },
+        "brier_score": {
+          "lower_95": -0.0632,
+          "upper_95": -0.0162
+        }
+      },
+      "personalized_minus_temporal": {
+        "auroc": {
+          "lower_95": -0.1536,
+          "upper_95": 0.0311
+        },
+        "average_precision": {
+          "lower_95": -0.1112,
+          "upper_95": 0.0382
+        },
+        "brier_score": {
+          "lower_95": -0.0388,
+          "upper_95": 0.0006
+        }
+      },
+      "personalized_minus_static": {
+        "auroc": {
+          "lower_95": -0.1599,
+          "upper_95": 0.036
+        },
+        "average_precision": {
+          "lower_95": -0.0934,
+          "upper_95": -0.001
+        },
+        "brier_score": {
+          "lower_95": -0.0927,
+          "upper_95": -0.026
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "temporal_minus_static": {
+        "auroc": {
+          "lower_95": -0.1295,
+          "upper_95": 0.0093
+        },
+        "average_precision": {
+          "lower_95": -0.1035,
+          "upper_95": -0.0201
+        },
+        "brier_score": {
+          "lower_95": -0.0426,
+          "upper_95": -0.0012
+        }
+      },
+      "personalized_minus_temporal": {
+        "auroc": {
+          "lower_95": -0.3983,
+          "upper_95": 0.1247
+        },
+        "average_precision": {
+          "lower_95": -0.0495,
+          "upper_95": 0.0365
+        },
+        "brier_score": {
+          "lower_95": -0.0677,
+          "upper_95": -0.0199
+        }
+      },
+      "personalized_minus_static": {
+        "auroc": {
+          "lower_95": -0.424,
+          "upper_95": 0.0751
+        },
+        "average_precision": {
+          "lower_95": -0.1477,
+          "upper_95": -0.0147
+        },
+        "brier_score": {
+          "lower_95": -0.1003,
+          "upper_95": -0.0352
+        }
+      }
+    }
+  ],
+  "paired_bootstrap_note": "Approximate percentile interval bounds rounded to four decimals from 200 paired patient-cluster bootstrap replicates per split/comparison. See local full JSON artifact for point estimates and valid replicate counts."
 }
