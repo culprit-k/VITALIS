@@ -30,7 +30,7 @@ Focused tests: `tests/test_utility.py`.
 
 ## Remaining gates
 
-1. Obtain independent clinician/statistician review of plausible cost ratios, utility assumptions, and label-window semantics before interpreting any scenario ranking.
+1. Use the [independent utility-cost review checklist](UTILITY_COST_REVIEW_CHECKLIST.md) to obtain a qualified clinician/statistician review of plausible cost ratios, utility assumptions, and label-window semantics before interpreting any scenario ranking.
 2. Treat Set-A candidate rankings as development-only. Freeze any policy only after the cost assumptions and selection rule are predeclared; evaluate it once on a new independent cohort. Set B results already inspected must not be reused for threshold selection.
 3. When runtime/network constraints permit, rerun from a verified clean checkout and repeat the utility-focused analysis with a larger uncertainty-replicate count if uncertainty intervals are needed. The current local execution is explicitly not byte-identically verified and used 20 bootstrap replicates.
 4. Prospective evaluation, governance review, and clinical validation remain separate gates.
