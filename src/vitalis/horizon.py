@@ -165,13 +165,17 @@ def _patient_summaries(targets, probabilities, patient_ids, times, threshold, re
         raise ValueError("probabilities must be finite and in [0, 1]")
     if not isfinite(threshold) or not 0 <= threshold <= 1 or refractory_hours < 1:
         raise ValueError("threshold must be in [0, 1] and refractory_hours positive")
+    # The cache/evaluator contract provides chronological, contiguous patient blocks.
+    # Slice each block once; a full-vector mask per patient is quadratic at cohort scale.
+    boundaries = np.r_[0, np.flatnonzero(patients[1:] != patients[:-1]) + 1, len(patients)]
     summaries = []
-    for patient in pd.unique(patients):
-        mask = patients == patient
-        pt = t[mask].astype(int)
+    for start, end in zip(boundaries[:-1], boundaries[1:]):
+        pt = t[start:end].astype(int)
         if len(pt) > 1 and np.any(np.diff(pt) <= 0):
             raise ValueError("time indices must be strictly increasing within each patient")
-        summaries.append(_patient_summary(y[mask].astype(np.int8), p[mask], pt, threshold, refractory_hours))
+        summaries.append(_patient_summary(
+            y[start:end].astype(np.int8), p[start:end], pt, threshold, refractory_hours
+        ))
     return summaries
 
 
