@@ -597,10 +597,11 @@ The next implementation layer has now been added on the existing research branch
 
 - [x] Add \`src/vitalis/utility.py\` to compare thresholds under explicit missed-window-versus-alert cost scenarios.
 - [x] Report sensitivity, PPV, alerts per at-risk patient-day, forecast-positive-window coverage, missed windows, label-relative warning time, and alerts outside target-positive windows.
-- [x] Integrate cost sensitivity into \`scripts/evaluate_horizon_calibration.py\` on the untouched patient-disjoint Set-A operating-point holdout only; default illustrative missed-window cost ratios are 1, 5, 10, and 20 per alert-cost unit, with CLI overrides.
+- [x] Integrate cost sensitivity into \`scripts/evaluate_horizon_calibration.py\` on the untouched patient-disjoint Set-A operating-point holdout only; default illustrative missed-window cost ratios are 1, 10, 100, 500, and 1,000 per alert-cost unit, with CLI overrides.
 - [x] Add focused utility input/metric tests and an evaluator integration assertion; document the method in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the operating-point protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
 - [ ] Confirm GitHub Actions passes on the final code-bearing head and fix any regressions before marking the milestone complete.
-- [ ] Run the integrated full-cohort cost-sensitivity analysis against the authorized local Set-A cache; commit aggregate-only output, never patient-level scores or cache data.
+- [x] Commit the aggregate-only exploratory full-cohort utility analysis for all nine seed × horizon combinations: [report](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json). The run used a reconstructed local working copy and is not byte-identically verified against the checked-in source.
+- [ ] Rerun the integrated checked-in evaluator from a clean checkout and reconcile its aggregate outputs against the exploratory artifact; retain only aggregate output in Git.
 - [ ] Obtain independent clinical/statistical justification for cost ratios. Current defaults are illustrative research assumptions, not clinical valuations.
 - [ ] Freeze any development policy before testing it on a genuinely new independent cohort. Set B has already been inspected and remains evaluation-only; do not use it to select thresholds.
 
