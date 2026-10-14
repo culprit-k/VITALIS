@@ -1,0 +1,232 @@
+{
+  "project": "VITALIS",
+  "run_type": "cross_cohort_A_train_validation_recalibration_B_test_paired_patient_cluster_bootstrap",
+  "date": "2026-10-14",
+  "dataset_B": {
+    "patients": 20000,
+    "hourly_rows": 761995,
+    "positive_hourly_label_rows": 10780,
+    "positive_label_prevalence": 0.014147074455869133
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "bootstrap_replicates_per_seed_and_probability_stream": 20,
+    "comparison": "temporal minus static",
+    "streams": [
+      "raw set-B probabilities",
+      "set-A-validation-Platt-recalibrated probabilities"
+    ],
+    "cluster_unit": "set-B patient",
+    "set_B_used_for_fitting_or_recalibration": false,
+    "row_level_scores_committed": false
+  },
+  "runs": [
+    {
+      "seed": 42,
+      "test_patients": 20000,
+      "test_rows": 761995,
+      "positive_label_rows": 10780,
+      "archive_sha256": "d3637158515f6a389b5af2916d9eaaf68bf3c062549c84a6ac4ef7b89eee9478",
+      "paired_bootstrap": {
+        "raw": {
+          "replicates_requested": 20,
+          "replicates_valid": 20,
+          "seed": 700042,
+          "temporal_minus_static": {
+            "auroc": {
+              "mean_bootstrap_difference": 0.057869818273774264,
+              "ci_95_percentile": [
+                0.05099844465223707,
+                0.06437306956078769
+              ]
+            },
+            "auprc": {
+              "mean_bootstrap_difference": 0.013180344420904423,
+              "ci_95_percentile": [
+                0.010568064281140635,
+                0.016974477990001926
+              ]
+            },
+            "brier_score": {
+              "mean_bootstrap_difference": -0.06413461563167061,
+              "ci_95_percentile": [
+                -0.06469818969876066,
+                -0.06350298422260874
+              ]
+            }
+          }
+        },
+        "recalibrated": {
+          "replicates_requested": 20,
+          "replicates_valid": 20,
+          "seed": 710042,
+          "temporal_minus_static": {
+            "auroc": {
+              "mean_bootstrap_difference": 0.05680508294331186,
+              "ci_95_percentile": [
+                0.050425007220870684,
+                0.062124448241527595
+              ]
+            },
+            "auprc": {
+              "mean_bootstrap_difference": 0.012772380893262361,
+              "ci_95_percentile": [
+                0.011232151080907861,
+                0.014979246137307948
+              ]
+            },
+            "brier_score": {
+              "mean_bootstrap_difference": -0.00010596629309923494,
+              "ci_95_percentile": [
+                -0.0001313249811920949,
+                -0.00007835166678988987
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "test_patients": 20000,
+      "test_rows": 761995,
+      "positive_label_rows": 10780,
+      "archive_sha256": "6bd427773e4e25178506a8059d2d3c5e4d2e6b0e",
+      "paired_bootstrap": {
+        "raw": {
+          "replicates_requested": 20,
+          "replicates_valid": 20,
+          "seed": 700123,
+          "temporal_minus_static": {
+            "auroc": {
+              "mean_bootstrap_difference": 0.0562562509132903,
+              "ci_95_percentile": [
+                0.04885078809098722,
+                0.061367554529175715
+              ]
+            },
+            "auprc": {
+              "mean_bootstrap_difference": 0.013280073844216941,
+              "ci_95_percentile": [
+                0.011463853075004403,
+                0.0166484615989872
+              ]
+            },
+            "brier_score": {
+              "mean_bootstrap_difference": -0.0670402409362503,
+              "ci_95_percentile": [
+                -0.06766735193767084,
+                -0.06631801900327235
+              ]
+            }
+          }
+        },
+        "recalibrated": {
+          "replicates_requested": 20,
+          "replicates_valid": 20,
+          "seed": 710123,
+          "temporal_minus_static": {
+            "auroc": {
+              "mean_bootstrap_difference": 0.055095872280949656,
+              "ci_95_percentile": [
+                0.04834816331534366,
+                0.06148879174609683
+              ]
+            },
+            "auprc": {
+              "mean_bootstrap_difference": 0.013057273020452762,
+              "ci_95_percentile": [
+                0.011144889099757388,
+                0.016586659205352593
+              ]
+            },
+            "brier_score": {
+              "mean_bootstrap_difference": -0.00016763507776973284,
+              "ci_95_percentile": [
+                -0.00025568851939365055,
+                -0.00009205921335788784
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "test_patients": 20000,
+      "test_rows": 761995,
+      "positive_label_rows": 10780,
+      "archive_sha256": "a9353493d1a20a368695adaa0646c52268c413c7360e499a9a9306746ade95d9",
+      "paired_bootstrap": {
+        "raw": {
+          "replicates_requested": 20,
+          "replicates_valid": 20,
+          "seed": 702026,
+          "temporal_minus_static": {
+            "auroc": {
+              "mean_bootstrap_difference": 0.05785244208901187,
+              "ci_95_percentile": [
+                0.05000552344843399,
+                0.06353385900267422
+              ]
+            },
+            "auprc": {
+              "mean_bootstrap_difference": 0.011969828838401579,
+              "ci_95_percentile": [
+                0.010004191753043025,
+                0.014595793631712034
+              ]
+            },
+            "brier_score": {
+              "mean_bootstrap_difference": -0.074866827999477,
+              "ci_95_percentile": [
+                -0.07554934045866059,
+                -0.07403346023945424
+              ]
+            }
+          }
+        },
+        "recalibrated": {
+          "replicates_requested": 20,
+          "replicates_valid": 20,
+          "seed": 712026,
+          "temporal_minus_static": {
+            "auroc": {
+              "mean_bootstrap_difference": 0.058486931942427475,
+              "ci_95_percentile": [
+                0.051194740626544076,
+                0.06674186107911817
+              ]
+            },
+            "auprc": {
+              "mean_bootstrap_difference": 0.01226014304554311,
+              "ci_95_percentile": [
+                0.010255253838321118,
+                0.015124188229602514
+              ]
+            },
+            "brier_score": {
+              "mean_bootstrap_difference": -0.00041228267213731676,
+              "ci_95_percentile": [
+                -0.0005499375762734042,
+                -0.0002939017123388934
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "source_provenance": "Held-out score vectors generated with a reconstructed local harness; exact byte identity to checked-in runner not verified. Bootstrap implementation is a local working copy of the checked-in tie-aware weighted patient-cluster method.",
+  "limitations": [
+    "Only 20 bootstrap replicates per seed/stream; percentile intervals are rough pilot estimates and should not be treated as final uncertainty estimates.",
+    "Conditional uncertainty for each held-out set-B cohort; not uncertainty from model training or cohort selection.",
+    "Set B is from the same PhysioNet/CinC benchmark, not independent real-world/prospective validation.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, clinical lead time, or clinical false-alarm burden.",
+    "No clinical calibration or utility claim is supported."
+  ]
+}
