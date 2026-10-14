@@ -459,4 +459,4 @@ The next implementation layer has now been added on the existing research branch
 - Static mean AUROC/AUPRC across seeds was 0.6634/0.00379 (1 h), 0.6813/0.01358 (3 h), and 0.6868/0.02859 (6 h). Temporal means were 0.6569/0.00317, 0.6800/0.01264, and 0.6864/0.02643, respectively.
 - At the fixed 0.5 threshold, PPV remained very low and alert burden high; neither model should be promoted as a clinical alert policy.
 - Class-weighted model probabilities were not calibrated; Brier scores were much worse than a constant-prevalence predictor. A training-only calibration protocol and independent statistical review remain required.
-- See [full results and limitations](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md). Aggregate JSON is stored outside the repository; raw caches and individual predictions were not uploaded.
+- See [full results and limitations](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) and the committed [aggregate-only result JSON](../results/horizon_cross_cohort_2026-10-14.json). Raw caches and individual predictions were not uploaded.
