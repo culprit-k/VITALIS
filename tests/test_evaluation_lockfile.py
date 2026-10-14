@@ -55,7 +55,7 @@ def valid_lockfile():
             "cost_definition": "missed cost * missed windows + alert cost * all alerts",
             "alert_cost": 1.0,
             "missed_window_costs_relative_to_one_alert": [1, 10, 100],
-            "primary_cost_scenario": "100",
+            "primary_cost_scenario": 100,
             "selection_rule": "Choose lowest cost per patient-day on Set-A holdout",
             "candidate_selection_cohort": "Patient-disjoint Set-A operating-point holdout only; never Set B",
             "clinical_cost_justification": "Exploratory assumption pending independent clinical/statistical review",
@@ -142,3 +142,10 @@ def test_rejects_nonpositive_or_nonfinite_cost_assumptions():
     errors = MOD.validate_lockfile(data)
     assert any("alert_cost must be a positive finite number" in e for e in errors)
     assert any("missed_window_costs_relative_to_one_alert" in e for e in errors)
+
+
+def test_rejects_primary_cost_scenario_not_in_frozen_grid():
+    data = valid_lockfile()
+    data["utility_policy"]["primary_cost_scenario"] = 25
+    errors = MOD.validate_lockfile(data)
+    assert any("primary_cost_scenario must be included" in e for e in errors)
