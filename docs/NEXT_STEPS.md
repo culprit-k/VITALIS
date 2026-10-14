@@ -17,14 +17,14 @@
 
 In the 500-patient exploratory sample, the static model had the best mean AUROC (0.7244) and average precision (0.1018). The temporal model had lower discrimination, while the personalized model had the lowest mean AUROC (0.5847) and average precision (0.0525). The personalized model's lower Brier score but higher log loss is mixed evidence, not proof of good calibration. These results do not justify advancing the personalized model as the default or claiming clinical benefit.
 
-## Phase 2 status: started
+## Phase 2 status: exploratory analysis complete; exact runner reconciliation open
 
 - [x] Added aggregate calibration and predictor-missingness helper functions with unit tests: [Phase 2 plan](PHASE2_PLAN.md).
 - [x] GitHub Actions passed for the Phase 2 helper tests and runner (latest verified run: https://github.com/culprit-k/VITALIS/actions/runs/38549292731).
-- [ ] Execute the canonical Phase 1 runner on the local dataset and reconcile its output with the committed aggregate artifact; do not assume the local equivalent is identical.
+- [ ] Execute the canonical repository runner on the local dataset and reconcile its output with the committed aggregate artifact; the local environment cannot resolve GitHub source hosts, so the equivalent local run is not an exact reconciliation.
 - [x] Run held-out calibration and split-specific missingness diagnostics; recalibration was fit on validation data only. Results are exploratory and show unstable recalibration.
 - [x] Run an exploratory age/gender and missingness-stratified audit with small-cell suppression; see the Phase 2 results report. Results are unstable and not fairness/safety evidence.
-- [ ] Consider full-cohort execution only after reproducibility and memory/runtime checks; external validation remains separate.
+- [ ] Consider full-cohort execution only after exact runner reconciliation and memory/runtime checks; external validation remains separate.
 - [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
 
 ## Next software/research actions
@@ -32,7 +32,7 @@ In the 500-patient exploratory sample, the static model had the best mean AUROC 
 1. Confirm CI and test the new calibration helpers.
 2. Reconcile the canonical runner with the recorded Phase 1 artifact.
 3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); the local equivalent runner completed, but the canonical repository runner still needs an exact local reconciliation.
-4. Design stronger prespecified robustness checks (including alternate missingness handling and calibration methods) before considering a larger/full-cohort run.
+4. Expanded robustness grid completed locally: median imputation with/without missingness indicators and raw/Platt/isotonic calibration. See [aggregate summary](../results/phase2_robustness_grid_summary.json). Do not interpret lower Brier/log loss after Platt scaling as proof of clinical calibration.
 5. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
 
 ## Hardware gate
