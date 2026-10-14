@@ -78,8 +78,17 @@
       "npv_at_0_5": 0.0014018104
     }
   },
+  "paired_temporal_minus_static_bootstrap_95ci": {
+    "method": "Paired patient-cluster percentile bootstrap; same resampled test patients used for both models",
+    "replicates": 200,
+    "seed": 77123,
+    "auroc_difference": {"estimate": 0.0249182054, "lower_95": 0.0154580094, "upper_95": 0.0331281342},
+    "auprc_difference": {"estimate": 0.0065219012, "lower_95": 0.0025703614, "upper_95": 0.0144561295},
+    "brier_score_difference": {"estimate": -0.0088863637, "lower_95": -0.0106776185, "upper_95": -0.0070440971},
+    "interpretation": "Intervals are conditional on one held-out patient split and the challenge dataset; they do not establish external validity or clinical benefit."
+  },
   "warnings": [
-    "Patient-cluster intervals are individual-model percentile intervals. No paired bootstrap interval for temporal-minus-static differences was computed; these results do not establish a statistically significant improvement.",
+    Paired difference intervals are conditional on a single held-out patient split and the challenge dataset; they do not establish external validity or clinical benefit.",
     "The local harness matched the intended repository algorithm but was not run through the repository CLI; a direct CLI reproduction remains necessary.",
     "Fixed threshold 0.5 is not clinically optimized. PPV is approximately 5.7% for temporal features at this threshold."
   ],
