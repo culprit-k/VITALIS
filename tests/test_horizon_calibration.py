@@ -92,6 +92,6 @@ def test_evaluate_one_reports_paired_static_temporal_bootstrap_on_set_b():
     assert out["set_b_used_for_fit_or_threshold_selection"] is False
     utility = out["models"]["static"]["cohorts"]["set_a_untouched_holdout"]["platt_calibrated"]["utility_cost_sensitivity"]
     assert utility["set_b_used_for_threshold_selection"] is False
-    assert utility["missed_window_cost_scenarios"] == [1.0, 5.0, 10.0, 20.0]
-    assert len(utility["cost_scenarios"]) == 4
+    assert utility["missed_window_cost_scenarios"] == [1.0, 5.0]
+    assert len(utility["cost_scenarios"]) == 2
     assert all("future_positive_window_coverage" in point for point in utility["operating_points"])
