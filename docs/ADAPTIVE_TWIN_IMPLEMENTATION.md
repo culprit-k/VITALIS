@@ -29,6 +29,21 @@ q_{j,t}=\min\left(\frac{|z_{j,t}|}{z_{\max}},1\right).
 
 Here, (\epsilon) is a numerical scale floor. It is **not** a clinically established sensor noise floor. It must be chosen per measurement and validated before interpreting scores.
 
+After the first minimum-history window, the implementation freezes a robust reference center and scale, while retaining a rolling baseline. The reference-normalized deviation is
+
+\\[
+z^0_{j,t}=\\frac{x_{j,t}-m^0_j}{s^0_j}.
+\\]
+
+To avoid losing gradual shifts as the rolling baseline adapts, a two-sided cumulative-sum detector tracks positive and negative departures from this fixed reference:
+
+\\[
+C^+_{j,t}=\\max(0,C^+_{j,t-1}+z^0_{j,t}-k),\\qquad
+C^-_{j,t}=\\max(0,C^-_{j,t-1}-z^0_{j,t}-k).
+\\]
+
+A cumulative shift is flagged when \\(\\max(C^+_{j,t},C^-_{j,t})\\ge h\\). The allowance \\(k\\) and threshold \\(h\\) are configurable engineering parameters and require validation; they are not clinical alarm cutoffs. The per-channel score uses the larger absolute deviation from the rolling and frozen reference baselines, clipped to \\(z_{\\max}\\). Channel-specific scale floors can be supplied to avoid using the same absolute noise floor for measurements with different units.
+
 For each physiological system (g), average the available channel scores:
 
 [
@@ -47,16 +62,16 @@ Equal system weighting avoids letting a system dominate merely because more chan
 ## Causality and adaptation safeguards
 
 1. Score the current measurement before adding it to history, so the measurement cannot move its own baseline.
-2. Do not update the baseline with a point whose absolute z-score exceeds the configured update limit.
+2. Do not update the rolling baseline with a point whose absolute rolling z-score exceeds the configured update limit or while its CUSUM detector is triggered.
 3. Bound the history length to limit memory and permit adaptation to gradual changes.
-4. Ignore missing, non-numeric, and non-finite observations; expose coverage and withhold an eligible score when data sufficiency checks fail.
+4. Ignore missing, non-numeric, and non-finite observations; reset a channel's consecutive-deviation streak on missing samples, expose coverage, and withhold an eligible score when data sufficiency checks fail.
 5. Call `reset()` at patient/session boundaries. The module does not persist identity or patient data.
 
-These safeguards do not solve prolonged drift, a baseline already affected by illness, correlated sensors, irregular sampling, artifact detection, or asynchronous timestamps. Those need explicit design and validation.
+The fixed reference helps reveal gradual drift, but it can become stale after recovery or major treatment changes; re-baselining is explicit via session reset. These safeguards do not solve a reference already affected by illness, correlated sensors, irregular sampling, artifact detection, or full asynchronous signal synchronization. Those need explicit design and validation.
 
 ## Output contract
 
-- `state`: one of `insufficient_data`, `within_person_range`, `deviation_detected`, `marked_deviation`, or `persistent_multisystem_deviation`.
+- `state`: one of `insufficient_data`, `within_person_range`, `deviation_detected`, `marked_deviation`, `persistent_multisystem_deviation`, `cumulative_shift_detected`, or `cumulative_multisystem_shift`.
 - `trajectory_score`: unitless heuristic in the approximate range 0–1 when eligible; **not a risk probability**.
 - `cross_system_concordance`: fraction of represented systems whose normalized deviation score exceeds the configured comparison threshold.
 - `coverage`, per-channel baselines/z-scores, history counts, and baseline-update flags support debugging and audit.
