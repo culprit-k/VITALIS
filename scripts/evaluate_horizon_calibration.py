@@ -278,7 +278,7 @@ def main() -> None:
     parser.add_argument("--predict-chunk-rows", type=int, default=50000)
     parser.add_argument("--refractory-hours", type=int, default=6)
     parser.add_argument("--bootstrap-replicates", type=int, default=200)
-    parser.add_argument("--missed-window-costs", type=float, nargs="+", default=[1.0, 5.0, 10.0, 20.0],
+    parser.add_argument("--missed-window-costs", type=float, nargs="+", default=[1.0, 10.0, 100.0, 500.0, 1000.0],
                         help="Set-A development cost scenarios, relative to the cost of one alert; defaults are illustrative")
     parser.add_argument("--alert-cost", type=float, default=1.0,
                         help="Cost unit assigned to one alert; defaults to 1.0 for relative comparisons")
