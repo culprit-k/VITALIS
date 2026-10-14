@@ -1,0 +1,133 @@
+{
+  "project": "VITALIS",
+  "experiment": "combined A+B cohort temporal-minus-static paired patient-cluster bootstrap",
+  "date": "2026-10-14",
+  "dataset": {
+    "patients": 40336,
+    "hourly_rows": 1552210,
+    "positive_hourly_labels": 27916
+  },
+  "protocol": {
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "bootstrap_replicates_per_seed": 200,
+    "patient_disjoint": true,
+    "test_patient_count_per_seed": 8068,
+    "training_rows_capped": 500000,
+    "bootstrap_unit": "patient cluster, with all hourly rows for sampled patient represented by multiplicity weights",
+    "confidence_interval": "95% percentile interval conditional on each held-out split"
+  },
+  "runs": [
+    {
+      "seed": 42,
+      "bootstrap_seed": 90042,
+      "replicates_requested": 200,
+      "replicates_valid": 200,
+      "test_rows": 310997,
+      "test_patients": 8068,
+      "positive_hourly_labels": 5247,
+      "score_archive_sha256": "",
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.03461600874625525,
+          "ci_95_percentile": [
+            0.02668659333971356,
+            0.041962056579033825
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.012443718611261083,
+          "ci_95_percentile": [
+            0.006186913266459453,
+            0.019103777380945115
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.014897257669912636,
+          "ci_95_percentile": [
+            -0.016211918109165877,
+            -0.01311310660828486
+          ]
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "bootstrap_seed": 90123,
+      "replicates_requested": 200,
+      "replicates_valid": 200,
+      "test_rows": 310863,
+      "test_patients": 8068,
+      "positive_hourly_labels": 5818,
+      "score_archive_sha256": "",
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.03910420557262299,
+          "ci_95_percentile": [
+            0.030156680389791447,
+            0.05003864829149589
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.008075193202014197,
+          "ci_95_percentile": [
+            0.004288061623978606,
+            0.012089339615381188
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.014200271869726874,
+          "ci_95_percentile": [
+            -0.015496577789612501,
+            -0.013061533423277137
+          ]
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "bootstrap_seed": 92026,
+      "replicates_requested": 200,
+      "replicates_valid": 200,
+      "test_rows": 311841,
+      "test_patients": 8068,
+      "positive_hourly_labels": 5754,
+      "score_archive_sha256": "",
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.03764468510463363,
+          "ci_95_percentile": [
+            0.030987073171111552,
+            0.04594822150037188
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.010753857676318281,
+          "ci_95_percentile": [
+            0.007309582477016962,
+            0.016245180371341338
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.012970758880690898,
+          "ci_95_percentile": [
+            -0.014253734234160714,
+            -0.011612553527302668
+          ]
+        }
+      }
+    }
+  ],
+  "source_provenance": "Local feature cache and score-preparation runner were reconstructed from checked-in logic and were not verified byte-identical to GitHub source blobs. Bootstrap-only local runner also reconstructed from checked-in logic. These results do not close source-byte identity.",
+  "privacy": "Aggregate metrics only; patient-level score archives remain outside Git.",
+  "limitations": [
+    "Retrospective hourly PhysioNet/CinC Challenge 2019 labels, not clinical event-level outcomes",
+    "Combined A+B held-out split is not independent external validation",
+    "Threshold and metrics do not establish clinical utility",
+    "Temporal feature chronological/hourly assumption remains",
+    "External/prospective validation and clinical/statistical governance review required"
+  ]
+}
