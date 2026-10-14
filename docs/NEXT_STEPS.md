@@ -235,7 +235,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Ran an exploratory paired patient-cluster bootstrap comparing temporal vs static models for raw and Set-A-validation-recalibrated probabilities (20 replicates per seed/stream).
 - [x] Committed aggregate-only pilot intervals: [JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_20x3_2026-10-14.json) and [report](CROSS_COHORT_RECALIBRATION_PILOT.md).
 - [x] Generated raw Set-B score archives using the exact checked-in evaluator (source blob verified) and ran the checked-in bootstrap script for 200 replicates per seed. See [exact-source bootstrap results](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json). A 1,000-replicate attempt did not complete within the execution window.
-- [ ] Optimize runtime/memory and increase exact-source bootstrap repetitions to 1,000 per seed. The existing recalibrated-score 20-replicate pilot used a reconstructed harness; do not conflate it with the exact-source raw-score analysis.
+- [x] Optimized the cross-cohort bootstrap and completed 1,000 exact-source replicates per seed for raw and Set-A-validation-Platt-recalibrated scores. See [the 1,000-replicate aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md). The earlier reconstructed-harness 20-replicate pilot remains distinct and is not treated as source-verified.
 - [ ] Run score generation from an exact repository checkout and reconcile the aggregate results; current score-generation source identity remains unverified.
 - [ ] Continue with a pre-specified subgroup robustness audit, suppress small cells, and keep Set B out of all model/recalibrator/threshold tuning.
 
@@ -243,7 +243,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 
 - [x] Started upgrading the Set-B paired patient-cluster bootstrap beyond the 20-replicate pilot. A Numba-accelerated local implementation completed 1,000 valid patient-cluster replicates for seed 42 using raw probabilities.
 - [x] Added the aggregate-only partial result: [seed 42 raw stream, 1,000 replicates](../results/cross_cohort_paired_bootstrap_seed42_raw_1000_2026-10-14.json). Temporal-minus-static AUROC difference was +0.0575 (95% percentile interval +0.0497 to +0.0647), AUPRC difference +0.0135 (+0.0111 to +0.0167), and Brier difference -0.0641 (-0.0650 to -0.0632).
-- [ ] Complete the remaining five seed/stream analyses (seed 42 recalibrated; seeds 123 and 2026 raw and recalibrated). Do not describe the 1,000-replicate cross-cohort phase as complete until all six are done.
+- [x] Completed all six seed/stream analyses: raw and recalibrated probabilities for seeds 42, 123, and 2026, 1,000 replicates each. Aggregate-only results are committed in [the 1,000-replicate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json).
 - [ ] Validate the optimized bootstrap implementation against the checked-in bootstrap runner on synthetic tied-score fixtures and compare its results against the existing 20-replicate pilot where applicable.
 - [ ] Exact source-byte identity for model fitting and score generation remains open; the current scores came from reconstructed local runner logic. This is not external or prospective clinical validation.
 - [x] Added an operator-facing [exact-checkout reproduction runbook](EXACT_CHECKOUT_REPRODUCTION.md) with clean-checkout checks, cache-build commands, the committed runner invocation, reconciliation criteria, and data-safety boundaries. This documents the procedure; the exact-checkout data run itself remains pending.
@@ -348,8 +348,8 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added regression tests for metric parity with scikit-learn, the fixed 0.5 threshold boundary, private archive path enforcement, archive schema, and vector validation. Local focused tests passed (12/12); GitHub Actions also passed on code-bearing PR head `c0064adf78c40140e65a1d7bc0603d22b25b04d6` (run https://github.com/culprit-k/VITALIS/actions/runs/38600885999).
 - [x] Verified the modified evaluator and tests by Git blob SHA against GitHub; generated score archives locally for all Set-B patients for seeds 42, 123, and 2026. Model metrics matched the previously verified exact-source outputs within 2.4e-14.
 - [x] Ran the checked-in paired patient-cluster bootstrap for 200 replicates per seed. Aggregate-only results are in [the JSON artifact](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json). The archives remain outside Git.
-- [ ] A 1,000-replicate run exceeded the local execution window; optimize bootstrap performance before claiming a 1,000-replicate result.
-- [ ] Recalibrated score-vector generation and 1,000-replicate exact-source bootstrap remain separate follow-up work; the existing recalibrated 20-replicate pilot is not source-identical.
+- [x] The first unoptimized 1,000-replicate attempt exceeded the execution window; the accelerated tie-aware runner now completes the 1,000-replicate analysis in deterministic chunks. Chunk offsets were validated against a full 400-replicate run.
+- [x] Generated exact-source recalibrated score vectors outside Git and completed the 1,000-replicate bootstrap for all three seeds. The 20-replicate reconstructed-harness pilot remains historical and separate.
 
 
 ## Exact-source recalibrated-score uncertainty checkpoint (14 October 2026)
