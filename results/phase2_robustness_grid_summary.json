@@ -1,0 +1,79 @@
+{
+  "project": "VITALIS",
+  "phase": "Phase 2",
+  "status": "exploratory analyses completed; canonical-runner reconciliation remains open",
+  "protocol": {
+    "sampled_patients": 500,
+    "sampling_seed": 20261014,
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "patient_disjoint_splits": true,
+    "test_used_for_calibration_fitting": false
+  },
+  "robustness_grid": {
+    "sha256": "a24e02badb34dc0fde751f377e2f4b447d3b6a6a24fb2757c4739673587cfbd0",
+    "results": [
+      {
+        "imputation": "median_with_missingness_indicators",
+        "calibration": "raw",
+        "brier": 0.18155,
+        "log_loss": 0.56834,
+        "auroc": 0.72436,
+        "average_precision": 0.10181
+      },
+      {
+        "imputation": "median_with_missingness_indicators",
+        "calibration": "platt_validation_only",
+        "brier": 0.0219,
+        "log_loss": 0.10283,
+        "auroc": 0.72436,
+        "average_precision": 0.10181
+      },
+      {
+        "imputation": "median_with_missingness_indicators",
+        "calibration": "isotonic_validation_only",
+        "brier": 0.02249,
+        "log_loss": 0.10561,
+        "auroc": 0.70451,
+        "average_precision": 0.07781
+      },
+      {
+        "imputation": "median_without_missingness_indicators",
+        "calibration": "raw",
+        "brier": 0.18551,
+        "log_loss": 0.57966,
+        "auroc": 0.70551,
+        "average_precision": 0.12156
+      },
+      {
+        "imputation": "median_without_missingness_indicators",
+        "calibration": "platt_validation_only",
+        "brier": 0.02452,
+        "log_loss": 0.11081,
+        "auroc": 0.70551,
+        "average_precision": 0.12156
+      },
+      {
+        "imputation": "median_without_missingness_indicators",
+        "calibration": "isotonic_validation_only",
+        "brier": 0.02803,
+        "log_loss": 0.12118,
+        "auroc": 0.71752,
+        "average_precision": 0.10411
+      }
+    ]
+  },
+  "conclusions": [
+    "Platt recalibration lowered row-level Brier/log loss but did not improve AUROC; probability compression toward low prevalence is a plausible explanation, not evidence of clinical calibration.",
+    "Isotonic results varied across splits and may overfit small validation cohorts.",
+    "Missingness indicators were associated with a modest mean AUROC increase in this sample but did not consistently improve average precision.",
+    "No model or calibration method is selected as clinically ready."
+  ],
+  "open_gates": [
+    "Run the exact canonical repository runner in the same runtime as the local dataset and reconcile outputs.",
+    "Independent/external and prospective validation are not part of this phase and require separate protocol/governance."
+  ]
+}
