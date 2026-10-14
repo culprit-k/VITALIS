@@ -95,7 +95,7 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 - [Train-A/test-B cross-cohort evaluation](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) separately tests generalization across the benchmark's two cohorts.
 - [Full-cohort future-label horizon results](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) records the Set A→Set B 1/3/6-hour run; [aggregate-only metrics and provenance](results/horizon_cross_cohort_2026-10-14.json).
 - [Horizon calibration and operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md) defines patient-disjoint Set-A-only Platt recalibration, a predeclared threshold grid, and evaluation-only Set B handling. Completed results: [interpretation report](docs/HORIZON_CALIBRATION_RESULTS_2026-10-15.md) and [aggregate-only JSON](results/horizon_calibration_summary_2026-10-15.json). Patient-cluster uncertainty intervals are summarized in [the uncertainty report](docs/HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) and [aggregate JSON](results/horizon_calibration_uncertainty_summary_2026-10-15.json).
-- [Patient-cluster calibration uncertainty analysis](docs/HORIZON_CALIBRATION_UNCERTAINTY_RESULTS.md) reports 200-replicate per-patient bootstrap intervals across the nine predeclared seed × horizon runs; [aggregate-only JSON](results/horizon_calibration_uncertainty_aggregate_2026-10-15.json).
+- [Patient-cluster calibration uncertainty analysis](docs/HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) reports 200-replicate per-patient bootstrap intervals across the nine predeclared seed × horizon runs; [aggregate-only JSON](results/horizon_calibration_uncertainty_summary_2026-10-15.json).
 
 ## Development status
 
