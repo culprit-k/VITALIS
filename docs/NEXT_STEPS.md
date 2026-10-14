@@ -409,7 +409,7 @@ The next implementation layer has now been added on the existing research branch
 - [x] Add focused tests for baseline causality, CUSUM gradual-shift detection, per-channel scale floors, baseline-update suppression, multisystem persistence, missing data, trajectory direction, session reset, unit checks, timestamps, freshness, out-of-order samples, and end-to-end stream-to-twin integration.
 - [x] Add `scripts/demo_adaptive_twin.py` and `dashboard/twin_demo.py`, deterministic CLI and interactive synthetic-data demonstrations that do not read or generate real patient records.
 - [x] Document the mathematical definition, output semantics, and validation boundaries in [Adaptive twin implementation](ADAPTIVE_TWIN_IMPLEMENTATION.md).
-- [x] GitHub Actions passed on commit `01e2083bbce6bfdc32c2c15831ba69f4d5a30c28`, including `compileall` and the full pytest suite: https://github.com/culprit-k/VITALIS/actions/runs/38612586742.
+- [x] GitHub Actions passed on commit `4b3aa798af04a0819ce1523cb9bae672dcc9dddf`, including `compileall`, the synthetic timestamped-stream smoke test, and the full pytest suite: https://github.com/culprit-k/VITALIS/actions/runs/38612764680.
 - [ ] Run the full suite from a clean checkout and verify the demo from a fresh environment.
 - [ ] Add edge-case tests for flatline, spikes, gradual drift, sensor replacement, irregular sampling, and conflicting or correlated channels.
 - [ ] Build a supervised, leakage-safe future-outcome model with a clearly defined prediction horizon. The current challenge label's six-hour lead convention is not evidence for a calibrated 1–3 hour forecast.
