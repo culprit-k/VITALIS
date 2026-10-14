@@ -1,6 +1,6 @@
 # VITALIS Phase 2 Closeout
 
-**Status: Exploratory analysis work complete; exact canonical-runner reconciliation remains an explicit reproducibility exception.**
+**Status: Exploratory analysis and aggregate-metric reconciliation complete; strict byte-for-byte source identity remains an explicit reproducibility exception.**
 
 ## Scope completed
 
@@ -24,9 +24,9 @@
 
 ## Reproducibility exception
 
-The exact checked-in `scripts/evaluate_calibration_robustness.py` has **not** been executed byte-for-byte in the same local runtime as the dataset. The local container cannot resolve GitHub source hosts. Local equivalent implementations were run and their aggregate outputs reproduced, but this is not exact canonical-runner reconciliation.
+The checked-in runner logic was mirrored from GitHub and executed against the local dataset. Aggregate split counts, row counts, positive-label counts, and feature counts match the prior local equivalent; metric differences are small and recorded below. However, the mirrored files were not verified byte-for-byte against the repository blobs in the execution runtime, so this is aggregate-metric reconciliation, not strict source-identical execution.
 
-**Closure gate:** make the checked-in source and local dataset available in the same runtime, execute the canonical entry point with the documented sampling/split seeds, compare aggregate outputs to the local artifact, and record any differences. Do not claim this gate has passed until the comparison is performed.
+**Remaining closure gate:** verify exact source/blob identity in the execution runtime (or run the canonical entry point in an environment with the repository checkout and dataset together). Do not claim byte-for-byte canonical execution until this is completed.
 
 ## Phase 2 acceptance decision
 
