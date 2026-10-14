@@ -472,3 +472,13 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Next: run the updated full-cohort uncertainty workflow in separate bounded horizon/seed invocations, review interval behavior, then define a utility-based operating-point framework on development data. Keep Set B untouched for threshold selection and independent validation claims.
 - [ ] Independent clinical/statistical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
 
+## Phase 6: calibration uncertainty review (15 October 2026)
+
+- [x] Add patient-cluster percentile bootstrap uncertainty for Set B calibrated Brier score, log loss, mean predicted probability, fixed-bin ECE, Brier-minus-prevalence-reference, and paired calibrated-minus-raw Brier difference.
+- [x] Run all nine predeclared seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 h) with 200 patient-cluster bootstrap replicates per model/horizon/seed; 18 fitted model combinations, 3,600 bootstrap replicates total.
+- [x] Preserve Set B as final evaluation only. Calibration remains fit on patient-disjoint Set A calibration patients; no threshold was selected from Set B.
+- [x] Record aggregate-only results in [calibration uncertainty report](HORIZON_CALIBRATION_UNCERTAINTY_RESULTS.md) and [JSON](../results/horizon_calibration_uncertainty_aggregate_2026-10-15.json).
+- [x] Results support a clear reduction in Brier score after Platt recalibration versus raw class-weighted probabilities, but do not establish adequate clinical calibration or robust improvement over a constant-prevalence Brier reference. The seed-specific CI envelopes are descriptive, not pooled intervals.
+- [ ] Next research gate: predeclare a paired patient-level comparison of static versus temporal models on aligned Set B predictions, with no threshold selection on Set B; audit target timing and leakage before interpreting model differences.
+- [ ] Independent statistical/clinical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
+
