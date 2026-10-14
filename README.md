@@ -105,7 +105,7 @@ VITALIS now has retrospective static/temporal research workflows plus an initial
 
 ### Utility-based operating-point analysis
 
-The Set-A-only cost-sensitivity framework is documented in [Utility operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration/operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md). Exploratory nine-run results and the source-provenance caveat are in [the utility results report](docs/HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate-only JSON](results/horizon_utility_operating_point_aggregate_2026-10-15.json). Cost ratios are illustrative, not clinical recommendations. Set B remains evaluation-only.
+The Set-A-only cost-sensitivity framework is documented in [Utility operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration/operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md). The evaluator now adds patient-cluster uncertainty intervals and threshold-selection stability summaries on the untouched Set-A holdout (default 200 replicates; `--utility-bootstrap-replicates`); these quantify conditional development-sample variability, not clinical optimality. Exploratory nine-run results and the source-provenance caveat are in [the utility results report](docs/HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate-only JSON](results/horizon_utility_operating_point_aggregate_2026-10-15.json). Cost ratios are illustrative, not clinical recommendations. Set B remains evaluation-only.
 
 
 ### Independent evaluation gate
