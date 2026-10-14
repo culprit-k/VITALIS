@@ -65,6 +65,9 @@ The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shif
 - [Aggregate dataset inventory](results/dataset_inventory.json) records the verified local archive counts for training sets A and B; no raw or patient-level data are stored here.
 - [Multi-seed experiment runner](scripts/run_experiment_suite.py) supports reproducible static-versus-temporal comparisons across patient-level split seeds.
 - [Subset experiment runner](scripts/run_subset_experiment.py) deterministically samples patient files and writes aggregate-only matched comparison results.
+- [Exact-source cross-cohort results](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) documents the Set-A-to-Set-B benchmark comparison and its limitations.
+- [1,000-replicate patient-cluster uncertainty analysis](docs/CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md) records raw and Set-A-validation-Platt-recalibrated comparisons across seeds 42, 123, and 2026. Row-level score archives remain local-only.
+- For the accelerated uncertainty runner, install the optional extra with `pip install -e ".[bootstrap-accelerated]"`; use only local score archives stored outside the repository.
 - [Structured historical results](results/local_experiment_summary.json) is an aggregate-only record of earlier experiments. These historical metrics are not automatically reproduced by the current workflow.
 - [Fresh subset rerun](results/current_subset_rerun.json) records an earlier 1,500-patient experiment; its results are mixed and exploratory.
 - [Three-seed subset experiment report](docs/MULTISEED_SUBSET_EXPERIMENT.md) and [aggregate metrics](results/multiseed_subset_summary.json) document a fresh comparison on the same deterministic 1,500-patient sample across split seeds 42, 123, and 2026.
