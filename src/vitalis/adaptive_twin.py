@@ -265,6 +265,14 @@ class AdaptivePhysiologicalTwin:
             "warning": "Research-only deviation detection; not for patient-care decisions.",
         }
 
+    def reset_channel(self, channel: str) -> None:
+        """Clear one channel's history after a known sensor/source replacement."""
+        if channel not in self.states:
+            raise ValueError(f"Unknown channel: {channel}")
+        self.states[channel] = ChannelState()
+        # A changed input stream invalidates continuity of the aggregate trajectory.
+        self._trajectory_score = None
+
     def reset(self) -> None:
         """Clear patient-specific state before processing a different patient."""
         self.states = {key: ChannelState() for key in self.channels}
