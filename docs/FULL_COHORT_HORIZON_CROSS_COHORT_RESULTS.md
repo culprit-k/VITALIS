@@ -1,11 +1,12 @@
 # Full-cohort future-label forecasting: Set A → Set B results
 
 **Run date:** 2026-10-14  
-**Status:** completed; aggregate-only output retained locally and available as a downloadable artifact from the active conversation.  
+**Status:** completed; aggregate-only metrics are committed in [the result JSON](../results/horizon_cross_cohort_2026-10-14.json). Raw patient data, feature caches, and individual predictions remain local-only.  
 **Purpose:** retrospective research evaluation, not a clinical model validation.
 
 ## Execution and integrity
 
+- Aggregate-only machine-readable output: [results/horizon_cross_cohort_2026-10-14.json](../results/horizon_cross_cohort_2026-10-14.json). It contains cohort counts, seed-level aggregate metrics, patient-cluster interval summaries, and provenance only.
 - Set A: 20,336 patients, 790,215 hourly rows, 17,136 positive Challenge labels.
 - Set B: 20,000 patients, 761,995 hourly rows, 10,780 positive Challenge labels.
 - Both caches passed count, group, row, and schema checks. Each cache has 109 features.
