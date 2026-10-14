@@ -34,6 +34,8 @@ class TwinConfig:
     persistence_steps: int = 3
     baseline_update_z_limit: float = 2.5
     scale_floor: float = 1e-3
+    cusum_allowance: float = 0.5
+    cusum_threshold: float = 5.0
 
     def __post_init__(self):
         if self.min_history < 2 or self.history_window < self.min_history:
@@ -48,22 +50,31 @@ class TwinConfig:
             raise ValueError("z_clip and scale_floor must be positive")
         if self.persistence_steps < 1:
             raise ValueError("persistence_steps must be positive")
-        if not 0 < self.deviation_z <= self.high_deviation_z:
-            raise ValueError("deviation thresholds must be positive and ordered")
+        if not 0 < self.deviation_z <= self.high_deviation_z <= self.z_clip:
+            raise ValueError("deviation thresholds must be positive, ordered, and <= z_clip")
+        if self.cusum_allowance < 0 or self.cusum_threshold <= 0:
+            raise ValueError("CUSUM allowance must be non-negative and threshold positive")
 
 
 @dataclass
 class ChannelState:
     values: list[float] = field(default_factory=list)
+    reference_center: float | None = None
+    reference_scale: float | None = None
+    cusum_positive: float = 0.0
+    cusum_negative: float = 0.0
     consecutive_deviations: int = 0
 
 
 class AdaptivePhysiologicalTwin:
-    """Online robust baseline, normalized deviations and multisystem trajectory.
+    """Online robust baselines, reference-shift detection and multisystem trajectory.
 
-    The current observation is scored against prior history before baseline
-    updates. Large deviations are withheld from the baseline to reduce immediate
-    contamination. Prolonged drift and an already-abnormal baseline remain risks.
+    The current observation is scored before baseline updates. A robust reference
+    is frozen after the first minimum-history window while a rolling baseline
+    adapts. Two-sided CUSUM on the frozen reference helps expose gradual drift
+    that the rolling baseline could otherwise absorb. Large deviations are
+    withheld from the rolling baseline. The initial reference may itself be
+    abnormal, and long-term recovery/re-baselining requires an explicit reset.
     """
 
     def __init__(
@@ -107,7 +118,7 @@ class AdaptivePhysiologicalTwin:
             if isfinite(value):
                 valid[name] = value
 
-        # A missing/non-finite sample breaks the persistence streak for that channel.
+        # Missing/non-finite observations break a channel's persistence streak.
         for name in set(self.channels).difference(valid):
             self.states[name].consecutive_deviations = 0
 
@@ -118,26 +129,58 @@ class AdaptivePhysiologicalTwin:
 
         for name, value in valid.items():
             state = self.states[name]
-            baseline = z_score = None
+            baseline = z_score = reference_z = None
+            cusum_triggered = False
             if len(state.values) >= self.config.min_history:
-                baseline, scale = self._reference(state.values)
-                z_score = (value - baseline) / scale
-                magnitude = min(abs(z_score), self.config.z_clip) / self.config.z_clip
+                baseline, adaptive_scale = self._reference(state.values)
+                if state.reference_center is None:
+                    state.reference_center, state.reference_scale = baseline, adaptive_scale
+                z_score = (value - baseline) / adaptive_scale
+                reference_z = (
+                    (value - state.reference_center) / state.reference_scale
+                    if state.reference_center is not None and state.reference_scale is not None
+                    else z_score
+                )
+                state.cusum_positive = max(
+                    0.0, state.cusum_positive + reference_z - self.config.cusum_allowance
+                )
+                state.cusum_negative = max(
+                    0.0, state.cusum_negative - reference_z - self.config.cusum_allowance
+                )
+                cusum_score = max(state.cusum_positive, state.cusum_negative)
+                cusum_triggered = cusum_score >= self.config.cusum_threshold
+                effective_z = max(abs(z_score), abs(reference_z))
+                magnitude = min(effective_z, self.config.z_clip) / self.config.z_clip
                 system_values.setdefault(self.channel_systems[name], []).append(magnitude)
                 state.consecutive_deviations = (
                     state.consecutive_deviations + 1
-                    if abs(z_score) >= self.config.deviation_z else 0
+                    if effective_z >= self.config.deviation_z else 0
                 )
                 scored += 1
+            else:
+                cusum_score = max(state.cusum_positive, state.cusum_negative)
+
             channel_results[name] = {
-                "value": value, "baseline": baseline, "z_score": z_score,
-                "history_count": len(state.values), "baseline_updated": False,
+                "value": value,
+                "baseline": baseline,
+                "reference_baseline": state.reference_center,
+                "z_score": z_score,
+                "reference_z_score": reference_z,
+                "cusum_score": cusum_score,
+                "cusum_triggered": cusum_triggered,
+                "history_count": len(state.values),
+                "baseline_updated": False,
             }
-            # Score first; only then update. Avoid learning an extreme point as normal.
-            if z_score is None or abs(z_score) <= self.config.baseline_update_z_limit:
+            # Score first; do not absorb a large deviation or a detected cumulative shift.
+            if (
+                z_score is None
+                or (abs(z_score) <= self.config.baseline_update_z_limit and not cusum_triggered)
+            ):
                 state.values.append(value)
                 if len(state.values) > self.config.history_window:
                     state.values.pop(0)
+                if state.reference_center is None and len(state.values) >= self.config.min_history:
+                    state.reference_center, state.reference_scale = self._reference(state.values)
                 channel_results[name]["baseline_updated"] = True
 
         system_scores = {
@@ -151,7 +194,7 @@ class AdaptivePhysiologicalTwin:
         )
         trajectory_score = concordance = trajectory_delta = None
         trajectory_direction = None
-        persistent_channels = 0
+        persistent_channels = cumulative_shift_channels = cumulative_shift_systems = 0
         if eligible:
             instantaneous = sum(system_scores.values()) / len(system_scores)
             previous_score = self._trajectory_score
@@ -177,11 +220,23 @@ class AdaptivePhysiologicalTwin:
                 state.consecutive_deviations >= self.config.persistence_steps
                 for state in self.states.values()
             )
+            cumulative_shift_channels = sum(
+                max(state.cusum_positive, state.cusum_negative) >= self.config.cusum_threshold
+                for state in self.states.values()
+            )
+            cumulative_shift_systems = len({
+                self.channel_systems[name] for name, state in self.states.items()
+                if max(state.cusum_positive, state.cusum_negative) >= self.config.cusum_threshold
+            })
 
         if not eligible:
             label = "insufficient_data"
         elif persistent_channels >= self.config.min_channels and (concordance or 0) >= 0.5:
             label = "persistent_multisystem_deviation"
+        elif cumulative_shift_channels >= self.config.min_channels and cumulative_shift_systems >= self.config.min_systems:
+            label = "cumulative_multisystem_shift"
+        elif cumulative_shift_channels:
+            label = "cumulative_shift_detected"
         elif (trajectory_score or 0) >= self.config.high_deviation_z / self.config.z_clip:
             label = "marked_deviation"
         elif (trajectory_score or 0) >= self.config.deviation_z / self.config.z_clip:
@@ -195,8 +250,10 @@ class AdaptivePhysiologicalTwin:
             "trajectory_delta": trajectory_delta, "trajectory_direction": trajectory_direction,
             "score_semantics": "unitless heuristic; not a probability or clinical risk",
             "cross_system_concordance": concordance, "system_scores": system_scores,
-            "persistent_channels": persistent_channels, "channels": channel_results,
-            "clinical_recommendation": None,
+            "persistent_channels": persistent_channels,
+            "cumulative_shift_channels": cumulative_shift_channels,
+            "cumulative_shift_systems": cumulative_shift_systems,
+            "channels": channel_results, "clinical_recommendation": None,
             "warning": "Research-only deviation detection; not for patient-care decisions.",
         }
 
