@@ -294,6 +294,5 @@ def main() -> None:
     print(json.dumps({"output": str(args.output), "runs": len(runs), "elapsed_seconds": summary["elapsed_seconds"]}, indent=2))
 
 
-if __
-name__ == "__main__":
+if __name__ == "__main__":
     main()
