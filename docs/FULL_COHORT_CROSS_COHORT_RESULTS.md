@@ -35,6 +35,8 @@ The aggregate values in the table above come from the exact checked-in evaluator
 
 The exact-source run emitted expected scikit-learn warnings for Set-A-all-empty EtCO2 columns (and temporal derivatives), which the median imputer skips. Thus those Set-B EtCO2 values do not enter this Set-A-trained model. Set B remains evaluation-only; no feature, calibration, model, or threshold tuning used it.
 
+The historical-versus-exact-source metric discrepancy and the independent recalibration-runner rerun are tracked in the [cross-cohort reproducibility reconciliation](CROSS_COHORT_REPRODUCIBILITY_RECONCILIATION.md). The root cause of the historical discrepancy remains unresolved because the prior reconstructed harness did not preserve sufficient source/split provenance; both result artifacts remain available and the historical file has not been overwritten.
+
 ## Interpretation
 
 In this first cross-cohort experiment, temporal features ranked positive hourly challenge-label rows better than static features on set B (higher AUROC and AUPRC). At the fixed 0.5 threshold, however, the temporal model had **lower sensitivity** and higher specificity; neither threshold was selected for clinical use. The Brier scores also differ substantially and require calibration and distribution-shift analysis before they can be interpreted as reliable probabilities. These results are a reason to investigate further, not proof of clinical utility.
