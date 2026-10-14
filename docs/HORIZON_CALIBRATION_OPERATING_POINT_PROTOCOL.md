@@ -55,3 +55,10 @@ The runner validates expected official cohort counts and feature schema and stop
 - Alerts outside future-positive windows are not verified clinical false alarms. Neither these metrics nor calibration alone establish clinical utility, safety, or patient benefit.
 
 **Research-only:** VITALIS is not a medical device or clinically validated decision-support system. Do not use its outputs to guide patient care.
+
+## Paired static-versus-temporal comparison
+
+The evaluator also compares the two frozen Platt-calibrated Set-B score streams on the exact same eligible target rows. For each horizon and seed, it reports temporal-minus-static differences in AUROC, AUPRC, Brier score, and log loss, with paired patient-cluster percentile intervals. Whole patients are resampled together, preserving within-patient dependence and alignment of the paired predictions. Score ties are grouped once so bootstrap calculations do not repeatedly sort the full cohort.
+
+These intervals are conditional on the fitted models and this retrospective cohort. They are descriptive comparisons, not a new independent validation; the three seeds are not independent cohorts. Set B remains evaluation-only and cannot be used to choose thresholds or model settings. The comparison does not establish clinical utility or patient benefit.
+
