@@ -525,3 +525,14 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Freeze the model, calibration, threshold, refractory policy, endpoints, and analysis plan before accessing independent-cohort outcomes. Prospective silent-mode and clinical-impact studies require separate approvals and are not authorized by this protocol.
 
 **Boundary:** these are project-readiness tasks, not evidence of clinical readiness. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 10: independent-evaluation freeze gate (15 October 2026)
+
+- [x] Added an intentionally incomplete machine-readable lockfile scaffold: `configs/independent_evaluation_lockfile.template.json`.
+- [x] Added `scripts/validate_evaluation_lockfile.py` to reject unfrozen policies, missing endpoint/configuration fields, Set B reuse, Challenge-proxy labels used for clinical-onset claims, invalid thresholds/horizons, and missing independent reviewer/governance sign-offs.
+- [x] Added synthetic unit tests in `tests/test_evaluation_lockfile.py` and documented the workflow in [the independent-evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md) and README.
+- [ ] Run the focused and full CI suite and review any failures before treating this guard as verified.
+- [ ] Complete the lockfile privately only after the cohort, event definition, cost assumptions, model policy, and reviewers are identified; do not put a completed lockfile containing sensitive study metadata in public Git.
+- [ ] Obtain a genuinely new cohort, data-governance/ethics determination, and independent clinical/statistical approval. Set B remains unavailable for threshold selection.
+- [ ] Complete clean-checkout reproduction and history-wide privacy/security review. The project remains research-only; this validation helper does not confer clinical validity or authorize a prospective study.
