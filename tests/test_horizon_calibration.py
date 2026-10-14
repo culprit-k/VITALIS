@@ -95,3 +95,7 @@ def test_evaluate_one_reports_paired_static_temporal_bootstrap_on_set_b():
     assert utility["missed_window_cost_scenarios"] == [1.0, 5.0]
     assert len(utility["cost_scenarios"]) == 2
     assert all("future_positive_window_coverage" in point for point in utility["operating_points"])
+    utility_ci = out["models"]["static"]["cohorts"]["set_a_untouched_holdout"]["platt_calibrated"]["utility_cost_sensitivity_bootstrap_95ci"]
+    assert utility_ci["unique_patients"] == out["patient_counts"]["set_a_untouched_holdout"]
+    assert utility_ci["requested_replicates"] == 200
+    assert len(utility_ci["cost_scenario_selection_stability"]) == 2
