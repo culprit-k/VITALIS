@@ -404,12 +404,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 
 The next implementation layer has now been added on the existing research branch:
 
-- [x] Add `src/vitalis/adaptive_twin.py`: causal robust personal baselines, normalized deviation, equal-weight physiological-system aggregation, EWMA trajectory score, missingness coverage, persistence, and rising/falling/stable trajectory direction.
+- [x] Add `src/vitalis/adaptive_twin.py`: causal rolling and frozen-reference baselines, normalized deviation, two-sided CUSUM for gradual drift, equal-weight physiological-system aggregation, EWMA trajectory score/direction, missingness coverage, persistence, and per-channel scale floors.
 - [x] Add `src/vitalis/stream.py`: timestamp-aware observations, expected-unit validation, quality-flag rejection, per-channel freshness, out-of-order sample rejection, and session reset.
-- [x] Add focused tests for baseline causality, baseline-update suppression during large deviations, multisystem persistence, missing data, trajectory direction, session reset, unit checks, timestamps, freshness, and out-of-order samples.
+- [x] Add focused tests for baseline causality, CUSUM gradual-shift detection, per-channel scale floors, baseline-update suppression, multisystem persistence, missing data, trajectory direction, session reset, unit checks, timestamps, freshness, out-of-order samples, and end-to-end stream-to-twin integration.
 - [x] Add `scripts/demo_adaptive_twin.py` and `dashboard/twin_demo.py`, deterministic CLI and interactive synthetic-data demonstrations that do not read or generate real patient records.
 - [x] Document the mathematical definition, output semantics, and validation boundaries in [Adaptive twin implementation](ADAPTIVE_TWIN_IMPLEMENTATION.md).
-- [x] GitHub Actions passed on commit `fa22a87a778de8a6e6b593ea560cef4d281d9072`, including `compileall` and the full pytest suite: https://github.com/culprit-k/VITALIS/actions/runs/38612067869.
+- [x] GitHub Actions passed on commit `01e2083bbce6bfdc32c2c15831ba69f4d5a30c28`, including `compileall` and the full pytest suite: https://github.com/culprit-k/VITALIS/actions/runs/38612586742.
 - [ ] Run the full suite from a clean checkout and verify the demo from a fresh environment.
 - [ ] Add edge-case tests for flatline, spikes, gradual drift, sensor replacement, irregular sampling, and conflicting or correlated channels.
 - [ ] Build a supervised, leakage-safe future-outcome model with a clearly defined prediction horizon. The current challenge label's six-hour lead convention is not evidence for a calibrated 1–3 hour forecast.
