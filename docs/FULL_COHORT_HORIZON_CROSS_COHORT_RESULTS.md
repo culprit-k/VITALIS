@@ -76,3 +76,9 @@ These envelopes are not pooled confidence intervals; they show the span of bound
 - Preserve PR #1 as draft/unmerged pending source-provenance, security, reproducibility, and independent review gates.
 
 **Research-only:** VITALIS is not a medical device or a clinically validated decision-support system. Do not use these outputs to guide patient care.
+
+
+## Reproduction provenance
+
+The authorized archive used for the local run had SHA-256 `b67472a9cfc549b5d2fc911475b952e52d264287d0be864fad5ef94781a2d8e6`. The cache builder and evaluator source were verified through the GitHub repository integration (blob SHAs `eba7dda1532675c2e3f21476b0bba2cead537e78` and `891b84ad4a5da039f1dc38411211c503c971167c`). The execution container could not resolve `github.com` to perform a full Git clone, so the run used a local reconstruction of the checked-in workflow and the vectorized patient-cluster bootstrap. The aggregate JSON records this limitation and the source provenance. The performance-optimization change passed [GitHub Actions run #515](https://github.com/culprit-k/VITALIS/actions/runs/38616767009) with 120 tests passing.
+
