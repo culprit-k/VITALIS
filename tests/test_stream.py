@@ -57,3 +57,21 @@ def test_reset_clears_stream_and_twin_state():
     assert result["coverage"] == 0
     assert result["step"] == 1
     assert stream.rejected["bad_unit"] == 0
+
+
+def test_timestamped_stream_drives_twin_after_warmup():
+    stream = make_stream(max_age=60)
+    start = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    for index in range(3):
+        timestamp = start + timedelta(seconds=index)
+        stream.ingest(Observation("heart_rate", timestamp, 70, "bpm"))
+        stream.ingest(Observation("spo2", timestamp, 98, "%"))
+        result = stream.score(timestamp)
+    timestamp = start + timedelta(seconds=3)
+    stream.ingest(Observation("heart_rate", timestamp, 110, "bpm"))
+    stream.ingest(Observation("spo2", timestamp, 90, "%"))
+    result = stream.score(timestamp)
+    assert result["eligible"] is True
+    assert result["channels"]["heart_rate"]["baseline"] == 70
+    assert result["trajectory_score"] is not None
+    assert result["channel_age_seconds"]["spo2"] == 0
