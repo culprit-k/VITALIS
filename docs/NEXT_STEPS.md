@@ -81,3 +81,14 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added metric tests for the cached evaluator: `tests/test_cached_multiseed.py`; GitHub Actions passed for the test and runner commits (runs 38558602303, 38558586454, and 38558571408).
 - [ ] Run the repository-native scripts against the full local dataset and compare their outputs with [the prior exploratory summary](FULL_COHORT_MULTISEED_RESULTS.md). Prior results came from local optimized harnesses; source-level equivalence has not yet been verified. The latest documentation CI run passed: https://github.com/culprit-k/VITALIS/actions/runs/38558700926.
 - [ ] Ensure the cache is complete before evaluation: every chunk marker must exist, and metadata must match the dataset file list. Do not commit cache files, row-level predictions, or patient identifiers.
+
+
+## Repository-runner full-cohort reconciliation (2026-10-14)
+
+- [x] Built the local memory-mapped feature cache in four patient chunks and verified 20,336 patient groups, 790,215 rows, 17,136 positive hourly labels, and 109 feature columns.
+- [x] Ran the cache-backed evaluator separately for split seeds 42, 123, and 2026; each seed completed and wrote aggregate-only output locally.
+- [x] Recorded the reconciliation summary and per-seed results: [runner reconciliation report](REPOSITORY_RUNNER_RECONCILIATION.md), [aggregate JSON](../results/repository_runner_full_cohort_reconciliation_2026-10-14.json).
+- [x] The results reproduce the earlier aggregate AUROC/AUPRC/Brier metrics to displayed precision. Temporal features have higher mean AUROC/AUPRC and lower mean Brier score in these exploratory splits.
+- [ ] Strict byte-for-byte identity between local working copies and GitHub checked-in source blobs remains open. The local scripts were reconstructed from checked-in logic, not verified as identical bytes.
+- [ ] Paired patient-cluster uncertainty intervals from matched held-out predictions remain outstanding; existing three-seed SDs are not confidence intervals.
+- [ ] External/prospective validation and clinical/statistical governance review remain required before clinical claims.
