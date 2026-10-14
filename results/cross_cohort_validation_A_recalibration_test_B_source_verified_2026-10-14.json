@@ -49,46 +49,46 @@
     "static": {
       "raw_set_b": {
         "auroc": {
-          "mean": 0.6750166555304314,
-          "sample_sd": 0.00582416929377881
+          "mean": 0.6750166555370981,
+          "sample_sd_across_seeds": 0.005824160410709515
         },
         "auprc": {
           "mean": 0.04549463942027698,
-          "sample_sd": 0.0017931824464817653
+          "sample_sd_across_seeds": 0.0017931807678908428
         },
         "brier_score": {
           "mean": 0.16589241050101514,
-          "sample_sd": 0.005733622377220677
+          "sample_sd_across_seeds": 0.005733622396338764
         },
         "log_loss": {
-          "mean": 0.522277922374278,
-          "sample_sd": 0.012058017729506942
+          "mean": 0.5222779223742781,
+          "sample_sd_across_seeds": 0.012058017729526888
         },
         "mean_predicted_probability": {
-          "mean": 0.3676225939834037,
-          "sample_sd": 0.008949402118358402
+          "mean": 0.36762259398340374,
+          "sample_sd_across_seeds": 0.00894940174721701
         }
       },
       "recalibrated_set_b": {
         "auroc": {
-          "mean": 0.6750166555304314,
-          "sample_sd": 0.0058241597291106
+          "mean": 0.6750166555370981,
+          "sample_sd_across_seeds": 0.005824160410709515
         },
         "auprc": {
           "mean": 0.04549463942027698,
-          "sample_sd": 0.0017931807678908428
+          "sample_sd_across_seeds": 0.0017931807678908428
         },
         "brier_score": {
-          "mean": 0.014071162019169116,
-          "sample_sd": 0.000186954117
+          "mean": 0.014071162019169114,
+          "sample_sd_across_seeds": 0.00018683137905958303
         },
         "log_loss": {
           "mean": 0.07172112703908183,
-          "sample_sd": 0.0001497
+          "sample_sd_across_seeds": 0.000149951992434055
         },
         "mean_predicted_probability": {
           "mean": 0.018861966200122926,
-          "sample_sd": 0.0006448
+          "sample_sd_across_seeds": 0.0006445966961099187
         }
       }
     },
@@ -96,45 +96,45 @@
       "raw_set_b": {
         "auroc": {
           "mean": 0.7319108726402911,
-          "sample_sd": 0.006418500017207337
+          "sample_sd_across_seeds": 0.006418503979594225
         },
         "auprc": {
           "mean": 0.058094760738500985,
-          "sample_sd": 0.0014806834562855798
+          "sample_sd_across_seeds": 0.001480683680885981
         },
         "brier_score": {
           "mean": 0.09722227333924051,
-          "sample_sd": 0.0021598541879650347
+          "sample_sd_across_seeds": 0.0021598541943049147
         },
         "log_loss": {
-          "mean": 0.3525856692160966,
-          "sample_sd": 0.005238692815048651
+          "mean": 0.3525856692160965,
+          "sample_sd_across_seeds": 0.005238692815086074
         },
         "mean_predicted_probability": {
           "mean": 0.2632675128512416,
-          "sample_sd": 0.004877335085866534
+          "sample_sd_across_seeds": 0.00487733485474911
         }
       },
       "recalibrated_set_b": {
         "auroc": {
           "mean": 0.7319108726402911,
-          "sample_sd": 0.006418503979594225
+          "sample_sd_across_seeds": 0.006418503979594225
         },
         "auprc": {
           "mean": 0.058094760738500985,
-          "sample_sd": 0.001480683680885981
+          "sample_sd_across_seeds": 0.0014806836808859782
         },
         "brier_score": {
-          "mean": 0.013830165423673125,
-          "sample_sd": 0.0000314
+          "mean": 0.013830165423673123,
+          "sample_sd_across_seeds": 0.00003198602285650735
         },
         "log_loss": {
-          "mean": 0.0689960023746189,
-          "sample_sd": 0.00028
+          "mean": 0.06899601950831889,
+          "sample_sd_across_seeds": 0.00027966073108775575
         },
         "mean_predicted_probability": {
-          "mean": 0.01336148771331064,
-          "sample_sd": 0.000821
+          "mean": 0.01336148771297731,
+          "sample_sd_across_seeds": 0.0008210217294586579
         }
       }
     }
