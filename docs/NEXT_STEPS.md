@@ -3,7 +3,8 @@
 ## Current verified state
 
 - The public repository contains the research scaffold, automated tests, dataset inventory, historical experiment register, and multi-seed runner.
-- A fresh local rerun on a deterministic 1,500-patient sample from training_setA has been recorded in [current_subset_rerun.json](../results/current_subset_rerun.json).
+- An earlier local rerun on a deterministic 1,500-patient sample is recorded in [current_subset_rerun.json](../results/current_subset_rerun.json).
+- [x] Completed a fresh three-seed comparison on the same deterministic 1,500-patient sample; see [multi-seed report](MULTISEED_SUBSET_EXPERIMENT.md) and [aggregate results](../results/multiseed_subset_summary.json).
 - The rerun used 960 train, 240 validation, and 300 test patients with no patient overlap. The model fit emitted warnings because EtCO2 had no observed values and was dropped by the imputer.
 - On this one held-out sample, temporal features increased AUROC by about 0.0119 and lowered Brier score by about 0.0186, but average precision decreased by about 0.0092. This mixed result does not establish that temporal features are better overall.
 - The run was executed locally against the current intended protocol, but it is not an execution from GitHub Actions and not a full-cohort evaluation.
@@ -20,9 +21,9 @@
 
 ### 2. Rerun the baseline experiment reproducibly
 - [x] Add `scripts/run_subset_experiment.py` for a deterministic patient-level subset comparison; run it locally and keep aggregate-only outputs.
-- [ ] Use the checked-in `scripts/run_experiment_suite.py` on the local training_setA folder with seeds 42, 123, and 2026 after confirming convergence and runtime.
-- Save aggregate JSON under the ignored local outputs/ directory first.
-- Inspect cohort counts, warnings, positive-label prevalence, model convergence, and split overlap before considering results.
+- [x] Run static-versus-temporal comparisons on split seeds 42, 123, and 2026; the checked-in multi-seed report records results and limitations.
+- [x] Review and publish aggregate-only metrics after checking counts, split overlap, and model warnings.
+- [x] Inspect cohort counts, positive-label prevalence, convergence warnings, and patient-level split separation.
 - Keep patient-level predictions and raw files local; only publish aggregate metrics after review.
 
 ### 3. Improve evaluation before claiming model benefit
