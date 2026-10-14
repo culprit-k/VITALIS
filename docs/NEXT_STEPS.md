@@ -539,16 +539,18 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Complete clean-checkout reproduction and history-wide privacy/security review. The project remains research-only; this validation helper does not confer clinical validity or authorize a prospective study.
 
 
+
 ## Phase 8: utility-based operating-point framework (15 October 2026)
 
 - [x] Add \`src/vitalis/utility.py\` to compare threshold candidates under explicit missed-window versus alert-cost scenarios.
-- [x] Report sensitivity, PPV, alerts per at-risk patient-day, forecast-positive-window coverage, missed windows, alerts outside target-positive windows, and warning time relative to Challenge-label entry.
-- [x] Integrate cost-sensitivity summaries into the calibration evaluator for the untouched patient-disjoint Set-A operating-point holdout only. Default illustrative missed-window cost ratios are 1, 5, 10, and 20 per alert-cost unit; both cost inputs are configurable.
-- [x] Add focused unit tests and an end-to-end synthetic evaluator assertion. The scenario ranking is labeled a development candidate, not a clinical threshold.
-- [x] Document assumptions and reproduction options in [the utility operating-point framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
-- [ ] Confirm the GitHub Actions result for the latest code-bearing commit and fix any failures before proceeding.
-- [ ] Run the integrated cost-sensitivity evaluator on the authorized local Set-A/Set-B caches, preserving Set B as evaluation-only; commit aggregate-only output after validating it contains no row-level data.
-- [ ] Obtain independent clinician/statistician review of cost ratios, alert burden, and target semantics. These ratios are illustrative and not clinically elicited.
-- [ ] Freeze any development candidate only after review, then evaluate once on a new independent cohort. Do not reuse inspected Set B for threshold selection.
+- [x] Integrate cost-sensitivity summaries into the calibration evaluator for the untouched, patient-disjoint Set-A operating-point holdout only. Set B is not used for threshold selection.
+- [x] Evaluate the predeclared threshold grid across all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours), for static and temporal models; 18 fits completed with zero captured fit warnings.
+- [x] Commit aggregate-only results and report: [utility operating-point results](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json).
+- [x] Add focused utility tests, an independent cost-review checklist, and framework documentation.
+- [x] Record provenance: the full-cohort analysis used a reconstructed local working copy and is not claimed as byte-identically verified execution of the checked-in source. The analysis used 20 bootstrap replicates for ancillary uncertainty summaries; these are preliminary.
+- [ ] Confirm successful GitHub Actions on the latest code-bearing head.
+- [ ] Obtain independent clinician/statistician review of the target semantics, alert burden, and illustrative missed-window cost ratios (1, 10, 100, 500, 1,000 relative units per alert-cost unit).
+- [ ] Freeze any development candidate only after review, then evaluate it on a new independent cohort. Do not reuse inspected Set B for threshold selection.
+- [ ] Complete clean-checkout reproduction, privacy/security review, governance review, and prospective/clinical validation gates before any clinical-use claim.
 
-**Boundary:** the target is future entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. This weighted cost proxy is not clinical utility. VITALIS remains research-only and must not guide patient care.
+**Boundary:** the target is future entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. The weighted cost proxy is not clinical utility. VITALIS remains research-only and must not guide patient care.
