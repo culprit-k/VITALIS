@@ -435,3 +435,19 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Obtain independent clinical/statistical review. These labels do not provide an independent onset timestamp, and no clinical alert policy is established.
 
 **Interpretation boundary:** the new model forecasts entry into the Challenge SepsisLabel-positive window. Because the challenge label already incorporates a six-hour lead convention, a 1/3/6-hour forecast here is not a claim of sepsis onset prediction within 1/3/6 hours. All threshold, refractory, and alert metrics are retrospective research settings, not clinical operating points.
+
+
+## Phase 5: full-cohort horizon cross-cohort evaluation (started 2026-10-14)
+
+- [x] Add `scripts/evaluate_horizon_cross_cohort.py` to train static and temporal future-label models on a patient-disjoint Set A training subset and evaluate all eligible Set B patients.
+- [x] Enforce expected official cohort counts and feature-schema agreement; fail closed when the cache does not match the source cohort.
+- [x] Keep Set B evaluation-only: no fitting, feature selection, calibration, or threshold tuning on Set B.
+- [x] Add synthetic-cache tests for target alignment and end-to-end Set A→Set B evaluation.
+- [x] Document cache build chunks and the full-cohort run in [Horizon cross-cohort execution](HORIZON_CROSS_COHORT_EXECUTION.md).
+- [ ] Confirm GitHub Actions passes for the cross-cohort horizon tests.
+- [ ] Build both official feature caches locally, outside Git, from verified Set A and Set B archives.
+- [ ] Run all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours) and retain aggregate-only JSON outside the repository.
+- [ ] Review model metrics, patient-level warning burden, and patient-cluster intervals without tuning on Set B.
+- [ ] Obtain independent statistical/clinical review before any clinical claim.
+
+**Current execution boundary:** the code and synthetic tests can be validated through GitHub Actions, but the official full-cohort runs require the authorized local Set A and Set B feature caches. Those caches and any row-level predictions must not be uploaded to GitHub. The horizon target remains future Challenge-label entry, not independently observed sepsis onset.
