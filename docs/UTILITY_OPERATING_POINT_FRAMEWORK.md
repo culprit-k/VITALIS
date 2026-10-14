@@ -12,7 +12,7 @@ The scenario score is:
                   + alert_cost × all_alerts
     weighted_cost_per_patient_day = weighted_cost / eligible_at_risk_patient_days
 
-The alert cost is expressed in units of one alert. Missed-window cost is an analyst-specified multiple of that unit. The function accepts cost assumptions as inputs rather than asserting a medically justified default. Compare multiple plausible scenarios; do not treat one ratio as objective truth. All alerts count toward burden, including those inside positive windows. Alerts outside target-positive windows are not presumed to be clinical false alarms.
+The alert cost is expressed in units of one alert. Missed-window cost is an analyst-specified multiple of that unit. The function accepts cost assumptions as inputs rather than asserting a medically justified default. The CLI default sensitivity grid is missed-window cost 1, 10, 100, 500, and 1,000 relative units per alert-cost unit; these values are illustrative and intentionally span a broad range. Compare multiple plausible scenarios; do not treat one ratio as objective truth. All alerts count toward burden, including those inside positive windows. Alerts outside target-positive windows are not presumed to be clinical false alarms.
 
 ## Data partition and selection discipline
 
@@ -28,7 +28,7 @@ Pure analysis function: `src/vitalis/utility.py` (`evaluate_utility_operating_po
 
 Focused tests: `tests/test_utility.py`.
 
-## Remaining work before a full-cohort result
+## Remaining gates
 
 1. Obtain independent clinician/statistician review of plausible cost ratios, utility assumptions, and label-window semantics before interpreting any scenario ranking.
 2. Treat Set-A candidate rankings as development-only. Freeze any policy only after the cost assumptions and selection rule are predeclared; evaluate it once on a new independent cohort. Set B results already inspected must not be reused for threshold selection.
