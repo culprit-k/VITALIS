@@ -43,3 +43,40 @@ def test_metrics_treats_probability_equal_to_threshold_as_positive():
     assert result["specificity"] == 0.0
     assert result["ppv"] == 0.5
     assert result["npv"] is None
+
+
+def test_score_archive_directory_must_be_outside_repository(tmp_path):
+    import pytest
+
+    repository_root = tmp_path / "repo"
+    repository_root.mkdir()
+    with pytest.raises(ValueError, match="outside the repository"):
+        MOD.validate_private_score_archive_dir(repository_root / "scores", repository_root)
+
+    outside = MOD.validate_private_score_archive_dir(tmp_path / "private-scores", repository_root)
+    assert outside == (tmp_path / "private-scores").resolve()
+
+
+def test_local_score_archive_contains_only_expected_arrays(tmp_path):
+    labels = np.asarray([0, 1, 0], dtype=np.int8)
+    groups = np.asarray([10, 10, 20], dtype=np.int32)
+    static = np.asarray([0.1, 0.8, 0.2])
+    temporal = np.asarray([0.2, 0.9, 0.3])
+    path = MOD.write_local_score_archive(tmp_path / "heldout.npz", labels, groups, static, temporal)
+
+    with np.load(path, allow_pickle=False) as data:
+        assert set(data.files) == {"y", "groups", "p_static", "p_temporal"}
+        assert np.array_equal(data["y"], labels)
+        assert np.array_equal(data["groups"], groups)
+        assert np.array_equal(data["p_static"], static)
+        assert np.array_equal(data["p_temporal"], temporal)
+
+
+def test_local_score_archive_rejects_misaligned_vectors(tmp_path):
+    import pytest
+
+    with pytest.raises(ValueError, match="equal lengths"):
+        MOD.write_local_score_archive(
+            tmp_path / "heldout.npz", np.asarray([0, 1]), np.asarray([1]),
+            np.asarray([0.1, 0.9]), np.asarray([0.2, 0.8]),
+        )
