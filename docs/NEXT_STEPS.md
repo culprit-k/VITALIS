@@ -183,3 +183,14 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Exact source-byte identity for model fitting and held-out score generation remains unresolved; local runner copies were reconstructed from checked-in logic. Do not describe these as exact-checkout reproductions.
 - [ ] Run the full combined-cohort and train-A/test-B analyses from an exact repository checkout with local data, then reconcile aggregate outputs.
 - [ ] Investigate calibration, cohort shift, subgroup robustness, and alert burden under clinical/statistical supervision. No patient-facing use before external/prospective validation and governance review.
+
+
+## Cross-cohort calibration audit (2026-10-14)
+
+- [x] Added reusable descriptive calibration runner: scripts/evaluate_cross_cohort_calibration.py; CI unit tests passed for the diagnostic helper.
+- [x] Audited raw static and temporal probabilities on all set B patients across training-subset seeds 42, 123, and 2026; see docs/CROSS_COHORT_CALIBRATION_AUDIT.md and results/cross_cohort_calibration_diagnostics_2026-10-14.json.
+- [x] Recorded that mean predicted probabilities were 36.8% static and 26.3% temporal versus 1.415% positive hourly-label prevalence. The temporal model ranked labels better, but neither raw probability stream is calibrated for use as risk estimates.
+- [x] Added a descriptive constant-prevalence reference to contextualize Brier score and log loss. It uses set B prevalence only as a scale reference, not as a deployable model.
+- [ ] The analysis runner was reconstructed locally and exact source-byte identity for model fitting remains unverified; rerun from an exact repository checkout before treating the aggregate artifact as a strict reproduction.
+- [ ] Next calibration experiment: fit a pre-specified recalibrator using only a patient-disjoint validation subset of set A, freeze it, and evaluate once on set B. Do not tune on set B.
+- [ ] External/prospective validation and clinical/statistical governance review remain required before patient-facing research.
