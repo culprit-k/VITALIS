@@ -46,6 +46,8 @@ python scripts/compare_models.py /path/to/psv_files --seed 42 --output outputs/m
 
 The comparison runs both variants with the same deterministic patient split strategy and reports temporal-minus-static metric deltas. Deltas are descriptive; they do not establish clinical benefit.
 
+The training report includes 95% patient-cluster bootstrap intervals for held-out row-level metrics (200 patient-resampling replicates by default). Intervals express between-patient sampling uncertainty; they do not make row-level results event-level metrics.
+
 The training report also includes a refractory-period alert-burden summary and coverage of contiguous challenge-positive label episodes. These are label-window analyses, not true clinical event sensitivity or false-alarm rates, because the challenge label is not independently observed onset.
 
 ## 7. View aggregate results
