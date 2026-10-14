@@ -481,6 +481,17 @@ The next implementation layer has now been added on the existing research branch
 - [x] Preserve Set B as final evaluation only. Calibration remains fit on patient-disjoint Set A calibration patients; no threshold was selected from Set B.
 - [x] Record aggregate-only results in [calibration uncertainty report](HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) and [JSON](../results/horizon_calibration_uncertainty_summary_2026-10-15.json).
 - [x] Results support a clear reduction in Brier score after Platt recalibration versus raw class-weighted probabilities, but do not establish adequate clinical calibration or robust improvement over a constant-prevalence Brier reference. The seed-specific CI envelopes are descriptive, not pooled intervals.
-- [ ] Next research gate: predeclare a paired patient-level comparison of static versus temporal models on aligned Set B predictions, with no threshold selection on Set B; audit target timing and leakage before interpreting model differences.
+- [x] Completed a predeclared paired patient-cluster comparison of Platt-calibrated static versus temporal Set-B predictions for AUROC, AUPRC, Brier score, and log loss; report and aggregate-only JSON are linked below. No threshold or model setting was selected from Set B.
 - [ ] Independent statistical/clinical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
+
+## Phase 7: paired model comparison (15 October 2026)
+
+- [x] Add a paired patient-cluster bootstrap comparing static and temporal Platt-calibrated probabilities on identical Set-B eligible rows.
+- [x] Report temporal-minus-static differences for AUROC, AUPRC, Brier score, and log loss; resample whole patients and precompute score-tie groups for efficient bootstrap calculation.
+- [x] Add unit tests against scikit-learn point metrics and explicit patient-resampling intervals, plus a synthetic end-to-end evaluator test.
+- [x] Run all nine seed × horizon combinations with 200 paired bootstrap replicates per run (1,800 paired replicates); 319.0 seconds summed runtime and zero captured fit warnings.
+- [x] Commit [paired comparison results](HORIZON_PAIRED_MODEL_COMPARISON_RESULTS_2026-10-15.md) and [aggregate-only JSON](../results/horizon_paired_model_comparison_aggregate_2026-10-15.json).
+- [x] Findings: temporal AUROC differences were positive with seed-specific intervals above zero at 1 h and 6 h, but not consistently at 3 h; AUPRC intervals overlapped zero at all horizons; temporal log loss was lower across all horizons; Brier differences were inconclusive at 1 h and 3 h and favored temporal at 6 h. These are descriptive retrospective comparisons, not grounds to select a model using Set B.
+- [ ] Next: define a utility-based operating-point framework on a patient-disjoint development partition before selecting any threshold. State the relative cost of missed forecast windows versus alert burden; evaluate sensitivity, PPV, alerts per at-risk patient-day, and window coverage together. Keep Set B untouched and reserve a new independent cohort for final evaluation.
+- [ ] Independent clinical/statistical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
 
