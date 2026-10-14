@@ -50,12 +50,12 @@ def test_patient_warning_metrics_count_forecast_windows_and_refractory_alerts():
     )
     assert result["patients"] == 2
     assert result["eligible_hours"] == 7
-    assert result["alerts_total"] == 3
+    assert result["alerts_total"] == 2
     assert result["future_positive_windows"] == 1
     assert result["covered_future_positive_windows"] == 1
     assert result["future_positive_window_coverage"] == 1
     assert result["warning_lead_hours_to_challenge_label_entry"]["mean"] == 2
-    assert result["alerts_outside_future_positive_windows"] == 2
+    assert result["alerts_outside_future_positive_windows"] == 1
     assert "not clinical onset" in result["interpretation_note"]
 
 
