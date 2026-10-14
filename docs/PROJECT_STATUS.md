@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `4fcfacc9c405eceb3eb10ff9aae22b64923074bd` (documentation-only follow-up after CI passed on `2b56ad2a91ede9081ae56e51ed72b9dcfaf4aa6e`).
+**Latest branch head checked during this update:** `83688f5debab67f7836608e96e77c145e09b1502` (documentation-only follow-up after CI passed on `013d7fe5050eb0424b51b139e408b05df490a8f2`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -81,6 +81,18 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - The full-cohort horizon CLI has **not** yet been run in this environment because the authorized patient data are local and must not be uploaded or committed. No horizon performance results are claimed yet.
 
 **Interpretation boundary:** these targets forecast entry into the Challenge SepsisLabel-positive window. The source label already uses a six-hour lead convention, so the new 1/3/6-hour targets are not independent predictions of biological onset. Alert rates are relative to eligible at-risk hours; alerts outside forecast-positive windows are not verified clinical false alarms. Threshold and refractory settings remain research defaults.
+
+## New software milestone: Set A → Set B horizon evaluation (2026-10-14)
+
+- Added `scripts/evaluate_horizon_cross_cohort.py` to compare static and temporal models for future Challenge SepsisLabel entry at 1-, 3-, and 6-hour horizons.
+- The runner builds targets within patient blocks, excludes current-positive rows and incomplete future tails, verifies official Set A/Set B row/patient/label counts and feature schema, and uses a patient-disjoint Set A 60/40 training/unused-holdout split.
+- Set B is evaluation-only. No fitting, feature selection, calibration, or threshold tuning is performed on Set B.
+- Added `tests/test_horizon_cross_cohort.py` for patient-boundary target alignment and synthetic-cache cross-cohort evaluation.
+- GitHub Actions passed on commit `013d7fe5050eb0424b51b139e408b05df490a8f2`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38614840411). **120 tests passed.**
+- Added [full-cohort execution protocol](HORIZON_CROSS_COHORT_EXECUTION.md), including cache construction and a reproducible command for all nine seed × horizon combinations.
+- **Official full-cohort execution remains pending.** It requires verified local Set A and Set B caches. No new horizon performance results are claimed until that run completes.
+
+**Interpretation boundary:** the targets forecast entry into the Challenge SepsisLabel-positive window; the source label already incorporates a six-hour lead convention. These metrics are not independent sepsis-onset predictions, verified clinical false-alarm rates, or clinical validation. Raw data, caches, and row-level predictions must remain outside Git.
 
 ## 6. Next steps, in order
 
