@@ -100,12 +100,21 @@ def load_patient_rows(data_dir: Path, temporal: bool) -> tuple[pd.DataFrame, pd.
                 if len(values) > 1:
                     lag[1:] = values[:-1]
                 delta = values - lag
-                rolling = (
-                    pd.Series(values, copy=False)
-                    .rolling(window=6, min_periods=1)
-                    .mean()
-                    .to_numpy(dtype=np.float32)
-                )
+                valid = np.isfinite(values)
+                clean = np.where(valid, values, 0.0).astype(np.float64, copy=False)
+                cumulative_sum = np.cumsum(clean)
+                cumulative_count = np.cumsum(valid, dtype=np.int32)
+                rolling_sum = cumulative_sum.copy()
+                rolling_count = cumulative_count.copy()
+                if len(values) > 6:
+                    rolling_sum[6:] -= cumulative_sum[:-6]
+                    rolling_count[6:] -= cumulative_count[:-6]
+                rolling = np.divide(
+                    rolling_sum,
+                    rolling_count,
+                    out=np.full(len(values), np.nan, dtype=np.float64),
+                    where=rolling_count > 0,
+                ).astype(np.float32)
                 local[:, feature_names.index(f"{column}_lag1")] = lag
                 local[:, feature_names.index(f"{column}_delta1")] = delta
                 local[:, feature_names.index(f"{column}_rollmean6")] = rolling
