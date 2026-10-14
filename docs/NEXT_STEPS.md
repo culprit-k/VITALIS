@@ -591,3 +591,18 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Obtain independent clinical/statistical review of endpoint semantics, cost assumptions, and model/threshold policy; obtain required governance/ethics determination and a genuinely new independent cohort before external/prospective evaluation.
 
 **Current decision:** the utility-analysis implementation and automated software/privacy checks are in place, but the independent-evaluation and clean-reproduction gates remain open. Keep PR #1 draft and unmerged. VITALIS remains research-only and is not clinically validated.
+
+
+## Phase 13: clinical translation and regulatory readiness (15 October 2026)
+
+- [x] Add [clinical translation and regulatory roadmap](CLINICAL_TRANSLATION_AND_REGULATORY_ROADMAP.md) with intended-use, target-market, QMS/design-control, risk, software lifecycle, cybersecurity, clinical-evaluation, governance, and post-market workstreams.
+- [x] Link the roadmap from the README and record the current safety boundary: VITALIS is a retrospective research prototype, not a clinically validated device.
+- [ ] Choose the first target jurisdiction and approve the exact intended-use statement, population, setting, intended user, clinical claim, output, and exclusions.
+- [ ] Appoint accountable clinical, statistical, regulatory/quality, cybersecurity, privacy/data-governance, and human-factors owners.
+- [ ] Complete clean-checkout/fresh-cache reproduction, reconcile historical metric discrepancies, and close the history-wide privacy/security review with independent triage.
+- [ ] Establish the appropriate quality management system, controlled design records, risk file, software lifecycle evidence, traceability, usability evidence, and cybersecurity plan.
+- [ ] Obtain governance/ethics and data permissions; establish a new independent cohort with an independently defined/adjudicated reference standard and a frozen statistical analysis plan.
+- [ ] Complete external retrospective validation, then appropriately approved prospective silent-mode evaluation; only consider an interventional study after clinical/regulatory review.
+- [ ] Determine and satisfy all applicable jurisdiction-specific regulatory submission, authorization, labeling, and post-market requirements before any clinical marketing or deployment.
+
+**Gate status:** this roadmap and repository changes are planning artifacts only. They do not establish QMS conformity, regulatory classification, ethics approval, clinical validity, or authorization. Keep PR #1 draft/unmerged; keep VITALIS research-only and out of patient-care decisions.
