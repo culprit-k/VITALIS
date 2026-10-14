@@ -1,0 +1,36 @@
+{
+  "project": "VITALIS",
+  "phase": "Phase 1 software foundation and exploratory evaluation",
+  "status": "completed within defined exploratory scope; not clinical validation",
+  "local_rerun": {
+    "script": "run_vitalis_phase1_complete.py",
+    "dataset_partition": "PhysioNet/CinC Challenge 2019 training_setA",
+    "available_patient_files": 20336,
+    "sampled_patients": 500,
+    "sample_seed": 20261014,
+    "split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "paired_patient_cluster_bootstrap_replicates_per_comparison_per_split": 200,
+    "output_sha256": "0e79dd61721aaf42d2b80be88d1c621d3d6b7203a94e24acaf7bf13867fd9f52",
+    "deterministic_repeat": "A second local execution reproduced the same aggregate JSON byte-for-byte (matching SHA-256)."
+  },
+  "interpretation": {
+    "static_model_mean_auroc": 0.7243600821740394,
+    "static_model_mean_average_precision": 0.10180575487634251,
+    "temporal_model_mean_auroc": 0.6744686421052929,
+    "temporal_model_mean_average_precision": 0.07759930363755717,
+    "personalized_model_mean_auroc": 0.5846559922837371,
+    "personalized_model_mean_average_precision": 0.05252013903981895,
+    "conclusion": "The static model performed best on mean AUROC and average precision in this exploratory sample. VITALIS-PB has not demonstrated overall superiority."
+  },
+  "remaining_gates": [
+    "Run the repository's canonical runner on the local dataset and compare output with the recorded artifact.",
+    "Calibration and missingness/subgroup robustness analyses.",
+    "Larger/full-cohort and external validation before any clinical claims.",
+    "Clinical/statistical supervision, governance, and risk review before patient-facing research."
+  ],
+  "safety": "Research-only. No patient-level predictions or identifiers are included. No clinical utility, novelty, patentability, or regulatory claims."
+}
