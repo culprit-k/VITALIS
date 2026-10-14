@@ -19,7 +19,7 @@ For every seed (42, 123, 2026) and horizon (1, 3, 6 hours):
 7. Report patient-level alert burden, forecast-positive-window coverage, and label-relative warning time for the recalibrated Set B scores at the predeclared 0.005 and 0.01 thresholds only. The six-hour refractory interval is a research setting, not a clinical alarm policy.
 8. Export aggregate metrics only. Do not export raw rows, patient identifiers, or individual probabilities.
 
-The model uses bounded fitting settings (LBFGS, maximum 100 iterations, tolerance 0.01). The completed nine-run execution captured zero model-fit warnings.
+The model uses bounded fitting settings (LBFGS, maximum 100 iterations, tolerance 0.01). The completed nine-run execution captured zero model-fit warnings. The runner also supports patient-cluster percentile-bootstrap intervals for calibrated Brier score, log loss, mean predicted probability, fixed-bin ECE, Brier difference from the constant-prevalence reference, and paired calibrated-minus-raw Brier difference. It resamples whole patient blocks and stores aggregate intervals only.
 
 ## Reproduce
 
@@ -31,6 +31,7 @@ python scripts/evaluate_horizon_calibration.py \
   --seeds 42 123 2026 \
   --predict-chunk-rows 50000 \
   --refractory-hours 6 \
+  --bootstrap-replicates 200 \
   --output /path/outside/repo/horizon_calibration_operating_points.json
 ```
 
@@ -49,7 +50,7 @@ The runner validates expected official cohort counts and feature schema and stop
 - Set B is used only for final evaluation. No Set B fitting, recalibration, feature selection, or threshold selection is permitted.
 - Do not choose a threshold after inspecting Set B and then report that same Set B result as unbiased evaluation. The threshold grid is predeclared and all points are descriptive.
 - Fixed-bin calibration error depends on the stated binning; it is not a complete calibration assessment. Compare Brier score and log loss with the constant-prevalence reference and inspect calibration-bin summaries.
-- The Set A holdout is a development diagnostic, not an independent external validation cohort. Seed-to-seed standard deviations are descriptive and are not confidence intervals; calibration-metric patient-cluster intervals remain future work.
+- The Set A holdout is a development diagnostic, not an independent external validation cohort. Seed-to-seed standard deviations are descriptive and are not confidence intervals. The new patient-cluster bootstrap intervals quantify conditional uncertainty in this retrospective Set B cohort; they are not prospective or clinical validation.
 - The Challenge `SepsisLabel` already incorporates a six-hour lead convention. Targets forecast entry into the Challenge-positive label window, not independently observed biological sepsis onset.
 - Alerts outside future-positive windows are not verified clinical false alarms. Neither these metrics nor calibration alone establish clinical utility, safety, or patient benefit.
 
