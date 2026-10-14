@@ -29,6 +29,7 @@ from vitalis.calibration_uncertainty import (
     patient_cluster_bootstrap_calibration_metrics,
     patient_cluster_bootstrap_paired_model_metrics,
 )
+from vitalis.utility import evaluate_utility_operating_points
 
 BASE = [
     "HR", "O2Sat", "Temp", "SBP", "MAP", "DBP", "Resp", "EtCO2",
@@ -230,6 +231,12 @@ def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: 
                 variants[variant] = {"probability_metrics": probability_metrics(labels, scores), "threshold_grid": [
                     threshold_metrics(labels, scores, threshold) for threshold in THRESHOLDS
                 ]}
+            if cohort_name == "set_a_untouched_holdout":
+                variants["platt_calibrated"]["utility_cost_sensitivity"] = evaluate_utility_operating_points(
+                    labels, calibrated, patients, times, thresholds=THRESHOLDS,
+                    missed_window_costs=args.missed_window_costs, alert_cost=args.alert_cost,
+                    refractory_hours=refractory_hours,
+                )
             # Keep patient-level alert computation tractable while preserving a
             # predeclared calibrated Set-B operating-point slice. No threshold is selected.
             if cohort_name == "set_b_final_evaluation":
@@ -271,12 +278,18 @@ def main() -> None:
     parser.add_argument("--predict-chunk-rows", type=int, default=50000)
     parser.add_argument("--refractory-hours", type=int, default=6)
     parser.add_argument("--bootstrap-replicates", type=int, default=200)
+    parser.add_argument("--missed-window-costs", type=float, nargs="+", default=[1.0, 5.0, 10.0, 20.0],
+                        help="Set-A development cost scenarios, relative to the cost of one alert; defaults are illustrative")
+    parser.add_argument("--alert-cost", type=float, default=1.0,
+                        help="Cost unit assigned to one alert; defaults to 1.0 for relative comparisons")
     parser.add_argument("--output", type=Path, required=True, help="Aggregate-only JSON output")
     args = parser.parse_args()
     if not args.horizons or any(h < 1 for h in args.horizons) or len(set(args.horizons)) != len(args.horizons):
         parser.error("--horizons must contain unique positive integers")
     if not args.seeds or len(set(args.seeds)) != len(args.seeds) or args.predict_chunk_rows < 1 or args.refractory_hours < 1 or args.bootstrap_replicates < 20:
         parser.error("seeds must be unique; chunk rows and refractory hours must be positive; bootstrap replicates must be >=20")
+    if not args.missed_window_costs or any(not np.isfinite(c) or c <= 0 for c in args.missed_window_costs) or len(set(args.missed_window_costs)) != len(args.missed_window_costs) or not np.isfinite(args.alert_cost) or args.alert_cost <= 0:
+        parser.error("missed-window costs must be unique positive values and alert cost must be positive")
     ma, Xa, ya, ga = load_cache(args.set_a_cache, "A")
     mb, Xb, yb, gb = load_cache(args.set_b_cache, "B")
     validate_official_cohort(ma, ya, ga, "A")
@@ -295,6 +308,10 @@ def main() -> None:
                             "base_model": "median imputation with missingness indicators, standard scaling, class-weighted logistic regression (lbfgs, max_iter=100, tol=0.01)",
                             "set_a_split": "patient-disjoint 60% model training / 20% Platt calibration / 20% untouched operating-point holdout",
                             "threshold_grid": list(THRESHOLDS), "thresholds_selected": False,
+                            "utility_cost_analysis": {"missed_window_costs_relative_to_one_alert": args.missed_window_costs,
+                                                      "alert_cost": args.alert_cost,
+                                                      "computed_on": "patient-disjoint untouched Set-A operating-point holdout only",
+                                                      "candidate_thresholds_are_clinical": False},
                             "patient_alert_metrics_thresholds": [0.005, 0.01],
                             "patient_cluster_bootstrap_replicates": args.bootstrap_replicates,
                             "bootstrap_unit": "whole patient; calibration uncertainty and paired static-versus-temporal calibrated-score differences on aligned Set-B rows",
