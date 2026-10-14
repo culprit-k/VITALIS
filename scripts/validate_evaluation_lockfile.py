@@ -113,6 +113,28 @@ def validate_lockfile(data: dict[str, Any]) -> list[str]:
         if policy.get("threshold_selection_frozen") is not True:
             errors.append("frozen_policy.threshold_selection_frozen must be true")
 
+    utility = data.get("utility_policy")
+    if not isinstance(utility, dict):
+        errors.append("utility_policy must be an object")
+    else:
+        for key in ("cost_definition", "primary_cost_scenario", "selection_rule",
+                    "candidate_selection_cohort", "clinical_cost_justification"):
+            value = utility.get(key)
+            if not isinstance(value, str) or not value.strip() or value.strip().lower().startswith(("todo", "tbd", "placeholder")):
+                errors.append(f"utility_policy.{key} must be a specific predeclared string")
+        alert_cost = utility.get("alert_cost")
+        if isinstance(alert_cost, bool) or not isinstance(alert_cost, (int, float)) or not 0 < alert_cost < float("inf"):
+            errors.append("utility_policy.alert_cost must be a positive finite number")
+        missed_costs = utility.get("missed_window_costs_relative_to_one_alert")
+        if not isinstance(missed_costs, list) or not missed_costs or any(
+            isinstance(cost, bool) or not isinstance(cost, (int, float)) or not 0 < cost < float("inf")
+            for cost in missed_costs
+        ) or len(set(missed_costs)) != len(missed_costs):
+            errors.append("utility_policy.missed_window_costs_relative_to_one_alert must be a nonempty list of unique positive finite numbers")
+        cohort_rule = utility.get("candidate_selection_cohort")
+        if isinstance(cohort_rule, str) and "set b" in cohort_rule.lower():
+            errors.append("utility_policy.candidate_selection_cohort cannot use Set B for threshold selection")
+
     approvals = data.get("approvals")
     if not isinstance(approvals, dict):
         errors.append("approvals must be an object")
