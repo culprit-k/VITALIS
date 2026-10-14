@@ -28,7 +28,8 @@
     "model": "SimpleImputer(median, add_indicator=True) + StandardScaler + LogisticRegression(max_iter=500, class_weight=balanced, solver=lbfgs)",
     "threshold": 0.5,
     "threshold_note": "Fixed reference threshold; not clinically optimized and not selected using validation data.",
-    "temporal_features": "Per-patient one-hour lag, one-hour difference, and trailing six-row mean for candidate physiological measurements."
+    "temporal_features": "Per-patient one-row lag, one-row difference, and trailing six-row mean for candidate physiological measurements.",
+    "bootstrap": "200 patient-cluster percentile resamples per model, seed 42; individual-model intervals only, not a paired interval for model differences."
   },
   "results": {
     "static_baseline": {
@@ -36,28 +37,36 @@
       "test_rows": 159102,
       "positive_test_label_rows": 3411,
       "auroc": 0.7623354698,
+      "auroc_patient_bootstrap_95ci": [0.7434517072, 0.7774113686],
       "auprc": 0.0776750776,
+      "auprc_patient_bootstrap_95ci": [0.0664610715, 0.0956029925],
       "brier_score": 0.1902758112,
+      "brier_patient_bootstrap_95ci": [0.1826259434, 0.1974564959],
       "sensitivity_at_0_5": 0.6341248901,
       "specificity_at_0_5": 0.7563892582,
       "ppv_at_0_5": 0.0539522586,
       "npv_at_0_5": 0.9895135744,
       "confusion_matrix": {"tn": 117763, "fp": 37928, "fn": 1248, "tp": 2163},
-      "fit_seconds": 5.08
+      "fit_seconds": 5.24,
+      "imputer_warning": "EtCO2 was entirely missing and skipped."
     },
     "temporal_features": {
       "features": 109,
       "test_rows": 159102,
       "positive_test_label_rows": 3411,
       "auroc": 0.7872536751,
+      "auroc_patient_bootstrap_95ci": [0.7694206396, 0.8061729777],
       "auprc": 0.0841969788,
+      "auprc_patient_bootstrap_95ci": [0.0720339199, 0.1029237064],
       "brier_score": 0.1813894474,
+      "brier_patient_bootstrap_95ci": [0.1729346457, 0.1893367567],
       "sensitivity_at_0_5": 0.6845499853,
       "specificity_at_0_5": 0.7538393356,
       "ppv_at_0_5": 0.0574274471,
       "npv_at_0_5": 0.9909153847,
       "confusion_matrix": {"tn": 117366, "fp": 38325, "fn": 1076, "tp": 2335},
-      "fit_seconds": 23.46
+      "fit_seconds": 22.22,
+      "imputer_warning": "EtCO2 and its temporal derivatives were entirely missing and skipped."
     },
     "temporal_minus_static": {
       "auroc": 0.0249182054,
@@ -70,16 +79,14 @@
     }
   },
   "warnings": [
-    "EtCO2 was entirely missing in the cohort and was skipped by median imputation, along with its temporal derivatives.",
-    "The local harness used the same intended model and split protocol but was not launched through the repository CLI; a direct CLI run should still be recorded as the definitive reproducibility check.",
-    "No patient-cluster bootstrap intervals were computed for this rerun yet."
+    "Patient-cluster intervals are individual-model percentile intervals. No paired bootstrap interval for temporal-minus-static differences was computed; these results do not establish a statistically significant improvement.",
+    "The local harness matched the intended repository algorithm but was not run through the repository CLI; a direct CLI reproduction remains necessary.",
+    "Fixed threshold 0.5 is not clinically optimized. PPV is approximately 5.7% for temporal features at this threshold."
   ],
   "interpretation_limits": [
     "Retrospective evaluation on one challenge dataset only.",
     "Metrics are hourly-row metrics, not patient-level event-detection metrics.",
     "Positive SepsisLabel rows follow the challenge's early-warning label definition and are not independently observed clinical onset.",
-    "The fixed 0.5 threshold is not a clinically selected operating point; PPV is low at this threshold.",
-    "The temporal feature variant has better point estimates on this split, but this does not prove clinical benefit or generalizability.",
     "No external validation, prospective evaluation, clinical impact study, novelty assessment, or patentability assessment."
   ]
 }
