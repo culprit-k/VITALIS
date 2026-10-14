@@ -1,0 +1,252 @@
+{
+  "project": "VITALIS",
+  "title": "Full-cohort multi-seed static-versus-temporal exploratory comparison",
+  "created_date": "2026-10-14",
+  "dataset": {
+    "partition": "training_setA",
+    "patients": 20336,
+    "hourly_rows": 790215,
+    "positive_hourly_labels": 17136
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "patient_disjoint_splits": true,
+    "split_method": "two-stage GroupShuffleSplit: 20% test, then 20% validation of remaining patients",
+    "models": "Logistic regression; median imputation with missingness indicators; standard scaling; class_weight=balanced; max_iter=500",
+    "threshold": 0.5,
+    "temporal_features": "per-patient lag-1, one-step difference, trailing six-row mean for measured variables",
+    "aggregation": "mean and sample standard deviation across three test splits; standard deviation is across split seeds, not a confidence interval",
+    "provenance": "All three runs used local optimized/cached-feature harnesses. Seed 42 is summarized from the existing full-cohort rerun; seeds 123 and 2026 were run with the cached feature-matrix evaluator. This is not a byte-verified execution of the checked-in full-cohort CLI."
+  },
+  "split_results": [
+    {
+      "seed": 42,
+      "test_rows": 159102,
+      "positive_rows": 3411,
+      "metrics": {
+        "static": {
+          "auroc": 0.7623354697524292,
+          "auprc": 0.07767507764572511,
+          "brier_score": 0.19027581116186243,
+          "sensitivity": 0.6341248900615655,
+          "specificity": 0.7563892582101727,
+          "ppv": 0.05395225861165848,
+          "npv": 0.9895135743754779
+        },
+        "temporal": {
+          "auroc": 0.7872536751127859,
+          "auprc": 0.084196978821625,
+          "brier_score": 0.18138944740778012,
+          "sensitivity": 0.6845499853415421,
+          "specificity": 0.7538393356070678,
+          "ppv": 0.057427447122479096,
+          "npv": 0.9909153847452762
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "test_rows": 160217,
+      "positive_rows": 3557,
+      "metrics": {
+        "static": {
+          "auroc": 0.7643256217136895,
+          "auprc": 0.09413823232238272,
+          "brier_score": 0.1927850517230081,
+          "sensitivity": 0.6578577452909755,
+          "specificity": 0.7489786799438274,
+          "ppv": 0.056162246489859596,
+          "npv": 0.9897344625143397
+        },
+        "temporal": {
+          "auroc": 0.7906037675497662,
+          "auprc": 0.09521671532932847,
+          "brier_score": 0.18617547397820808,
+          "sensitivity": 0.6856901883609784,
+          "specificity": 0.7433039703817184,
+          "ppv": 0.057182378730687176,
+          "npv": 0.9904902861420163
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "test_rows": 155703,
+      "positive_rows": 3470,
+      "metrics": {
+        "static": {
+          "auroc": 0.7618504934353718,
+          "auprc": 0.0819798075147334,
+          "brier_score": 0.18525034473927318,
+          "sensitivity": 0.6380403458213256,
+          "specificity": 0.7626730078235336,
+          "ppv": 0.05774196072294813,
+          "npv": 0.9892978868438991
+        },
+        "temporal": {
+          "auroc": 0.7873873132174097,
+          "auprc": 0.08628558149138209,
+          "brier_score": 0.17733285260066486,
+          "sensitivity": 0.6613832853025937,
+          "specificity": 0.7599469234660028,
+          "ppv": 0.05909008985813229,
+          "npv": 0.9899455777656079
+        }
+      }
+    }
+  ],
+  "aggregate_metrics": {
+    "static": {
+      "auroc": {
+        "mean": 0.7628371949671635,
+        "sd": 0.0013116253816761304,
+        "by_seed": {
+          "42": 0.7623354697524292,
+          "123": 0.7643256217136895,
+          "2026": 0.7618504934353718
+        }
+      },
+      "auprc": {
+        "mean": 0.08459770582761374,
+        "sd": 0.008538085801824942,
+        "by_seed": {
+          "42": 0.07767507764572511,
+          "123": 0.09413823232238272,
+          "2026": 0.0819798075147334
+        }
+      },
+      "brier_score": {
+        "mean": 0.1894370692080479,
+        "sd": 0.0038367392902701153,
+        "by_seed": {
+          "42": 0.19027581116186243,
+          "123": 0.1927850517230081,
+          "2026": 0.18525034473927318
+        }
+      },
+      "sensitivity": {
+        "mean": 0.6433409937246223,
+        "sd": 0.01272339402365091,
+        "by_seed": {
+          "42": 0.6341248900615655,
+          "123": 0.6578577452909755,
+          "2026": 0.6380403458213256
+        }
+      },
+      "specificity": {
+        "mean": 0.7560136486591779,
+        "sd": 0.006854886280626681,
+        "by_seed": {
+          "42": 0.7563892582101727,
+          "123": 0.7489786799438274,
+          "2026": 0.7626730078235336
+        }
+      },
+      "ppv": {
+        "mean": 0.055952155274822064,
+        "sd": 0.0019035661958690239,
+        "by_seed": {
+          "42": 0.05395225861165848,
+          "123": 0.056162246489859596,
+          "2026": 0.05774196072294813
+        }
+      },
+      "npv": {
+        "mean": 0.989515307911239,
+        "sd": 0.00021829299774580484,
+        "by_seed": {
+          "42": 0.9895135743754779,
+          "123": 0.9897344625143397,
+          "2026": 0.9892978868438991
+        }
+      }
+    },
+    "temporal": {
+      "auroc": {
+        "mean": 0.7884149186266539,
+        "sd": 0.0018967760784840278,
+        "by_seed": {
+          "42": 0.7872536751127859,
+          "123": 0.7906037675497662,
+          "2026": 0.7873873132174097
+        }
+      },
+      "auprc": {
+        "mean": 0.08856642521411186,
+        "sd": 0.005853232802515209,
+        "by_seed": {
+          "42": 0.084196978821625,
+          "123": 0.09521671532932847,
+          "2026": 0.08628558149138209
+        }
+      },
+      "brier_score": {
+        "mean": 0.18163259132888435,
+        "sd": 0.004426322111123807,
+        "by_seed": {
+          "42": 0.18138944740778012,
+          "123": 0.18617547397820808,
+          "2026": 0.17733285260066486
+        }
+      },
+      "sensitivity": {
+        "mean": 0.6772078196683714,
+        "sd": 0.013716301675438688,
+        "by_seed": {
+          "42": 0.6845499853415421,
+          "123": 0.6856901883609784,
+          "2026": 0.6613832853025937
+        }
+      },
+      "specificity": {
+        "mean": 0.7523634098182631,
+        "sd": 0.008419069992699167,
+        "by_seed": {
+          "42": 0.7538393356070678,
+          "123": 0.7433039703817184,
+          "2026": 0.7599469234660028
+        }
+      },
+      "ppv": {
+        "mean": 0.05789997190376619,
+        "sd": 0.0010379307241537318,
+        "by_seed": {
+          "42": 0.057427447122479096,
+          "123": 0.057182378730687176,
+          "2026": 0.05909008985813229
+        }
+      },
+      "npv": {
+        "mean": 0.9904504162176334,
+        "sd": 0.00048613126067561374,
+        "by_seed": {
+          "42": 0.9909153847452762,
+          "123": 0.9904902861420163,
+          "2026": 0.9899455777656079
+        }
+      }
+    }
+  },
+  "key_comparison": {
+    "temporal_minus_static_mean": {
+      "auroc": 0.025577723659490403,
+      "auprc": 0.003968719386498121,
+      "brier_score": -0.007804477879163552
+    },
+    "interpretation": "Temporal features had higher mean AUROC and AUPRC and lower mean Brier score in these three internal splits. This is exploratory consistency evidence only; no paired cross-seed test is possible from aggregate-only saved predictions, and it does not establish clinical benefit."
+  },
+  "limitations": [
+    "Retrospective internal dataset only; no external or prospective validation.",
+    "Metrics are hourly-row challenge-label metrics, not patient-level event detection, lead time, or clinical false-alarm rates.",
+    "SepsisLabel was used as supplied; no additional lead shift.",
+    "Threshold 0.5 is a research comparison threshold, not a clinically selected operating point.",
+    "Temporal features assume file rows are chronological hourly observations.",
+    "Some variables and derived features are entirely missing and are skipped by the imputer.",
+    "This report does not represent byte-verified execution of the checked-in full-cohort CLI.",
+    "No patient-level predictions or raw patient data are included."
+  ]
+}
