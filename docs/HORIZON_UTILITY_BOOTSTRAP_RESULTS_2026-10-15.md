@@ -57,4 +57,10 @@ The candidate changes when the assumed cost ratio changes. This is evidence that
 
 Machine-readable aggregate summary: [utility bootstrap summary](../results/horizon_utility_bootstrap_summary_2026-10-15.json).
 
+## Software validation checkpoint
+
+- The available reconstructed local suite passed 28 tests with `PYTHONPATH=src`; `compileall` passed for the available `src`, `scripts`, and `tests` trees.
+- GitHub Actions passed on code-bearing PR head `86776762479dd450e20821da8e6f0b50c482e21d` (run [38639673606](https://github.com/culprit-k/VITALIS/actions/runs/38639673606)): 170 tests passed, compile and synthetic stream smoke tests passed, repository-artifact hygiene passed, and the reachable-history audit reported zero configured-pattern findings in 563 commits / 544 unique blobs among fetched refs.
+- These checks validate software behavior and configured preventive gates; they do not close the clean local checkout/fresh-cache reproduction or independent clinical/statistical/governance gates.
+
 **Research-only:** VITALIS is not clinically validated and must not guide patient care.
