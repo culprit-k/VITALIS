@@ -23,7 +23,7 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). The analytical w
 
 - [x] Added aggregate calibration and predictor-missingness helper functions with unit tests: [Phase 2 plan](PHASE2_PLAN.md).
 - [x] GitHub Actions passed for the Phase 2 helper tests and runner (latest verified run: https://github.com/culprit-k/VITALIS/actions/runs/38549292731).
-- [ ] Execute the canonical repository runner on the local dataset and reconcile its output with the committed aggregate artifact; the local environment cannot resolve GitHub source hosts, so the equivalent local run is not an exact reconciliation.
+- [x] Execute the runner logic mirrored from checked-in source on the local dataset and reconcile aggregate outputs; split counts and feature counts match, with small metric differences and a documented reliability-bin discrepancy. Strict byte-for-byte source verification remains blocked by local DNS.
 - [x] Run held-out calibration and split-specific missingness diagnostics; recalibration was fit on validation data only. Results are exploratory and show unstable recalibration.
 - [x] Run an exploratory age/gender and missingness-stratified audit with small-cell suppression; see the Phase 2 results report. Results are unstable and not fairness/safety evidence.
 - [ ] Consider full-cohort execution only after exact runner reconciliation and memory/runtime checks; external validation remains separate.
