@@ -116,3 +116,6 @@ The next external evidence stage is specified in the [independent-cohort evaluat
 ### Independent evaluation freeze gate
 
 The independent-evaluation protocol now has a machine-checkable scaffold: `configs/independent_evaluation_lockfile.template.json`, validated by `scripts/validate_evaluation_lockfile.py`. It refuses draft/unfrozen policies, Set B reuse, proxy-label/clinical-onset mismatches, and missing reviewer/governance sign-offs. The template is intentionally invalid until independently completed. Keep the completed lockfile and any cohort-identifying information in an approved private workspace; this validator is not an ethics approval or clinical-validity check.
+
+
+- [Utility-based operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) documents the cost-sensitivity method for missed forecast windows versus alert burden. The calibration evaluator now computes scenarios on the untouched patient-disjoint Set-A holdout only; default cost ratios are illustrative, no threshold is selected from Set B, and full-cohort integrated utility output still needs to be run and reviewed.
