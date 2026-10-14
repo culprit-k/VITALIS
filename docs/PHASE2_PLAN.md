@@ -23,4 +23,6 @@ Phase 2 investigates whether the Phase 1 ranking is stable and whether model pro
 
 - Added `src/vitalis/calibration.py` with aggregate calibration and missingness summaries.
 - Added unit tests for valid output, invalid probabilities, single-class samples, and aggregate missingness ordering.
-- Full data execution and held-out calibration analysis are still pending; helper tests alone are not evidence of model calibration.
+- Added `scripts/evaluate_calibration_robustness.py` to generate matched patient-disjoint splits, train the three feature variants, fit optional recalibration on validation patients only, and export aggregate test calibration and split-specific missingness summaries.
+- GitHub Actions passed after correcting a numerical edge case where logistic recalibration could round probabilities to exactly 0 or 1.
+- The full local dataset run is still pending; CI tests validate code behavior, not empirical calibration.
