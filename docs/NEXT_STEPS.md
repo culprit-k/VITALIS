@@ -39,11 +39,11 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). Aggregate-metric
 
 - [x] Added an aggregate-only dataset integrity checker and unit tests: `scripts/check_dataset_integrity.py` and `tests/test_dataset_integrity.py`.
 - [x] Ran the checker over all 20,336 `training_setA` patient files: 790,215 rows; 17,136 positive challenge-label rows; zero invalid target rows, empty files, or column-set mismatches. See [integrity audit JSON](../results/phase3_training_setA_integrity_audit.json).
-- [ ] Direct execution of the checked-in full-cohort model CLI and strict source-byte verification remain open; a separate full-cohort calibration attempt exceeded the five-minute execution window and did not produce a result artifact.
+- [ ] Direct execution of the checked-in full-cohort model CLI and strict source-byte verification remain open. A full-cohort calibration run exceeded the five-minute execution window without an artifact; a second full-cohort seed-123 static/temporal attempt also timed out before completing and is not counted as a result. The existing seed-42 full-cohort result remains a separate optimized local harness run, not a checked-in CLI execution.
 
 ## Next software/research actions
 
-1. Confirm CI for the new dataset-integrity checker and the latest leakage/evaluation tests.
+1. Make the full-cohort model runner operational within a bounded runtime, with cached feature matrices or incremental processing and explicit CLI arguments for split seed/output path; then rerun matched static/temporal models on multiple patient-disjoint seeds.
 2. Finish strict source/blob identity verification for the Phase 2 mirrored runner; aggregate-metric reconciliation is recorded.
 3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); aggregate-metric reconciliation is documented, while strict byte-for-byte source identity remains open.
 4. Expanded robustness grid completed locally: median imputation with/without missingness indicators and raw/Platt/isotonic calibration. See [aggregate summary](../results/phase2_robustness_grid_summary.json). Do not interpret lower Brier/log loss after Platt scaling as proof of clinical calibration.
