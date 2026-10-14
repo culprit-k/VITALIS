@@ -82,3 +82,17 @@ python scripts/evaluate_horizon_calibration.py \\
 ```
 
 The evaluator output must remain aggregate-only. The cost proxy omits treatment harms, alarm fatigue, staffing, delayed treatment, patient preferences, and competing outcomes. Cost ratios need independent clinical/statistical justification. Set A holdout rankings are development evidence only; after a policy is frozen, a **new independent cohort** is needed for final evaluation. Previously inspected Set B results must not be reused to select a threshold.
+
+
+## Utility-based operating-point cost sensitivity (15 October 2026)
+
+The evaluator now computes cost-sensitivity summaries on the **untouched patient-disjoint Set-A operating-point holdout only**. Set B remains final evaluation only and is never used to rank or select thresholds.
+
+The predeclared threshold grid is 0.001, 0.005, 0.01, 0.05, 0.5. The default illustrative missed-window cost scenarios are 1, 5, 10, 20 units per missed forecast-positive window, relative to an alert cost of 1 unit per alert. These values are engineering sensitivity scenarios, not clinician-elicited or validated costs. The CLI allows explicit replacement of the scenarios and alert-cost unit.
+
+For each candidate, the aggregate output reports row sensitivity/PPV, alerts per at-risk patient-day, forecast-positive-window coverage, missed forecast-positive windows, and label-relative warning time. The scenario ranking minimizes:
+
+    (missed_window_cost * missed_windows + alert_cost * all_alerts)
+    / eligible_at_risk_patient_days
+
+This proxy counts all alerts toward burden and does not label alerts outside positive windows as verified clinical false alarms. A lowest-cost threshold is only a development candidate under that particular assumed cost ratio; it is not a clinical recommendation. Do not tune costs or thresholds after inspecting Set B and report that same Set B as unbiased evaluation. A new independent cohort is required after any policy is frozen.
