@@ -114,7 +114,9 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - Platt recalibration substantially reduced Brier scores versus raw class-weighted scores, but Set-B calibrated Brier scores remained slightly worse than the constant-prevalence reference for all six model/horizon combinations. Adequate calibration is not established.
 - At a calibrated threshold of 0.005, 6-hour forecast-window coverage was approximately 97–98% with about 4 alerts per at-risk patient-day. This trade-off is descriptive and does not establish a clinical alarm policy.
 - Focused local suite passed: 9 tests. GitHub Actions run #564 is pending at [the current PR head](https://github.com/culprit-k/VITALIS/actions/runs/38622090252).
-- Next research milestone: patient-cluster uncertainty intervals for calibrated probability metrics and a predeclared utility-based operating-point framework using development data. Do not select thresholds on Set B.
+- Added `src/vitalis/calibration_uncertainty.py` and integrated patient-cluster percentile-bootstrap intervals into the horizon calibration runner for Brier score, log loss, mean predicted probability, fixed-bin ECE, Brier-minus-prevalence-reference, and paired calibrated-minus-raw Brier difference. The default is 200 patient-cluster replicates.
+- Added four focused tests for reproducibility, metric parity, invalid inputs, patient-block boundaries, and aggregate-only output. Local available suite: 13 tests passed; GitHub Actions for the runner/test commit is pending.
+- Next: run the updated full-cohort uncertainty workflow in bounded invocations, inspect interval estimates, and define a utility-based operating-point framework on development data. Do not select thresholds on Set B.
 
 **Interpretation boundary:** the Challenge label uses a six-hour lead convention, so forecasts concern Challenge-label-window entry rather than independently observed biological sepsis onset. VITALIS remains research-only, not clinically validated, and not for patient care.
 
