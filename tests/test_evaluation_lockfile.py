@@ -51,6 +51,15 @@ def valid_lockfile():
             "refractory_hours": 6,
             "threshold_selection_frozen": True,
         },
+        "utility_policy": {
+            "cost_definition": "missed cost * missed windows + alert cost * all alerts",
+            "alert_cost": 1.0,
+            "missed_window_costs_relative_to_one_alert": [1, 10, 100],
+            "primary_cost_scenario": "100",
+            "selection_rule": "Choose lowest cost per patient-day on Set-A holdout",
+            "candidate_selection_cohort": "Patient-disjoint Set-A operating-point holdout only; never Set B",
+            "clinical_cost_justification": "Exploratory assumption pending independent clinical/statistical review",
+        },
         "approvals": approvals,
     }
 
@@ -108,3 +117,28 @@ def test_rejects_malformed_model_commit_and_artifact_hashes():
     assert any("environment_lock_hash must be a 64-character hexadecimal digest" in e for e in errors)
     assert any("feature_schema_hash must be a 64-character hexadecimal digest" in e for e in errors)
     assert any("model_artifact_hash must be a 64-character hexadecimal digest" in e for e in errors)
+
+
+def test_rejects_missing_or_unpredeclared_utility_policy():
+    data = valid_lockfile()
+    data["utility_policy"]["missed_window_costs_relative_to_one_alert"] = ["TODO"]
+    data["utility_policy"]["selection_rule"] = "TODO: decide later"
+    errors = MOD.validate_lockfile(data)
+    assert any("missed_window_costs_relative_to_one_alert" in e for e in errors)
+    assert any("utility_policy.selection_rule" in e for e in errors)
+
+
+def test_rejects_set_b_utility_candidate_selection():
+    data = valid_lockfile()
+    data["utility_policy"]["candidate_selection_cohort"] = "Use Set B to select threshold"
+    errors = MOD.validate_lockfile(data)
+    assert any("cannot use Set B" in e for e in errors)
+
+
+def test_rejects_nonpositive_or_nonfinite_cost_assumptions():
+    data = valid_lockfile()
+    data["utility_policy"]["alert_cost"] = 0
+    data["utility_policy"]["missed_window_costs_relative_to_one_alert"] = [1, float("inf")]
+    errors = MOD.validate_lockfile(data)
+    assert any("alert_cost must be a positive finite number" in e for e in errors)
+    assert any("missed_window_costs_relative_to_one_alert" in e for e in errors)
