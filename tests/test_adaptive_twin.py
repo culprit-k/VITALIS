@@ -54,6 +54,26 @@ def test_missing_channels_reduce_coverage_and_prevent_scoring():
     assert result["state"] == "insufficient_data"
 
 
+def test_missing_sample_breaks_consecutive_deviation_streak():
+    t = twin()
+    warm(t)
+    t.update({"heart_rate": 110, "spo2": 90, "respiratory_rate": 28})
+    t.update({"heart_rate": 111, "spo2": 91, "respiratory_rate": 29})
+    assert t.states["heart_rate"].consecutive_deviations == 2
+    t.update({"heart_rate": None, "spo2": 91, "respiratory_rate": 29})
+    assert t.states["heart_rate"].consecutive_deviations == 0
+
+
+def test_trajectory_reports_direction_after_first_eligible_score():
+    t = twin()
+    warm(t)
+    first = t.update({"heart_rate": 70, "spo2": 98, "respiratory_rate": 16})
+    second = t.update({"heart_rate": 110, "spo2": 90, "respiratory_rate": 28})
+    assert first["trajectory_direction"] is None
+    assert second["trajectory_direction"] == "rising"
+    assert second["trajectory_delta"] > 0
+
+
 def test_reset_prevents_patient_state_carryover():
     t = twin()
     warm(t)
