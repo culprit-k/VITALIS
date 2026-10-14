@@ -277,3 +277,11 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Further investigate large availability shifts among features retained by the policy; finite-value rates alone do not establish comparable measurement practice or missingness mechanisms.
 - [ ] Full clean-checkout provenance remains open because GitHub DNS was unavailable during local execution; the sensitivity wrapper itself is local-only and is not a checked-in CLI. VITALIS remains research-only.
 
+## Reproducible feature-availability audit CLI (14 October 2026)
+
+- [x] Added `scripts/audit_feature_availability.py`, which reads local feature caches in bounded chunks, validates cache dimensions/schema, and writes aggregate finite-value counts/rates only.
+- [x] Added unit tests for finite counts, cohort shift reporting, schema/shape errors, and threshold validation: `tests/test_feature_availability_audit.py`.
+- [x] Added a runbook: [reproducing the feature-availability audit](REPRODUCING_FEATURE_AVAILABILITY_AUDIT.md).
+- [ ] Confirm GitHub Actions on the current PR head before treating this step as CI-verified.
+- [ ] When feasible, compare the CLI's aggregate output against the previously recorded audit JSON using local caches; keep raw caches and all row-level data outside Git.
+- [ ] This audit is descriptive only. Do not use Set B to select features, tune models, or choose thresholds; no clinical validity or utility claim follows.
