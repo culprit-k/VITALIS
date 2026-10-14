@@ -117,8 +117,8 @@ def validate_lockfile(data: dict[str, Any]) -> list[str]:
     if not isinstance(utility, dict):
         errors.append("utility_policy must be an object")
     else:
-        for key in ("cost_definition", "primary_cost_scenario", "selection_rule",
-                    "candidate_selection_cohort", "clinical_cost_justification"):
+        for key in ("cost_definition", "selection_rule", "candidate_selection_cohort",
+                    "clinical_cost_justification"):
             value = utility.get(key)
             if not isinstance(value, str) or not value.strip() or value.strip().lower().startswith(("todo", "tbd", "placeholder")):
                 errors.append(f"utility_policy.{key} must be a specific predeclared string")
@@ -131,6 +131,11 @@ def validate_lockfile(data: dict[str, Any]) -> list[str]:
             for cost in missed_costs
         ) or len(set(missed_costs)) != len(missed_costs):
             errors.append("utility_policy.missed_window_costs_relative_to_one_alert must be a nonempty list of unique positive finite numbers")
+        primary_cost = utility.get("primary_cost_scenario")
+        if isinstance(primary_cost, bool) or not isinstance(primary_cost, (int, float)) or not 0 < primary_cost < float("inf"):
+            errors.append("utility_policy.primary_cost_scenario must be a positive finite number")
+        elif isinstance(missed_costs, list) and primary_cost not in missed_costs:
+            errors.append("utility_policy.primary_cost_scenario must be included in missed_window_costs_relative_to_one_alert")
         cohort_rule = utility.get("candidate_selection_cohort")
         if isinstance(cohort_rule, str):
             normalized_rule = " ".join(cohort_rule.lower().replace("-", " ").split())
