@@ -213,5 +213,16 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added `scripts/evaluate_cross_cohort_recalibration.py` with explicit cache/seed/output arguments, patient-disjoint 60/20/20 set-A partitions, validation-only Platt fitting, chunked set-B scoring, and aggregate-only output.
 - [x] Added `tests/test_cross_cohort_recalibration.py` for patient isolation, deterministic splits, validation-only recalibrator inputs, invalid-input handling, and aggregate-only metrics.
 - [x] Documented the reproduction command in [the cross-cohort recalibration report](CROSS_COHORT_RECALIBRATION_PILOT.md).
-- [ ] GitHub Actions checks for the new runner and tests are pending; confirm both are green before treating the implementation milestone as complete.
+- [x] GitHub Actions passed for the checked-in runner and regression tests (run https://github.com/culprit-k/VITALIS/actions/runs/38583831584). This verifies the software tests, not exact reproduction of the local aggregate results.
 - [ ] Execute the checked-in runner from an exact repository checkout against local set-A/set-B caches and reconcile its aggregate output against the prior reconstructed-harness artifact. Do not claim exact source reproduction until that run is performed.
+
+
+## Current handover checkpoint — cross-cohort recalibration (14 October 2026)
+
+- [x] Confirmed the latest main-branch workflow run for `Track checked-in cross-cohort recalibration runner` completed successfully: https://github.com/culprit-k/VITALIS/actions/runs/38583831584.
+- [x] Confirmed the preceding documentation update workflow also passed: https://github.com/culprit-k/VITALIS/actions/runs/38583816179.
+- [x] The checked-in runner uses patient-disjoint 60/20/20 partitions in set A, fits Platt recalibration on set-A validation predictions only, scores set B in chunks, and writes aggregate-only results. Set B is not used for fitting or threshold selection.
+- [ ] Run `scripts/evaluate_cross_cohort_recalibration.py` from a byte-identical checkout against the local set-A and set-B caches; compare the resulting aggregate JSON against `results/cross_cohort_validation_A_recalibration_test_B_3seed_2026-10-14.json`. Current local network DNS has prevented establishing source-byte identity, so do not claim exact reproduction yet.
+- [ ] Add paired patient-cluster uncertainty intervals for cross-cohort results using held-out set-B predictions, while keeping score vectors and patient group IDs outside Git. Preserve split-specific results and avoid treating three seed SDs as confidence intervals.
+- [ ] Audit subgroup performance and calibration without using set B to tune model or recalibrator. Suppress small cells and frame results as exploratory.
+- [ ] Document the final pre-specified evaluation protocol and obtain statistical/clinical governance review before any prospective or patient-facing study. VITALIS remains research-only.
