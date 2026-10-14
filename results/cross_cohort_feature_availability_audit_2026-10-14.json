@@ -1,0 +1,328 @@
+{
+  "project": "VITALIS",
+  "date": "2026-10-14",
+  "audit": "descriptive finite-value availability across cached hourly rows",
+  "cohorts": {
+    "set_a": {
+      "patients": 20336,
+      "rows": 790215,
+      "positive_hourly_labels": 17136,
+      "feature_columns": 109
+    },
+    "set_b": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780,
+      "feature_columns": 109
+    }
+  },
+  "threshold_definition": "absolute difference in finite-value row rate >= 0.05",
+  "features_all_missing_in_A_but_observed_in_B": [
+    {
+      "feature": "EtCO2",
+      "set_a_finite_rows": 0,
+      "set_b_finite_rows": 57636,
+      "set_b_finite_rate": 0.0756383
+    },
+    {
+      "feature": "EtCO2_lag1",
+      "set_a_finite_rows": 0,
+      "set_b_finite_rows": 56837,
+      "set_b_finite_rate": 0.0745897
+    },
+    {
+      "feature": "EtCO2_delta1",
+      "set_a_finite_rows": 0,
+      "set_b_finite_rows": 51766,
+      "set_b_finite_rate": 0.0679348
+    },
+    {
+      "feature": "EtCO2_rollmean6",
+      "set_a_finite_rows": 0,
+      "set_b_finite_rows": 73733,
+      "set_b_finite_rate": 0.0967631
+    }
+  ],
+  "features_all_missing_in_B_but_observed_in_A": [],
+  "feature_rate_shifts_at_least_5pp": [
+    [
+      "DBP_rollmean6",
+      0.565103,
+      0.965531,
+      0.400428
+    ],
+    [
+      "HCO3_rollmean6",
+      0.380741,
+      0.00499,
+      -0.375751
+    ],
+    [
+      "DBP",
+      0.518742,
+      0.860554,
+      0.341812
+    ],
+    [
+      "DBP_lag1",
+      0.509407,
+      0.839076,
+      0.329669
+    ],
+    [
+      "BaseExcess_rollmean6",
+      0.333943,
+      0.006395,
+      -0.327548
+    ],
+    [
+      "FiO2_rollmean6",
+      0.411978,
+      0.097137,
+      -0.314841
+    ],
+    [
+      "DBP_delta1",
+      0.488735,
+      0.771333,
+      0.282598
+    ],
+    [
+      "pH_rollmean6",
+      0.370632,
+      0.093148,
+      -0.277484
+    ],
+    [
+      "PaCO2_rollmean6",
+      0.324639,
+      0.093375,
+      -0.231265
+    ],
+    [
+      "Unit1",
+      0.511317,
+      0.703679,
+      0.192363
+    ],
+    [
+      "Unit2",
+      0.511317,
+      0.703679,
+      0.192363
+    ],
+    [
+      "Glucose_rollmean6",
+      0.495876,
+      0.68417,
+      0.188293
+    ],
+    [
+      "Hct_rollmean6",
+      0.497005,
+      0.314616,
+      -0.182389
+    ],
+    [
+      "Resp_delta1",
+      0.835059,
+      0.679124,
+      -0.155934
+    ],
+    [
+      "FiO2",
+      0.14193,
+      0.022585,
+      -0.119344
+    ],
+    [
+      "FiO2_lag1",
+      0.140097,
+      0.02234,
+      -0.117757
+    ],
+    [
+      "Resp",
+      0.902232,
+      0.788611,
+      -0.11362
+    ],
+    [
+      "Resp_lag1",
+      0.881082,
+      0.768727,
+      -0.112355
+    ],
+    [
+      "BaseExcess",
+      0.104251,
+      0.002315,
+      -0.101936
+    ],
+    [
+      "BaseExcess_lag1",
+      0.10309,
+      0.00228,
+      -0.10081
+    ],
+    [
+      "Glucose",
+      0.122316,
+      0.221602,
+      0.099286
+    ],
+    [
+      "EtCO2_rollmean6",
+      0,
+      0.096763,
+      0.096763
+    ],
+    [
+      "Glucose_lag1",
+      0.120589,
+      0.216966,
+      0.096377
+    ],
+    [
+      "Potassium_rollmean6",
+      0.471516,
+      0.376407,
+      -0.095109
+    ],
+    [
+      "pH",
+      0.114671,
+      0.022255,
+      -0.092417
+    ],
+    [
+      "pH_lag1",
+      0.113255,
+      0.022033,
+      -0.091222
+    ],
+    [
+      "SaO2_rollmean6",
+      0.167489,
+      0.079003,
+      -0.088485
+    ],
+    [
+      "HCO3",
+      0.080506,
+      0.001852,
+      -0.078654
+    ],
+    [
+      "HCO3_lag1",
+      0.079275,
+      0.001823,
+      -0.077452
+    ],
+    [
+      "Chloride",
+      0.083239,
+      0.006154,
+      -0.077085
+    ],
+    [
+      "BUN_rollmean6",
+      0.386411,
+      0.309401,
+      -0.07701
+    ],
+    [
+      "Hgb_rollmean6",
+      0.395206,
+      0.318626,
+      -0.07658
+    ],
+    [
+      "EtCO2",
+      0,
+      0.075638,
+      0.075638
+    ],
+    [
+      "EtCO2_lag1",
+      0,
+      0.07459,
+      0.07459
+    ],
+    [
+      "EtCO2_delta1",
+      0,
+      0.067935,
+      0.067935
+    ],
+    [
+      "PaCO2",
+      0.087682,
+      0.022327,
+      -0.065355
+    ],
+    [
+      "PaCO2_lag1",
+      0.086688,
+      0.022099,
+      -0.064589
+    ],
+    [
+      "HR_delta1",
+      0.860277,
+      0.798625,
+      -0.061652
+    ],
+    [
+      "Hct",
+      0.117763,
+      0.058235,
+      -0.059528
+    ],
+    [
+      "WBC_rollmean6",
+      0.353424,
+      0.294736,
+      -0.058688
+    ],
+    [
+      "Hct_lag1",
+      0.116025,
+      0.0574,
+      -0.058625
+    ],
+    [
+      "Creatinine_rollmean6",
+      0.36753,
+      0.30962,
+      -0.05791
+    ],
+    [
+      "MAP_delta1",
+      0.822456,
+      0.766371,
+      -0.056084
+    ],
+    [
+      "Platelets_rollmean6",
+      0.353332,
+      0.297741,
+      -0.055591
+    ],
+    [
+      "Lactate_rollmean6",
+      0.127987,
+      0.075854,
+      -0.052133
+    ]
+  ],
+  "interpretation": [
+    "Descriptive hourly-row availability audit; rows are correlated within patients.",
+    "Set B availability is evaluation-only characterization and must not be used to tune features, models, or thresholds.",
+    "Features entirely missing in Set A cannot have learnable coefficients under Set-A-only fitting.",
+    "Availability differences do not establish measurement comparability, predictive value, clinical utility, or transportability."
+  ],
+  "row_level_data_exported": false,
+  "model_fitted": false,
+  "set_b_used_for_tuning": false
+}
