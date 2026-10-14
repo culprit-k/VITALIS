@@ -35,9 +35,15 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). Aggregate-metric
 - [x] Added regression tests for overlapping patient splits and threshold/alert-burden calculations; CI verification pending for the latest commits.
 - [ ] Revisit the chronological-row assumption if any new data loader or dataset format is introduced.
 
+## Full-cohort data-integrity gate (2026-10-14)
+
+- [x] Added an aggregate-only dataset integrity checker and unit tests: `scripts/check_dataset_integrity.py` and `tests/test_dataset_integrity.py`.
+- [x] Ran the checker over all 20,336 `training_setA` patient files: 790,215 rows; 17,136 positive challenge-label rows; zero invalid target rows, empty files, or column-set mismatches. See [integrity audit JSON](../results/phase3_training_setA_integrity_audit.json).
+- [ ] Direct execution of the checked-in full-cohort model CLI and strict source-byte verification remain open; a separate full-cohort calibration attempt exceeded the five-minute execution window and did not produce a result artifact.
+
 ## Next software/research actions
 
-1. Confirm the latest CI runs for the calibration, split-isolation, and alert-burden regression tests.
+1. Confirm CI for the new dataset-integrity checker and the latest leakage/evaluation tests.
 2. Finish strict source/blob identity verification for the Phase 2 mirrored runner; aggregate-metric reconciliation is recorded.
 3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); aggregate-metric reconciliation is documented, while strict byte-for-byte source identity remains open.
 4. Expanded robustness grid completed locally: median imputation with/without missingness indicators and raw/Platt/isotonic calibration. See [aggregate summary](../results/phase2_robustness_grid_summary.json). Do not interpret lower Brier/log loss after Platt scaling as proof of clinical calibration.
