@@ -5,7 +5,7 @@
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
 **Last verified branch head before this status document:** `ce824a6d01bc463600ba2ef65b73bce23bc43647`
-**Latest branch head checked during this update:** `e01751ddc81c5c000db4b1a29d76a45f0347fe35` (documentation-only commits after the successful code-bearing CI run).
+**Latest branch head checked during this update:** `fde3fd0af080a2f234c0518c7ca5204aecec1aa1` (documentation-only commits after the successful code-bearing CI run on `270a73db22426c7f1a4b3526dc310b3bae977d2b`).
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -32,6 +32,8 @@ PR #1 remains **open, draft, and unmerged**. It should stay that way until the o
 - Completed 1,000-replicate paired patient-cluster bootstrap summaries for static-versus-temporal comparisons, for all three seeds and both raw and Set-A-validation-Platt-recalibrated probabilities.
 - Re-ran the checked-in recalibration runner against existing local feature caches and reconciled its aggregate metrics with the previous source-verified artifact to floating-point precision.
 - Added reports explaining the experiment, uncertainty, provenance, privacy boundary, and remaining release blockers.
+- Added an initial streaming adaptive physiological twin (`src/vitalis/adaptive_twin.py`) with causal robust baselines, multisystem deviation aggregation, an EWMA trajectory score and direction, coverage checks, persistence, and suppression of baseline updates for large deviations. Added a timestamped/unit-checked stream adapter (`src/vitalis/stream.py`), a deterministic synthetic demonstration, focused tests, and algorithm documentation. These are software components for research, not clinical prediction or a validated digital twin.
+- GitHub Actions passed after the new code and tests were added on commit `270a73db22426c7f1a4b3526dc310b3bae977d2b`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38611810692). Later commits in this update are documentation-only; clean-checkout verification remains pending.
 - Verified a successful GitHub Actions test run on code-bearing commit `a0103df503a574f097045a34062e5f3abf229b60`: [workflow run](https://github.com/culprit-k/VITALIS/actions/runs/38608383356). A later documentation-only commit (`ce824a6d01bc463600ba2ef65b73bce23bc43647`) recorded that result. This does **not** mean CI has been verified on every subsequent documentation commit.
 
 ## 4. What do the results mean?
