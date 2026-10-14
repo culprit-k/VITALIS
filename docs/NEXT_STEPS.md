@@ -579,3 +579,15 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before any research release.
 
 **Boundary:** this tooling is a preventive/detection gate. It does not prove that sensitive data was never exposed, and it does not change or rewrite repository history automatically.
+
+
+## Phase 11: automated repository-history privacy gate (15 October 2026)
+
+- [x] Confirmed the current PR workflow checks out full Git history (fetch-depth: 0), runs current-tree data-artifact hygiene, and invokes scripts/audit_git_history.py across commits/blobs reachable from fetched refs.
+- [x] The current PR-head workflow passed on fb58d0fecacd741a3755d932fc423315ce5c2d6b: [GitHub Actions run 38634604467](https://github.com/culprit-k/VITALIS/actions/runs/38634604467). The job completed compile checks, current-tree hygiene, reachable-history audit, synthetic stream smoke test, and **164 tests passed**.
+- [x] The history-audit command returned success, meaning no findings matched its configured data-artifact, oversized-blob, or high-confidence credential patterns in the refs scanned by that run.
+- [ ] Treat this as a heuristic gate only. Confirm that all relevant refs/tags were fetched, manually triage any future finding, and retain independent provider secret scanning and privacy review.
+- [ ] Complete the full-cohort reproduction from a clean checkout and fresh caches on a machine with GitHub network access. The current runtime still cannot resolve github.com; the successful GitHub Actions checkout validates CI, not the local full-cohort reproduction.
+- [ ] Obtain independent clinical/statistical review of endpoint semantics, cost assumptions, and model/threshold policy; obtain required governance/ethics determination and a genuinely new independent cohort before external/prospective evaluation.
+
+**Current decision:** the utility-analysis implementation and automated software/privacy checks are in place, but the independent-evaluation and clean-reproduction gates remain open. Keep PR #1 draft and unmerged. VITALIS remains research-only and is not clinically validated.
