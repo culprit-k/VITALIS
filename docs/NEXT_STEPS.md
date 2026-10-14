@@ -171,5 +171,15 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Kept the combined-cohort experiment distinct from the [train-A/test-B cross-cohort experiment](FULL_COHORT_CROSS_COHORT_RESULTS.md); the latter is the stronger cohort-shift check.
 - [x] Documented that model fitting capped training data at 500,000 sampled hourly rows per split and that the local evaluator was not byte-verified against the exact GitHub source.
 - [ ] Execute both-cohort and cross-cohort experiments from an exact repository checkout and reconcile aggregate metrics against these reports.
-- [ ] Add patient-cluster uncertainty intervals for the combined A+B held-out comparisons from securely retained local scores, if the results will be used for a formal report.
+- [x] Added paired patient-cluster percentile-bootstrap intervals (200 replicates per split) for combined A+B held-out comparisons; aggregate-only artifact and interpretation are in [the combined-cohort report](FULL_AB_COMBINED_RESULTS.md) and [bootstrap JSON](../results/full_AB_combined_paired_bootstrap_200x3_2026-10-14.json). Score archives remain outside Git.
 - [ ] Investigate calibration, subgroup robustness, alert burden at clinically justified thresholds, and cohort shift under statistical/clinical supervision. No patient-facing use before external/prospective validation and governance review.
+
+
+## Combined A+B paired uncertainty analysis (2026-10-14)
+
+- [x] Regenerated held-out static and temporal scores for the three combined-cohort split seeds from local caches; retained score archives locally only.
+- [x] Completed 200 paired patient-cluster bootstrap replicates per seed and committed aggregate-only intervals in [results/full_AB_combined_paired_bootstrap_200x3_2026-10-14.json](../results/full_AB_combined_paired_bootstrap_200x3_2026-10-14.json).
+- [x] Documented conditional intervals in [the combined-cohort report](FULL_AB_COMBINED_RESULTS.md): AUROC and AUPRC differences were positive and Brier differences negative across all three splits.
+- [ ] Exact source-byte identity for model fitting and held-out score generation remains unresolved; local runner copies were reconstructed from checked-in logic. Do not describe these as exact-checkout reproductions.
+- [ ] Run the full combined-cohort and train-A/test-B analyses from an exact repository checkout with local data, then reconcile aggregate outputs.
+- [ ] Investigate calibration, cohort shift, subgroup robustness, and alert burden under clinical/statistical supervision. No patient-facing use before external/prospective validation and governance review.
