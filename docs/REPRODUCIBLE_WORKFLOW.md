@@ -38,13 +38,15 @@ python scripts/train_baseline.py /path/to/psv_files --temporal --seed 42 --outpu
 
 The script uses patient-level group splits, training-only preprocessing, and a fixed 0.5 reference threshold. The validation split is reserved for later threshold selection; the current script deliberately does not tune the test threshold. Temporal features use current and prior observations only.
 
-## 6. Run a matched static-versus-temporal comparison
+## 6. Run a matched three-model comparison
 
 ```bash
 python scripts/compare_models.py /path/to/psv_files --seed 42 --output outputs/model_comparison.json
 ```
 
-The comparison runs both variants with the same deterministic patient split strategy and reports temporal-minus-static metric deltas. Deltas are descriptive; they do not establish clinical benefit.
+The comparison runs static, temporal, and patient-baseline-deviation variants with the same deterministic patient split strategy. It reports temporal-minus-static and personalized-minus-temporal metric deltas. Deltas are descriptive; they do not establish clinical benefit.
+
+The personalized variant combines temporal features with causal expanding-median personal baselines, deviations, and robust normalized deviations. See [VITALIS-PB algorithm specification](VITALIS_PB_ALGORITHM.md). Run it alone with `--temporal --personalized` on `train_baseline.py`. This is an experimental feature generator, not a clinical score.
 
 The training report includes 95% patient-cluster bootstrap intervals for held-out row-level metrics (200 patient-resampling replicates by default). Intervals express between-patient sampling uncertainty; they do not make row-level results event-level metrics.
 
