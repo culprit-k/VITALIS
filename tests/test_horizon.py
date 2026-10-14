@@ -14,11 +14,11 @@ def test_future_target_uses_only_next_rows_and_excludes_current_positive_and_tai
     result = build_future_challenge_targets(labels, patients, horizon_hours=2)
 
     # Patient a contributes source rows 0, 1, 2; rows 3-6 are positive or tail.
-    # Patient b is shorter than the horizon plus one, so it contributes no rows.
-    assert result.row_indices.tolist() == [0, 1, 2]
-    assert result.targets.tolist() == [0, 1, 1]
-    assert result.patient_ids.tolist() == ["a", "a", "a"]
-    assert result.patient_time_indices.tolist() == [0, 1, 2]
+    # Patient b contributes its first row; the remaining two rows form the full future window.
+    assert result.row_indices.tolist() == [0, 1, 2, 7]
+    assert result.targets.tolist() == [0, 1, 1, 0]
+    assert result.patient_ids.tolist() == ["a", "a", "a", "b"]
+    assert result.patient_time_indices.tolist() == [0, 1, 2, 0]
 
 
 def test_future_target_never_crosses_patient_boundary():
