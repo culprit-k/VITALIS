@@ -386,3 +386,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Obtain independent clinical/statistical review of split and label semantics, calibration interpretation, domain shift, bootstrap estimand, and the exploratory 5% feature-coverage rule.
 - [ ] Review full repository history for accidentally committed sensitive artifacts/secrets, address all reviewer findings, and rerun CI after any code changes.
 - [ ] Keep PR #1 draft and unmerged until the outstanding release gates are completed and an explicit merge decision is made. VITALIS remains research-only and is not clinically validated.
+
+
+## Exact-source rerun checkpoint (14 October 2026)
+
+- [x] Retried `git clone https://github.com/culprit-k/VITALIS.git`; it failed because the runtime could not resolve `github.com`. The fresh-clone gate remains open; do not call this a clean-checkout reproduction.
+- [x] Reran the exact-source recalibration runner separately for seeds 42, 123, and 2026 using the available local Set-A/Set-B feature caches and verified source blob hashes against the PR branch. All patient/row split counts matched the previous source-verified artifact; AUROC/AUPRC matched exactly at reported precision, with maximum absolute raw metric difference below 1e-12 and recalibrated difference below 5e-15.
+- [x] Added [the rerun reconciliation report](FRESH_SOURCE_RERUN_RECONCILIATION.md) and [aggregate-only JSON](../results/fresh_source_rerun_reconciliation_2026-10-14.json). Row-level score archives stayed outside the repository.
+- [ ] Complete a fresh clone and fresh cache build from authorized source data when network/DNS access permits; run the full current PR test suite from that checkout and record the checkout commit and clean status.
+- [ ] Obtain independent clinical/statistical review and perform a history-wide sensitive-artifact/secret audit before deciding whether to mark PR #1 ready or merge it.
