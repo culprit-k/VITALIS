@@ -161,7 +161,7 @@ def _predict(model, X, row_indices, feature_indices, chunk_rows):
     return result
 
 
-def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int, missed_window_costs: list[float] = (1.0, 10.0, 100.0, 500.0, 1000.0), alert_cost: float = 1.0):
+def evaluate_one(meta_a, Xa, ya, ga, meta_b, Xb, yb, gb, *, horizon: int, seed: int, chunk_rows: int, refractory_hours: int, bootstrap_replicates: int, missed_window_costs: list[float] = (1.0, 5.0, 10.0, 20.0), alert_cost: float = 1.0):
     target_a = build_future_challenge_targets(ya, ga, horizon)
     target_b = build_future_challenge_targets(yb, gb, horizon)
     columns = meta_a["columns"]
