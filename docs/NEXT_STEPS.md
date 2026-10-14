@@ -196,11 +196,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] External/prospective validation and clinical/statistical governance review remain required before patient-facing research.
 
 
-## Cross-cohort recalibration pilot (2026-10-14)
+## Cross-cohort recalibration (2026-10-14)
 
-- [x] Completed one exploratory split (seed 42): split set A patients into model-training, validation-only recalibration, and unused partitions; then evaluated the frozen recalibrator on all set B patients.
-- [x] Committed aggregate-only results: [seed 42 JSON](../results/cross_cohort_validation_A_recalibration_test_B_seed42_2026-10-14.json) and [pilot report](CROSS_COHORT_RECALIBRATION_PILOT.md).
-- [x] Kept set B entirely out of model fitting, recalibrator fitting, and threshold selection.
-- [ ] Repeat the same pre-specified procedure for seeds 123 and 2026 and add uncertainty estimates; the seed-42 result alone is not enough to claim transportable calibration.
-- [ ] Exact source-byte identity for the local experimental harness remains unresolved; do not call this an exact-checkout reproduction.
+- [x] Completed validation-only Platt recalibration on patient-disjoint set A validation partitions and evaluated frozen recalibrators on all set B patients for seeds 42, 123, and 2026.
+- [x] Committed aggregate-only three-seed results: [JSON](../results/cross_cohort_validation_A_recalibration_test_B_3seed_2026-10-14.json) and [report](CROSS_COHORT_RECALIBRATION_PILOT.md).
+- [x] Kept set B out of model fitting, recalibrator fitting, and threshold selection.
+- [x] Recalibrated Brier score and log loss were substantially lower across all three seeds; AUROC/AUPRC were essentially unchanged. These are benchmark results, not proof of clinical calibration.
+- [ ] Add a parameterized checked-in runner for the exact train/validation/test protocol and regression tests proving patient separation and that set B is never used to fit calibration.
+- [ ] Run that committed runner from an exact repository checkout and reconcile aggregate results; current local harness source identity is unverified.
 - [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
