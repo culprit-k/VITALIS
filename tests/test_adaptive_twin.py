@@ -133,3 +133,15 @@ def test_reference_baseline_remains_separate_from_rolling_baseline():
     result = t.update({"heart_rate": 70, "spo2": 98})
     assert result["channels"]["heart_rate"]["reference_baseline"] == 70
     assert result["channels"]["heart_rate"]["baseline"] == 70
+
+
+def test_scale_floor_can_be_configured_per_channel():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "spo2"],
+        scale_floors={"heart_rate": 1.0},
+        config=TwinConfig(min_history=3, history_window=6, min_channels=2, min_systems=2),
+    )
+    for _ in range(3):
+        t.update({"heart_rate": 70, "spo2": 98})
+    result = t.update({"heart_rate": 71, "spo2": 98})
+    assert result["channels"]["heart_rate"]["reference_z_score"] == 1.0
