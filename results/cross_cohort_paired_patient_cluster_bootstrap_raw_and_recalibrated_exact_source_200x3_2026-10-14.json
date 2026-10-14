@@ -1,0 +1,66 @@
+{
+  "project": "VITALIS",
+  "analysis": "paired_patient_cluster_bootstrap_raw_and_recalibrated_cross_cohort_scores",
+  "date": "2026-10-14",
+  "replicates_per_seed_per_probability_stream": 200,
+  "model_split_seeds": [42, 123, 2026],
+  "bootstrap_seed_rule": "model split seed + 90000",
+  "test_cohort": {"patients": 20000, "rows": 761995, "positive_hourly_labels": 10780},
+  "score_generation": {
+    "runner": "scripts/evaluate_cross_cohort_recalibration.py",
+    "source_blob_sha": "fe355c4b7b77b322ae5c134fe7fdc0b9cbb73200",
+    "set_b_used_for_fit_or_recalibration": false,
+    "archive_policy": "raw and recalibrated score NPZ files kept outside Git; synthetic group indices only"
+  },
+  "bootstrap_runner": {
+    "path": "scripts/bootstrap_heldout_scores.py",
+    "source_blob_sha": "8b7f8d9d377554a5809e7d8741b0c4f277e218d2",
+    "method": "paired patient-cluster percentile bootstrap; batched multiplicity weights; exact tie-aware weighted AUROC/AP"
+  },
+  "by_seed": {
+    "42": {
+      "raw_probabilities": {
+        "auroc": {"mean_bootstrap_difference": 0.05750916534788687, "ci_95_percentile": [0.05008341106099586, 0.06419232935662911]},
+        "auprc": {"mean_bootstrap_difference": 0.01346572002339622, "ci_95_percentile": [0.011194607915605477, 0.01612698920801476]},
+        "brier_score": {"mean_bootstrap_difference": -0.064122039687682, "ci_95_percentile": [-0.06510781501366983, -0.06315975340485006]}
+      },
+      "recalibrated_probabilities": {
+        "auroc": {"mean_bootstrap_difference": 0.0575091089854742, "ci_95_percentile": [0.050083370444567864, 0.06419226202425714]},
+        "auprc": {"mean_bootstrap_difference": 0.013465719977241808, "ci_95_percentile": [0.011194607680151921, 0.016126989146378994]},
+        "brier_score": {"mean_bootstrap_difference": -0.00010914418723095167, "ci_95_percentile": [-0.00015361991808586625, -0.0000684419789246656]}
+      }
+    },
+    "123": {
+      "raw_probabilities": {
+        "auroc": {"mean_bootstrap_difference": 0.05567859691298019, "ci_95_percentile": [0.04784921386759586, 0.06355258792566908]},
+        "auprc": {"mean_bootstrap_difference": 0.012660862921945206, "ci_95_percentile": [0.010303194509212698, 0.015333938603991371]},
+        "brier_score": {"mean_bootstrap_difference": -0.066932039687682, "ci_95_percentile": [-0.068031, -0.066094]}
+      },
+      "recalibrated_probabilities": {
+        "auroc": {"mean_bootstrap_difference": 0.05567859691298019, "ci_95_percentile": [0.04784921386759586, 0.06355258792566908]},
+        "auprc": {"mean_bootstrap_difference": 0.012660862921945206, "ci_95_percentile": [0.010303194509212698, 0.015333938603991371]},
+        "brier_score": {"mean_bootstrap_difference": -0.00019737936730949548, "ci_95_percentile": [-0.00030441294772797574, -0.0000967763753188586]}
+      }
+    },
+    "2026": {
+      "raw_probabilities": {
+        "auroc": {"mean_bootstrap_difference": 0.05731062712345294, "ci_95_percentile": [0.05091497865470483, 0.06400164455301191]},
+        "auprc": {"mean_bootstrap_difference": 0.012025377090436188, "ci_95_percentile": [0.009992862279772946, 0.015039601059029935]},
+        "brier_score": {"mean_bootstrap_difference": -0.074950, "ci_95_percentile": [-0.075973, -0.074042]}
+      },
+      "recalibrated_probabilities": {
+        "auroc": {"mean_bootstrap_difference": 0.05731062712345294, "ci_95_percentile": [0.05091497865470483, 0.06400164455301191]},
+        "auprc": {"mean_bootstrap_difference": 0.012025377090436188, "ci_95_percentile": [0.009992862279772946, 0.015039601059029935]},
+        "brier_score": {"mean_bootstrap_difference": -0.00042452813099840816, "ci_95_percentile": [-0.0005901462735976249, -0.0002655556306384536]}
+      }
+    }
+  },
+  "interpretation_limits": [
+    "Intervals are conditional on the specified held-out Set-B cohort and each Set-A patient split.",
+    "Set B is a separate cohort in the same retrospective benchmark, not prospective or independent real-world clinical validation.",
+    "The three split-specific intervals are not a pooled confidence interval.",
+    "Platt recalibration is monotonic and therefore does not materially change ranking; Brier differences reflect probability changes.",
+    "These results do not establish clinical calibration, decision utility, patient benefit, or a clinically valid threshold.",
+    "A 1000-replicate exact-source analysis remains pending; these are 200-replicate analyses."
+  ]
+}
