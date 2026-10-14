@@ -62,3 +62,14 @@ This checklist assesses readiness for a **research-code release**, not for clini
 - [ ] Keep PR #1 draft and unmerged until the outstanding reproduction and independent-review gates are addressed.
 
 **Conclusion:** the utility framework is implemented and tested as a research sensitivity-analysis tool. Clinical utility, an appropriate cost ratio, and a clinically acceptable alert threshold remain unestablished.
+
+
+## Follow-up checkpoint: automated history audit (15 October 2026)
+
+- [x] Verified the current workflow checks out full history, runs current-tree artifact hygiene, and executes the reachable-history scanner. The current PR-head run [38634604467](https://github.com/culprit-k/VITALIS/actions/runs/38634604467) passed, including **164 tests**.
+- [x] The history-audit step returned success with no matches for the scanner's configured forbidden data-artifact paths, oversized blobs, or high-confidence credential patterns across the refs scanned by CI.
+- [x] The run validates the automation and current scanned history only. It does not prove that no sensitive information was ever exposed, does not replace provider secret scanning, and depends on which refs were fetched.
+- [ ] Complete a clean local checkout and fresh-cache full-cohort reproduction. An attempted clone in the current runtime failed because github.com could not be resolved; the CI checkout is not a substitute for reproducing the official-cohort analysis from a fresh local cache.
+- [ ] Obtain independent clinical/statistical review of label semantics, cost scenarios, calibration interpretation, and any proposed frozen policy. A new independent cohort and applicable governance/ethics approvals are required before external or prospective evaluation.
+
+**Decision remains unchanged:** research-code gates are improving, but clean-checkout reproduction and independent review remain open. Keep PR #1 draft and unmerged; do not interpret CI success as clinical validation.
