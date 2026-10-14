@@ -86,7 +86,7 @@
     "missed_window_costs_relative_to_one_alert": [
       "TODO: predeclared positive numeric scenarios"
     ],
-    "primary_cost_scenario": "TODO: one prespecified scenario selected before outcome access",
+    "primary_cost_scenario": "TODO: positive numeric value included in missed_window_costs_relative_to_one_alert",
     "selection_rule": "TODO: exact rule for choosing a development candidate on Set A only",
     "candidate_selection_cohort": "TODO: patient-disjoint Set A operating-point holdout; never Set B",
     "clinical_cost_justification": "TODO: independent clinical/statistical rationale or explicitly exploratory-only status"
