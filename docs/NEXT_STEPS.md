@@ -23,7 +23,7 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). Aggregate-metric
 
 - [x] Added aggregate calibration and predictor-missingness helper functions with unit tests: [Phase 2 plan](PHASE2_PLAN.md).
 - [x] GitHub Actions passed for the Phase 2 helper tests and runner (latest verified run: https://github.com/culprit-k/VITALIS/actions/runs/38549292731).
-- [x] Execute runner logic mirrored from checked-in source on the local dataset and reconcile aggregate outputs; split counts and feature counts match, with small metric differences documented in the closeout report. The local equivalent's reliability-bin calculation is being aligned to the repository helper. Strict byte-for-byte source verification remains blocked by local DNS.
+- [x] Execute runner logic mirrored from checked-in source on the local dataset and reconcile aggregate outputs; split counts and feature counts match, with small metric differences documented in the closeout report. The repository helper assigns reliability bins using original probabilities; the corrected local aggregate artifact records that convention. Strict byte-for-byte source verification remains blocked by local DNS.
 - [x] Run held-out calibration and split-specific missingness diagnostics; recalibration was fit on validation data only. Results are exploratory and show unstable recalibration.
 - [x] Run an exploratory age/gender and missingness-stratified audit with small-cell suppression; see the Phase 2 results report. Results are unstable and not fairness/safety evidence.
 - [ ] Consider full-cohort execution only after exact runner reconciliation and memory/runtime checks; external validation remains separate.
@@ -31,9 +31,9 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). Aggregate-metric
 
 ## Next software/research actions
 
-1. Confirm CI and test the new calibration helpers.
+1. Add regression tests for probability boundaries, reliability-bin coverage, invalid inputs, and empty missingness summaries.
 2. Finish strict source/blob identity verification for the Phase 2 mirrored runner; aggregate-metric reconciliation is recorded.
-3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); the local equivalent runner completed, but the canonical repository runner still needs an exact local reconciliation.
+3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); aggregate-metric reconciliation is documented, while strict byte-for-byte source identity remains open.
 4. Expanded robustness grid completed locally: median imputation with/without missingness indicators and raw/Platt/isotonic calibration. See [aggregate summary](../results/phase2_robustness_grid_summary.json). Do not interpret lower Brier/log loss after Platt scaling as proof of clinical calibration.
 5. Obtain clinical/statistical supervision and governance review before any prospective or patient-facing research.
 
