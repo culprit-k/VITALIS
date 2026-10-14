@@ -1,5 +1,7 @@
 # VITALIS next steps and current status
 
+> For a plain-language overview of the current stage, findings, limitations, and ordered release gates, see [PROJECT_STATUS.md](PROJECT_STATUS.md).
+
 ## Phase 1 status: completed within exploratory scope
 
 - [x] Established research repository, dataset protocol, model card, baseline pipeline, tests, and reproducible workflow.
