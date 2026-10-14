@@ -51,6 +51,7 @@ python scripts/train_baseline.py /path/to/psv_files --temporal --personalized --
 python scripts/compare_models.py /path/to/psv_files --output outputs/model_comparison.json
 python scripts/run_subset_experiment.py /path/to/psv_files --sample-size 1500 --sampling-seed 2026 --split-seed 42 --output outputs/subset_comparison.json
 python scripts/train_horizon_model.py /path/to/psv_files --horizons 1 3 6 --seed 42 --threshold 0.5 --refractory-hours 6 --bootstrap-replicates 200 --output outputs/horizon_forecast_summary.json
+python scripts/evaluate_horizon_cross_cohort.py --set-a-cache /path/outside/repo/cache_set_a --set-b-cache /path/outside/repo/cache_set_b --horizons 1 3 6 --seeds 42 123 2026 --threshold 0.5 --refractory-hours 6 --bootstrap-replicates 200 --output /path/outside/repo/horizon_cross_cohort.json
 ```
 
 Run the synthetic streaming demonstration of the adaptive physiological twin:
@@ -67,7 +68,7 @@ For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit ru
 
 - [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.\n- `src/vitalis/stream.py` adds a timestamped input contract with unit checks, freshness handling, quality flags, out-of-order rejection, and session reset; device-specific acquisition is still future work.
 - [VITALIS-PB research specification](docs/VITALIS_PB_ALGORITHM.md) defines the separate retrospective patient-baseline feature experiment.
-- The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** itself estimate a calibrated clinical risk.\n- `scripts/train_horizon_model.py` adds separate 1-, 3-, and 6-hour future-Challenge-label forecasting experiments with patient-disjoint splits and patient-level warning-burden metrics. These horizons refer to entry into the challenge-positive label window, not independently observed sepsis onset. See [Horizon forecasting protocol](docs/HORIZON_FORECASTING.md).
+- The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** itself estimate a calibrated clinical risk.\n- `scripts/train_horizon_model.py` adds separate 1-, 3-, and 6-hour future-Challenge-label forecasting experiments with patient-disjoint splits and patient-level warning-burden metrics. `scripts/evaluate_horizon_cross_cohort.py` trains on a patient-disjoint Set A subset and evaluates all eligible Set B patients, with Set B used only for final evaluation. These horizons refer to entry into the challenge-positive label window, not independently observed sepsis onset. See [Horizon forecasting protocol](docs/HORIZON_FORECASTING.md) and [cross-cohort execution checklist](docs/HORIZON_CROSS_COHORT_EXECUTION.md).
 
 ## Data safety and label semantics
 
