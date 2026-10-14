@@ -62,3 +62,13 @@ No custom hardware purchases are recommended from these results alone. Sensor se
 ## Safety boundary
 
 VITALIS is not validated for diagnosis, triage, treatment, or real patient-care decisions. No patient-level records or predictions belong in this public repository.
+
+
+## Full-cohort multi-seed exploratory comparison (2026-10-14)
+
+- [x] Evaluated static and temporal logistic-regression models on all of training_setA using local optimized/cached-feature harnesses for split seeds 42, 123, and 2026. Aggregate report: [full-cohort multi-seed results](FULL_COHORT_MULTISEED_RESULTS.md), [aggregate JSON](../results/full_cohort_multiseed_summary_2026-10-14.json).
+- [x] Recorded the mean and sample standard deviation across three split seeds; these SDs are not confidence intervals.
+- [x] Recorded the source-provenance caveat: these are not byte-verified executions of the checked-in full-cohort CLI.
+- [ ] Build and test a repository-native, cache-backed multi-seed runner with explicit seed/output arguments, bounded memory, and aggregate-only output; then verify it against these local results.
+- [ ] Add paired patient-cluster uncertainty intervals across matched test predictions from each seed; current multi-seed summary cannot estimate paired differences because only aggregate outputs were retained for seeds 123 and 2026.
+- [ ] Perform external validation and obtain clinical/statistical supervision before any prospective or patient-facing study.
