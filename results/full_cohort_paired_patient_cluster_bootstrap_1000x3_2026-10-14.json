@@ -1,0 +1,119 @@
+{
+  "project": "VITALIS",
+  "run_type": "full_cohort_paired_patient_cluster_bootstrap_three_seeds_1000",
+  "dataset": {
+    "patients": 20336,
+    "hourly_rows": 790215,
+    "positive_hourly_labels": 17136
+  },
+  "method": "Paired patient-cluster percentile bootstrap with patient multiplicity weights and batched tie-aware weighted AUROC, average precision, and Brier calculations.",
+  "replicates_per_seed": 1000,
+  "seeds": [
+    {
+      "model_split_seed": 42,
+      "bootstrap_seed": 90042,
+      "test_patients": 4068,
+      "test_rows": 159102,
+      "positive_hourly_labels": 3411,
+      "elapsed_bootstrap_seconds": 28.187007665634155,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.025002562812489967,
+          "ci_95_percentile": [
+            0.015042657485109398,
+            0.03513852284625876
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.0070074911163042495,
+          "ci_95_percentile": [
+            0.002192494794686528,
+            0.01543206461386218
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.008856331719573077,
+          "ci_95_percentile": [
+            -0.010750265406178362,
+            -0.00706440161527564
+          ]
+        }
+      }
+    },
+    {
+      "model_split_seed": 123,
+      "bootstrap_seed": 90123,
+      "test_patients": 4068,
+      "test_rows": 160217,
+      "positive_hourly_labels": 3557,
+      "elapsed_bootstrap_seconds": 27.407655715957,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.026426040495783253,
+          "ci_95_percentile": [
+            0.01688104951339863,
+            0.036822354898945295
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.0011108356157639317,
+          "ci_95_percentile": [
+            -0.0040920776055404975,
+            0.00669571782243407
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.0066250267981754355,
+          "ci_95_percentile": [
+            -0.008669489340875827,
+            -0.004712566612543625
+          ]
+        }
+      }
+    },
+    {
+      "model_split_seed": 2026,
+      "bootstrap_seed": 92026,
+      "test_patients": 4068,
+      "test_rows": 155703,
+      "positive_hourly_labels": 3470,
+      "elapsed_bootstrap_seconds": 26.987650156021118,
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.025668398619566993,
+          "ci_95_percentile": [
+            0.01447502619343555,
+            0.036779842372239656
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.004211292730238304,
+          "ci_95_percentile": [
+            -0.0001852642451640969,
+            0.00895236459607319
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.007939720383310837,
+          "ci_95_percentile": [
+            -0.009846117732986685,
+            -0.0060996120731062675
+          ]
+        }
+      }
+    }
+  ],
+  "provenance": {
+    "heldout_score_generation": "Local reconstructed evaluator matching the checked-in algorithm; not a byte-identical repository checkout.",
+    "bootstrap_implementation": "Batched local implementation; checked-in runner has scikit-learn parity and deterministic tests passing in GitHub Actions.",
+    "patient_level_scores_committed": false,
+    "raw_data_committed": false
+  },
+  "interpretation": "Conditional intervals for each held-out split separately. Temporal-minus-static AUROC is positive and Brier difference negative in all three splits. AUPRC intervals cross zero for seeds 123 and 2026. This is retrospective hourly challenge-label analysis, not external validation or clinical event-level performance.",
+  "limitations": [
+    "Strict byte-for-byte source identity for model fitting/score generation remains unverified.",
+    "No external or prospective validation.",
+    "Threshold 0.5 is not a clinically selected operating point.",
+    "Do not pool split-specific intervals as if they were independent replications of a clinical trial."
+  ]
+}
