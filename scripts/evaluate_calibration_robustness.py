@@ -35,7 +35,7 @@ def _fit_recalibrator(y_validation: np.ndarray, p_validation: np.ndarray):
 def _apply_recalibrator(model, probability: np.ndarray) -> np.ndarray:
     p = np.clip(np.asarray(probability, dtype=float), 1e-6, 1 - 1e-6)
     logits = np.log(p / (1 - p)).reshape(-1, 1)
-    return model.predict_proba(logits)[:, 1]
+    return np.clip(model.predict_proba(logits)[:, 1], 1e-6, 1 - 1e-6)
 
 
 def evaluate(data_dir: Path, sample_size: int | None, sampling_seed: int,
