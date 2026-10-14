@@ -561,7 +561,7 @@ The next implementation layer has now been added on the existing research branch
 - [x] Add \`scripts/check_repository_hygiene.py\` to fail CI when the current working tree contains common data/cache/model-artifact extensions or files larger than 5 MiB.
 - [x] Add regression tests for forbidden extensions, oversized files, invalid inputs, and ignored Git/cache directories in \`tests/test_repository_hygiene.py\`.
 - [x] Run the guard in GitHub Actions before the test suite.
-- [ ] Confirm the new CI run passes on the latest code-bearing head.
+- [x] Confirmed CI passed on PR head `86776762479dd450e20821da8e6f0b50c482e21d` (run [38639673606](https://github.com/culprit-k/VITALIS/actions/runs/38639673606)); the repository-artifact hygiene step passed.
 - [ ] Separately complete a history-wide privacy/secret audit. This guard checks the current tree only and does not prove that sensitive artifacts were never committed in earlier revisions.
 - [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before considering a research release.
 
@@ -574,7 +574,7 @@ The next implementation layer has now been added on the existing research branch
 - [x] Add regression tests for a deleted data-file path, a synthetic credential pattern, an oversized historical blob, shallow-clone rejection, and invalid repository roots.
 - [x] Configure CI checkout to fetch full history and run the audit alongside the current-tree hygiene guard.
 - [x] Document scope, safe triage, and incident-response boundaries in [Git-history privacy audit](GIT_HISTORY_PRIVACY_AUDIT.md).
-- [ ] Confirm CI audit output and triage any findings before claiming the history is clean. A scan failure may represent historical paths or oversized files requiring review, not necessarily a credential leak.
+- [x] Confirmed the CI reachable-history audit passed on PR head `86776762479dd450e20821da8e6f0b50c482e21d` (run [38639673606](https://github.com/culprit-k/VITALIS/actions/runs/38639673606)): 563 commits, 544 unique blobs, and zero configured-pattern findings in fetched refs.
 - [ ] Complete a separate manual/GitHub security review; the scanner is heuristic and does not replace provider secret scanning.
 - [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before any research release.
 
