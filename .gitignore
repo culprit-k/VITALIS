@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+.venv/
+venv/
+
+# Local data and outputs (never commit patient-level data)
+data/
+datasets/
+outputs/
+artifacts/
+*.psv
+*.parquet
+*.feather
+*.sqlite
+*.db
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
