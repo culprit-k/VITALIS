@@ -78,6 +78,6 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 
 - [x] Added `scripts/build_feature_cache.py` to build a local memory-mapped feature cache in patient-index chunks; raw dataset and cache must remain outside Git.
 - [x] Added `scripts/evaluate_cached_multiseed.py` to evaluate patient-disjoint splits and write aggregate-only results for multiple seeds.
-- [x] Added metric tests for the cached evaluator: `tests/test_cached_multiseed.py`.
-- [ ] Run the repository-native scripts against the full local dataset and compare their outputs with [the prior exploratory summary](FULL_COHORT_MULTISEED_RESULTS.md). Prior results came from local optimized harnesses; source-level equivalence has not yet been verified.
+- [x] Added metric tests for the cached evaluator: `tests/test_cached_multiseed.py`; GitHub Actions passed for the test and runner commits (runs 38558602303, 38558586454, and 38558571408).
+- [ ] Run the repository-native scripts against the full local dataset and compare their outputs with [the prior exploratory summary](FULL_COHORT_MULTISEED_RESULTS.md). Prior results came from local optimized harnesses; source-level equivalence has not yet been verified. The latest documentation CI run passed: https://github.com/culprit-k/VITALIS/actions/runs/38558700926.
 - [ ] Ensure the cache is complete before evaluation: every chunk marker must exist, and metadata must match the dataset file list. Do not commit cache files, row-level predictions, or patient identifiers.
