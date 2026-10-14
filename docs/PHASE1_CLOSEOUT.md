@@ -56,7 +56,7 @@ SD is variability across three split seeds, **not a confidence interval**. Paire
 
 ## Reproducibility artifacts
 
-- Aggregate experiment JSON: [phase1_500_patient_three_seed_summary.json](../results/phase1_500_patient_three_seed_summary.json)
+- Reproduction runner: [run_phase1_repeated_comparison.py](../scripts/run_phase1_repeated_comparison.py)\n- Aggregate experiment JSON: [phase1_500_patient_three_seed_summary.json](../results/phase1_500_patient_three_seed_summary.json)\n- Reproduce locally: `python scripts/run_phase1_repeated_comparison.py /path/to/training_setA --sample-size 500 --sampling-seed 20261014 --split-seeds 42 123 2026 --bootstrap-replicates 200 --output results/phase1_reproduction.json`
 - Algorithm specification: [VITALIS-PB algorithm](VITALIS_PB_ALGORITHM.md)
 - Evaluation plan: [model evaluation plan](MODEL_EVALUATION.md)
 - Dataset protocol: [cohort protocol](COHORT_PROTOCOL.md)
