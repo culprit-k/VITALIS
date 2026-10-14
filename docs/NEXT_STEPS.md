@@ -460,3 +460,13 @@ The next implementation layer has now been added on the existing research branch
 - At the fixed 0.5 threshold, PPV remained very low and alert burden high; neither model should be promoted as a clinical alert policy.
 - Class-weighted model probabilities were not calibrated; Brier scores were much worse than a constant-prevalence predictor. A training-only calibration protocol and independent statistical review remain required.
 - See [full results and limitations](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) and the committed [aggregate-only result JSON](../results/horizon_cross_cohort_2026-10-14.json). Raw caches and individual predictions were not uploaded.
+
+### Horizon calibration results (2026-10-15)
+
+- [x] Completed all nine horizon × seed combinations on the verified full Set A and Set B caches: 18 static/temporal model fits, 217.7 seconds summed runtime, and zero captured fit warnings.
+- [x] Added [aggregate-only calibration metrics](../results/horizon_calibration_summary_2026-10-15.json) and the [calibration/operating-point report](HORIZON_CALIBRATION_RESULTS_2026-10-15.md); updated the [protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [x] Used patient-disjoint Set A 60/20/20 training/calibration/untouched-holdout partitions. Platt recalibration was fit only on Set A calibration patients. Set B remained final evaluation only and no threshold was selected from it.
+- [x] Recalibration greatly reduced raw class-weighted Brier scores. However, calibrated Set-B Brier scores remained slightly worse than the constant-prevalence reference for every horizon/model pair; probabilities are not established as adequate clinical risk estimates.
+- [ ] Next: add patient-cluster uncertainty intervals for calibrated probability metrics and define a utility-based operating-point framework on development data. Keep Set B untouched for threshold selection and independent validation claims.
+- [ ] Independent clinical/statistical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
+
