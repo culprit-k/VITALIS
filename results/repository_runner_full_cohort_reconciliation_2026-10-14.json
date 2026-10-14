@@ -1,0 +1,296 @@
+{
+  "project": "VITALIS",
+  "run_type": "full_cohort_cached_feature_matrix_multiseed_reconciliation",
+  "dataset": {
+    "partition": "training_setA",
+    "patients": 20336,
+    "hourly_rows": 790215,
+    "positive_hourly_labels": 17136,
+    "feature_cache": {
+      "rows": 790215,
+      "features": 109,
+      "groups": 20336,
+      "positive_hourly_labels": 17136,
+      "chunks_completed": [
+        "0:5000",
+        "5000:10000",
+        "10000:15000",
+        "15000:20336"
+      ]
+    }
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "patient_disjoint_splits": true,
+    "split_method": "Two-stage GroupShuffleSplit; 20% test, then 20% validation of remaining patients",
+    "model": "Logistic regression, median imputation, missingness indicators, standard scaling, class_weight=balanced, max_iter=500",
+    "threshold": 0.5,
+    "temporal_features": "Per-patient prior-row lag, one-step difference, trailing six-row mean",
+    "aggregation": "Mean and sample standard deviation across split seeds; SD is not a confidence interval."
+  },
+  "runs": [
+    {
+      "seed": 42,
+      "patient_counts": {
+        "train": 13014,
+        "validation": 3254,
+        "test": 4068
+      },
+      "row_counts": {
+        "train": 505825,
+        "validation": 125288,
+        "test": 159102
+      },
+      "positive_rows": {
+        "train": 11007,
+        "validation": 2718,
+        "test": 3411
+      },
+      "models": {
+        "static": {
+          "auroc": 0.7623354697524292,
+          "auprc": 0.07767507764572511,
+          "brier_score": 0.19027581116186243,
+          "sensitivity": 0.6341248900615655,
+          "specificity": 0.7563892582101727,
+          "ppv": 0.05395225861165848,
+          "npv": 0.9895135743754779
+        },
+        "temporal": {
+          "auroc": 0.7872536751127859,
+          "auprc": 0.084196978821625,
+          "brier_score": 0.18138944740778012,
+          "sensitivity": 0.6845499853415421,
+          "specificity": 0.7538393356070678,
+          "ppv": 0.057427447122479096,
+          "npv": 0.9909153847452762
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "patient_counts": {
+        "train": 13014,
+        "validation": 3254,
+        "test": 4068
+      },
+      "row_counts": {
+        "train": 503908,
+        "validation": 126090,
+        "test": 160217
+      },
+      "positive_rows": {
+        "train": 11002,
+        "validation": 2577,
+        "test": 3557
+      },
+      "models": {
+        "static": {
+          "auroc": 0.7643256217136895,
+          "auprc": 0.09413823232238272,
+          "brier_score": 0.1927850517230081,
+          "sensitivity": 0.6578577452909755,
+          "specificity": 0.7489786799438274,
+          "ppv": 0.056162246489859596,
+          "npv": 0.9897344625143397
+        },
+        "temporal": {
+          "auroc": 0.7906037675497662,
+          "auprc": 0.09521671532932847,
+          "brier_score": 0.18617547397820808,
+          "sensitivity": 0.6856901883609784,
+          "specificity": 0.7433039703817184,
+          "ppv": 0.057182378730687176,
+          "npv": 0.9904902861420163
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "patient_counts": {
+        "train": 13014,
+        "validation": 3254,
+        "test": 4068
+      },
+      "row_counts": {
+        "train": 509074,
+        "validation": 125438,
+        "test": 155703
+      },
+      "positive_rows": {
+        "train": 10979,
+        "validation": 2687,
+        "test": 3470
+      },
+      "models": {
+        "static": {
+          "auroc": 0.7618504934353718,
+          "auprc": 0.0819798075147334,
+          "brier_score": 0.18525034473927318,
+          "sensitivity": 0.6380403458213256,
+          "specificity": 0.7626730078235336,
+          "ppv": 0.05774196072294813,
+          "npv": 0.9892978868438991
+        },
+        "temporal": {
+          "auroc": 0.7873873132174097,
+          "auprc": 0.08628558149138209,
+          "brier_score": 0.17733285260066486,
+          "sensitivity": 0.6613832853025937,
+          "specificity": 0.7599469234660028,
+          "ppv": 0.05909008985813229,
+          "npv": 0.9899455777656079
+        }
+      }
+    }
+  ],
+  "aggregate_metrics": {
+    "static": {
+      "auroc": {
+        "mean": 0.7628371949671635,
+        "sample_sd_across_seeds": 0.0013116253816761304,
+        "by_seed": {
+          "42": 0.7623354697524292,
+          "123": 0.7643256217136895,
+          "2026": 0.7618504934353718
+        }
+      },
+      "auprc": {
+        "mean": 0.08459770582761374,
+        "sample_sd_across_seeds": 0.008538085801824942,
+        "by_seed": {
+          "42": 0.07767507764572511,
+          "123": 0.09413823232238272,
+          "2026": 0.0819798075147334
+        }
+      },
+      "brier_score": {
+        "mean": 0.1894370692080479,
+        "sample_sd_across_seeds": 0.0038367392902701153,
+        "by_seed": {
+          "42": 0.19027581116186243,
+          "123": 0.1927850517230081,
+          "2026": 0.18525034473927318
+        }
+      },
+      "sensitivity": {
+        "mean": 0.6433409937246223,
+        "sample_sd_across_seeds": 0.01272339402365091,
+        "by_seed": {
+          "42": 0.6341248900615655,
+          "123": 0.6578577452909755,
+          "2026": 0.6380403458213256
+        }
+      },
+      "specificity": {
+        "mean": 0.7560136486591779,
+        "sample_sd_across_seeds": 0.006854886280626681,
+        "by_seed": {
+          "42": 0.7563892582101727,
+          "123": 0.7489786799438274,
+          "2026": 0.7626730078235336
+        }
+      },
+      "ppv": {
+        "mean": 0.055952155274822064,
+        "sample_sd_across_seeds": 0.0019035661958690239,
+        "by_seed": {
+          "42": 0.05395225861165848,
+          "123": 0.056162246489859596,
+          "2026": 0.05774196072294813
+        }
+      },
+      "npv": {
+        "mean": 0.989515307911239,
+        "sample_sd_across_seeds": 0.00021829299774580484,
+        "by_seed": {
+          "42": 0.9895135743754779,
+          "123": 0.9897344625143397,
+          "2026": 0.9892978868438991
+        }
+      }
+    },
+    "temporal": {
+      "auroc": {
+        "mean": 0.7884149186266539,
+        "sample_sd_across_seeds": 0.0018967760784840278,
+        "by_seed": {
+          "42": 0.7872536751127859,
+          "123": 0.7906037675497662,
+          "2026": 0.7873873132174097
+        }
+      },
+      "auprc": {
+        "mean": 0.08856642521411186,
+        "sample_sd_across_seeds": 0.005853232802515209,
+        "by_seed": {
+          "42": 0.084196978821625,
+          "123": 0.09521671532932847,
+          "2026": 0.08628558149138209
+        }
+      },
+      "brier_score": {
+        "mean": 0.18163259132888435,
+        "sample_sd_across_seeds": 0.004426322111123807,
+        "by_seed": {
+          "42": 0.18138944740778012,
+          "123": 0.18617547397820808,
+          "2026": 0.17733285260066486
+        }
+      },
+      "sensitivity": {
+        "mean": 0.6772078196683714,
+        "sample_sd_across_seeds": 0.013716301675438688,
+        "by_seed": {
+          "42": 0.6845499853415421,
+          "123": 0.6856901883609784,
+          "2026": 0.6613832853025937
+        }
+      },
+      "specificity": {
+        "mean": 0.7523634098182631,
+        "sample_sd_across_seeds": 0.008419069992699167,
+        "by_seed": {
+          "42": 0.7538393356070678,
+          "123": 0.7433039703817184,
+          "2026": 0.7599469234660028
+        }
+      },
+      "ppv": {
+        "mean": 0.05789997190376619,
+        "sample_sd_across_seeds": 0.0010379307241537318,
+        "by_seed": {
+          "42": 0.057427447122479096,
+          "123": 0.057182378730687176,
+          "2026": 0.05909008985813229
+        }
+      },
+      "npv": {
+        "mean": 0.9904504162176334,
+        "sample_sd_across_seeds": 0.00048613126067561374,
+        "by_seed": {
+          "42": 0.9909153847452762,
+          "123": 0.9904902861420163,
+          "2026": 0.9899455777656079
+        }
+      }
+    }
+  },
+  "reconciliation": {
+    "aggregate_results_reproduced": true,
+    "important_caveat": "Local working copies were reconstructed from checked-in runner logic but are not byte-identical to the GitHub blobs. This is not strict source-byte verification.",
+    "previous_summary_comparison": "AUROC/AUPRC/Brier values match the earlier recorded three-seed summary to displayed precision.",
+    "per_seed_evaluation": "Each seed was executed separately to remain within execution time limits; all three per-seed output artifacts were written."
+  },
+  "limitations": [
+    "Retrospective internal dataset only; no external or prospective validation.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or clinical false-alarm rates.",
+    "Threshold 0.5 is a research comparison threshold, not a clinically selected operating point.",
+    "Temporal features assume file rows are chronological hourly observations.",
+    "No patient-level predictions or raw patient records were exported."
+  ]
+}
