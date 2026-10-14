@@ -36,3 +36,17 @@ A paired patient-cluster bootstrap using the same 200 resampled test-patient set
 - This is retrospective evaluation on one dataset, not external or prospective validation. Do not claim clinical readiness, novelty, or patentability from these results.
 
 See [structured JSON results](../results/full_cohort_rerun_2026-10-14.json) and the [local experiment history](LOCAL_EXPERIMENTS.md).
+
+
+## Independent dataset integrity audit (2026-10-14)
+
+The full `training_setA` partition was independently re-read file-by-file using the new aggregate integrity checker. The checker completed in approximately 31 seconds in the local environment and reported:
+
+- 20,336 patient files and 790,215 hourly rows.
+- 17,136 positive challenge-label rows across 1,790 files.
+- Zero invalid/missing/non-binary target rows and zero empty files.
+- Zero files with a mismatched column set; 41 columns in the union.
+- 22,102,799 missing cells across the input tables.
+- Patient files ranged from 8 to 336 rows.
+
+Aggregate-only artifact: [training_setA integrity audit](../results/phase3_training_setA_integrity_audit.json). The checker does not export file names, patient rows, or predictions. This validates basic input integrity only; it does not resolve the separate direct canonical-CLI/source-identity limitation or establish model performance.
