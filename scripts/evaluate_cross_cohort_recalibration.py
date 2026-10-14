@@ -83,6 +83,15 @@ def patient_disjoint_three_way_split(y: np.ndarray, groups: np.ndarray, seed: in
     return train_idx, val_idx, unused_idx
 
 
+def validate_local_score_archive_dir(directory: Path, repository_root: Path) -> Path:
+    """Resolve a score archive directory and reject paths inside the repository."""
+    resolved = directory.expanduser().resolve()
+    root = repository_root.resolve()
+    if resolved == root or root in resolved.parents:
+        raise ValueError("local score archives must be stored outside the repository")
+    return resolved
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--set-a-cache", type=Path, required=True)
@@ -90,9 +99,19 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, nargs="+", default=[42, 123, 2026])
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--predict-chunk-rows", type=int, default=50000)
+    ap.add_argument("--local-score-archive-dir", type=Path, default=None,
+                     help="Optional local-only directory outside the repository for row-level NPZ scores")
     args = ap.parse_args()
     if args.predict_chunk_rows < 1:
         ap.error("--predict-chunk-rows must be positive")
+    if args.local_score_archive_dir is not None:
+        try:
+            args.local_score_archive_dir = validate_local_score_archive_dir(
+                args.local_score_archive_dir, Path(__file__).resolve().parents[1]
+            )
+        except ValueError as exc:
+            ap.error(str(exc))
+        args.local_score_archive_dir.mkdir(parents=True, exist_ok=True)
 
     ma = json.loads((args.set_a_cache / "meta.json").read_text())
     mb = json.loads((args.set_b_cache / "meta.json").read_text())
@@ -137,6 +156,7 @@ def main() -> None:
             "set_b_used_for_fit_or_recalibration": False,
             "models": {},
         }
+        score_vectors = {}
         for name, ix in feature_sets:
             model = make_pipeline(
                 SimpleImputer(strategy="median", add_indicator=True),
@@ -155,6 +175,7 @@ def main() -> None:
                 raw_parts.append(raw)
                 recal_parts.append(apply_platt_recalibrator(recalibrator, raw))
             raw_b, recal_b = np.concatenate(raw_parts), np.concatenate(recal_parts)
+            score_vectors[name] = {"raw": raw_b, "recalibrated": recal_b}
             run["models"][name] = {
                 "fit_warnings": [str(w.message) for w in caught],
                 "raw_set_b": probability_metrics(yb, raw_b),
@@ -167,6 +188,19 @@ def main() -> None:
                 f"recal_Brier={run['models'][name]['recalibrated_set_b']['brier_score']:.5f}",
                 flush=True,
             )
+        if args.local_score_archive_dir is not None:
+            # Cache patient identifiers are replaced with synthetic contiguous group indices.
+            _, synthetic_groups = np.unique(gb, return_inverse=True)
+            for stream in ("raw", "recalibrated"):
+                archive_path = args.local_score_archive_dir / f"heldout_scores_seed_{seed}_{stream}.npz"
+                np.savez_compressed(
+                    archive_path,
+                    y=np.asarray(yb, dtype=np.int8),
+                    groups=synthetic_groups.astype(np.int32, copy=False),
+                    p_static=score_vectors["static"][stream],
+                    p_temporal=score_vectors["temporal"][stream],
+                )
+                print(f"wrote local-only {stream} score archive: {archive_path}", flush=True)
         runs.append(run)
 
     aggregate = {}
@@ -196,7 +230,8 @@ def main() -> None:
             "models": "static and temporal balanced logistic regression with median imputation, missingness indicators, and standard scaling",
             "recalibration": "one-dimensional logistic (Platt) recalibration fit on set A validation predictions only",
             "threshold_selection": "none",
-            "row_level_predictions_exported": False,
+            "row_level_predictions_exported": args.local_score_archive_dir is not None,
+            "row_level_prediction_archives": "local-only outside repository" if args.local_score_archive_dir is not None else "not exported",
         },
         "source_provenance": "Aggregate runner records intended protocol; exact-checkout data execution must be separately verified.",
         "aggregate_mean_and_sample_sd_across_seeds": aggregate,
