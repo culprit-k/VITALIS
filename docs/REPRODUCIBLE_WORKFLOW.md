@@ -38,7 +38,17 @@ python scripts/train_baseline.py /path/to/psv_files --temporal --seed 42 --outpu
 
 The script uses patient-level group splits, training-only preprocessing, and a fixed 0.5 reference threshold. The validation split is reserved for later threshold selection; the current script deliberately does not tune the test threshold. Temporal features use current and prior observations only.
 
-## 6. View aggregate results
+## 6. Run a matched static-versus-temporal comparison
+
+```bash
+python scripts/compare_models.py /path/to/psv_files --seed 42 --output outputs/model_comparison.json
+```
+
+The comparison runs both variants with the same deterministic patient split strategy and reports temporal-minus-static metric deltas. Deltas are descriptive; they do not establish clinical benefit.
+
+The training report also includes a refractory-period alert-burden summary and coverage of contiguous challenge-positive label episodes. These are label-window analyses, not true clinical event sensitivity or false-alarm rates, because the challenge label is not independently observed onset.
+
+## 7. View aggregate results
 
 Install the optional dashboard dependency and launch:
 
