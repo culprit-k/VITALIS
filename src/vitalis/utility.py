@@ -146,25 +146,31 @@ def patient_cluster_bootstrap_utility_uncertainty(
     threshold_values_sorted = threshold_values[sorted_order]
     costs = np.asarray(base["missed_window_cost_scenarios"], dtype=np.float64)
 
+    # This helper computes all patient summaries in one pass over the aligned
+    # cohort. Calling the public aggregate evaluator separately for every
+    # patient would repeat setup work thousands of times on the full cohort.
+    try:
+        from vitalis.horizon import _patient_summaries as summarize_patients
+    except ImportError:  # compatibility with the earlier reconstructed local runner
+        from vitalis.horizon import _summaries as summarize_patients
+
     per_threshold = []
     for threshold in threshold_values:
         patient_tp, patient_fp, patient_fn = [], [], []
         patient_hours, patient_alerts, patient_windows, patient_covered = [], [], [], []
-        for start, end in zip(boundaries[:-1], boundaries[1:]):
+        summaries = summarize_patients(y, p, groups, times, threshold=float(threshold),
+                                       refractory_hours=refractory_hours)
+        for (start, end), summary in zip(zip(boundaries[:-1], boundaries[1:]), summaries):
             yp = y[start:end].astype(np.int8, copy=False)
             pp = p[start:end]
             pred = pp >= threshold
             patient_tp.append(np.sum(pred & (yp == 1)))
             patient_fp.append(np.sum(pred & (yp == 0)))
             patient_fn.append(np.sum(~pred & (yp == 1)))
-            summary = evaluate_horizon_alerts(
-                yp, pp, groups[start:end], times[start:end],
-                threshold=float(threshold), refractory_hours=refractory_hours,
-            )
-            patient_hours.append(summary["eligible_hours"])
-            patient_alerts.append(summary["alerts_total"])
-            patient_windows.append(summary["future_positive_windows"])
-            patient_covered.append(summary["covered_future_positive_windows"])
+            patient_hours.append(summary["hours"])
+            patient_alerts.append(summary["alerts"])
+            patient_windows.append(summary["windows"])
+            patient_covered.append(summary["covered"])
         arrays = [np.asarray(v, dtype=np.float64) for v in (
             patient_tp, patient_fp, patient_fn, patient_hours, patient_alerts,
             patient_windows, patient_covered,
