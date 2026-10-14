@@ -72,3 +72,12 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [ ] Build and test a repository-native, cache-backed multi-seed runner with explicit seed/output arguments, bounded memory, and aggregate-only output; then verify it against these local results.
 - [ ] Add paired patient-cluster uncertainty intervals across matched test predictions from each seed; current multi-seed summary cannot estimate paired differences because only aggregate outputs were retained for seeds 123 and 2026.
 - [ ] Perform external validation and obtain clinical/statistical supervision before any prospective or patient-facing study.
+
+
+## Cache-backed reproducible multi-seed runner
+
+- [x] Added `scripts/build_feature_cache.py` to build a local memory-mapped feature cache in patient-index chunks; raw dataset and cache must remain outside Git.
+- [x] Added `scripts/evaluate_cached_multiseed.py` to evaluate patient-disjoint splits and write aggregate-only results for multiple seeds.
+- [x] Added metric tests for the cached evaluator: `tests/test_cached_multiseed.py`.
+- [ ] Run the repository-native scripts against the full local dataset and compare their outputs with [the prior exploratory summary](FULL_COHORT_MULTISEED_RESULTS.md). Prior results came from local optimized harnesses; source-level equivalence has not yet been verified.
+- [ ] Ensure the cache is complete before evaluation: every chunk marker must exist, and metadata must match the dataset file list. Do not commit cache files, row-level predictions, or patient identifiers.
