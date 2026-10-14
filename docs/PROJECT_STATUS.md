@@ -4,7 +4,7 @@
 **Repository:** `culprit-k/VITALIS`  
 **Working branch:** `work/exact-checkout-reproduction`  
 **Pull request:** [#1 — Source-verify cross-cohort recalibration and document reproduction](https://github.com/culprit-k/VITALIS/pull/1)  
-**Latest code-and-documentation head before this status update:** `6f47d6728ebd0297a8be9e62f6b58e17408ead5f`. GitHub Actions passed on that head (144 tests): https://github.com/culprit-k/VITALIS/actions/runs/38628552833.
+**Verified branch head at this status update:** `7c468f47d3054f4287765f162d5c675474f84a55`. GitHub Actions passed on this head (144 tests): https://github.com/culprit-k/VITALIS/actions/runs/38630587074. The PR remains open, draft, and unmerged.
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use its predictions to guide patient care.
 
@@ -161,3 +161,12 @@ An older reconstructed evaluation harness produced different metrics from the ch
 - Cost ratios are illustrative scenarios (1, 10, 100, 500, 1,000 missed-window cost units per alert-cost unit), not clinically elicited values. The cost-sensitive candidate threshold varies with assumed cost and sometimes across split seeds; no clinically appropriate threshold has been established.
 - Provenance caveat: the full-cohort run used a reconstructed local working copy and is not claimed as byte-identically verified execution of checked-in source. Utility-focused reruns used 20 bootstrap replicates for ancillary uncertainty summaries. Set B remained evaluation-only, and no raw data or row-level predictions were committed.
 - Remaining gates: independent clinician/statistician review, verified clean-checkout reproduction, a new independent evaluation cohort for any frozen policy, and prospective/governance validation. VITALIS remains research-only.
+
+
+## 9. Independent-evaluation readiness (15 October 2026)
+
+- Added [the independent-cohort evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md) and [utility-cost review checklist](UTILITY_COST_REVIEW_CHECKLIST.md). These documents define review and governance gates; they do not indicate that approvals, independent data, or clinical validation have been obtained.
+- The Set-A utility framework is integrated and has aggregate-only exploratory results. Its cost ratios are illustrative and threshold candidates are development-only. Set B has already been inspected and must not be reused for threshold selection.
+- The next actionable external dependency is independent clinical/statistical review, alongside clean-checkout/pinned-environment reproduction and a history-wide privacy/secret audit.
+- A genuinely new cohort with independently defined/adjudicated event timing, governance/ethics approvals, and a frozen model/policy is required before final external evaluation. Prospective studies need separate approvals.
+- No clinical operating point is approved. VITALIS remains research-only and must not guide patient care.
