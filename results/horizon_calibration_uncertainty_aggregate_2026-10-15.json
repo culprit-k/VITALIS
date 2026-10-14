@@ -1,0 +1,31 @@
+{
+  "project": "VITALIS",
+  "run_type": "patient_cluster_bootstrap_horizon_calibration_uncertainty",
+  "run_date": "2026-10-15",
+  "protocol": {
+    "horizons_hours": [1, 3, 6],
+    "seeds": [42, 123, 2026],
+    "bootstrap_replicates_per_seed_model_horizon": 200,
+    "bootstrap_unit": "whole patient",
+    "set_a": "patient-disjoint 60% train / 20% Platt calibration / 20% untouched holdout",
+    "set_b": "evaluation only; no fitting, calibration, feature selection, or threshold selection",
+    "interval_summary": "Point estimates are mean and sample SD across three seeds. CI envelope is the minimum lower and maximum upper endpoint across seed-specific 95% patient-cluster percentile intervals; it is not a pooled confidence interval.",
+    "raw_data_or_row_level_predictions_exported": false
+  },
+  "results": [
+    {"horizon_hours":1,"model":"static","brier_mean":0.0012685535,"brier_sd_across_seeds":0.0000123336,"brier_95ci_envelope":[0.0011871551,0.0013705444],"brier_minus_prevalence_reference_mean":0.0000152757,"brier_minus_reference_95ci_envelope":[0.0000027468,0.0000502364],"calibrated_minus_raw_brier_mean":-0.1782577684,"calibrated_minus_raw_brier_95ci_envelope":[-0.1878724031,-0.1708107145],"log_loss_mean":0.0096375654,"log_loss_95ci_envelope":[0.0090302615,0.0103479734],"ece_mean":0.0009588645,"ece_95ci_envelope":[0.0006351090,0.0013332542]},
+    {"horizon_hours":1,"model":"temporal","brier_mean":0.0012671206,"brier_sd_across_seeds":0.0000117687,"brier_95ci_envelope":[0.0011819883,0.0013751562],"brier_minus_prevalence_reference_mean":0.0000138428,"brier_minus_reference_95ci_envelope":[-0.0000000910,0.0000468486],"calibrated_minus_raw_brier_mean":-0.1118646788,"calibrated_minus_raw_brier_95ci_envelope":[-0.1183314602,-0.1037997852],"log_loss_mean":0.0094513918,"log_loss_95ci_envelope":[0.0088613025,0.0101593453],"ece_mean":0.0005101979,"ece_95ci_envelope":[0.0002866296,0.0007190859]},
+    {"horizon_hours":3,"model":"static","brier_mean":0.0038634526,"brier_sd_across_seeds":0.0000480719,"brier_95ci_envelope":[0.0036029370,0.0041771122],"brier_minus_prevalence_reference_mean":0.0000415861,"brier_minus_reference_95ci_envelope":[-0.0000049715,0.0001621684],"calibrated_minus_raw_brier_mean":-0.1642428225,"calibrated_minus_raw_brier_95ci_envelope":[-0.1709453365,-0.1586911449],"log_loss_mean":0.0245745187,"log_loss_95ci_envelope":[0.0231871200,0.0259864968],"ece_mean":0.0023768720,"ece_95ci_envelope":[0.0018232816,0.0029710802]},
+    {"horizon_hours":3,"model":"temporal","brier_mean":0.0038337307,"brier_sd_across_seeds":0.0000168180,"brier_95ci_envelope":[0.0035879044,0.0041208158],"brier_minus_prevalence_reference_mean":0.0000118642,"brier_minus_reference_95ci_envelope":[-0.0000136512,0.0000655701],"calibrated_minus_raw_brier_mean":-0.1097902402,"calibrated_minus_raw_brier_95ci_envelope":[-0.1206642052,-0.1019351391],"log_loss_mean":0.0241502612,"log_loss_95ci_envelope":[0.0227883500,0.0255690974],"ece_mean":0.0012107317,"ece_95ci_envelope":[0.0007188750,0.0016148893]},
+    {"horizon_hours":6,"model":"static","brier_mean":0.0080903376,"brier_sd_across_seeds":0.0001193617,"brier_95ci_envelope":[0.0075345056,0.0087820728],"brier_minus_prevalence_reference_mean":0.0000929720,"brier_minus_reference_95ci_envelope":[-0.0000402653,0.0004098992],"calibrated_minus_raw_brier_mean":-0.1605617191,"calibrated_minus_raw_brier_95ci_envelope":[-0.1717755490,-0.1527104059],"log_loss_mean":0.0455624337,"log_loss_95ci_envelope":[0.0429857189,0.0481975278],"ece_mean":0.0045265367,"ece_95ci_envelope":[0.0033506695,0.0057765482]},
+    {"horizon_hours":6,"model":"temporal","brier_mean":0.0080308878,"brier_sd_across_seeds":0.0000787272,"brier_95ci_envelope":[0.0074916282,0.0086696496],"brier_minus_prevalence_reference_mean":0.0000335222,"brier_minus_reference_95ci_envelope":[-0.0000600674,0.0002475605],"calibrated_minus_raw_brier_mean":-0.1153056352,"calibrated_minus_raw_brier_95ci_envelope":[-0.1253966323,-0.1033474208],"log_loss_mean":0.0447594917,"log_loss_95ci_envelope":[0.0421870101,0.0474470565],"ece_mean":0.0025460759,"ece_95ci_envelope":[0.0019032170,0.0034583108]}
+  ],
+  "limitations": [
+    "Intervals are conditional on fitted models and one retrospective benchmark cohort; they do not include training-data/model-fitting uncertainty.",
+    "Seed-specific interval envelopes are descriptive, not pooled confidence intervals; seeds are not independent cohort replications.",
+    "Set B is a separate Challenge training cohort, not prospective external clinical validation.",
+    "The Challenge SepsisLabel already incorporates a six-hour lead convention; targets forecast label-window entry, not independently observed biological onset.",
+    "Fixed-bin ECE depends on bin boundaries. No clinical threshold was selected.",
+    "VITALIS remains research-only and is not clinically validated."
+  ]
+}
