@@ -27,3 +27,18 @@ These are conditional uncertainty intervals for retrospective hourly challenge-l
 Dataset integrity totals: 20,336 patients, 790,215 rows, 17,136 positive hourly challenge labels. No raw patient data, patient identifiers, or row-level predictions are included.
 
 Machine-readable results: [aggregate JSON](../results/full_cohort_paired_patient_cluster_bootstrap_2026-10-14.json).
+
+
+## Higher-replicate follow-up: seed 42 (1,000 replicates)
+
+To avoid repeatedly fitting models for every bootstrap replicate, I saved the held-out score vectors locally (not in Git) and ran a batched patient-cluster bootstrap. This completed 1,000 valid replicates in approximately 28 seconds after the score vectors were available. The earlier 200-replicate estimates for seed 42 remain shown above for comparison.
+
+| Metric | Mean bootstrap difference | 95% percentile interval |
+|---|---:|---:|
+| AUROC | +0.0250 | +0.0150 to +0.0351 |
+| AUPRC | +0.0070 | +0.0022 to +0.0154 |
+| Brier score | −0.0089 | −0.0108 to −0.0071 |
+
+Machine-readable seed-42 1,000-replicate artifact: [aggregate JSON](../results/full_cohort_paired_patient_cluster_bootstrap_seed42_1000_2026-10-14.json).
+
+The estimates are close to the earlier 200-replicate interval for seed 42, as expected. **This does not close source reproducibility:** the held-out scores were generated with a reconstructed local evaluator, not a byte-identical repository checkout. The batched bootstrap metric calculation was spot-checked against the checked-in weighted-metric implementation on tied-score test cases. Seeds 123 and 2026 remain at 200 replicates each; they have not yet been upgraded to 1,000.
