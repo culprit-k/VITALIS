@@ -161,7 +161,7 @@ def patient_cluster_bootstrap_utility_uncertainty(
                 yp, pp, groups[start:end], times[start:end],
                 threshold=float(threshold), refractory_hours=refractory_hours,
             )
-            patient_hours.append(summary["hours"])
+            patient_hours.append(summary["eligible_hours"])
             patient_alerts.append(summary["alerts_total"])
             patient_windows.append(summary["future_positive_windows"])
             patient_covered.append(summary["covered_future_positive_windows"])
