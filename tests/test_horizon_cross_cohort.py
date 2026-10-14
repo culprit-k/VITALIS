@@ -64,6 +64,6 @@ def test_cross_cohort_horizon_target_does_not_cross_patient_boundaries():
     labels = np.asarray([0, 0, 0, 1, 0, 0, 0, 0], dtype=np.int8)
     groups = np.asarray([1, 1, 1, 1, 2, 2, 2, 2], dtype=np.int32)
     target = horizon_rows(labels, groups, 1)
-    assert target.row_indices.tolist() == [0, 1, 4, 5, 6]
-    assert target.targets.tolist() == [0, 1, 0, 0, 0]
-    assert target.patient_ids.tolist() == [1, 1, 2, 2, 2]
+    assert target.row_indices.tolist() == [0, 1, 2, 4, 5, 6]
+    assert target.targets.tolist() == [0, 0, 1, 0, 0, 0]
+    assert target.patient_ids.tolist() == [1, 1, 1, 2, 2, 2]
