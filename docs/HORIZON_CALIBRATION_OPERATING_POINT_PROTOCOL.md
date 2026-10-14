@@ -66,19 +66,19 @@ These intervals are conditional on the fitted models and this retrospective coho
 
 ## Utility-based operating-point cost sensitivity (15 October 2026)
 
-The calibration evaluator now computes cost-sensitivity rankings only on the untouched, patient-disjoint Set-A operating-point holdout. Set B does not participate in the cost calculation or threshold ranking. The default CLI scenario grid is missed-window costs of \`1, 10, 100, 500, 1000\` relative to an alert cost of \`1\`; these values are **illustrative sensitivity scenarios, not clinically elicited costs**. Override them with \`--missed-window-costs\` and \`--alert-cost\` after documenting the rationale.
+The calibration evaluator now computes cost-sensitivity rankings only on the untouched, patient-disjoint Set-A operating-point holdout. Set B does not participate in the cost calculation or threshold ranking. The default CLI scenario grid is missed-window costs of `1, 10, 100, 500, 1000` relative to an alert cost of `1`; these values are **illustrative sensitivity scenarios, not clinically elicited costs**. Override them with `--missed-window-costs` and `--alert-cost` after documenting the rationale.
 
-For each candidate threshold the output includes row-level sensitivity/PPV, alerts per at-risk patient-day, missed/covered future-positive windows, window coverage, and label-relative warning time. Scenario cost is \`missed_window_cost × missed windows + alert_cost × all alerts\`, reported both as total cost and per at-risk patient-day. A lowest-cost threshold is reported as a Set-A development candidate under that scenario, not as a clinical selection.
+For each candidate threshold the output includes row-level sensitivity/PPV, alerts per at-risk patient-day, missed/covered future-positive windows, window coverage, and label-relative warning time. Scenario cost is `missed_window_cost × missed windows + alert_cost × all alerts`, reported both as total cost and per at-risk patient-day. A lowest-cost threshold is reported as a Set-A development candidate under that scenario, not as a clinical selection.
 
 Example:
 
-\`\`\`bash
+```bash
 python scripts/evaluate_horizon_calibration.py \\
   --set-a-cache /path/outside/repo/cache_set_a \\
   --set-b-cache /path/outside/repo/cache_set_b \\
   --horizons 1 3 6 --seeds 42 123 2026 \\
   --missed-window-costs 1 10 100 500 1000 --alert-cost 1 \\
   --output /path/outside/repo/horizon_utility_sensitivity.json
-\`\`\`
+```
 
 The evaluator output must remain aggregate-only. The cost proxy omits treatment harms, alarm fatigue, staffing, delayed treatment, patient preferences, and competing outcomes. Cost ratios need independent clinical/statistical justification. Set A holdout rankings are development evidence only; after a policy is frozen, a **new independent cohort** is needed for final evaluation. Previously inspected Set B results must not be reused to select a threshold.
