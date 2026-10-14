@@ -67,6 +67,38 @@ def audit_cache(cache_dir: Path, feature_names: list[str] | None = None) -> dict
             "positive_label_patient_rate_feature_present": float(patient_positive[available].mean()) if available.any() else None,
             "positive_label_patient_rate_feature_absent": float(patient_positive[absent].mean()) if absent.any() else None,
         }
+    duration_strata = []
+    duration_bins = [
+        (1, 24, "1-24 h"),
+        (25, 48, "25-48 h"),
+        (49, 72, "49-72 h"),
+        (73, int(counts.max()), "73+ h"),
+    ]
+    for lower, upper, label in duration_bins:
+        mask = (counts >= lower) & (counts <= upper)
+        if not mask.any():
+            continue
+        positive_mask = mask & patient_positive
+        negative_mask = mask & ~patient_positive
+        duration_features = {}
+        for name, available in patient_available.items():
+            duration_features[name] = {
+                "availability_rate": float(available[mask].mean()),
+                "availability_rate_positive_label": (
+                    float(available[positive_mask].mean()) if positive_mask.any() else None
+                ),
+                "availability_rate_no_positive_label": (
+                    float(available[negative_mask].mean()) if negative_mask.any() else None
+                ),
+            }
+        duration_strata.append({
+            "duration_hours": label,
+            "patients": int(mask.sum()),
+            "patients_with_positive_label": int(positive_mask.sum()),
+            "positive_label_patient_rate": float(patient_positive[mask].mean()),
+            "features": duration_features,
+        })
+
     return {
         "patients": int(patients),
         "hourly_rows": int(rows),
@@ -75,6 +107,7 @@ def audit_cache(cache_dir: Path, feature_names: list[str] | None = None) -> dict
         "median_rows_per_patient": float(np.median(counts)),
         "p90_rows_per_patient": float(np.quantile(counts, 0.9)),
         "features": features,
+        "duration_strata": duration_strata,
     }
 
 
