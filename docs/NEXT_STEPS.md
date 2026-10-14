@@ -29,9 +29,15 @@ Formal closeout: [Phase 2 closeout report](PHASE2_CLOSEOUT.md). Aggregate-metric
 - [ ] Consider full-cohort execution only after exact runner reconciliation and memory/runtime checks; external validation remains separate.
 - [ ] Obtain clinical/statistical supervision and governance review before prospective or patient-facing research.
 
+## Leakage/evaluation audit (2026-10-14)
+
+- [x] Reviewed patient-level split isolation, training-only preprocessing/feature selection, fixed threshold handling, label timing, temporal feature assumptions, and alert-burden interpretation. See [leakage and evaluation audit](LEAKAGE_EVALUATION_AUDIT.md).
+- [x] Added regression tests for overlapping patient splits and threshold/alert-burden calculations; CI verification pending for the latest commits.
+- [ ] Revisit the chronological-row assumption if any new data loader or dataset format is introduced.
+
 ## Next software/research actions
 
-1. Add regression tests for probability boundaries, reliability-bin coverage, invalid inputs, and empty missingness summaries.
+1. Confirm the latest CI runs for the calibration, split-isolation, and alert-burden regression tests.
 2. Finish strict source/blob identity verification for the Phase 2 mirrored runner; aggregate-metric reconciliation is recorded.
 3. Review the [Phase 2 calibration/missingness results](PHASE2_CALIBRATION_ROBUSTNESS_RESULTS.md); aggregate-metric reconciliation is documented, while strict byte-for-byte source identity remains open.
 4. Expanded robustness grid completed locally: median imputation with/without missingness indicators and raw/Platt/isotonic calibration. See [aggregate summary](../results/phase2_robustness_grid_summary.json). Do not interpret lower Brier/log loss after Platt scaling as proof of clinical calibration.
