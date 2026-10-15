@@ -25,7 +25,7 @@ The working tree must be clean. Save the commit SHA, UTC run start/end times, op
 
 ## 2. Verify checked-out bytes against the selected Git commit
 
-Run this before installing dependencies and again immediately before model execution. Any mismatch or uncommitted change is a hard stop.
+Run the automated manifest command after creating the virtual environment and before installing project dependencies, then again after installation and immediately before model execution. It writes the environment/source manifest outside Git and fails closed if the tree is dirty, a required file is missing, or any checked-out file differs from its Git blob. Any mismatch is a hard stop. The manual Git commands below remain available for independent spot checks.
 
 ```bash
 set -eu
@@ -55,7 +55,9 @@ The existing CI workflow uses Python 3.11 and installs the project with its deve
 python3.11 -m venv .venv
 . .venv/bin/activate
 python -m pip install --upgrade pip
+python scripts/verify_source_manifest.py --output /tmp/vitalis-source-manifest-preinstall.json
 python -m pip install -e ".[dev,bootstrap-accelerated]"
+python scripts/verify_source_manifest.py --output /tmp/vitalis-source-manifest-installed.json
 python --version
 python -m pip freeze > /tmp/vitalis-repro-pip-freeze.txt
 python -m pip check
@@ -65,7 +67,7 @@ python scripts/audit_git_history.py --json-output /tmp/vitalis-repro-history-aud
 pytest
 ```
 
-Save the package inventory and test/audit logs outside the repository. A successful test suite is necessary but does not by itself prove full-cohort result reproduction.
+Save both source manifests, package inventory, and test/audit logs outside the repository. The manifest records the commit/tree IDs, source blob checks, Python/platform metadata, and resolved package inventory. A successful test suite is necessary but does not by itself prove full-cohort result reproduction.
 
 ## 4. Validate local cohort sources and rebuild caches
 
