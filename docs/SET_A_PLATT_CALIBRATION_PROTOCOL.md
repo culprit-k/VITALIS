@@ -8,9 +8,9 @@ The physiology ablation improved AUROC/AUPRC but worsened Brier score. This foll
 ## Fixed partitions and method
 - Horizons: 1, 3 and 6 hours; seeds: 42, 123 and 2026.
 - Per horizon/seed, split eligible Set A patients into 60% model-fit, 20% calibration, and 20% untouched holdout, with patient groups disjoint.
-- Fit the existing logistic regression model on the model-fit partition only.
+- Compare two predeclared logistic objectives on the same model-fit patients: balanced class weights (previous protocol) and no class weighting (prevalence-aware objective). Fit each model on the model-fit partition only.
 - Fit Platt scaling (logistic regression on the logit of the base model's predicted probabilities) on the separate Set A calibration partition only. Both target classes must be present and both model/calibrator fits must converge.
-- Report raw and Platt-calibrated results for the temporal baseline and temporal-plus-personal-physiology model. The candidate is an exploratory comparison, not a selection target.
+- Report raw and Platt-calibrated results for the temporal baseline and temporal-plus-personal-physiology feature sets under both class-weight settings. This is an exploratory comparison, not a selection target.
 - Keep the threshold at 0.5 for comparability; it is a diagnostic reference, not clinically selected.
 - Report AUROC, AUPRC, Brier, calibration intercept/slope, and paired patient-cluster bootstrap uncertainty for calibrated-minus-raw Brier score.
 - Set B is frozen final evaluation only. No fitting, method selection, recalibration, threshold tuning, or model selection may use Set B.
