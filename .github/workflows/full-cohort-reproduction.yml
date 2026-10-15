@@ -13,6 +13,8 @@ on:
       - "scripts/audit_reproduction_cache.py"
       - "scripts/evaluate_horizon_cross_cohort.py"
       - "scripts/evaluate_physiological_features.py"
+      - "scripts/evaluate_set_a_platt_calibration.py"
+      - "docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md"
       - "scripts/verify_source_manifest.py"
       - "src/vitalis/horizon.py"
       - "src/vitalis/validation.py"
@@ -263,6 +265,44 @@ jobs:
             --bootstrap-replicates 200 \
             --output "$RUNNER_TEMP/vitalis_physiological_feature_ablation.json"
 
+      - name: Run patient-disjoint Set A Platt calibration experiment
+        run: |
+          python scripts/evaluate_set_a_platt_calibration.py \
+            --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
+            --set-b-cache "$RUNNER_TEMP/vitalis-cache-set-b" \
+            --horizons 1 3 6 \
+            --seeds 42 123 2026 \
+            --bootstrap-replicates 200 \
+            --output "$RUNNER_TEMP/vitalis_set_a_platt_calibration.json"
+
+      - name: Verify Set A calibration partitioning and aggregate-only outputs
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "vitalis_set_a_platt_calibration.json"
+          if not p.exists():
+              raise SystemExit("Required Set A calibration artifact is missing.")
+          data = json.loads(p.read_text())
+          assert len(data.get("runs", [])) == 9, "Expected 9 calibration runs."
+          assert data["protocol"]["no_Set_B_fit_selection_or_threshold_tuning"] is True
+          for run in data["runs"]:
+              partitions = run["partition_patients"]
+              assert partitions["model_fit"] > 0 and partitions["calibration"] > 0
+              assert partitions["unused_holdout"] > 0
+              assert len({partitions["fit_patient_ids_sha256"], partitions["calibration_patient_ids_sha256"], partitions["unused_patient_ids_sha256"]}) == 3
+              assert set(run["models"]) == {"temporal_baseline", "temporal_plus_personal_physiology"}
+              for model in run["models"].values():
+                  assert model["calibrator"]["fit_partition"] == "patient-disjoint Set A calibration partition only"
+                  assert model["calibrator"]["converged"] is True
+                  assert "set_b_raw" in model and "set_b_platt_calibrated" in model
+          serialized = json.dumps(data).lower()
+          assert '"patient_ids"' not in serialized
+          assert '"predictions"' not in serialized
+          print("Set A calibration protocol and aggregate-only output verified.")
+          PY
+
       - name: Verify probability-quality diagnostics are aggregate-only and complete
         if: always()
         run: |
@@ -464,6 +504,8 @@ jobs:
             ${{ runner.temp }}/vitalis-pip-freeze.txt
             ${{ runner.temp }}/vitalis-reconciliation.json
             ${{ runner.temp }}/vitalis_physiological_feature_ablation.json
+            ${{ runner.temp }}/vitalis_set_a_platt_calibration.json
+            docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md
           if-no-files-found: ignore
           retention-days: 30
 
