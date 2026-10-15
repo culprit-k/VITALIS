@@ -8,6 +8,7 @@ source patient data must remain local; JSON output is aggregate-only.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import time
 import warnings
@@ -193,6 +194,45 @@ def evaluate_one_horizon(
             target_b.patient_time_indices, threshold=threshold,
             refractory_hours=refractory_hours,
         )
+        # Aggregate-only diagnostics to isolate cross-runtime drift. These values
+        # never include patient identifiers, row-level features, or row-level scores.
+        def array_sha256(values) -> str:
+            array = np.ascontiguousarray(np.asarray(values))
+            return hashlib.sha256(array.dtype.str.encode() + str(array.shape).encode() + array.tobytes()).hexdigest()
+
+        fitted_classifier = model[-1]
+        fitted_imputer = model[0]
+        fitted_scaler = model[1]
+        prediction_bands = {
+            "p_lt_0_49": int(np.sum(test_probabilities < 0.49)),
+            "p_0_49_to_lt_0_50": int(np.sum((test_probabilities >= 0.49) & (test_probabilities < 0.50))),
+            "p_eq_or_gt_0_50_to_lt_0_51": int(np.sum((test_probabilities >= 0.50) & (test_probabilities < 0.51))),
+            "p_eq_or_gt_0_51": int(np.sum(test_probabilities >= 0.51)),
+        }
+        reproducibility_diagnostics = {
+            "ordered_feature_schema_sha256": hashlib.sha256(
+                json.dumps(columns, separators=(",", ":"), ensure_ascii=False).encode()
+            ).hexdigest(),
+            "selected_feature_indices_sha256": array_sha256(feature_indices),
+            "train_source_row_indices_sha256": array_sha256(train_source_rows),
+            "train_target_sha256": array_sha256(train_y),
+            "imputer_statistics_sha256": array_sha256(fitted_imputer.statistics_),
+            "scaler_mean_sha256": array_sha256(fitted_scaler.mean_),
+            "scaler_scale_sha256": array_sha256(fitted_scaler.scale_),
+            "coefficient_sha256": array_sha256(fitted_classifier.coef_),
+            "intercept_sha256": array_sha256(fitted_classifier.intercept_),
+            "n_iter": [int(x) for x in np.asarray(fitted_classifier.n_iter_).ravel()],
+            "converged_within_max_iter": bool(np.all(np.asarray(fitted_classifier.n_iter_) < fitted_classifier.max_iter)),
+            "prediction_sha256": array_sha256(test_probabilities),
+            "prediction_summary": {
+                "count": int(len(test_probabilities)),
+                "mean": float(np.mean(test_probabilities)),
+                "std": float(np.std(test_probabilities)),
+                "min": float(np.min(test_probabilities)),
+                "max": float(np.max(test_probabilities)),
+                "bands": prediction_bands,
+            },
+        }
         warning_ci = patient_cluster_bootstrap_horizon_alerts(
             target_b.targets, test_probabilities, target_b.patient_ids,
             target_b.patient_time_indices, threshold=threshold,
@@ -205,6 +245,7 @@ def evaluate_one_horizon(
             "set_b_test_metrics": binary_metrics(target_b.targets, test_probabilities, threshold),
             "set_b_patient_warning_metrics": warning_metrics,
             "set_b_patient_warning_metric_bootstrap_95ci": warning_ci,
+            "reproducibility_diagnostics": reproducibility_diagnostics,
         }
         print(
             f"horizon={horizon_hours}h seed={seed} model={model_name} "
