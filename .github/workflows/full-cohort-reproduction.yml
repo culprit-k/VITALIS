@@ -264,15 +264,15 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: vitalis-clean-checkout-reproduction-\${{ github.sha }}
+          name: vitalis-clean-checkout-reproduction-${{ github.sha }}
           path: |
-            \${{ runner.temp }}/horizon_cross_cohort_clean_checkout.json
-            \${{ runner.temp }}/horizon_cross_cohort_clean_checkout_report.md
-            \${{ runner.temp }}/vitalis-source-cohort-audit.json
-            \${{ runner.temp }}/vitalis-source-manifest-preinstall.json
-            \${{ runner.temp }}/vitalis-source-manifest-pre-run.json
-            \${{ runner.temp }}/vitalis-source-manifest-immediately-before-evaluation.json
-            \${{ runner.temp }}/vitalis-history-audit.json
-            \${{ runner.temp }}/vitalis-pip-freeze.txt
+            ${{ runner.temp }}/horizon_cross_cohort_clean_checkout.json
+            ${{ runner.temp }}/horizon_cross_cohort_clean_checkout_report.md
+            ${{ runner.temp }}/vitalis-source-cohort-audit.json
+            ${{ runner.temp }}/vitalis-source-manifest-preinstall.json
+            ${{ runner.temp }}/vitalis-source-manifest-pre-run.json
+            ${{ runner.temp }}/vitalis-source-manifest-immediately-before-evaluation.json
+            ${{ runner.temp }}/vitalis-history-audit.json
+            ${{ runner.temp }}/vitalis-pip-freeze.txt
           if-no-files-found: ignore
           retention-days: 30
