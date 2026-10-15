@@ -33,3 +33,9 @@ This contradicts the earlier claim that all 42 pairs matched for this clean-chec
 - **Clinical validation:** not performed; research-only.
 
 A newer workflow revision with an isolated Python environment and fail-closed reconciliation is present in the branch. A manual workflow-dispatch trigger has been enabled in commit `30d34924587121cec364c2334d111e686fd0b5ca`. This audit records the earlier artifact honestly; it is not a release approval.
+
+## Follow-up control added after this audit
+
+Commit [c20ed448ab3fbcfc6e6e35c73dd8b28a26950184](https://github.com/culprit-k/VITALIS/commit/c20ed448ab3fbcfc6e6e35c73dd8b28a26950184) adds explicit runtime assertions for the pinned scientific stack and key test/runtime dependencies immediately after installation. A version mismatch now stops the reproduction before cohort download and model evaluation. This prevents a future artifact from being treated as a pinned run merely because `pip freeze` was captured.
+
+The connected GitHub integration currently exposes a PR-triggered standard test run but not discovery of push-triggered full-cohort runs. The current full-cohort run and its artifact are therefore **not yet verified** in this audit. The dependency-version gate is a control added to the workflow, not evidence that the new run passed.
