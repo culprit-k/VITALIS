@@ -30,7 +30,7 @@ The predeclared rule requires exact agreement after rounding every aggregate mea
 | 3 h | Alerts / at-risk patient-day | 1.2762744951 | 1.276286 | 0.0807039708 | 0.080706 |
 | 3 h | Future-positive-window coverage | 0.2937976061 | 0.293435 | 0.0151169140 | 0.014854 |
 
-The discrepancies are small in absolute magnitude but are failures under the existing rule. The baseline remains immutable. The preserved baseline contains aggregate mean/SD values, not historical per-seed metrics, so direct historical seed-by-seed attribution is not currently possible from that file alone.
+The discrepancies are small in absolute magnitude but are failures under the existing rule. The baseline remains immutable. The preserved baseline does retain per-seed AUROC, AUPRC, Brier score, alert-rate, and coverage values (rounded to six decimals), but it does not retain per-seed specificity/sensitivity or the full per-seed probability outputs. Seed-level comparison is therefore possible for some metrics, not for every discrepancy.
 
 ## Interpretation: facts versus hypotheses
 
@@ -71,3 +71,19 @@ Do not attribute the issue to any one hypothesis without evidence.
 ## Exit criteria
 
 Step 2 may be accepted only after the repeat run and discrepancy investigation are documented, the declared acceptance process is satisfied or a separately reviewed replacement-baseline decision is approved, and an independent reviewer signs off. This is computational reproducibility only; independent clinical/statistical review, governance/ethics determination, and a genuinely new external cohort remain separate gates.
+
+
+## Follow-up: partial seed-level comparison
+
+The preserved JSON contains rounded per-seed summaries for some metrics, so these can be compared directly without accessing patient-level predictions. On the first clean-checkout run, the following temporal-model differences are visible in the stored per-seed summaries:
+
+| Horizon | Seed | Metric | Fresh clean-checkout | Preserved per-seed summary |
+|---:|---:|---|---:|---:|
+| 1 h | 42 | Alerts / at-risk patient-day | 1.330859 | 1.330892 |
+| 3 h | 2026 | Brier score | 0.132716 | 0.132712 |
+| 3 h | 2026 | Alerts / at-risk patient-day | 1.285430 | 1.285465 |
+| 3 h | 2026 | Future-positive-window coverage | 0.301415 | 0.300326 |
+
+These are descriptive comparisons of rounded stored summaries. The 3-hour/seed-2026 coverage difference is larger than the other listed differences and deserves targeted investigation of predictions near the fixed 0.5 threshold and the six-hour refractory rule. Small Brier-score differences alongside matching AUROC/AUPRC to six decimals are consistent with a numerical-path hypothesis, but do not prove it. Do not infer an exact number of changed alerts or windows without the source-run outputs needed to establish that.
+
+A same-commit, same-pinned-environment rerun was requested on 15 October 2026 to assess repeatability. Its results must be compared before concluding whether this clean-checkout pipeline is deterministic. The run's original aggregate-only artifact and the rerun artifact should both be preserved.
