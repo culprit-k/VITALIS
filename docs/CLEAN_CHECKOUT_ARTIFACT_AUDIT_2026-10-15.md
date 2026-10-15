@@ -39,3 +39,16 @@ A newer workflow revision with an isolated Python environment and fail-closed re
 Commit [c20ed448ab3fbcfc6e6e35c73dd8b28a26950184](https://github.com/culprit-k/VITALIS/commit/c20ed448ab3fbcfc6e6e35c73dd8b28a26950184) adds explicit runtime assertions for the pinned scientific stack and key test/runtime dependencies immediately after installation. A version mismatch now stops the reproduction before cohort download and model evaluation. This prevents a future artifact from being treated as a pinned run merely because `pip freeze` was captured.
 
 The connected GitHub integration currently exposes a PR-triggered standard test run but not discovery of push-triggered full-cohort runs. The current full-cohort run and its artifact are therefore **not yet verified** in this audit. The dependency-version gate is a control added to the workflow, not evidence that the new run passed.
+
+## Baseline provenance disposition
+
+The preserved baseline at `results/horizon_cross_cohort_2026-10-14.json` records that the historical execution used a reconstruction of the checked-in evaluator because a full Git clone was unavailable. Its source-blob fields establish which files were referenced, but do not establish that the checked-in evaluator was executed end-to-end from a clean checkout. Therefore the baseline remains a valuable immutable historical comparator, but it is **not yet an approved authoritative reference** for a release-grade reproducibility claim.
+
+The two problems must be treated separately:
+
+1. **Environment defect in the older CI artifact:** the run did not use the intended dependency pins.
+2. **Reference provenance defect:** the historical baseline itself was produced using a reconstructed execution path.
+
+The pinned clean-checkout run at [#38679761894](https://github.com/culprit-k/VITALIS/actions/runs/38679761894) passed installation and the explicit version-verification step before proceeding to source download. Its final execution, artifact, and reconciliation are still pending at the time of this update.
+
+If that run completes but fails numerical reconciliation, do not change the six-decimal rule or replace the 14 October file. Preserve its output as a candidate clean-checkout reference, document per-seed and per-metric differences, and require an independent reviewer to approve a separately versioned baseline before changing what future runs compare against. Numerical agreement alone cannot cure the baseline's provenance gap.
