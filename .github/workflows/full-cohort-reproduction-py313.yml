@@ -42,7 +42,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.13.5
         uses: actions/setup-python@v5
         with:
           python-version: "3.13.5"
@@ -60,7 +60,7 @@ jobs:
       - name: Install project and test dependencies
         run: |
           python -m pip install "pip==25.1.1" "setuptools==82.0.1" "wheel==0.45.1"
-          python -m pip install --no-build-isolation -c constraints/reproduction-py311.txt -e ".[dev,bootstrap-accelerated]"
+          python -m pip install --no-build-isolation -c constraints/reproduction-py313.txt -e ".[dev,bootstrap-accelerated]"
           python -m pip check
           python - <<'PY'
           import importlib.metadata as metadata
