@@ -299,5 +299,11 @@
     "The four core pipeline blobs were verified exactly, but a full clean Git checkout and full-tree source manifest were not completed.",
     "Independent statistical/clinical review, ethics/governance sign-off, and external/prospective validation remain open."
   ],
-  "clinical_status": "Research only; not a medical device or clinically validated decision-support system."
+  "clinical_status": "Research only; not a medical device or clinically validated decision-support system.",
+  "github_clean_checkout_workflow": {
+    "run_url": "https://github.com/culprit-k/VITALIS/actions/runs/38677774161",
+    "status": "in_progress",
+    "head_sha": "bfa78a9cfc6a045feb2edff57c0dc6d2b82e4641",
+    "note": "Not counted as successful until the workflow completes and aggregate outputs are reviewed."
+  }
 }
