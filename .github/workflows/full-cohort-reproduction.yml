@@ -1,5 +1,10 @@
 name: full-cohort-reproduction
 
+# Avoid duplicate expensive cohort runs for the same branch; newer commits supersede older runs.
+concurrency:
+  group: vitalis-full-cohort-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
     inputs:
