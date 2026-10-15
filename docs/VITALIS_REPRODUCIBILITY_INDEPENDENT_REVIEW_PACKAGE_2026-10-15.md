@@ -79,3 +79,11 @@ Two clean-checkout runs now pass the predeclared aggregate reconciliation, inclu
 ## Clinical and engineering boundary
 
 This is a retrospective software-reproducibility exercise. It does not establish safe alarm settings, prospective clinical performance, clinical utility, or readiness for hardware integration. External validation and a separately reviewed clinical-risk plan are prerequisites before making clinical claims or translating the model into a medical device.
+
+## Same-source cross-runtime gate — 15 October 2026
+
+Python 3.13 run [#38705107992](https://github.com/culprit-k/VITALIS/actions/runs/38705107992) passed the unchanged reconciliation rule: 42/42 mean–sample-SD pairs and 84/84 scalar values matched; the privacy-safe cache-integrity audit also passed. The result is attached as aggregate-only artifact [11958357679](https://github.com/culprit-k/VITALIS/actions/runs/38705107992/artifacts/11958357679).
+
+The Python 3.11 workflow now explicitly checks out `github.event.pull_request.head.sha || github.sha` to avoid synthetic PR merge commits. Cross-runtime completion requires Python 3.11 and Python 3.13 runs to report the identical source commit SHA, both pass the same predeclared acceptance rule, and their aggregate metric outputs agree. The Python 3.11 run has not yet been verified; do not mark this gate closed until that evidence is recorded.
+
+No model, threshold, seeds, horizons, metrics, baseline, or acceptance tolerance may be changed for this gate. Set B remains evaluation-only. No patient-level data or predictions may be published. This retrospective software reproduction is not clinical validation.
