@@ -34,6 +34,8 @@ jobs:
       OPENBLAS_NUM_THREADS: "1"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
+      AWS_RETRY_MODE: standard
+      AWS_MAX_ATTEMPTS: "5"
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -117,10 +119,10 @@ jobs:
           aws --version
           mkdir -p "$RUNNER_TEMP/physionet_challenge_2019"
           mkdir -p "$RUNNER_TEMP/physionet_challenge_2019/training_setA" "$RUNNER_TEMP/physionet_challenge_2019/training_setB"
-          aws s3 sync --no-sign-request --only-show-errors \
+          aws s3 sync --no-sign-request --only-show-errors --cli-connect-timeout 30 --cli-read-timeout 120 \
             s3://physionet-open/challenge-2019/1.0.0/training/training_setA/ \
             "$RUNNER_TEMP/physionet_challenge_2019/training_setA/"
-          aws s3 sync --no-sign-request --only-show-errors \
+          aws s3 sync --no-sign-request --only-show-errors --cli-connect-timeout 30 --cli-read-timeout 120 \
             s3://physionet-open/challenge-2019/1.0.0/training/training_setB/ \
             "$RUNNER_TEMP/physionet_challenge_2019/training_setB/"
           echo "VITALIS_DATA_ROOT=$RUNNER_TEMP/physionet_challenge_2019" >> "$GITHUB_ENV"
