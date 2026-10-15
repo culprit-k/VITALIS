@@ -148,3 +148,8 @@ The [clinical translation and regulatory roadmap](docs/CLINICAL_TRANSLATION_AND_
 ### Strict source-reproduction gate
 
 The documented provenance exception for full-cohort runs is tracked in the [strict source and full-cohort reproduction runbook](docs/STRICT_SOURCE_REPRODUCIBILITY_RUNBOOK.md). It defines clean-checkout/blob checks, environment capture, fresh-cache requirements, Set-B evaluation-only safeguards, and aggregate-output reconciliation. The gate remains open until a fresh, byte-verified full-cohort run and independent review are recorded; do not treat previous reconstructed-working-copy results as exact-source reproduction.
+
+
+## Aggregate report dashboard
+
+The dashboard now validates and displays baseline and full-cohort horizon aggregate reports. See [dashboard usage and privacy boundaries](docs/AGGREGATE_REPORT_DASHBOARD.md). It accepts aggregate-only JSON and does not fit models or make clinical recommendations.
