@@ -20,6 +20,7 @@ from sklearn.metrics import average_precision_score, brier_score_loss, confusion
 from sklearn.model_selection import GroupShuffleSplit
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from threadpoolctl import threadpool_info, threadpool_limits
 
 from vitalis.horizon import build_future_challenge_targets, evaluate_horizon_alerts, patient_cluster_bootstrap_horizon_alerts
 from vitalis.validation import assert_disjoint_patient_splits
@@ -173,15 +174,19 @@ def evaluate_one_horizon(
         with warnings.catch_warnings(record=True) as captured:
             warnings.simplefilter("always")
             start_fit = time.time()
-            model.fit(train_X, train_y)
+            # Environment variables alone do not reliably constrain already-loaded BLAS
+            # runtimes. Apply the cap at the point of execution for repeatable fits.
+            with threadpool_limits(limits=1):
+                model.fit(train_X, train_y)
             fit_seconds = time.time() - start_fit
 
         test_probabilities = np.empty(len(target_b.targets), dtype=np.float64)
-        for start in range(0, len(target_b.targets), predict_chunk_rows):
-            end = min(start + predict_chunk_rows, len(target_b.targets))
-            source_rows = target_b.row_indices[start:end]
-            chunk = Xb[np.ix_(source_rows, feature_indices)]
-            test_probabilities[start:end] = model.predict_proba(chunk)[:, 1]
+        with threadpool_limits(limits=1):
+            for start in range(0, len(target_b.targets), predict_chunk_rows):
+                end = min(start + predict_chunk_rows, len(target_b.targets))
+                source_rows = target_b.row_indices[start:end]
+                chunk = Xb[np.ix_(source_rows, feature_indices)]
+                test_probabilities[start:end] = model.predict_proba(chunk)[:, 1]
 
         warning_metrics = evaluate_horizon_alerts(
             target_b.targets, test_probabilities, target_b.patient_ids,
@@ -277,6 +282,11 @@ def main() -> None:
             "raw_data_or_row_level_predictions_exported": False,
         },
         "runs": runs,
+        "numerical_runtime": {
+            "threadpool_limit_per_fit_and_prediction": 1,
+            "threadpools_observed_after_evaluation": threadpool_info(),
+            "note": "BLAS/OpenMP thread limits are applied explicitly around model fitting and prediction; runtime details are retained for reproducibility audits.",
+        },
         "elapsed_seconds": round(time.time() - start, 3),
         "interpretation_note": "Retrospective Challenge-label forecast evaluation only; not clinical validation or prediction of independent biological onset.",
     }
