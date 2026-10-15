@@ -269,7 +269,7 @@ jobs:
 
       - name: Run patient-disjoint Set A Platt calibration experiment
         run: |
-          python scripts/evaluate_set_a_platt_calibration.py \
+          PYTHONPATH="$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" python scripts/evaluate_set_a_platt_calibration.py \
             --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
             --set-b-cache "$RUNNER_TEMP/vitalis-cache-set-b" \
             --horizons 1 3 6 \
