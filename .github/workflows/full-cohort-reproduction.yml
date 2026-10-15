@@ -16,6 +16,7 @@ on:
       - "src/vitalis/validation.py"
       - "constraints/reproduction-py311.txt"
       - "docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md"
+      - "docs/VITALIS_REPRODUCIBILITY_INDEPENDENT_REVIEW_PACKAGE_2026-10-15.md"
 
 permissions:
   contents: read
@@ -410,6 +411,7 @@ jobs:
             ${{ runner.temp }}/vitalis-source-manifest-immediately-before-evaluation.json
             ${{ runner.temp }}/vitalis-history-audit.json
             ${{ runner.temp }}/vitalis-cache-integrity-audit.json
+            docs/VITALIS_REPRODUCIBILITY_INDEPENDENT_REVIEW_PACKAGE_2026-10-15.md
             ${{ runner.temp }}/vitalis-pip-freeze.txt
             ${{ runner.temp }}/vitalis-reconciliation.json
           if-no-files-found: ignore
