@@ -422,3 +422,5 @@ jobs:
             ${{ runner.temp }}/vitalis-reconciliation.json
           if-no-files-found: ignore
           retention-days: 30
+
+# Reproducibility acceptance gate: preserve pinned Python 3.11 and fail-closed baseline comparison.
