@@ -9,6 +9,7 @@ on:
       - ".github/workflows/full-cohort-reproduction.yml"
       - "pyproject.toml"
       - "scripts/build_feature_cache.py"
+      - "scripts/audit_reproduction_cache.py"
       - "scripts/evaluate_horizon_cross_cohort.py"
       - "scripts/verify_source_manifest.py"
       - "src/vitalis/horizon.py"
@@ -223,6 +224,13 @@ jobs:
           python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 5000 --end 10000
           python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 10000 --end 15000
           python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 15000 --end 20000
+
+      - name: Audit fresh cache fingerprints and patient-row ordering
+        run: |
+          python scripts/audit_reproduction_cache.py \
+            --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
+            --set-b-cache "$RUNNER_TEMP/vitalis-cache-set-b" \
+            --output "$RUNNER_TEMP/vitalis-cache-integrity-audit.json"
 
       - name: Run predeclared 1/3/6-hour, three-seed evaluation
         run: |
