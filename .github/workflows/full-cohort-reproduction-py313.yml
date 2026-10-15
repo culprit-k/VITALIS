@@ -411,6 +411,7 @@ jobs:
             ${{ runner.temp }}/horizon_cross_cohort_clean_checkout.json
             ${{ runner.temp }}/horizon_cross_cohort_clean_checkout_report.md
             ${{ runner.temp }}/vitalis-source-cohort-audit.json
+            ${{ runner.temp }}/vitalis-cache-integrity-audit.json
             ${{ runner.temp }}/vitalis-source-manifest-preinstall.json
             ${{ runner.temp }}/vitalis-source-manifest-pre-run.json
             ${{ runner.temp }}/vitalis-source-manifest-immediately-before-evaluation.json
