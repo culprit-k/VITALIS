@@ -7,6 +7,7 @@ on:
       - work/strict-reproducibility-gate
     paths:
       - ".github/workflows/full-cohort-reproduction.yml"
+      - ".github/workflows/full-cohort-reproduction-py313.yml"
       - "pyproject.toml"
       - "scripts/build_feature_cache.py"
       - "scripts/audit_reproduction_cache.py"
