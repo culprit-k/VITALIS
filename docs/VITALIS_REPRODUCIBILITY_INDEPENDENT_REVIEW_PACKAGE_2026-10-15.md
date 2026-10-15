@@ -7,10 +7,10 @@
 
 ## Executive status
 
-- The clean-checkout full-cohort run [38692360591](https://github.com/culprit-k/VITALIS/actions/runs/38692360591), at commit `627b0d5b0f06f6d178a16e2d38f8b6f21c141160`, passed the predeclared aggregate reconciliation: **42/42 mean/sample-SD pairs and 84/84 scalar values matched** after rounding to six decimal places.
-- Its fresh cache-integrity audit passed for both cohorts.
-- The repository's automated unit and dashboard test runs for the later documentation/artifact commits have also passed as of preparation; see Actions for current status.
-- The repeat full-cohort verification on the updated artifact workflow is not yet confirmed complete in this document. Do not treat the initial pass as two independent passing runs.
+- The initial clean-checkout full-cohort run [38692360591](https://github.com/culprit-k/VITALIS/actions/runs/38692360591), at commit `627b0d5b0f06f6d178a16e2d38f8b6f21c141160`, passed the predeclared aggregate reconciliation: **42/42 mean/sample-SD pairs and 84/84 scalar values matched** after rounding to six decimal places; its fresh cache-integrity audit passed for both cohorts.
+- A second clean-checkout run [38695459518](https://github.com/culprit-k/VITALIS/actions/runs/38695459518), at commit `a3b7ab933931a231406b7abbfda305dfdaa3236c`, also passed: **42/42 pairs, 84/84 scalar values, zero mismatches**, fresh cache audit passed, and the aggregate/provenance artifact uploaded successfully.
+- The second run's pre-reproduction test step passed **193 tests**. The separate tests workflow on commit `a3b7ab933931a231406b7abbfda305dfdaa3236c` also passed: [run 38695459400](https://github.com/culprit-k/VITALIS/actions/runs/38695459400).
+- These are two successful runs, but the second run is a repeatability check on the updated workflow, not proof that the historical five-mismatch root cause is known.
 - The five mismatches in the earlier run remain unexplained at root-cause level. Environment/dependency drift is plausible, not proven.
 - The preserved historical aggregate `results/horizon_cross_cohort_2026-10-14.json` is immutable for this investigation. No thresholds, seeds, horizons, metrics, or acceptance tolerances were changed to achieve the pass.
 
@@ -62,7 +62,7 @@ Please record each item as **Pass**, **Fail**, or **Not assessable**, with a sho
 - [ ] The retained artifacts contain aggregate results only and no prohibited patient-level data.
 - [ ] The earlier five mismatches are addressed honestly; no unsupported root-cause claim is made.
 - [ ] Limitations are clear: Challenge-label target, retrospective data, no external clinical validation, and no claim of clinical utility.
-- [ ] A second clean run on the updated workflow has completed and independently passes.
+- [x] A second clean run on the updated workflow completed and passed: [run 38695459518](https://github.com/culprit-k/VITALIS/actions/runs/38695459518).
 
 ## Questions the review must answer
 
@@ -74,7 +74,7 @@ Please record each item as **Pass**, **Fail**, or **Not assessable**, with a sho
 
 ## Decision rule
 
-Do not mark the reproduction milestone accepted solely because a single run passed. Require the updated-workflow repeat run, review of the retained evidence, and a written reviewer disposition. If the historical discrepancy cannot be explained, preserve both records and document the uncertainty; do not rewrite the historical baseline to fit the new run.
+Two clean-checkout runs now pass the predeclared aggregate reconciliation, including a repeat on the updated workflow. Final independent acceptance still requires review of the retained evidence and a written reviewer disposition. If the historical discrepancy cannot be explained, preserve both records and document the uncertainty; do not rewrite the historical baseline to fit the new run.
 
 ## Clinical and engineering boundary
 
