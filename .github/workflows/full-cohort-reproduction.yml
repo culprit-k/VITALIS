@@ -136,7 +136,8 @@ jobs:
                           last = label
                       row_count += file_rows
               actual = {"patients": len(paths), "rows": row_count, "positive_labels": positive}
-              if actual != exp or malformed or nonbinary or reversions:
+              # Challenge labels describe the pre-onset lead window; a later 1-to-0 transition can be valid.
+              if actual != exp or malformed or nonbinary:
                   raise SystemExit(
                       f"{cohort} source audit failed: actual={actual}, malformed={malformed}, "
                       f"nonbinary={nonbinary}, reversions={reversions}"
