@@ -252,7 +252,6 @@ jobs:
             --output "$RUNNER_TEMP/horizon_cross_cohort_clean_checkout.json"
 
       - name: Run predeclared patient-relative physiology ablation
-        continue-on-error: true
         run: |
           python scripts/evaluate_physiological_features.py \
             --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
@@ -263,6 +262,35 @@ jobs:
             --refractory-hours 6 \
             --bootstrap-replicates 200 \
             --output "$RUNNER_TEMP/vitalis_physiological_feature_ablation.json"
+
+      - name: Verify probability-quality diagnostics are aggregate-only and complete
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "vitalis_physiological_feature_ablation.json"
+          if not p.exists():
+              raise SystemExit("Required physiology/probability-quality artifact is missing.")
+          d = json.loads(p.read_text())
+          assert len(d.get("runs", [])) == 9, "Expected 9 horizon/seed runs."
+          for run in d["runs"]:
+              models = run["models"]
+              assert "temporal_baseline" in models
+              assert "temporal_plus_personal_physiology" in models
+              for name in ("temporal_baseline", "temporal_plus_personal_physiology"):
+                  cal = models[name]["set_b_row_metrics"].get("calibration_diagnostics")
+                  assert cal and cal["calibration_fit_converged"], f"Missing calibration diagnostics: {name}"
+              paired = run.get("paired_probability_quality", {}).get("temporal_baseline_vs_candidate_brier")
+              assert paired and paired["bootstrap_replicates"] == 200
+              assert paired["bootstrap_unit"] == "Set B patient cluster"
+              assert "patient_ids" not in json.dumps(run).lower()
+          assert d["protocol"]["Set_B_role"] == "evaluation only"
+          assert d["protocol"]["no_Set_B_fit_or_selection"] is True
+          print(json.dumps({"runs": len(d["runs"]), "calibration_diagnostics": "complete",
+            "paired_brier_intervals": "complete", "Set_B_role": "evaluation only",
+            "row_level_predictions_retained": False}, indent=2))
+          PY
 
       - name: Verify aggregate-only result structure
         run: |
