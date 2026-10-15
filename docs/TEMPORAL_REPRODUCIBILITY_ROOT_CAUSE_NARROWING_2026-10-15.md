@@ -52,3 +52,18 @@ This is strong evidence that the five discrepancies are **not reproduced by the 
 - Historical baseline: unchanged.
 - Set B: evaluation-only.
 - Next: retain and inspect the passing run's cache/environment fingerprints, compare the earlier run's available environment logs, then require a second fresh pinned run on the updated workflow before declaring the reproduction gate stable.
+
+## Latest pinned Python 3.13 clean-checkout run — 15 October 2026
+
+Run [38702163220](https://github.com/culprit-k/VITALIS/actions/runs/38702163220) completed with reconciliation **FAIL** on exact source commit `a445b2b38a045c7cb2b27ad99687912ac951b16d`, Python 3.13.5, and the pinned environment. The retained aggregate-only artifact is [11957298608](https://github.com/culprit-k/VITALIS/actions/runs/38702163220/artifacts/11957298608), ZIP SHA-256 `8d8635345592516051218c35ad94e72aa8eb501042d4eb04e43ba7dc80c57670`.
+
+The fixed six-decimal gate reported 37/42 mean–SD pairs and 75/84 scalar values matching, with these five temporal-model discrepancies:
+- 1-hour specificity: mean rounds identically, sample SD does not (`0.0146516690` vs baseline `0.014651`).
+- 1-hour alerts per at-risk patient-day: fresh mean `1.461582`, SD `0.113262`; baseline `1.461593`, `0.113243`.
+- 3-hour Brier score: fresh mean `0.131345`, SD `0.003473`; baseline `0.131344`, `0.003472`.
+- 3-hour alerts per at-risk patient-day: fresh mean `1.276274`, SD `0.080704`; baseline `1.276286`, `0.080706`.
+- 3-hour future-positive-window coverage: fresh mean `0.293798`, SD `0.015117`; baseline `0.293435`, `0.014854`.
+
+The source manifest verified a clean checkout and exact Git blob matches for the evaluator (`891b84ad4a5da039f1dc38411211c503c971167c`), horizon implementation (`7d275dfb23ec86be25bdca26b9c30fc639887630`), and other manifest-listed files. The cache-builder blob also matches the historical result's recorded SHA `eba7dda1532675c2e3f21476b0bba2cead537e78`. The cohort source audit passed expected patient, row, and positive-label totals. These checks narrow the cause but do not prove that the historical local reconstruction used identical feature values, patient ordering, split membership, fit inputs, or temporal alarm summaries.
+
+**Updated disposition:** the earlier successful run on another commit does not close the gate; this newer Python 3.13 run fails. Do not label the gate passed, alter the six-decimal rule, overwrite the 14 October baseline, or tune against Set B. The next diagnostic must add aggregate-only cache/schema fingerprints and split/fit/alarm summaries to a fresh run, then compare them with any available historical evidence. If the historical execution cannot be reconstructed, propose a separately versioned replacement baseline for independent review rather than pretending the discrepancy is fixed. Set B remains evaluation-only and no row-level output may be uploaded.
