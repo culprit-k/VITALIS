@@ -18,7 +18,7 @@ permissions:
 
 concurrency:
   group: vitalis-full-cohort-reproduction
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   reproduce:
@@ -68,10 +68,13 @@ jobs:
           command -v aws
           aws --version
           mkdir -p "$RUNNER_TEMP/physionet_challenge_2019"
-          aws s3 ls --recursive s3://physionet-open/challenge-2019/1.0.0/ | head -n 30 || true
+          mkdir -p "$RUNNER_TEMP/physionet_challenge_2019/training_setA" "$RUNNER_TEMP/physionet_challenge_2019/training_setB"
           aws s3 sync --no-sign-request \
-            s3://physionet-open/challenge-2019/1.0.0/ \
-            "$RUNNER_TEMP/physionet_challenge_2019/"
+            s3://physionet-open/challenge-2019/1.0.0/training_setA/ \
+            "$RUNNER_TEMP/physionet_challenge_2019/training_setA/"
+          aws s3 sync --no-sign-request \
+            s3://physionet-open/challenge-2019/1.0.0/training_setB/ \
+            "$RUNNER_TEMP/physionet_challenge_2019/training_setB/"
           echo "VITALIS_DATA_ROOT=$RUNNER_TEMP/physionet_challenge_2019" >> "$GITHUB_ENV"
 
       - name: Audit source cohorts before feature generation
