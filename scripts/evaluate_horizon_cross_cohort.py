@@ -252,6 +252,8 @@ def main() -> None:
     if meta_a["columns"] != meta_b["columns"]:
         parser.error("Set A and Set B cache feature schemas differ")
 
+    with threadpool_limits(limits=1):
+        active_threadpools = threadpool_info()
     start = time.time()
     runs = []
     for seed in args.seeds:
@@ -284,7 +286,7 @@ def main() -> None:
         "runs": runs,
         "numerical_runtime": {
             "threadpool_limit_per_fit_and_prediction": 1,
-            "threadpools_observed_after_evaluation": threadpool_info(),
+            "threadpools_observed_under_single_thread_limit": active_threadpools,
             "note": "BLAS/OpenMP thread limits are applied explicitly around model fitting and prediction; runtime details are retained for reproducibility audits.",
         },
         "elapsed_seconds": round(time.time() - start, 3),
