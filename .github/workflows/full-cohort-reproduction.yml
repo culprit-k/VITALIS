@@ -54,6 +54,17 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
+      - name: Verify evaluator source matches preserved baseline provenance
+        shell: bash
+        run: |
+          actual="$(git hash-object scripts/evaluate_horizon_cross_cohort.py)"
+          expected="891b84ad4a5da039f1dc38411211c503c971167c"
+          printf 'Evaluator Git blob: %s\nExpected baseline evaluator blob: %s\n' "$actual" "$expected"
+          test "$actual" = "$expected" || {
+            echo "Evaluator source differs from the source blob recorded for the preserved baseline."
+            exit 1
+          }
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
