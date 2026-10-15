@@ -68,12 +68,10 @@ jobs:
           command -v aws
           aws --version
           mkdir -p "$RUNNER_TEMP/physionet_challenge_2019"
+          aws s3 ls --recursive s3://physionet-open/challenge-2019/1.0.0/ | head -n 30 || true
           aws s3 sync --no-sign-request \
             s3://physionet-open/challenge-2019/1.0.0/ \
-            "$RUNNER_TEMP/physionet_challenge_2019/" \
-            --exclude "*" \
-            --include "training_setA/*.psv" \
-            --include "training_setB/*.psv"
+            "$RUNNER_TEMP/physionet_challenge_2019/"
           echo "VITALIS_DATA_ROOT=$RUNNER_TEMP/physionet_challenge_2019" >> "$GITHUB_ENV"
 
       - name: Audit source cohorts before feature generation
