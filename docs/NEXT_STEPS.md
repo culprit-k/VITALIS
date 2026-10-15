@@ -687,3 +687,10 @@ The new files are committed on `work/strict-reproducibility-gate`. The GitHub in
 5. Do not begin live sensor ingestion, patient-facing alerts, hardware integration for patient care, or clinical deployment. The adaptive twin and forecasting models remain research software.
 
 VITALIS remains research-only and must not be used to guide patient care.
+
+
+### Verification update — reporting/dashboard CI (15 October 2026)
+
+- [x] Dedicated reporting/dashboard workflow passed on commit `493888e3c4a3c5d5a64867f9599d409f799064b1`: [workflow run 38682236905](https://github.com/culprit-k/VITALIS/actions/runs/38682236905). Compilation and Ruff checks passed; the full suite passed **192 tests**.
+- [x] General repository CI passed on commit `56a8b7b25208b8562ce1f271a87d4c5ef21a8ccc`: [workflow run 38682236904](https://github.com/culprit-k/VITALIS/actions/runs/38682236904), with **192 tests passed** and source/history audit steps successful.
+- [ ] The full-cohort clean-checkout reproduction is still running. The fresh Set A and Set B caches have completed, and the nine horizon × seed evaluation is in progress. Reconciliation and aggregate-artifact checks are still pending; do not mark Step 2 complete until the run ends and the predeclared rule is assessed.
