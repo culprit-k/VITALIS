@@ -4,6 +4,16 @@
 
 Python 3.13 clean-checkout run #38702163220 on source commit `a445b2b38a045c7cb2b27ad99687912ac951b16d` produced 37/42 matching mean/sample-SD pairs (75/84 scalar values). The preserved baseline is unchanged. The five differences are temporal-model metrics at horizons 1 h and 3 h.
 
+## Cross-runtime comparison after the pinned Python 3.11 pass
+
+The retained artifact for pinned Python 3.11 run #38692360591 reports 42/42 mean/sample-SD pairs and 84/84 scalar matches. The retained Python 3.13 diagnostic artifact for run #38712336504 reports 37/42 pairs and 75/84 scalar matches. The two runs have the same audited cohort totals and predeclared protocol, but the Python 3.13 artifact has no counterpart Python 3.11 cache fingerprint from that passing run, so cache equality between those exact runs is not established.
+
+Direct aggregate-output comparison shows small per-seed differences in temporal-model probabilities/metrics, with threshold-sensitive alert differences at 1 h and 3 h; even static-model Brier values differ at machine precision. This is consistent with numerical/runtime drift being a contributor, but it does **not** prove whether the cause is BLAS/runtime, feature matrix differences, or fit-path differences. Python 3.13 is diagnostic only; pinned Python 3.11 remains the declared acceptance gate.
+
+Commit `798de0c420d8de3d9bd433a7cb1a40d192f5550a` adds privacy-safe per-run diagnostics to the aggregate evaluator: schema and selected-feature hashes, split/training-target hashes, imputer/scaler/model parameter hashes, convergence iterations, prediction-array hash, aggregate prediction moments, and fixed score-band counts around 0.5. It does not export patient identifiers, feature rows, or row-level predictions and does not alter the model, threshold, seeds, horizons, or acceptance rule.
+
+The new diagnostics must be reviewed from a fresh pinned Python 3.11 run and a matching Python 3.13 diagnostic run. Compare fingerprints only within the same source revision and matching cohort/cache construction; do not infer cache equivalence from cohort totals alone.
+
 ## Highest-value next experiment
 
 The Python 3.11 workflow already invokes `scripts/audit_reproduction_cache.py`; the Python 3.13 diagnostic workflow does not. Add that exact cache-integrity audit step after both fresh cache builds and before evaluation, and include its aggregate-only JSON in the retained artifact. This is a diagnostic-only workflow change: it must not change feature construction, model fitting, threshold, seed, metric, baseline, or acceptance tolerance.
