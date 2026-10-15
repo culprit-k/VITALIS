@@ -1,6 +1,6 @@
 # Strict source and full-cohort reproduction gate
 
-**Status:** procedure defined; a fresh clean-checkout, pinned-environment full-cohort reproduction has **not** yet been completed. Do not mark this gate complete until a reviewer can inspect the command logs and aggregate comparison.
+**Status:** procedure defined; a fresh clean-checkout, environment-captured full-cohort reproduction has **not** yet been completed. The environment is recorded but not fully locked until a reviewed lock file or immutable container is adopted. Do not mark this gate complete until a reviewer can inspect the command logs and aggregate comparison.
 
 ## Goal
 
