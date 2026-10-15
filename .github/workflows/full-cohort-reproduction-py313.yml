@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - work/strict-reproducibility-gate
+  pull_request:
+    branches:
+      - work/exact-checkout-reproduction
     paths:
       - ".github/workflows/full-cohort-reproduction-py313.yml"
       - "pyproject.toml"
