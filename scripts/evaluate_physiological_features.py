@@ -1,4 +1,4 @@
-"""Predeclared causal patient-relative physiology feature ablation; aggregate outputs only."""
+"""Predeclared causal patient-relative physiology ablation with aggregate-only probability-quality analysis."""
 from __future__ import annotations
 import argparse, hashlib, json, time, warnings
 from pathlib import Path
