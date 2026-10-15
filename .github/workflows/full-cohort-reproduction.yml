@@ -14,6 +14,7 @@ on:
       - "scripts/evaluate_horizon_cross_cohort.py"
       - "scripts/evaluate_physiological_features.py"
       - "scripts/evaluate_set_a_platt_calibration.py"
+      - "tests/test_set_a_platt_calibration.py"
       - "docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md"
       - "scripts/verify_source_manifest.py"
       - "src/vitalis/horizon.py"
@@ -276,7 +277,7 @@ jobs:
             --output "$RUNNER_TEMP/vitalis_set_a_platt_calibration.json"
 
       - name: Verify Set A calibration partitioning and aggregate-only outputs
-        if: always()
+        if: success()
         run: |
           python - <<'PY'
           import json, os
@@ -304,7 +305,7 @@ jobs:
           PY
 
       - name: Verify probability-quality diagnostics are aggregate-only and complete
-        if: always()
+        if: success()
         run: |
           python - <<'PY'
           import json, os
