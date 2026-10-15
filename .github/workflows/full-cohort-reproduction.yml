@@ -1,6 +1,7 @@
 name: full-cohort-reproduction
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - work/strict-reproducibility-gate
