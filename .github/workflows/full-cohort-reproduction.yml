@@ -17,6 +17,7 @@ on:
       - "scripts/__init__.py"
       - "tests/test_set_a_platt_calibration.py"
       - "docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md"
+      - "docs/SET_A_PLATT_CALIBRATION_RESULTS_2026-10-16.md"
       - "scripts/verify_source_manifest.py"
       - "src/vitalis/horizon.py"
       - "src/vitalis/validation.py"
@@ -294,7 +295,7 @@ jobs:
               assert partitions["model_fit"] > 0 and partitions["calibration"] > 0
               assert partitions["unused_holdout"] > 0
               assert len({partitions["fit_patient_ids_sha256"], partitions["calibration_patient_ids_sha256"], partitions["unused_patient_ids_sha256"]}) == 3
-              assert set(run["models"]) == {"temporal_baseline", "temporal_plus_personal_physiology"}
+              assert set(run["models"]) == {"temporal_baseline_balanced", "temporal_baseline_unweighted", "temporal_plus_personal_physiology_balanced", "temporal_plus_personal_physiology_unweighted"}
               for model in run["models"].values():
                   assert model["calibrator"]["fit_partition"] == "patient-disjoint Set A calibration partition only"
                   assert model["calibrator"]["converged"] is True
