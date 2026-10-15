@@ -84,7 +84,7 @@ The checked-in evaluators must reject mismatched counts or schemas. If validatio
 
 ## 5. Run the predeclared evaluations without tuning on Set B
 
-Use output paths outside the repository. Preserve the existing committed aggregate reports as historical records; do not overwrite them or silently replace them with reconstructed results.
+Immediately before the evaluation commands, rerun `python scripts/verify_source_manifest.py --output /tmp/vitalis-source-manifest-pre-run.json`. Use output paths outside the repository. Preserve the existing committed aggregate reports as historical records; do not overwrite them or silently replace them with reconstructed results.
 
 ### Static/temporal future-label cross-cohort evaluation
 
