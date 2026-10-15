@@ -11,7 +11,8 @@ from typing import Any
 
 _FORBIDDEN_KEYS = {
     "patient_id", "patient_ids", "patient_records", "patient_predictions",
-    "row_level_predictions", "predictions", "probabilities", "y_true", "y_pred",
+    "patient_level_predictions", "row_level_predictions", "row_predictions",
+    "predictions", "probabilities", "prediction_probabilities", "y_true", "y_pred",
     "records", "score_archive",
 }
 _BASELINE_METRICS = (
@@ -108,6 +109,9 @@ def normalize_aggregate_report(report: Any) -> dict[str, Any]:
             "kind": "baseline",
             "metadata": metadata,
             "patient_counts": dict(report["patient_counts"]),
+            "test_alert_burden": report.get("test_alert_burden"),
+            "confusion_matrix": metrics.get("confusion_matrix"),
+            "limitations": report.get("limitations", []),
             "rows": rows,
         }
 
