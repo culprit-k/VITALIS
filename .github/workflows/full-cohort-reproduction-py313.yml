@@ -1,0 +1,407 @@
+name: full-cohort-reproduction-py313-diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - work/strict-reproducibility-gate
+    paths:
+      - ".github/workflows/full-cohort-reproduction-py313.yml"
+      - "pyproject.toml"
+      - "scripts/build_feature_cache.py"
+      - "scripts/evaluate_horizon_cross_cohort.py"
+      - "scripts/verify_source_manifest.py"
+      - "src/vitalis/horizon.py"
+      - "src/vitalis/validation.py"
+      - "constraints/reproduction-py313.txt"
+      - "docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vitalis-full-cohort-reproduction-py313
+  cancel-in-progress: true
+
+jobs:
+  reproduce:
+    name: Clean-checkout Set A to Set B reproduction
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      AWS_RETRY_MODE: standard
+      AWS_MAX_ATTEMPTS: "5"
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.5"
+          cache: pip
+
+      - name: Create isolated Python environment
+        run: |
+          python -m venv "$RUNNER_TEMP/vitalis-venv"
+          echo "$RUNNER_TEMP/vitalis-venv/bin" >> "$GITHUB_PATH"
+          echo "VITALIS_VENV=$RUNNER_TEMP/vitalis-venv" >> "$GITHUB_ENV"
+
+      - name: Capture pre-install source manifest
+        run: python scripts/verify_source_manifest.py --output "$RUNNER_TEMP/vitalis-source-manifest-preinstall.json"
+
+      - name: Install project and test dependencies
+        run: |
+          python -m pip install "pip==25.1.1" "setuptools==82.0.1" "wheel==0.45.1"
+          python -m pip install --no-build-isolation -c constraints/reproduction-py311.txt -e ".[dev,bootstrap-accelerated]"
+          python -m pip check
+          python - <<'PY'
+          import importlib.metadata as metadata
+          import json
+          import sys
+
+          expected = {
+              "pip": "25.1.1",
+              "setuptools": "82.0.1",
+              "wheel": "0.45.1",
+              "numpy": "2.3.5",
+              "pandas": "2.2.3",
+              "scikit-learn": "1.8.0",
+              "scipy": "1.17.0",
+              "joblib": "1.5.3",
+              "threadpoolctl": "3.6.0",
+              "numba": "0.65.1",
+              "llvmlite": "0.47.0",
+              "pytest": "9.0.2",
+              "ruff": "0.17.0",
+          }
+          actual = {}
+          mismatches = {}
+          for package, wanted in expected.items():
+              try:
+                  got = metadata.version(package)
+              except metadata.PackageNotFoundError:
+                  got = None
+              actual[package] = got
+              if got != wanted:
+                  mismatches[package] = {"expected": wanted, "actual": got}
+          print(json.dumps({
+              "python": sys.version,
+              "expected_core_environment": expected,
+              "actual_core_environment": actual,
+              "mismatches": mismatches,
+          }, indent=2))
+          if mismatches:
+              raise SystemExit("Pinned reproduction environment check failed.")
+          PY
+
+      - name: Verify source blobs and capture exact environment
+        run: |
+          python scripts/verify_source_manifest.py --output "$RUNNER_TEMP/vitalis-source-manifest-pre-run.json"
+          python -m pip freeze > "$RUNNER_TEMP/vitalis-pip-freeze.txt"
+          python -m compileall -q src scripts dashboard tests
+          python scripts/check_repository_hygiene.py
+          python scripts/audit_git_history.py --json-output "$RUNNER_TEMP/vitalis-history-audit.json"
+          pytest
+
+      - name: Download official Challenge 2019 cohorts to ephemeral runner storage
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v aws
+          aws --version
+          mkdir -p "$RUNNER_TEMP/physionet_challenge_2019"
+          mkdir -p "$RUNNER_TEMP/physionet_challenge_2019/training_setA" "$RUNNER_TEMP/physionet_challenge_2019/training_setB"
+          aws s3 sync --no-sign-request --only-show-errors --cli-connect-timeout 30 --cli-read-timeout 120 \
+            s3://physionet-open/challenge-2019/1.0.0/training/training_setA/ \
+            "$RUNNER_TEMP/physionet_challenge_2019/training_setA/"
+          aws s3 sync --no-sign-request --only-show-errors --cli-connect-timeout 30 --cli-read-timeout 120 \
+            s3://physionet-open/challenge-2019/1.0.0/training/training_setB/ \
+            "$RUNNER_TEMP/physionet_challenge_2019/training_setB/"
+          echo "VITALIS_DATA_ROOT=$RUNNER_TEMP/physionet_challenge_2019" >> "$GITHUB_ENV"
+
+      - name: Audit source cohorts before feature generation
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, hashlib, json, os
+          from pathlib import Path
+
+          root = Path(os.environ["VITALIS_DATA_ROOT"])
+          expected = {
+              "training_setA": {"patients": 20336, "rows": 790215, "positive_labels": 17136},
+              "training_setB": {"patients": 20000, "rows": 761995, "positive_labels": 10780},
+          }
+          report = {"source": "s3://physionet-open/challenge-2019/1.0.0/", "cohorts": {}}
+          for cohort, exp in expected.items():
+              paths = sorted((root / cohort).glob("*.psv"))
+              if len(paths) != exp["patients"]:
+                  raise SystemExit(f"{cohort}: expected {exp['patients']} PSV files, got {len(paths)}")
+              row_count = positive = malformed = nonbinary = reversions = 0
+              columns_ref = None
+              digest = hashlib.sha256()
+              for path in paths:
+                  with path.open("r", encoding="utf-8", newline="") as handle:
+                      reader = csv.reader(handle, delimiter="|")
+                      header = next(reader, None)
+                      if not header or len(header) != 41 or "SepsisLabel" not in header:
+                          malformed += 1
+                          continue
+                      if columns_ref is None:
+                          columns_ref = header
+                      elif header != columns_ref:
+                          malformed += 1
+                          continue
+                      label_i = header.index("SepsisLabel")
+                      last = 0
+                      file_rows = 0
+                      file_hash = hashlib.sha256()
+                      with path.open("rb") as raw:
+                          for block in iter(lambda: raw.read(1024 * 1024), b""):
+                              file_hash.update(block)
+                      digest.update(file_hash.digest())
+                      for row in reader:
+                          file_rows += 1
+                          if len(row) != len(header):
+                              malformed += 1
+                              continue
+                          try:
+                              label = int(row[label_i])
+                          except Exception:
+                              nonbinary += 1
+                              continue
+                          if label not in (0, 1):
+                              nonbinary += 1
+                              continue
+                          positive += label
+                          if last == 1 and label == 0:
+                              reversions += 1
+                          last = label
+                      row_count += file_rows
+              actual = {"patients": len(paths), "rows": row_count, "positive_labels": positive}
+              # Challenge labels describe the pre-onset lead window; a later 1-to-0 transition can be valid.
+              if actual != exp or malformed or nonbinary:
+                  raise SystemExit(
+                      f"{cohort} source audit failed: actual={actual}, malformed={malformed}, "
+                      f"nonbinary={nonbinary}, reversions={reversions}"
+                  )
+              report["cohorts"][cohort] = {
+                  **actual, "source_columns": len(columns_ref or []),
+                  "malformed_rows": malformed, "nonbinary_labels": nonbinary,
+                  "label_reversions": reversions,
+                  "ordered_file_content_fingerprint_sha256": digest.hexdigest(),
+              }
+          out = Path(os.environ["RUNNER_TEMP"]) / "vitalis-source-cohort-audit.json"
+          out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps({k: {x: v for x, v in val.items() if "fingerprint" not in x}
+                            for k, val in report["cohorts"].items()}, indent=2))
+          PY
+
+      - name: Build fresh Set A feature cache in disjoint chunks
+        run: |
+          set -euo pipefail
+          DATA="$VITALIS_DATA_ROOT/training_setA"
+          CACHE="$RUNNER_TEMP/vitalis-cache-set-a"
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 0 --end 5000
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 5000 --end 10000
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 10000 --end 15000
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 15000 --end 20336
+
+      - name: Build fresh Set B feature cache in disjoint chunks
+        run: |
+          set -euo pipefail
+          DATA="$VITALIS_DATA_ROOT/training_setB"
+          CACHE="$RUNNER_TEMP/vitalis-cache-set-b"
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 0 --end 5000
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 5000 --end 10000
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 10000 --end 15000
+          python scripts/build_feature_cache.py "$DATA" --cache-dir "$CACHE" --start 15000 --end 20000
+
+      - name: Run predeclared 1/3/6-hour, three-seed evaluation
+        run: |
+          python scripts/verify_source_manifest.py --output "$RUNNER_TEMP/vitalis-source-manifest-immediately-before-evaluation.json"
+          python scripts/evaluate_horizon_cross_cohort.py \
+            --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
+            --set-b-cache "$RUNNER_TEMP/vitalis-cache-set-b" \
+            --horizons 1 3 6 \
+            --seeds 42 123 2026 \
+            --threshold 0.5 \
+            --refractory-hours 6 \
+            --bootstrap-replicates 200 \
+            --output "$RUNNER_TEMP/horizon_cross_cohort_clean_checkout.json"
+
+      - name: Verify aggregate-only result structure
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "horizon_cross_cohort_clean_checkout.json"
+          d = json.loads(p.read_text())
+          assert len(d.get("runs", [])) == 9, f"Expected 9 seed/horizon runs, got {len(d.get('runs', []))}"
+          assert d["protocol"]["raw_data_or_row_level_predictions_exported"] is False
+          assert d["cohorts"]["set_a"]["patients"] == 20336
+          assert d["cohorts"]["set_b"]["patients"] == 20000
+          assert all(len(r["models"]) == 2 for r in d["runs"])
+          print(json.dumps({
+              "runs": len(d["runs"]),
+              "model_fits": sum(len(r["models"]) for r in d["runs"]),
+              "set_a_patients": d["cohorts"]["set_a"]["patients"],
+              "set_b_patients": d["cohorts"]["set_b"]["patients"],
+              "aggregate_only": True,
+              "source_revision": os.environ.get("GITHUB_SHA"),
+          }, indent=2))
+          PY
+
+      - name: Reconcile against preserved baseline (predeclared six-decimal rule)
+        run: |
+          python - <<'PY'
+          import json, os, statistics
+          from pathlib import Path
+
+          root = Path(os.environ["RUNNER_TEMP"])
+          fresh = json.loads((root / "horizon_cross_cohort_clean_checkout.json").read_text())
+          baseline = json.loads(Path("results/horizon_cross_cohort_2026-10-14.json").read_text())
+          metric_paths = {
+              "auroc": ("set_b_test_metrics", "auroc"),
+              "auprc": ("set_b_test_metrics", "auprc"),
+              "brier_score": ("set_b_test_metrics", "brier_score"),
+              "sensitivity": ("set_b_test_metrics", "sensitivity"),
+              "specificity": ("set_b_test_metrics", "specificity"),
+              "alerts_per_at_risk_patient_day": ("set_b_patient_warning_metrics", "alerts_per_at_risk_patient_day"),
+              "future_positive_window_coverage": ("set_b_patient_warning_metrics", "future_positive_window_coverage"),
+          }
+          mismatches = []
+          comparisons = []
+          baseline_by_horizon = {int(x["horizon_hours"]): x for x in baseline["aggregate_by_horizon"]}
+          for h, ref in baseline_by_horizon.items():
+              runs = [x for x in fresh["runs"] if int(x["horizon_hours"]) == h]
+              if sorted(int(x["seed"]) for x in runs) != [42, 123, 2026]:
+                  mismatches.append({"horizon_hours": h, "issue": "seed set differs"})
+                  continue
+              expected_rows = int(ref["set_b_eligible_rows"])
+              expected_positive = int(ref["set_b_positive_future_target_rows"])
+              for run in runs:
+                  if int(run["row_counts"]["set_b_eligible"]) != expected_rows:
+                      mismatches.append({"horizon_hours": h, "seed": run["seed"], "issue": "Set B eligible row count differs"})
+                  if int(run["positive_target_rows"]["set_b_test"]) != expected_positive:
+                      mismatches.append({"horizon_hours": h, "seed": run["seed"], "issue": "Set B future-positive row count differs"})
+              for model in ("static", "temporal"):
+                  for metric, (section, key) in metric_paths.items():
+                      values = []
+                      for run in sorted(runs, key=lambda x: int(x["seed"])):
+                          value = run["models"][model][section][key]
+                          if value is None:
+                              raise SystemExit(f"Missing metric: horizon={h}, model={model}, metric={metric}")
+                          values.append(float(value))
+                      mean = statistics.mean(values)
+                      sd = statistics.stdev(values)
+                      target_mean, target_sd = ref["models"][model][metric]
+                      item = {
+                          "horizon_hours": h, "model": model, "metric": metric,
+                          "fresh_mean": mean, "baseline_mean": target_mean,
+                          "fresh_sd": sd, "baseline_sd": target_sd,
+                          "mean_round6_match": round(mean, 6) == round(float(target_mean), 6),
+                          "sd_round6_match": round(sd, 6) == round(float(target_sd), 6),
+                      }
+                      comparisons.append(item)
+                      if not item["mean_round6_match"] or not item["sd_round6_match"]:
+                          mismatches.append(item)
+          result = {
+              "status": "pass" if not mismatches and len(comparisons) == 42 else "fail",
+              "rule": "Exact match after rounding each mean and sample SD to six decimal places; fixed before this dependency-pinned rerun.",
+              "metric_mean_sd_pairs": len(comparisons),
+              "matching_pairs": len(comparisons) - sum(1 for x in comparisons if not x["mean_round6_match"] or not x["sd_round6_match"]),
+              "scalar_values_matching": sum(int(x["mean_round6_match"]) + int(x["sd_round6_match"]) for x in comparisons),
+              "scalar_values_expected": 2 * len(comparisons),
+              "mismatch_count": len(mismatches),
+              "mismatches": mismatches,
+          }
+          out = root / "vitalis-reconciliation.json"
+          out.write_text(json.dumps(result, indent=2) + "\n")
+          print(json.dumps({k: v for k, v in result.items() if k != "mismatches"}, indent=2))
+          if result["status"] != "pass":
+              raise SystemExit("Reconciliation failed; preserve both outputs and investigate without changing the predeclared rule.")
+          PY
+
+      - name: Create concise aggregate report
+        if: always()
+        run: |
+          if [ ! -f "$RUNNER_TEMP/horizon_cross_cohort_clean_checkout.json" ]; then echo "Evaluation output was not produced." > "$RUNNER_TEMP/horizon_cross_cohort_clean_checkout_report.md"; exit 0; fi
+          python - <<'PY'
+          import json, os, statistics
+          from pathlib import Path
+          root = Path(os.environ["RUNNER_TEMP"])
+          data = json.loads((root / "horizon_cross_cohort_clean_checkout.json").read_text())
+          reconciliation_path = root / "vitalis-reconciliation.json"
+          reconciliation = json.loads(reconciliation_path.read_text()) if reconciliation_path.exists() else None
+          grouped = {}
+          for run in data["runs"]:
+              for model_name, model in run["models"].items():
+                  m = model["set_b_test_metrics"]
+                  w = model["set_b_patient_warning_metrics"]
+                  key = (run["horizon_hours"], model_name)
+                  grouped.setdefault(key, []).append({
+                      "auroc": m["auroc"], "auprc": m["auprc"], "brier": m["brier_score"],
+                      "sensitivity": m["sensitivity"], "ppv": m["ppv"],
+                      "alerts_day": w["alerts_per_at_risk_patient_day"],
+                      "coverage": w["future_positive_window_coverage"],
+                  })
+          lines = [
+              "# VITALIS clean-checkout full-cohort reproduction",
+              "",
+              f"- Commit: {os.environ.get('GITHUB_SHA', 'unknown')}",
+              "- Runtime: Python 3.11 on GitHub-hosted Ubuntu runner.",
+              "- Dataset: official PhysioNet/CinC Challenge 2019 Set A and Set B, downloaded to ephemeral runner storage.",
+              "- Protocol: horizons 1/3/6 hours; seeds 42/123/2026; static and temporal logistic regression; fixed threshold 0.5; six-hour refractory interval; 200 patient-cluster bootstrap replicates.",
+              "- Set B is evaluation-only. No raw data, feature caches, patient-level predictions, or patient identifiers are included in this artifact.",
+              f"- Baseline reconciliation: {reconciliation.get('status', 'unknown')}." if reconciliation else "- Baseline reconciliation: not completed.",
+              "- Target is entry into the Challenge SepsisLabel-positive window, not independently observed sepsis onset.",
+              "",
+              "| Horizon | Model | AUROC mean ± SD | AUPRC mean ± SD | Brier mean ± SD | Sensitivity @ 0.5 | PPV @ 0.5 | Alerts / at-risk patient-day mean ± SD | Future-positive-window coverage mean ± SD |",
+              "|---:|---|---:|---:|---:|---:|---:|---:|---:|",
+          ]
+          for (h, model), vals in sorted(grouped.items()):
+              def fmt(k):
+                  xs = [v[k] for v in vals if v[k] is not None]
+                  if not xs: return "NA"
+                  sd = statistics.stdev(xs) if len(xs) > 1 else 0
+                  return f"{statistics.mean(xs):.6f} ± {sd:.6f}"
+              lines.append(
+                  f"| {h} h | {model} | {fmt('auroc')} | {fmt('auprc')} | {fmt('brier')} | "
+                  f"{statistics.mean([v['sensitivity'] for v in vals if v['sensitivity'] is not None]):.6f} | "
+                  f"{statistics.mean([v['ppv'] for v in vals if v['ppv'] is not None]):.6f} | "
+                  f"{fmt('alerts_day')} | {fmt('coverage')} |"
+              )
+          lines += [
+              "",
+              "## Scope and limitations",
+              "",
+              "This is a retrospective cross-cohort software reproduction, not clinical validation. Set B is another Challenge training cohort. The fixed threshold and refractory interval are research defaults, and outside-window alerts are not verified clinical false alarms. Independent statistical/source review and genuinely external validation remain open.",
+          ]
+          (root / "horizon_cross_cohort_clean_checkout_report.md").write_text("\n".join(lines) + "\n")
+          PY
+
+      - name: Retain aggregate outputs and provenance (no patient-level artifacts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitalis-clean-checkout-reproduction-py313-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/horizon_cross_cohort_clean_checkout.json
+            ${{ runner.temp }}/horizon_cross_cohort_clean_checkout_report.md
+            ${{ runner.temp }}/vitalis-source-cohort-audit.json
+            ${{ runner.temp }}/vitalis-source-manifest-preinstall.json
+            ${{ runner.temp }}/vitalis-source-manifest-pre-run.json
+            ${{ runner.temp }}/vitalis-source-manifest-immediately-before-evaluation.json
+            ${{ runner.temp }}/vitalis-history-audit.json
+            ${{ runner.temp }}/vitalis-pip-freeze.txt
+            ${{ runner.temp }}/vitalis-reconciliation.json
+          if-no-files-found: ignore
+          retention-days: 30
