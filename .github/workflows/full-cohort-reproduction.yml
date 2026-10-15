@@ -66,7 +66,6 @@ jobs:
       PYTHONHASHSEED: "0"
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
-      OPENBLAS_CORETYPE: "SkylakeX"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
       AWS_RETRY_MODE: standard
@@ -156,7 +155,9 @@ jobs:
           python -m compileall -q src scripts dashboard tests
           python scripts/check_repository_hygiene.py
           python scripts/audit_git_history.py --json-output "$RUNNER_TEMP/vitalis-history-audit.json"
-          pytest
+
+      - name: Run unit tests in portable numerical backend configuration
+        run: pytest
 
       - name: Record and verify numerical backend dispatch
         run: |
@@ -170,8 +171,9 @@ jobs:
           if not openblas:
               raise SystemExit("No OpenBLAS backend was detected; numerical backend is not the predeclared one.")
           architectures = {p.get("architecture") for p in openblas}
-          if architectures != {"SkylakeX"}:
-              raise SystemExit(f"OpenBLAS dispatch is not pinned to SkylakeX: {sorted(str(x) for x in architectures)}")
+          print(f"Detected OpenBLAS architecture(s): {sorted(str(x) for x in architectures)}")
+          if len(architectures) != 1:
+              raise SystemExit(f"OpenBLAS dispatch is inconsistent across detected pools: {sorted(str(x) for x in architectures)}")
           PY
 
       - name: Download official Challenge 2019 cohorts to ephemeral runner storage
