@@ -18,7 +18,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from threadpoolctl import threadpool_limits
 
-from scripts.evaluate_physiological_features import (
+from evaluate_physiological_features import (
     BASE, EXPECTED, VITALS, calibration_summary, load_cache, metric,
     paired_brier_cluster_bootstrap, personal_z,
 )
