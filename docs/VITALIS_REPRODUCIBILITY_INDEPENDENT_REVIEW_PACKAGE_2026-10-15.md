@@ -5,6 +5,14 @@
 **Working branch:** `work/strict-reproducibility-gate`  
 **Purpose:** Give an independent reviewer a compact, privacy-safe route to assess the full-cohort reproduction and its limits.
 
+## Verification status update — 15 October 2026, 11:00 Uzbekistan time
+
+- Python 3.13.5 clean-checkout run [38705107992](https://github.com/culprit-k/VITALIS/actions/runs/38705107992) completed successfully on the diagnostic workflow: all 42 mean/sample-SD pairs and 84 scalar values matched the preserved aggregate at six decimals; the cache-integrity audit and aggregate-only artifact upload passed. Artifact SHA-256: `6f910a4831d38d49ea1c78c7b460d67c046062a80f7768569bf23fcec55e4170`.
+- A subsequent Python 3.13.5 run [38706807345](https://github.com/culprit-k/VITALIS/actions/runs/38706807345) is still in progress at the source-cohort download step. It is not counted as a pass yet.
+- The corrected Python 3.11.17 workflow now checks out the exact source commit rather than a synthetic PR merge commit. The Python 3.11 same-source result for the current head has **not been verified from available run evidence**. Do not close Stage 2 until its current-head run and retained reconciliation artifact are inspected.
+- The immutable baseline and six-decimal acceptance rule remain unchanged. The successful Python 3.13 result does not by itself establish cross-runtime agreement or explain the earlier five temporal-metric discrepancies.
+- Next gate: verify the exact current-head Python 3.11.17 run, confirm the 42/42 + 84/84 result and cache audit, and confirm artifact privacy. If the Python 3.11 run fails, preserve the failure and investigate rather than changing the protocol. Stage 3 physiological-algorithm comparisons remain blocked until this gate and independent review are complete.
+
 ## Executive status
 
 - The initial clean-checkout full-cohort run [38692360591](https://github.com/culprit-k/VITALIS/actions/runs/38692360591), at commit `627b0d5b0f06f6d178a16e2d38f8b6f21c141160`, passed the predeclared aggregate reconciliation: **42/42 mean/sample-SD pairs and 84/84 scalar values matched** after rounding to six decimal places; its fresh cache-integrity audit passed for both cohorts.
