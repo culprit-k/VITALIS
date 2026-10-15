@@ -8,10 +8,18 @@ def test_normalizes_baseline_metrics() -> None:
     result = normalize_aggregate_report({
         "model": "static",
         "patient_counts": {"test": 12},
-        "test_metrics": {"auroc": 0.71, "auprc": 0.08, "rows": 99},
+        "test_metrics": {
+            "auroc": 0.71, "auprc": 0.08, "rows": 99,
+            "confusion_matrix": {"tp": 2, "fp": 3, "tn": 5, "fn": 2},
+        },
+        "test_alert_burden": {"alerts_per_patient_day": 0.4},
+        "limitations": ["Synthetic test report."],
     })
     assert result["kind"] == "baseline"
     assert result["patient_counts"]["test"] == 12
+    assert result["confusion_matrix"] == {"tp": 2, "fp": 3, "tn": 5, "fn": 2}
+    assert result["test_alert_burden"] == {"alerts_per_patient_day": 0.4}
+    assert result["limitations"] == ["Synthetic test report."]
     assert {row["metric"] for row in result["rows"]} == {"auroc", "auprc"}
     assert all(row["value"] >= 0 for row in result["rows"])
 
@@ -60,6 +68,15 @@ def test_normalizes_source_verified_flat_aggregate_metrics() -> None:
 def test_rejects_unsupported_report_shapes(report: object) -> None:
     with pytest.raises(AggregateReportError):
         normalize_aggregate_report(report)
+
+
+def test_rejects_patient_level_prediction_field_variants() -> None:
+    with pytest.raises(AggregateReportError, match="row-level"):
+        normalize_aggregate_report({
+            "patient_counts": {"test": 1},
+            "test_metrics": {"auroc": 0.7},
+            "patient_level_predictions": [0.2, 0.9],
+        })
 
 
 def test_rejects_row_level_prediction_fields() -> None:
