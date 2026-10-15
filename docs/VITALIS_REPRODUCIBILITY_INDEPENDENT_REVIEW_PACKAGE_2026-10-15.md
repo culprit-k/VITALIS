@@ -1,0 +1,81 @@
+# VITALIS reproducibility and independent review package
+
+**Prepared:** 15 October 2026  
+**Repository:** `culprit-k/VITALIS`  
+**Working branch:** `work/strict-reproducibility-gate`  
+**Purpose:** Give an independent reviewer a compact, privacy-safe route to assess the full-cohort reproduction and its limits.
+
+## Executive status
+
+- The clean-checkout full-cohort run [38692360591](https://github.com/culprit-k/VITALIS/actions/runs/38692360591), at commit `627b0d5b0f06f6d178a16e2d38f8b6f21c141160`, passed the predeclared aggregate reconciliation: **42/42 mean/sample-SD pairs and 84/84 scalar values matched** after rounding to six decimal places.
+- Its fresh cache-integrity audit passed for both cohorts.
+- The repository's automated unit and dashboard test runs for the later documentation/artifact commits have also passed as of preparation; see Actions for current status.
+- The repeat full-cohort verification on the updated artifact workflow is not yet confirmed complete in this document. Do not treat the initial pass as two independent passing runs.
+- The five mismatches in the earlier run remain unexplained at root-cause level. Environment/dependency drift is plausible, not proven.
+- The preserved historical aggregate `results/horizon_cross_cohort_2026-10-14.json` is immutable for this investigation. No thresholds, seeds, horizons, metrics, or acceptance tolerances were changed to achieve the pass.
+
+## Reproduction protocol
+
+| Item | Locked setting |
+|---|---|
+| Source data | Official PhysioNet/CinC Challenge 2019 training Set A and Set B |
+| Set A | 20,336 patients; 790,215 hourly rows; 17,136 positive Challenge labels |
+| Set B | 20,000 patients; 761,995 hourly rows; 10,780 positive Challenge labels |
+| Feature matrix | 109 features |
+| Horizons | 1, 3, and 6 hours |
+| Seeds | 42, 123, and 2026 |
+| Models | Static and temporal logistic-regression baselines |
+| Train/holdout split | Patient-disjoint 60% train / 40% unused holdout on Set A |
+| Evaluation cohort | All eligible Set B patients; evaluation-only |
+| Alert threshold | 0.5, fixed before evaluation |
+| Refractory interval | 6 hours |
+| Cluster bootstrap | 200 patient-level replicates |
+| Environment | Python 3.11.17 with pins in `constraints/reproduction-py311.txt`; BLAS/OpenMP threads fixed to one |
+| Acceptance | Each mean and sample SD must match the preserved baseline after rounding to six decimal places |
+| Metrics | AUROC, AUPRC, Brier score, sensitivity, specificity, alerts per at-risk patient-day, future-positive-window coverage |
+
+The target is entry into the Challenge `SepsisLabel`-positive window, not independently observed biological sepsis onset. Set B is a second Challenge training cohort and is **not** a prospective or independent clinical validation cohort.
+
+## Evidence to retain and inspect
+
+1. **Exact source revision:** record the tested commit SHA and verify source manifests.
+2. **Environment:** inspect the retained `vitalis-pip-freeze.txt`, Python version, package-pin check, and pre-/pre-evaluation source manifests in the GitHub Actions artifact.
+3. **Cohort audit:** verify the aggregate patient, row, label, schema, and ordered source-file fingerprints.
+4. **Cache integrity:** inspect `vitalis-cache-integrity-audit.json` for the 109-feature schema hash, ordered file-list fingerprints, hashes of the aggregate cache arrays, finite-value counts, feature-summary hashes, and patient-block checks.
+5. **Evaluation and reconciliation:** inspect `horizon_cross_cohort_clean_checkout.json`, `vitalis-reconciliation.json`, and the concise Markdown report.
+6. **Privacy check:** confirm the artifact contains no raw PSV source files, feature caches, patient identifiers, or row-level predictions.
+
+The aggregate cache hashes are fingerprints, not a substitute for a historical cache fingerprint. Since the historical run did not retain an equivalent verified cache manifest, the current audit cannot prove byte-for-byte identity with that historical cache.
+
+## Independent reviewer checklist
+
+Please record each item as **Pass**, **Fail**, or **Not assessable**, with a short rationale and a reference to the evidence.
+
+- [ ] The commit SHA, source manifests, and environment are unambiguous.
+- [ ] Both cohort counts and source-label audits agree with the protocol.
+- [ ] Feature construction and the ordered 109-feature schema are reviewed.
+- [ ] Patient-disjoint split semantics are verified; no patient crosses train/holdout.
+- [ ] Set B is used only for final evaluation, not fitting, calibration, feature selection, model selection, or threshold selection.
+- [ ] Horizon target construction does not use future information beyond the explicitly defined target label.
+- [ ] Metrics, patient-level alert counting, refractory handling, and patient-cluster uncertainty calculations are independently checked.
+- [ ] The 42 mean/SD comparisons use the predeclared six-decimal acceptance rule without exceptions.
+- [ ] The retained artifacts contain aggregate results only and no prohibited patient-level data.
+- [ ] The earlier five mismatches are addressed honestly; no unsupported root-cause claim is made.
+- [ ] Limitations are clear: Challenge-label target, retrospective data, no external clinical validation, and no claim of clinical utility.
+- [ ] A second clean run on the updated workflow has completed and independently passes.
+
+## Questions the review must answer
+
+1. Can the reviewer reproduce the aggregate report from the exact source commit and pinned environment?
+2. Are the split, label horizon, and alert metrics implemented as described?
+3. Is the initial 42/42 pass repeatable on the updated workflow?
+4. What evidence, if any, identifies the root cause of the earlier five mismatches? If not identifiable, state that explicitly.
+5. Are any protocol, documentation, privacy, or statistical issues unresolved before this reproduction milestone is accepted?
+
+## Decision rule
+
+Do not mark the reproduction milestone accepted solely because a single run passed. Require the updated-workflow repeat run, review of the retained evidence, and a written reviewer disposition. If the historical discrepancy cannot be explained, preserve both records and document the uncertainty; do not rewrite the historical baseline to fit the new run.
+
+## Clinical and engineering boundary
+
+This is a retrospective software-reproducibility exercise. It does not establish safe alarm settings, prospective clinical performance, clinical utility, or readiness for hardware integration. External validation and a separately reviewed clinical-risk plan are prerequisites before making clinical claims or translating the model into a medical device.
