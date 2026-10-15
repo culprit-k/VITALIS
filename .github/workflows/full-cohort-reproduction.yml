@@ -18,6 +18,7 @@ on:
       - "constraints/reproduction-py311.txt"
       - "docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md"
       - "docs/VITALIS_REPRODUCIBILITY_INDEPENDENT_REVIEW_PACKAGE_2026-10-15.md"
+      - "docs/REPRODUCTION_FAILURE_TRIAGE_2026-10-15.md"
 
 permissions:
   contents: read
