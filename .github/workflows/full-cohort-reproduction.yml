@@ -60,6 +60,45 @@ jobs:
           python -m pip install "pip==25.1.1" "setuptools==82.0.1" "wheel==0.45.1"
           python -m pip install --no-build-isolation -c constraints/reproduction-py311.txt -e ".[dev,bootstrap-accelerated]"
           python -m pip check
+          python - <<'PY'
+          import importlib.metadata as metadata
+          import json
+          import sys
+
+          expected = {
+              "pip": "25.1.1",
+              "setuptools": "82.0.1",
+              "wheel": "0.45.1",
+              "numpy": "2.3.5",
+              "pandas": "2.2.3",
+              "scikit-learn": "1.8.0",
+              "scipy": "1.17.0",
+              "joblib": "1.5.3",
+              "threadpoolctl": "3.6.0",
+              "numba": "0.65.1",
+              "llvmlite": "0.47.0",
+              "pytest": "9.0.2",
+              "ruff": "0.17.0",
+          }
+          actual = {}
+          mismatches = {}
+          for package, wanted in expected.items():
+              try:
+                  got = metadata.version(package)
+              except metadata.PackageNotFoundError:
+                  got = None
+              actual[package] = got
+              if got != wanted:
+                  mismatches[package] = {"expected": wanted, "actual": got}
+          print(json.dumps({
+              "python": sys.version,
+              "expected_core_environment": expected,
+              "actual_core_environment": actual,
+              "mismatches": mismatches,
+          }, indent=2))
+          if mismatches:
+              raise SystemExit("Pinned reproduction environment check failed.")
+          PY
 
       - name: Verify source blobs and capture exact environment
         run: |
