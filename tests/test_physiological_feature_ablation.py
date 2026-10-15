@@ -33,3 +33,30 @@ def test_personal_physiology_features_are_prior_only_and_patient_local():
     assert np.isfinite(z[21]).any()
     # Patient-specific references and current deviations differ between patients.
     assert not np.allclose(z[10], z[21], equal_nan=True)
+
+
+from scripts.evaluate_physiological_features import paired_brier_cluster_bootstrap, calibration_summary
+
+
+def test_paired_brier_bootstrap_is_paired_and_aggregate_only():
+    y = np.asarray([0, 1, 0, 1, 0, 0], dtype=np.int8)
+    baseline = np.asarray([0.2, 0.4, 0.3, 0.6, 0.1, 0.2])
+    candidate = np.asarray([0.1, 0.6, 0.2, 0.7, 0.1, 0.1])
+    groups = np.asarray([1, 1, 2, 2, 3, 3])
+    result = paired_brier_cluster_bootstrap(y, baseline, candidate, groups, 100, 7)
+    expected = float(np.mean((candidate-y)**2) - np.mean((baseline-y)**2))
+    assert np.isclose(result["point_estimate"], expected)
+    assert result["bootstrap_replicates"] == 100
+    assert result["unique_patients"] == 3
+    assert result["bootstrap_unit"] == "Set B patient cluster"
+    assert "predictions" not in result
+
+
+def test_calibration_summary_is_descriptive_and_does_not_transform_probabilities():
+    y = np.asarray([0, 0, 0, 1, 0, 1, 0, 0], dtype=np.int8)
+    p = np.asarray([0.1, 0.2, 0.15, 0.7, 0.3, 0.6, 0.05, 0.2])
+    result = calibration_summary(y, p)
+    assert np.isfinite(result["calibration_intercept_slope_fixed_1"])
+    assert np.isfinite(result["calibration_intercept_free_slope"])
+    assert np.isfinite(result["calibration_slope"])
+    assert "no calibration transformation applied" in result["interpretation"]
