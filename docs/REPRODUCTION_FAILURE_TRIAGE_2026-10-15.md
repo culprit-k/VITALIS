@@ -1,22 +1,29 @@
 # Reproduction failure triage — 15 October 2026
 
-## Latest evidence update — run #38714974286
+## Latest same-source diagnostic comparison — run #38718273571
 
-The latest clean-checkout Python 3.13 diagnostic on source commit `3cec7115cb030c67c11a1b28f8baea1f901ba0b5` completed successfully and reports **42/42 mean/sample-SD pairs and 84/84 scalar values matching** the preserved baseline under the unchanged six-decimal diagnostic comparison. The run is diagnostic-only and is not the pinned Python 3.11 acceptance gate.
+The Python 3.13 diagnostic on current source commit `aa9f7a0d75b3c1f27a869ca853510ee160d02f23` completed successfully as a workflow, but the metric reconciliation is **37/42 mean/sample-SD pairs and 75/84 scalar values**; five pairs mismatch the unchanged historical reference. This remains diagnostic-only and is not the Python 3.11 acceptance gate.
 
-The retained artifact includes `vitalis-cache-integrity-audit.json`. Both cohort audits passed and report the expected totals and 109 features. Privacy-safe cache fingerprints:
+The cache-integrity audit in this run reports the same schema, ordered source-file list, X/y/group array hashes, feature summary hashes, cohort counts, and patient-block checks as the earlier Python 3.13 diagnostic artifact from run #38714974286, which reported 42/42 pairs. Thus the compared runs have matching audited cache identities, but not matching fitted model fingerprints or predictions. In the run metadata, OpenBLAS reports architecture `Haswell` for the latest run and `SkylakeX` for the earlier 42/42 run, while both report one BLAS/OpenMP thread. This is a plausible numerical-runtime contributor, not proof of root cause.
+
+The aggregate-only comparison found differences in coefficient/intercept/prediction hashes for both static and temporal models. Temporal-model score summaries and threshold-adjacent score-band counts differ as well; at least one horizon has alert-count changes. No patient-level values were exported. Next step is to run the pinned Python 3.11 acceptance workflow on this current source revision, then compare cache and model diagnostics across runtimes. Do not change the baseline, threshold, seeds, horizons, or acceptance rule.
+
+Current run: https://github.com/culprit-k/VITALIS/actions/runs/38718273571
+Earlier diagnostic: https://github.com/culprit-k/VITALIS/actions/runs/38714974286
+
+## Prior cache fingerprints (same values in both compared Python 3.13 artifacts)
+
+Both cohort audits passed and report the expected totals and 109 features. Privacy-safe cache fingerprints:
 - Set A schema SHA-256: `980504b21cc0b14cf20ef3c3374d9d51de82691c13b1cbc82246fc9904a366dc`
 - Set A X/y/group array SHA-256: `9f9379097b68581c9fdf7806a6b4dcb95e3a6e358b8fcefe0306845acf11c3fc` / `5678668bd7f97a21fe5f52fbd5a3ac8f5084802165a7355f113ee93770bd0de6` / `82c3c9aa39deae8deed1881edb3fb721ab7c05140c65d08e8a9b6e195f358298`
 - Set B schema SHA-256: `980504b21cc0b14cf20ef3c3374d9d51de82691c13b1cbc82246fc9904a366dc`
 - Set B X/y/group array SHA-256: `584ec01e021767e9065b5d8df305ce7a580bd3726b3a33683b3378455b4ef6d6` / `d7d714f5021ebfed38417a949c730d9c26c332b2f8c6b06be7cd185374957034` / `f0e6353406dfc7b6366aa890e350bae76f08cb499cba230cd79578ee715c5b00`
 
-These hashes are aggregate provenance, not patient data. They establish the latest run's cache identity but do not establish equality with the older Python 3.11 passing run because that artifact did not include this cache audit. Next action is to run the pinned Python 3.11 workflow on a revision containing the current diagnostics, then compare cache and per-model fingerprints only when artifacts are from matching source revisions and construction protocols.
-
-Run: https://github.com/culprit-k/VITALIS/actions/runs/38714974286
+These hashes are aggregate provenance, not patient data. They establish cache identity for these two Python 3.13 artifacts, but not cache equality with the older Python 3.11 passing run because that artifact did not include this cache audit.
 
 ## Earlier observed discrepancy
 
-Python 3.13 clean-checkout run #38702163220 on source commit `a445b2b38a045c7cb2b27ad99687912ac951b16d` produced 37/42 matching mean/sample-SD pairs (75/84 scalar values). Five differences were temporal-model metrics at horizons 1 h and 3 h. The later #38714974286 result above matched all pairs; do not generalize the earlier mismatch to the latest run.
+Python 3.13 clean-checkout run #38702163220 on source commit `a445b2b38a045c7cb2b27ad99687912ac951b16d` produced 37/42 matching mean/sample-SD pairs (75/84 scalar values). Five differences were temporal-model metrics at horizons 1 h and 3 h. Run #38714974286 later matched all pairs; run #38718273571 on the current source revision again reported 37/42. Do not generalize either diagnostic outcome as acceptance.
 
 ## Cross-runtime comparison after the pinned Python 3.11 pass
 
@@ -28,7 +35,7 @@ Commit `798de0c420d8de3d9bd433a7cb1a40d192f5550a` adds privacy-safe per-run diag
 
 ## Next diagnostic
 
-The Python 3.11 workflow already invokes `scripts/audit_reproduction_cache.py`; the current Python 3.13 diagnostic workflow also now retains the same cache-integrity audit. The latest artifact's cache hashes must be compared with a fresh pinned Python 3.11 artifact generated on a matching source revision. If cache fingerprints match but model fingerprints differ, investigate split ordering and dependency/runtime effects. If probabilities match but alert metrics differ, test temporal alarm/refractory/window summaries against small synthetic fixtures.
+The Python 3.11 workflow already invokes `scripts/audit_reproduction_cache.py`; the Python 3.13 diagnostic workflow also retains the same cache-integrity audit. The next required step is a fresh pinned Python 3.11 artifact from the current source revision. Compare its cache hashes with the same-revision Python 3.13 artifact. If cache fingerprints match but model fingerprints differ, investigate split ordering, solver convergence, dependency/runtime effects, and CPU/BLAS behavior. If probabilities match but alert metrics differ, test temporal alarm/refractory/window summaries against small synthetic fixtures.
 
 No patient-level predictions or identifiers may be exported. Set B remains evaluation-only; diagnostics must not be used to tune the model or threshold.
 
