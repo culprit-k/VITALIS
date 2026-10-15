@@ -409,6 +409,7 @@ jobs:
             ${{ runner.temp }}/vitalis-source-manifest-pre-run.json
             ${{ runner.temp }}/vitalis-source-manifest-immediately-before-evaluation.json
             ${{ runner.temp }}/vitalis-history-audit.json
+            ${{ runner.temp }}/vitalis-cache-integrity-audit.json
             ${{ runner.temp }}/vitalis-pip-freeze.txt
             ${{ runner.temp }}/vitalis-reconciliation.json
           if-no-files-found: ignore
