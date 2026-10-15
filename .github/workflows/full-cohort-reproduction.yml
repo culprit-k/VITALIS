@@ -14,6 +14,7 @@ on:
       - "scripts/evaluate_horizon_cross_cohort.py"
       - "scripts/evaluate_physiological_features.py"
       - "scripts/evaluate_set_a_platt_calibration.py"
+      - "scripts/__init__.py"
       - "tests/test_set_a_platt_calibration.py"
       - "docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md"
       - "scripts/verify_source_manifest.py"
