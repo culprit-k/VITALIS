@@ -38,3 +38,17 @@ This narrows one hypothesis; it does not identify the root cause.
 - No model or evaluation code was changed in this diagnostic note.
 - No raw patient data, caches, identifiers, or row-level predictions are committed.
 - Step 2 remains **not accepted** until evidence explains the discrepancies or an independently reviewed replacement-baseline decision is approved.
+
+## New evidence: pinned clean-checkout run
+
+The full-cohort workflow on commit `627b0d5b0f06f6d178a16e2d38f8b6f21c141160` completed successfully on 15 October 2026 (run [38692360591](https://github.com/culprit-k/VITALIS/actions/runs/38692360591)). Under the workflow's pinned Python 3.11 environment and fresh feature caches, the predeclared reconciliation reported **42/42 mean/sample-SD pairs matched**, **84/84 scalar values matched**, and **zero mismatches** after rounding to six decimals. The cache-integrity audit also passed: both cohorts had the expected patient/row/positive-label counts, 109 features, contiguous patient blocks, and patient block lengths consistent with metadata.
+
+This is strong evidence that the five discrepancies are **not reproduced by the current pinned clean-checkout workflow**. It is not sufficient to claim the historical cause is definitively identified: the prior failing Python 3.11 run's exact dependency set and execution artifacts must be compared against this passing run. The preserved 14 October baseline remains unchanged. The current workflow is being updated to retain the cache audit JSON as an aggregate-only artifact so reviewers can inspect the fingerprints without access to patient-level material.
+
+## Current status and next action
+
+- Current pinned clean-checkout acceptance result: **PASS (42/42 pairs)**.
+- Historical cause of the earlier failures: **not yet proven**; dependency/environment drift is a leading hypothesis, not a confirmed explanation.
+- Historical baseline: unchanged.
+- Set B: evaluation-only.
+- Next: retain and inspect the passing run's cache/environment fingerprints, compare the earlier run's available environment logs, then require a second fresh pinned run on the updated workflow before declaring the reproduction gate stable.
