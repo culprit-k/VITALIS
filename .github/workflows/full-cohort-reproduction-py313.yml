@@ -36,6 +36,7 @@ jobs:
       PYTHONHASHSEED: "0"
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "SkylakeX"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
       AWS_RETRY_MODE: standard
@@ -115,6 +116,22 @@ jobs:
           python scripts/check_repository_hygiene.py
           python scripts/audit_git_history.py --json-output "$RUNNER_TEMP/vitalis-history-audit.json"
           pytest
+
+      - name: Record and verify numerical backend dispatch
+        run: |
+          python - <<'PY'
+          import json
+          from threadpoolctl import threadpool_info
+
+          pools = threadpool_info()
+          openblas = [p for p in pools if p.get("internal_api") == "openblas"]
+          print(json.dumps({"threadpools": pools}, indent=2))
+          if not openblas:
+              raise SystemExit("No OpenBLAS backend was detected; numerical backend is not the predeclared one.")
+          architectures = {p.get("architecture") for p in openblas}
+          if architectures != {"SkylakeX"}:
+              raise SystemExit(f"OpenBLAS dispatch is not pinned to SkylakeX: {sorted(str(x) for x in architectures)}")
+          PY
 
       - name: Download official Challenge 2019 cohorts to ephemeral runner storage
         shell: bash
