@@ -46,6 +46,45 @@ def metric(y,p,threshold):
       "specificity":float(tn/(tn+fp)) if tn+fp else None,"ppv":float(tp/(tp+fp)) if tp+fp else None,
       "npv":float(tn/(tn+fn)) if tn+fn else None,"confusion_matrix":{"tn":int(tn),"fp":int(fp),"fn":int(fn),"tp":int(tp)}}
 
+def paired_brier_cluster_bootstrap(y, p_base, p_candidate, groups, n_bootstrap, seed):
+    """Paired Set B Brier difference (candidate - baseline), resampling whole patients."""
+    y=np.asarray(y,dtype=np.int8); p_base=np.asarray(p_base,dtype=float)
+    p_candidate=np.asarray(p_candidate,dtype=float); groups=np.asarray(groups)
+    unique, inverse=np.unique(groups,return_inverse=True)
+    sums=np.zeros((len(unique),3),dtype=float)
+    np.add.at(sums[:,0],inverse,(p_base-y)**2)
+    np.add.at(sums[:,1],inverse,(p_candidate-y)**2)
+    np.add.at(sums[:,2],inverse,1.0)
+    point=float((sums[:,1].sum()-sums[:,0].sum())/sums[:,2].sum())
+    rng=np.random.default_rng(seed)
+    draws=rng.integers(0,len(unique),size=(n_bootstrap,len(unique)))
+    sampled=sums[draws].sum(axis=1)
+    deltas=(sampled[:,1]-sampled[:,0])/sampled[:,2]
+    return {"estimand":"Brier(candidate) - Brier(temporal baseline); negative favors candidate",
+      "point_estimate":point,"ci_95_percentile":{"lower":float(np.quantile(deltas,.025)),"upper":float(np.quantile(deltas,.975))},
+      "bootstrap_replicates":int(n_bootstrap),"bootstrap_unit":"Set B patient cluster","unique_patients":int(len(unique))}
+
+def calibration_summary(y,p):
+    """Descriptive calibration only; no recalibration is fitted or applied."""
+    from scipy.optimize import minimize
+    y=np.asarray(y,dtype=np.int8); p=np.clip(np.asarray(p,dtype=float),1e-7,1-1e-7)
+    logit=np.log(p/(1-p))
+    lo,hi=-30.0,30.0
+    for _ in range(80):
+        mid=(lo+hi)/2
+        pred=1/(1+np.exp(-np.clip(logit+mid,-40,40)))
+        if pred.mean()>y.mean(): hi=mid
+        else: lo=mid
+    intercept=(lo+hi)/2
+    def objective(theta):
+        z=np.clip(theta[0]+theta[1]*logit,-40,40)
+        return float(np.sum(np.logaddexp(0,z)-y*z))
+    fit=minimize(objective,np.array([0.0,1.0]),method="L-BFGS-B",bounds=[(-30,30),(-20,20)])
+    return {"calibration_intercept_slope_fixed_1":float(intercept),
+      "calibration_intercept_free_slope":float(fit.x[0]),"calibration_slope":float(fit.x[1]),
+      "calibration_fit_converged":bool(fit.success),
+      "interpretation":"Descriptive Set B diagnostics only; no calibration transformation applied."}
+
 def digest(a):
     a=np.ascontiguousarray(np.asarray(a))
     return hashlib.sha256(a.dtype.str.encode()+str(a.shape).encode()+a.tobytes()).hexdigest()
@@ -68,6 +107,7 @@ def run_one(ma,Xa,ya,ga,mb,Xb,yb,gb,horizon,seed,threshold,refractory,boot):
       "set_a_training_patients":len(train_groups),"set_a_heldout_unused_patients":len(unused_groups),
       "set_b_evaluation_patients":int(len(np.unique(tb.patient_ids))),"set_a_training_rows":int(len(train_rows)),
       "set_b_evaluation_rows":int(len(tb.targets)),"set_b_positive_target_rows":int(tb.targets.sum()),"models":{}}
+    predictions={}
     for name,indices,add_z in configs:
         def select(X,rows,z):
             raw=np.asarray(X[np.ix_(rows,indices)],dtype=np.float32)
@@ -81,6 +121,8 @@ def run_one(ma,Xa,ya,ga,mb,Xb,yb,gb,horizon,seed,threshold,refractory,boot):
             fit_seconds=time.time()-start
         with threadpool_limits(limits=1): p=model.predict_proba(test_X)[:,1]
         row_metrics=metric(tb.targets,p,threshold)
+        predictions[name]=np.asarray(p,dtype=np.float64).copy()
+        row_metrics['calibration_diagnostics']=calibration_summary(tb.targets,p)
         alert=evaluate_horizon_alerts(tb.targets,p,tb.patient_ids,tb.patient_time_indices,threshold=threshold,refractory_hours=refractory)
         ci=patient_cluster_bootstrap_horizon_alerts(tb.targets,p,tb.patient_ids,tb.patient_time_indices,threshold=threshold,refractory_hours=refractory,n_bootstrap=boot,seed=seed)
         clf=model[-1]
@@ -92,6 +134,13 @@ def run_one(ma,Xa,ya,ga,mb,Xb,yb,gb,horizon,seed,threshold,refractory,boot):
             "converged_within_max_iter":bool(np.all(np.asarray(clf.n_iter_)<clf.max_iter))}}
         print(f"horizon={horizon} seed={seed} model={name} AUROC={row_metrics['auroc']}",flush=True)
         del model,train_X,test_X,p
+    result["paired_probability_quality"]={
+      "temporal_baseline_vs_candidate_brier":paired_brier_cluster_bootstrap(
+        tb.targets,predictions["temporal_baseline"],predictions["temporal_plus_personal_physiology"],
+        tb.patient_ids,boot,seed+100000+horizon),
+      "note":"Paired patient-cluster uncertainty; Set B is evaluation-only. No calibration or threshold selection on Set B."
+    }
+    del predictions
     result["candidate_features"]={"channels":list(VITALS),"min_history":5,"scale_floor":1e-3,"uses_prior_rows_only":True}
     return result
 
@@ -110,7 +159,7 @@ def main():
       "cohorts":{"A":{"patients":len(np.unique(ga)),"rows":len(ya),"positive_labels":int(np.asarray(ya).sum())},
       "B":{"patients":len(np.unique(gb)),"rows":len(yb),"positive_labels":int(np.asarray(yb).sum())}},"runs":runs,
       "limitations":["Exploratory retrospective ablation, not clinical validation.","Set B is another Challenge training cohort, not independent prospective validation.",
-      "Candidate is a prior-only personal-deviation feature ablation, not the full streaming adaptive twin.","Do not use Set B results to tune/select the model or claim clinical benefit."]}
+      "Candidate is a prior-only personal-deviation feature ablation, not the full streaming adaptive twin.","Calibration intercept/slope are descriptive diagnostics; no Set B calibration is fitted or applied.","Paired Brier intervals quantify uncertainty for candidate-minus-baseline difference, not clinical benefit.","Do not use Set B results to tune/select the model or claim clinical benefit."]}
     a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(json.dumps(out,indent=2)+"\n")
     print(json.dumps({"runs":len(runs),"runtime_seconds":out["runtime_seconds"],"output":str(a.output)}))
 if __name__=="__main__": main()
