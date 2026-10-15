@@ -67,7 +67,7 @@ python scripts/audit_git_history.py --json-output /tmp/vitalis-repro-history-aud
 pytest
 ```
 
-Save both source manifests, package inventory, and test/audit logs outside the repository. The manifest records the commit/tree IDs, source blob checks, Python/platform metadata, and resolved package inventory. A successful test suite is necessary but does not by itself prove full-cohort result reproduction.
+Save both source manifests, package inventory, and test/audit logs outside the repository. CI retains its source manifest and history-audit JSON as a GitHub Actions artifact for 30 days; use the artifact from the exact reviewed commit, not a later run. The manifest records the commit/tree IDs, source blob checks, Python/platform metadata, and resolved package inventory. A successful test suite is necessary but does not by itself prove full-cohort result reproduction.
 
 ## 4. Validate local cohort sources and rebuild caches
 
