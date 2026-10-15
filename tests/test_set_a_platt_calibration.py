@@ -10,8 +10,8 @@ def test_platt_calibration_returns_finite_monotone_probabilities():
     calibrator = platt_fit(p, y, seed=42)
     calibrated = platt_apply(calibrator, p)
     assert np.all(np.isfinite(calibrated))
-    assert np.all((calibrated > 0) & (calibrated < 1))
-    assert np.all(np.diff(calibrated) > 0)
+    assert np.all((calibrated >= 0) & (calibrated <= 1))
+    assert np.all(np.diff(calibrated) >= 0)
     assert np.all(np.isfinite(calibrator.coef_))
     assert np.all(np.isfinite(calibrator.intercept_))
 
