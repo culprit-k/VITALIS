@@ -64,17 +64,23 @@ def test_build_manifest_rejects_missing_required_source(tmp_path: Path) -> None:
         manifest.build_manifest(root)
 
 
-def test_main_rejects_output_inside_repository(tmp_path: Path) -> None:
+def test_main_rejects_output_inside_repository(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     root = _repository(tmp_path)
-    inside = root / "manifest.json"
+    monkeypatch.setattr(
+        manifest.sys,
+        "argv",
+        [
+            "verify_source_manifest.py",
+            "--root",
+            str(root),
+            "--output",
+            str(root / "manifest.json"),
+        ],
+    )
 
     with pytest.raises(SystemExit) as error:
-        manifest.main_args_for_test = None
-        # Exercise the same path guard used by the CLI without relying on process cwd.
-        git_root = Path(manifest.git(root, "rev-parse", "--show-toplevel")).resolve()
-        output = inside.resolve()
-        assert output != git_root
-        assert git_root in output.parents
-        raise SystemExit(2)
+        manifest.main()
 
     assert error.value.code == 2
