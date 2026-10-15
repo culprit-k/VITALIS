@@ -78,6 +78,16 @@ if normalized["kind"] == "baseline":
     st.dataframe(frame[["metric", "model", "value"]], use_container_width=True, hide_index=True)
     chart_frame = frame.set_index("metric")[["value"]]
     st.bar_chart(chart_frame)
+    if normalized.get("test_alert_burden"):
+        st.subheader("Alert burden against challenge-label windows")
+        st.json(normalized["test_alert_burden"])
+    if normalized.get("confusion_matrix") is not None:
+        st.subheader("Confusion matrix at the stated threshold")
+        st.json(normalized["confusion_matrix"])
+    if normalized.get("limitations"):
+        st.subheader("Report-specific limitations")
+        for limitation in normalized["limitations"]:
+            st.write(f"- {limitation}")
 else:
     if "horizon_hours" in frame:
         horizon_values = sorted(
