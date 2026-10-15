@@ -20,6 +20,8 @@ The candidate uses the existing `add_patient_baseline_features` implementation w
 - 200 patient-cluster bootstrap replicates for aggregate alert metrics.
 - Set B is used only to calculate frozen models' descriptive metrics. It is not used for fitting, feature selection, calibration, threshold selection or model selection.
 - Metrics include AUROC, AUPRC, Brier score, threshold-specific metrics, forecast-window coverage, alerts per at-risk patient-day and patient-cluster uncertainty.
+- Probability-quality follow-up: report descriptive calibration-in-the-large, calibration intercept/slope for each frozen model, plus a paired patient-cluster bootstrap interval for the candidate-minus-temporal-baseline Brier score difference at each horizon/seed. Negative Brier differences favor the candidate. Calibration diagnostics are evaluation-only; no recalibration is fitted or applied on Set B.
+- The paired bootstrap resamples Set B patients as clusters and retains baseline/candidate pairing. It quantifies uncertainty in the Brier difference; it does not establish clinical benefit or correct for all model-selection uncertainty.
 
 ## Interpretation and stop rules
 This is an exploratory ablation on a second Challenge training cohort, not independent external or prospective validation. The target is Challenge label-window entry, not independently adjudicated biological onset. The 0.5 threshold is a fixed reference, not clinically selected. Do not select the candidate based on Set B results or tune parameters against Set B. Any further model selection must use development data only, freeze the full model/policy and be assessed on a genuinely new independent cohort.
