@@ -66,7 +66,7 @@ Compared seven metrics for each of two models at each of three horizons (42 mean
 - The Challenge `SepsisLabel` already incorporates a six-hour lead convention. The target is entry into the benchmark's positive-label window, not independently observed biological sepsis onset.
 - Set B is a second cohort within the same benchmark, not prospective or genuinely independent clinical validation.
 - The Python 3.13.5 runtime differs from the documented Python 3.11 baseline, and no fully locked environment was used. A clean full-repository checkout/tree manifest was not completed in this network-restricted runtime.
-- The GitHub-hosted full-cohort workflow run [#38677355122](https://github.com/culprit-k/VITALIS/actions/runs/38677355122) was cancelled and is **not** counted as a successful reproduction.
+- The GitHub-hosted full-cohort workflow run [#38677355122](https://github.com/culprit-k/VITALIS/actions/runs/38677355122) was cancelled and is **not** counted as a successful reproduction. A later clean-checkout/Python 3.11 run, [#38677774161](https://github.com/culprit-k/VITALIS/actions/runs/38677774161), is currently in progress; it is not counted as passed until it completes successfully and its outputs are reviewed.
 - An independent statistician/clinical reviewer, governance/ethics sign-off, and a genuinely new cohort with independently defined event timing remain required.
 
 **Research only:** VITALIS is not a medical device or a clinically validated decision-support system. Do not use these outputs to guide patient care.
