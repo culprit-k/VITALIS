@@ -55,7 +55,7 @@ permissions:
 
 concurrency:
   group: vitalis-full-cohort-reproduction
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   reproduce:
