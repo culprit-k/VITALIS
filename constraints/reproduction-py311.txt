@@ -1,0 +1,22 @@
+# Reproducibility constraints for the VITALIS full-cohort horizon experiment.
+# Validated target scientific stack from the source-blob-verified local reproduction.
+# Keep Python at 3.11.x for the clean-checkout workflow; the exact resolved versions
+# are retained as a workflow artifact. Update these pins only with a reviewed rerun.
+cloudpickle==3.1.2
+iniconfig==2.3.1
+joblib==1.6.0
+llvmlite==0.50.0
+narwhals==2.27.1
+numba==0.68.0
+numpy==2.3.5
+packaging==26.3
+pandas==2.2.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+python-dateutil==2.9.0.post0
+ruff==0.17.0
+scikit-learn==1.8.0
+scipy==1.17.0
+six==1.17.0
+threadpoolctl==3.7.0
