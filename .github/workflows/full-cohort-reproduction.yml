@@ -2,6 +2,12 @@ name: full-cohort-reproduction
 
 on:
   workflow_dispatch:
+    inputs:
+      run_extended_analyses:
+        description: "Also run physiology ablation and calibration (adds substantial runtime)"
+        required: false
+        type: boolean
+        default: false
   pull_request:
     branches:
       - work/exact-checkout-reproduction
@@ -303,6 +309,7 @@ jobs:
             --output "$RUNNER_TEMP/horizon_cross_cohort_clean_checkout.json"
 
       - name: Run predeclared patient-relative physiology ablation
+        if: ${{ inputs.run_extended_analyses == true }}
         run: |
           python scripts/evaluate_physiological_features.py \
             --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
@@ -315,6 +322,7 @@ jobs:
             --output "$RUNNER_TEMP/vitalis_physiological_feature_ablation.json"
 
       - name: Run patient-disjoint Set A Platt calibration experiment
+        if: ${{ inputs.run_extended_analyses == true }}
         run: |
           PYTHONPATH="$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" python scripts/evaluate_set_a_platt_calibration.py \
             --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
@@ -325,7 +333,7 @@ jobs:
             --output "$RUNNER_TEMP/vitalis_set_a_platt_calibration.json"
 
       - name: Verify Set A calibration partitioning and aggregate-only outputs
-        if: success()
+        if: ${{ inputs.run_extended_analyses == true && success() }}
         run: |
           python - <<'PY'
           import json, os
