@@ -254,14 +254,14 @@ jobs:
       - name: Run predeclared patient-relative physiology ablation
         continue-on-error: true
         run: |
-          python scripts/evaluate_physiological_features.py \\
-            --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \\
-            --set-b-cache "$RUNNER_TEMP/vitalis-cache-set-b" \\
-            --horizons 1 3 6 \\
-            --seeds 42 123 2026 \\
-            --threshold 0.5 \\
-            --refractory-hours 6 \\
-            --bootstrap-replicates 200 \\
+          python scripts/evaluate_physiological_features.py \
+            --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
+            --set-b-cache "$RUNNER_TEMP/vitalis-cache-set-b" \
+            --horizons 1 3 6 \
+            --seeds 42 123 2026 \
+            --threshold 0.5 \
+            --refractory-hours 6 \
+            --bootstrap-replicates 200 \
             --output "$RUNNER_TEMP/vitalis_physiological_feature_ablation.json"
 
       - name: Verify aggregate-only result structure
