@@ -149,8 +149,11 @@ def normalize_aggregate_report(report: Any) -> dict[str, Any]:
                 raise AggregateReportError("horizon_hours must be a positive integer.")
             model = str(entry.get("model") or "unspecified")
             metrics = entry.get("metrics")
+            if metrics is None:
+                metrics = {key: value for key, value in entry.items()
+                           if key not in {"horizon_hours", "model"}}
             if not isinstance(metrics, Mapping):
-                raise AggregateReportError("Each aggregate_metrics entry must contain metrics.")
+                raise AggregateReportError("Each aggregate_metrics entry must contain metric summaries.")
             for name, summary in metrics.items():
                 if not isinstance(summary, Mapping) or "mean" not in summary or "sd" not in summary:
                     continue
