@@ -47,6 +47,8 @@ This run establishes that the full-cohort pipeline can execute in the intended p
 
 The preserved baseline records an execution note saying the historical local run used a reconstruction of the evaluator and an optimized patient-cluster bootstrap because a full Git clone was unavailable. The older source-verified local run used Python 3.13.5, whereas this clean-checkout run used Python 3.11.17. These are provenance differences worth investigating, but the evidence currently available does not prove which difference caused each of the five mismatches. The mismatches are concentrated in temporal-model metrics, including warning metrics; do not infer a root cause from that pattern alone.
 
+A direct comparison with the earlier unpinned clean-checkout artifact (run [#38677774161](https://github.com/culprit-k/VITALIS/actions/runs/38677774161), using NumPy 2.4.6 / pandas 3.0.6 / scikit-learn 1.9.1 / SciPy 1.17.1) shows the pinned run's aggregate means/SDs are closer to the preserved baseline for each of these five pairs, but the old artifact also differs from the pinned run at seed level. This is consistent with environment or numerical-path sensitivity, not proof of a specific cause. The baseline JSON stores aggregate mean/SD values rather than the historical per-seed metrics, so exact seed-by-seed attribution against the baseline cannot be recovered from that file alone.
+
 No evidence here justifies overwriting the baseline, loosening the tolerance, changing the model based on Set B, or claiming clinical utility. The preserved baseline remains an immutable comparator, not yet an authoritative reference result.
 
 ## Required follow-up before Step 2 can be accepted
