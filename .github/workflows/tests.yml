@@ -29,3 +29,13 @@ jobs:
         run: python scripts/demo_adaptive_twin.py --seed 2026 > /tmp/vitalis-twin-demo.jsonl
       - name: Run tests
         run: pytest
+      - name: Retain source and history audit manifests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitalis-source-audit-${{ github.sha }}
+          path: |
+            /tmp/vitalis-source-manifest.json
+            /tmp/vitalis-history-audit.json
+          if-no-files-found: ignore
+          retention-days: 30
