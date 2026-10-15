@@ -143,3 +143,8 @@ The [clinical translation and regulatory roadmap](docs/CLINICAL_TRANSLATION_AND_
 - Initial market: **Uzbekistan**. Initial intended deployment: **research only**, beginning with offline retrospective analysis of authorized, de-identified data.
 - No live hospital feed, prospective patient monitoring, clinician-facing score, patient-care influence, or clinical marketing is authorized by this project status. The pathway for software-specific registration and study governance requires written confirmation from the competent Uzbekistan authorities and host institution.
 - This documentation is a planning aid, not legal advice, medical-device classification, ethics approval, data-processing permission, regulatory authorization, or clinical validation.
+
+
+### Strict source-reproduction gate
+
+The documented provenance exception for full-cohort runs is tracked in the [strict source and full-cohort reproduction runbook](docs/STRICT_SOURCE_REPRODUCIBILITY_RUNBOOK.md). It defines clean-checkout/blob checks, environment capture, fresh-cache requirements, Set-B evaluation-only safeguards, and aggregate-output reconciliation. The gate remains open until a fresh, byte-verified full-cohort run and independent review are recorded; do not treat previous reconstructed-working-copy results as exact-source reproduction.
