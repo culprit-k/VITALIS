@@ -153,3 +153,12 @@ The documented provenance exception for full-cohort runs is tracked in the [stri
 ## Aggregate report dashboard
 
 The dashboard now validates and displays baseline and full-cohort horizon aggregate reports. See [dashboard usage and privacy boundaries](docs/AGGREGATE_REPORT_DASHBOARD.md). It accepts aggregate-only JSON and does not fit models or make clinical recommendations.
+
+## Hardware integration roadmap
+
+The intended integration architecture, plain-language explanation, proposed components, sensor data contract, inference cycle, safety gates and current implementation gaps are documented here:
+
+- **[Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)** — how the software and proposed physiology twin could connect to sensors and an embedded gateway, which parts are needed, how the pipeline works, and what remains to be built.
+- The Mermaid architecture diagram in that guide can be rendered by GitHub directly.
+
+**Important:** this is a proposed research prototype architecture. Sensor adapters and the physical device are not yet confirmed as implemented. VITALIS is not clinically validated and must not guide patient care.
