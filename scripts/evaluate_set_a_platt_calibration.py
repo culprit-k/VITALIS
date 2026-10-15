@@ -94,8 +94,10 @@ def run_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon, seed, boot):
     static_ix = np.array([ix[n] for n in BASE if n in ix], dtype=np.int64)
     temporal_ix = np.arange(len(ma["columns"]), dtype=np.int64)
     configs = (
-        ("temporal_baseline", temporal_ix, False),
-        ("temporal_plus_personal_physiology", temporal_ix, True),
+        ("temporal_baseline_balanced", temporal_ix, False, "balanced"),
+        ("temporal_baseline_unweighted", temporal_ix, False, None),
+        ("temporal_plus_personal_physiology_balanced", temporal_ix, True, "balanced"),
+        ("temporal_plus_personal_physiology_unweighted", temporal_ix, True, None),
     )
     out = {
         "horizon_hours": horizon, "seed": seed,
@@ -111,7 +113,7 @@ def run_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon, seed, boot):
         "set_b_positive_target_rows": int(tb.targets.sum()),
         "models": {},
     }
-    for name, indices, add_z in configs:
+    for name, indices, add_z, class_weight in configs:
         def select(X, rows, z):
             raw = np.asarray(X[np.ix_(rows, indices)], dtype=np.float32)
             return np.concatenate((raw, z[rows]), axis=1) if add_z else raw
@@ -122,7 +124,7 @@ def run_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon, seed, boot):
         model = make_pipeline(
             SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True),
             StandardScaler(),
-            LogisticRegression(max_iter=300, class_weight="balanced", solver="lbfgs", random_state=seed),
+            LogisticRegression(max_iter=300, class_weight=class_weight, solver="lbfgs", random_state=seed),
         )
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
@@ -142,6 +144,7 @@ def run_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon, seed, boot):
             "calibration_prevalence": float(np.mean(calibration_y)),
             "calibrator": {
                 "method": "Platt scaling on clipped logit of predicted probability",
+                "base_model_class_weight": class_weight,
                 "fit_partition": "patient-disjoint Set A calibration partition only",
                 "intercept": float(calibrator.intercept_[0]),
                 "slope": float(calibrator.coef_[0, 0]),
@@ -196,6 +199,8 @@ def main():
             "calibration": "Platt scaling on model logits; fit only on Set A calibration patients",
             "Set_B_role": "frozen final evaluation only",
             "no_Set_B_fit_selection_or_threshold_tuning": True,
+            "base_model_class_weight_comparison": ["balanced", None],
+            "class_weight_note": "Unweighted model is prevalence-aware; comparison is exploratory.",
             "threshold_reported_for_diagnostics_only": 0.5,
             "bootstrap_replicates": args.bootstrap_replicates,
         },
