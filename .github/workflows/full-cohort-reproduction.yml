@@ -203,7 +203,7 @@ jobs:
               "numpy_build_configuration": config_buffer.getvalue(),
           }
           output = Path(os.environ["RUNNER_TEMP"]) / "vitalis-numerical-backend-diagnostics.json"
-          output.write_text(json.dumps(diagnostics, indent=2) + "\\n", encoding="utf-8")
+          output.write_text(json.dumps(diagnostics, indent=2) + "\n", encoding="utf-8")
           print(json.dumps(diagnostics, indent=2))
           PY
 
