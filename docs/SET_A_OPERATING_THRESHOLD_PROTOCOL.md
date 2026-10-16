@@ -24,7 +24,7 @@ For every threshold, report:
 - precision-recall AUPRC and AUROC for the underlying scores (threshold-independent);
 - confusion counts as aggregate totals only;
 - alert episodes per patient-day, using the already specified six-hour refractory period and a consistent episode definition;
-- patient-cluster bootstrap uncertainty intervals for sensitivity, PPV, and alert burden.
+- patient-cluster bootstrap uncertainty intervals for sensitivity and PPV at four predeclared reference thresholds (0.01, 0.05, 0.10, 0.50), plus alert-burden point estimates and patient-cluster intervals at those same reference thresholds. Other grid points receive aggregate point estimates only.
 
 Document positive-window prevalence and compare Brier score to the constant-prevalence reference. Calibration quality and discrimination are different properties and must not be conflated.
 
@@ -45,4 +45,4 @@ Any chosen threshold and its rationale must be frozen and recorded before the fi
 
 ## Current blocker
 
-This is a protocol, not an experiment result. The threshold sweep still needs implementation, automated tests, and execution on the pinned full-cohort workflow. No new threshold has been selected, and no Set B result should be inferred from this document.
+This protocol is implemented by `scripts/evaluate_set_a_threshold_sweep.py` and wired into the optional extended full-cohort workflow. Automated tests and a pinned full-cohort execution are still required before treating the implementation or output as verified. Uncertainty intervals are limited to the four reference thresholds listed above; the full grid receives aggregate point estimates. No threshold has been selected, and no Set B result should be inferred from this document.
