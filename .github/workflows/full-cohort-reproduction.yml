@@ -2,7 +2,7 @@ name: full-cohort-reproduction
 
 # Avoid duplicate expensive cohort runs for the same branch; newer commits supersede older runs.
 concurrency:
-  group: vitalis-full-cohort-${{ github.head_ref || github.ref_name }}
+  group: vitalis-full-cohort-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
   # Preserve expensive runs; newer commits may replace pending runs but must not cancel an active reproduction.
   cancel-in-progress: false
 
@@ -27,41 +27,11 @@ on:
       - "scripts/evaluate_set_a_platt_calibration.py"
       - "scripts/__init__.py"
       - "tests/test_set_a_platt_calibration.py"
-      - "docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md"
-      - "docs/SET_A_PLATT_CALIBRATION_RESULTS_2026-10-16.md"
       - "scripts/verify_source_manifest.py"
       - "src/vitalis/horizon.py"
       - "src/vitalis/validation.py"
       - "constraints/reproduction-py311.txt"
-      - "docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md"
-      - "docs/VITALIS_REPRODUCIBILITY_INDEPENDENT_REVIEW_PACKAGE_2026-10-15.md"
-      - "docs/REPRODUCTION_FAILURE_TRIAGE_2026-10-15.md"
-      - "docs/PHYSIOLOGICAL_FEATURE_ABLATION_PROTOCOL.md"
-  push:
-    branches:
-      - work/strict-reproducibility-gate
-    paths:
-      - ".github/workflows/full-cohort-reproduction.yml"
-      - ".github/workflows/full-cohort-reproduction-py313.yml"
-      - "pyproject.toml"
-      - "scripts/build_feature_cache.py"
-      - "scripts/audit_reproduction_cache.py"
-      - "scripts/evaluate_horizon_cross_cohort.py"
-      - "scripts/evaluate_physiological_features.py"
-      - "scripts/evaluate_set_a_platt_calibration.py"
-      - "scripts/__init__.py"
-      - "tests/test_set_a_platt_calibration.py"
-      - "docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md"
-      - "docs/SET_A_PLATT_CALIBRATION_RESULTS_2026-10-16.md"
-      - "scripts/verify_source_manifest.py"
-      - "src/vitalis/horizon.py"
-      - "src/vitalis/validation.py"
-      - "constraints/reproduction-py311.txt"
-      - "docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md"
-      - "docs/VITALIS_REPRODUCIBILITY_INDEPENDENT_REVIEW_PACKAGE_2026-10-15.md"
-      - "docs/REPRODUCTION_FAILURE_TRIAGE_2026-10-15.md"
-      - "docs/PHYSIOLOGICAL_FEATURE_ABLATION_PROTOCOL.md"
-
+      - "results/horizon_cross_cohort_2026-10-14.json"
 permissions:
   contents: read
 
