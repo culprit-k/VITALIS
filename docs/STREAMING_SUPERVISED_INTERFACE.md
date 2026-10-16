@@ -17,7 +17,7 @@ Do not average, multiply, add, or otherwise fuse the twin heuristic score with s
 2. `TimestampedTwinStream.ingest()` rejects unknown channels, naive timestamps, mismatched units, non-good quality, non-finite/missing values, and non-increasing per-channel timestamps.
 3. `TimestampedTwinStream.score(timestamp)` filters stale measurements and calls the adaptive twin with the latest fresh frame.
 4. `AdaptivePhysiologicalTwin.update(frame)` returns heuristic deviation/trajectory fields. Its configuration values are engineering defaults, not clinically selected thresholds.
-5. `src/vitalis/integrated_inference.py` now exposes a versioned research output envelope and accepts an optional injected predictor callable. The demo deliberately supplies no model and therefore returns explicit unavailable/null probabilities. The offline horizon workflow is still not automatically loaded as a streaming model artifact; caller must supply a frozen predictor and matching version metadata.
+5. `src/vitalis/integrated_inference.py` now exposes a versioned research output envelope and accepts an optional injected predictor callable. The demo deliberately supplies no model and therefore returns explicit unavailable/null probabilities. The offline horizon workflow is still not automatically loaded as a streaming model artifact; caller must supply a frozen predictor, matching version metadata, and the exact expected feature-name list; mismatched feature keys are rejected.
 
 ## Integration envelope
 
@@ -57,7 +57,7 @@ The envelope is implemented in `src/vitalis/integrated_inference.py`; the exampl
 - Reject stale/out-of-order data and expose coverage; do not silently impute a twin score when the twin is ineligible.
 - Supervised inference must use only features available at the prediction timestamp. Any preprocessing and calibration must be fitted on the training/calibration partition only.
 - Keep patient-level split boundaries intact. Set B is evaluation-only and cannot be used to fit, calibrate, select features, or choose a threshold.
-- Record model, feature-schema, calibration, and configuration versions with each supervised result.
+- Record model, feature-schema, calibration, and configuration versions with each supervised result. The adapter requires an explicit frozen feature-name list and rejects missing or unexpected feature names before invoking the predictor.
 - Keep twin heuristic score and supervised probability in distinct fields with distinct semantics.
 - Do not emit a clinical action, diagnosis, or recommendation.
 - Tests must cover missing/stale channels, out-of-order events, warm-up, unavailable model, output schema, and no accidental twin-score-to-probability conversion.
