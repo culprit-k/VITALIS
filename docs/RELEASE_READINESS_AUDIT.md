@@ -88,3 +88,23 @@ This checklist assesses readiness for a **research-code release**, not for clini
 - [ ] Obtain applicable governance/ethics and data-protection determinations and a genuinely new independent cohort with independently defined/adjudicated event timing before external or prospective evaluation.
 
 **Decision:** the software and automated repository gates have advanced, but clean-checkout reproducibility, independent review, independent-cohort evaluation, and governance remain open. Keep PR #1 draft and unmerged. VITALIS remains research-only and must not guide patient care.
+
+
+## Follow-up checkpoint — 16 October 2026
+
+This checkpoint supplements the 14 October audit; it does not retroactively change the original audit's scope or claim independent sign-off.
+
+- [x] Standard tests and reporting/dashboard tests passed on PR head `4346f0f1e5ef1de3ac9a2213f7912a3507d27aa6`: [tests #38859873903](https://github.com/culprit-k/VITALIS/actions/runs/38859873903), [dashboard #38859873797](https://github.com/culprit-k/VITALIS/actions/runs/38859873797).
+- [x] Repeated clean-checkout Python 3.11 runs using the historical OpenBLAS `SkylakeX` kernel passed the immutable 42-pair / 84-scalar baseline comparison: [#38857500125](https://github.com/culprit-k/VITALIS/actions/runs/38857500125), [#38857522352](https://github.com/culprit-k/VITALIS/actions/runs/38857522352), and [#38859753133](https://github.com/culprit-k/VITALIS/actions/runs/38859753133).
+- [ ] Current-head pinned Python 3.11 full-cohort run [#38859873792](https://github.com/culprit-k/VITALIS/actions/runs/38859873792) was still running when this checkpoint was written; do not mark current-head acceptance complete until its final reconciliation and artifact are inspected.
+- [ ] Current-head Python 3.13 diagnostic [#38859873780](https://github.com/culprit-k/VITALIS/actions/runs/38859873780) was still running. It is a diagnostic/portability check, not a replacement for the pinned Python 3.11 acceptance environment.
+- [x] Updated `docs/RELEASE_ACCEPTANCE_MATRIX.md` with the current evidence and explicit remaining blockers.
+- [x] Added `docs/INDEPENDENT_METHODS_REVIEW_CHECKLIST_2026-10-16.md` covering target/label timing, leakage, probability quality, the exploratory 5% coverage rule, uncertainty estimands, cohort shift, twin/supervised interface, and privacy/release claims.
+- [ ] Independent methods review has **not** been performed; the checklist is prepared for a qualified reviewer and must not be represented as approval.
+- [ ] Full Git-history privacy/secret scan and human triage remain pending. Path-level `.gitignore` and changed-file review are not a substitute for scanning every in-scope commit, branch, and tag.
+
+### Scientific decision remains unchanged
+
+No current model is promoted as clinically superior. Patient-relative physiology features improve ranking modestly but worsen Brier score at the evaluated horizons. The Set A Platt calibration at the fixed 0.5 reference threshold yields near-zero sensitivity and is not an alerting success. The 5% Set-A feature-coverage rule remains exploratory and not clinically justified. Set B remains evaluation-only; do not tune threshold/calibration/model/features on it.
+
+**Release decision:** research-code release remains blocked pending current-head workflow completion, independent methods review, full-history privacy/security triage, and a final human review of the PR diff. PR #2 remains draft/open/unmerged. No hardware integration or clinical-use claim is authorized by this checkpoint.
