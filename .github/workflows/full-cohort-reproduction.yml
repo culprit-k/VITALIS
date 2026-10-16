@@ -362,7 +362,7 @@ jobs:
           PY
 
       - name: Verify probability-quality diagnostics are aggregate-only and complete
-        if: success()
+        if: ${{ inputs.run_extended_analyses == true && success() }}
         run: |
           python - <<'PY'
           import json, os
