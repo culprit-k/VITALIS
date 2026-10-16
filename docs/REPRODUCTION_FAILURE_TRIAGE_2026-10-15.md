@@ -116,3 +116,12 @@ The retained artifacts now support a specific explanation for the five baseline 
 The earlier Haswell mitigation is **superseded** because it made runs agree with one another without reproducing the historical baseline. Both reproduction workflows now request `OPENBLAS_CORETYPE=SkylakeX` and perform an AVX-512F capability check plus a runtime OpenBLAS-architecture check before downloading the cohorts. A runner without AVX-512F fails early, rather than silently running a different numerical experiment. No baseline, evaluator, package pin, metric, threshold, seed, split, tolerance, or Set B boundary was changed.
 
 **Acceptance remains pending until the corrected Python 3.11 workflow completes on a compatible runner and passes all 42 pairs / 84 scalar checks.** A further clean run must pass before treating the mitigation as repeatable. A failure on an incompatible runner is a documented environment preflight failure, not a model/evaluation failure; a mismatch on a SkylakeX run requires further investigation.
+
+
+## Verification of SkylakeX mitigation — 16 October 2026
+
+The first clean-checkout Python 3.11 run using the historical numerical kernel has completed successfully: [run #38857500125](https://github.com/culprit-k/VITALIS/actions/runs/38857500125), source commit `08f47f5613be539a2743f8629405cae52339ef16`. Reconciliation passed the unchanged six-decimal criterion: **42/42 mean/sample-SD pairs, 84/84 scalar values, zero mismatches**. The aggregate-only artifact is [12027304973](https://github.com/culprit-k/VITALIS/actions/runs/38857500125/artifacts/12027304973), SHA-256 `deaf2a49f1e3469bd2c4feaaeb186aff682e422ecf21063e2435ecfb94c99ec6`.
+
+The artifact records Python 3.11.17, NumPy 2.3.5, OpenBLAS 0.3.30, CPU Intel Xeon Platinum 8573C, `OPENBLAS_CORETYPE=SkylakeX`, and the loaded OpenBLAS architecture as `SkylakeX`. Cohort audits, fresh Set A/Set B cache construction, cache-integrity audit, and all nine horizon/seed evaluation combinations passed. No raw cohort data, caches, or row-level predictions were retained.
+
+**Interpretation:** this pass supports the dispatch-mismatch diagnosis and proves that the baseline can be reproduced when the historical kernel is selected. It is one successful controlled clean run, not yet repeatability proof on the latest guard-order revision. A second clean run on the current workflow revision is still required before closing the reproduction gate. The baseline and acceptance rule remain unchanged.
