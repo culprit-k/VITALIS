@@ -148,3 +148,34 @@ def test_session_reset_clears_sensor_source_identity():
     later = now + timedelta(seconds=1)
     assert stream.ingest(Observation("heart_rate", later, 72, "bpm", source="sensor-B"))
     assert stream.source_change_counts["heart_rate"] == 0
+
+def test_future_dated_sample_is_not_used_for_earlier_score():
+    stream = make_stream(max_age=60)
+    future = datetime(2026, 10, 14, 12, 1, tzinfo=timezone.utc)
+    assert stream.ingest(Observation("heart_rate", future, 120, "bpm"))
+    result = stream.score(future - timedelta(seconds=1))
+    assert result["coverage"] == 0
+    assert result["channels"] == {}
+    assert result["channel_age_seconds"]["heart_rate"] == -1
+
+
+def test_nonfinite_and_non_numeric_values_are_rejected_without_replacing_latest():
+    stream = make_stream()
+    now = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    assert stream.ingest(Observation("heart_rate", now, 72, "bpm"))
+    assert not stream.ingest(Observation("heart_rate", now + timedelta(seconds=1), float("inf"), "bpm"))
+    assert not stream.ingest(Observation("heart_rate", now + timedelta(seconds=2), "not-a-number", "bpm"))
+    result = stream.score(now + timedelta(seconds=3))
+    assert result["channels"]["heart_rate"]["value"] == 72
+    assert stream.rejected["bad_value"] == 2
+
+
+def test_duplicate_timestamp_is_rejected_and_does_not_replace_latest():
+    stream = make_stream()
+    now = datetime(2026, 10, 14, 12, tzinfo=timezone.utc)
+    assert stream.ingest(Observation("heart_rate", now, 72, "bpm"))
+    assert not stream.ingest(Observation("heart_rate", now, 99, "bpm"))
+    result = stream.score(now + timedelta(seconds=1))
+    assert result["channels"]["heart_rate"]["value"] == 72
+    assert stream.rejected["out_of_order"] == 1
+
