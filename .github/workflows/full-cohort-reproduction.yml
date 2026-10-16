@@ -74,7 +74,7 @@ jobs:
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
       # Force the same supported OpenBLAS kernel across heterogeneous GitHub-hosted CPUs.
-      OPENBLAS_CORETYPE: "Haswell"
+      OPENBLAS_CORETYPE: "SkylakeX"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
       AWS_RETRY_MODE: standard
@@ -207,6 +207,28 @@ jobs:
           output = Path(os.environ["RUNNER_TEMP"]) / "vitalis-numerical-backend-diagnostics.json"
           output.write_text(json.dumps(diagnostics, indent=2) + "\n", encoding="utf-8")
           print(json.dumps(diagnostics, indent=2))
+          PY
+
+      - name: Require historical-baseline OpenBLAS kernel and compatible CPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -Eiq '(^|[[:space:]])avx512f([[:space:]]|$)' /proc/cpuinfo; then
+            echo "::error::The preserved baseline was reproduced with OpenBLAS SkylakeX. This runner does not expose AVX-512F, so running with another kernel would not be an apples-to-apples reproduction. Refusing before dataset download; do not alter the baseline or tolerance."
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          import os
+          import numpy as np
+          from threadpoolctl import threadpool_info
+
+          pools = [pool for pool in threadpool_info() if pool.get("internal_api") == "openblas"]
+          print(json.dumps({"numpy_version": np.__version__, "requested_coretype": os.environ.get("OPENBLAS_CORETYPE"), "openblas_pools": pools}, indent=2))
+          if os.environ.get("OPENBLAS_CORETYPE") != "SkylakeX":
+              raise SystemExit("OPENBLAS_CORETYPE is not the preserved baseline kernel (SkylakeX).")
+          if not pools or any(str(pool.get("architecture", "")).lower() != "skylakex" for pool in pools):
+              raise SystemExit("Loaded OpenBLAS architecture is not SkylakeX; refusing a mismatched numerical environment.")
           PY
 
       - name: Download official Challenge 2019 cohorts to ephemeral runner storage
