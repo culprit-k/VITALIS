@@ -169,11 +169,42 @@ jobs:
       - name: Record numerical backend diagnostics
         run: |
           python - <<'PY'
+          import contextlib
+          import io
           import json
+          import os
+          import platform
+          import sys
+          from pathlib import Path
           import numpy as np
           from threadpoolctl import threadpool_info
-          print(json.dumps({"threadpools": threadpool_info()}, indent=2))
-          np.show_config()
+
+          config_buffer = io.StringIO()
+          with contextlib.redirect_stdout(config_buffer):
+              np.show_config()
+          cpu_model = None
+          try:
+              for line in Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines():
+                  if line.lower().startswith("model name"):
+                      cpu_model = line.split(":", 1)[1].strip()
+                      break
+          except OSError:
+              pass
+          diagnostics = {
+              "python_version": sys.version,
+              "platform": platform.platform(),
+              "machine": platform.machine(),
+              "cpu_model": cpu_model,
+              "numpy_version": np.__version__,
+              "thread_environment": {key: os.environ.get(key) for key in (
+                  "PYTHONHASHSEED", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                  "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS")},
+              "threadpools": threadpool_info(),
+              "numpy_build_configuration": config_buffer.getvalue(),
+          }
+          output = Path(os.environ["RUNNER_TEMP"]) / "vitalis-numerical-backend-diagnostics.json"
+          output.write_text(json.dumps(diagnostics, indent=2) + "\\n", encoding="utf-8")
+          print(json.dumps(diagnostics, indent=2))
           PY
 
       - name: Download official Challenge 2019 cohorts to ephemeral runner storage
@@ -561,6 +592,7 @@ jobs:
             docs/VITALIS_REPRODUCIBILITY_INDEPENDENT_REVIEW_PACKAGE_2026-10-15.md
             ${{ runner.temp }}/vitalis-pip-freeze.txt
             ${{ runner.temp }}/vitalis-reconciliation.json
+            ${{ runner.temp }}/vitalis-numerical-backend-diagnostics.json
             ${{ runner.temp }}/vitalis_physiological_feature_ablation.json
             ${{ runner.temp }}/vitalis_set_a_platt_calibration.json
             docs/SET_A_PLATT_CALIBRATION_PROTOCOL.md
