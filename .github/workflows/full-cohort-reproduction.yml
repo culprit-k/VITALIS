@@ -45,9 +45,9 @@ jobs:
       PYTHONHASHSEED: "0"
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
-      # Prefer the historical SkylakeX kernel only when the runner advertises AVX-512F.
-      # The preflight sets OPENBLAS_CORETYPE for the process environment when supported;
-      # otherwise native OpenBLAS dispatch is used and strict baseline reconciliation still decides pass/fail.
+      # Strict baseline reproduction requires the same loaded OpenBLAS kernel as the preserved baseline.
+      OPENBLAS_CORETYPE: "SkylakeX"
+      VITALIS_EXPECT_SKYLAKEX: "true"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
       AWS_RETRY_MODE: standard
@@ -58,6 +58,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+
+      - name: Require baseline-compatible CPU before setup or cohort download
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -Eiq '(^|[[:space:]])avx512f([[:space:]]|$)' /proc/cpuinfo; then
+            echo "::error::The preserved baseline requires the SkylakeX OpenBLAS kernel, but this runner does not expose AVX-512F. Refusing before Python setup, dataset download, or model evaluation; retry on a compatible runner. Do not change the baseline or tolerance."
+            exit 1
+          fi
+          echo "Confirmed AVX-512F CPU support; the run will use the historical SkylakeX kernel."
 
       - name: Verify evaluator source matches preserved baseline provenance
         shell: bash
@@ -130,17 +140,10 @@ jobs:
               raise SystemExit("Pinned reproduction environment check failed.")
           PY
 
-      - name: Select supported numerical backend and record compatibility
+      - name: Verify historical-baseline OpenBLAS kernel after install
         shell: bash
         run: |
           set -euo pipefail
-          if grep -Eiq '(^|[[:space:]])avx512f([[:space:]]|$)' /proc/cpuinfo; then
-            echo "OPENBLAS_CORETYPE=SkylakeX" >> "$GITHUB_ENV"
-            echo "Runner advertises AVX-512F; requesting the historical SkylakeX kernel."
-          else
-            echo "Runner does not advertise AVX-512F; using native OpenBLAS CPU dispatch."
-            echo "VITALIS_EXPECT_SKYLAKEX=false" >> "$GITHUB_ENV"
-          fi
           python - <<'PY'
           import json
           import os
@@ -149,18 +152,23 @@ jobs:
           from threadpoolctl import threadpool_info
 
           pools = [pool for pool in threadpool_info() if pool.get("internal_api") == "openblas"]
-          skylakex = bool(pools) and all(str(pool.get("architecture", "")).lower() == "skylakex" for pool in pools)
-          expected = os.environ.get("VITALIS_EXPECT_SKYLAKEX", "true").lower() != "false"
+          skylakex = bool(pools) and all(
+              str(pool.get("architecture", "")).lower() == "skylakex" for pool in pools
+          )
+          avx512f = "avx512f" in Path("/proc/cpuinfo").read_text(encoding="utf-8").lower()
           diagnostics = {
               "numpy_version": np.__version__,
-              "requested_coretype": os.environ.get("OPENBLAS_CORETYPE", "native dispatch"),
+              "requested_coretype": os.environ.get("OPENBLAS_CORETYPE"),
               "openblas_pools": pools,
-              "cpu_advertises_avx512f": "avx512f" in Path("/proc/cpuinfo").read_text(encoding="utf-8").lower(),
+              "cpu_advertises_avx512f": avx512f,
               "loaded_openblas_skylakex": skylakex,
-              "historical_backend_compatible": skylakex if expected else False,
-              "note": "Backend mismatch is diagnostic only here; unchanged six-decimal baseline reconciliation remains the acceptance gate."
+              "historical_backend_compatible": avx512f and skylakex,
           }
           print(json.dumps(diagnostics, indent=2))
+          if not avx512f:
+              raise SystemExit("AVX-512F is unavailable; no cohort evaluation was started.")
+          if os.environ.get("OPENBLAS_CORETYPE") != "SkylakeX" or not skylakex:
+              raise SystemExit("Loaded OpenBLAS kernel differs from preserved baseline (SkylakeX).")
           PY
 
       - name: Verify source blobs and capture exact environment
