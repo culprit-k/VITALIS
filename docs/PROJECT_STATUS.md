@@ -1,5 +1,36 @@
 # VITALIS — project status in plain language
 
+**Status date:** 16 October 2026  
+**Repository:** `culprit-k/VITALIS`  
+**Current main commit at this status snapshot:** `86bc4732f7ec883c97df0678f5e5690092529adb`
+
+> **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use outputs to guide diagnosis, triage, treatment, or patient care.
+
+## Current verified state
+
+- **Local software demo:** installation diagnostics and synthetic-only twin / integrated interface smoke tests are included in CI. See the [fast-start guide](FAST_START_RESEARCH_DEMO.md).
+- **Input contract:** PR #12 merged as `34cc3620b19db06a4eb60733d68aefb93318fe3a`; the supervised inference interface validates horizon, feature, and predictor output types.
+- **Research utility contract:** PR #13 merged as `86bc4732f7ec883c97df0678f5e5690092529adb`; threshold/cost, probability, patient-time, and patient-block validation was tightened. Its CI passed: [PR #13 checks](https://github.com/culprit-k/VITALIS/actions/runs/38906330539).
+- **Full-cohort reproduction evidence:** the pinned Set A/Set B workflow completed on source commit `426ac5dd2a8076fb192bcebd0b1c8f838bf72906`, with 42/42 metric mean/sample-SD pairs and 84/84 scalar values matching the preserved six-decimal baseline. See [the execution report](MAIN_BRANCH_FULL_COHORT_REPRODUCTION_2026-10-16.md) and [aggregate-only artifact](https://github.com/culprit-k/VITALIS/actions/runs/38889950689/artifacts/12042469450). **This full-cohort result is not yet a run on the current main commit above.**
+- **Probability quality:** current calibration analysis does not identify a clinically usable threshold or a model that wins across discrimination, calibration, and alert burden. No Set B tuning is permitted.
+- **Privacy:** raw cohort files, caches, patient identifiers, and row-level predictions must stay out of Git and published artifacts.
+
+## Remaining release blockers
+
+1. Run the pinned full-cohort workflow from the exact current `main` SHA and retain its aggregate-only artifact and environment/source manifests.
+2. Confirm all reconciliation and cache-integrity gates pass on that SHA. Preserve the baseline and its six-decimal acceptance rule; do not waive a failure to force release.
+3. Obtain an independent reviewer’s written assessment of provenance, patient-disjoint splits, endpoint semantics, calibration/uncertainty, alert metrics, and the baseline reconciliation. This cannot be self-certified.
+4. Keep the software release research-only. External cohort validation, prospective silent-mode study, institutional/ethics/privacy approvals, and clinical safety/regulatory review are separate requirements.
+5. Hardware work is limited to a non-clinical bench/synthetic-data prototype until sensor interfaces, synchronization, signal quality, isolation, power, cybersecurity, verification, and expert safety review are specified.
+
+## How to use the project now
+
+Follow [FAST_START_RESEARCH_DEMO.md](FAST_START_RESEARCH_DEMO.md) to install the package, run diagnostics and tests, launch the synthetic twin demo, and inspect aggregate reports. The synthetic demo is a heuristic visualization, **not a trained sepsis predictor**. The supervised probability remains unavailable unless a frozen predictor with matching model/calibration/schema metadata is explicitly supplied.
+
+---
+
+**Historical snapshot below:** the remainder of this file records earlier status and results and is retained for traceability. Where its dates, branches, or PR states differ from the current verified state above, use the dated evidence linked in the current section rather than treating the older status text as current.
+
 **Status date:** 15 October 2026  
 **Repository:** `culprit-k/VITALIS`  
 **Working branch:** `work/exact-checkout-reproduction`  
