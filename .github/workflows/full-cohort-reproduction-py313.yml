@@ -46,6 +46,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
+      - name: Require baseline-compatible CPU before Python setup or cohort download
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -Eiq '(^|[[:space:]])avx512f([[:space:]]|$)' /proc/cpuinfo; then
+            echo "::error::The Python 3.13 run is diagnostic only and requires the same supported SkylakeX OpenBLAS kernel. This runner does not expose AVX-512F; stopping before Python setup or cohort download. Retry on a compatible runner; do not change the baseline or tolerance."
+            exit 1
+          fi
+          echo "Confirmed AVX-512F CPU support for the Python 3.13 diagnostic."
+
       - name: Set up Python 3.13.5
         uses: actions/setup-python@v5
         with:
