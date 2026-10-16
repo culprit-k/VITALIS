@@ -115,7 +115,7 @@ The retained artifacts now support a specific explanation for the five baseline 
 
 The earlier Haswell mitigation is **superseded** because it made runs agree with one another without reproducing the historical baseline. Both reproduction workflows now request `OPENBLAS_CORETYPE=SkylakeX` and perform an AVX-512F capability check plus a runtime OpenBLAS-architecture check before downloading the cohorts. A runner without AVX-512F fails early, rather than silently running a different numerical experiment. No baseline, evaluator, package pin, metric, threshold, seed, split, tolerance, or Set B boundary was changed.
 
-**Acceptance remains pending until the corrected Python 3.11 workflow completes on a compatible runner and passes all 42 pairs / 84 scalar checks.** A further clean run must pass before treating the mitigation as repeatable. A failure on an incompatible runner is a documented environment preflight failure, not a model/evaluation failure; a mismatch on a SkylakeX run requires further investigation.
+**Updated status after successful repeats — see the verification section below.** Incompatible runners must fail before data download; a mismatch on a SkylakeX run would reopen the investigation. The reference baseline and six-decimal tolerance remain unchanged.
 
 
 ## Verification of SkylakeX mitigation — 16 October 2026
@@ -125,3 +125,10 @@ The first clean-checkout Python 3.11 run using the historical numerical kernel h
 The artifact records Python 3.11.17, NumPy 2.3.5, OpenBLAS 0.3.30, CPU Intel Xeon Platinum 8573C, `OPENBLAS_CORETYPE=SkylakeX`, and the loaded OpenBLAS architecture as `SkylakeX`. Cohort audits, fresh Set A/Set B cache construction, cache-integrity audit, and all nine horizon/seed evaluation combinations passed. No raw cohort data, caches, or row-level predictions were retained.
 
 **Interpretation:** this pass supports the dispatch-mismatch diagnosis and proves that the baseline can be reproduced when the historical kernel is selected. It is one successful controlled clean run, not yet repeatability proof on the latest guard-order revision. A second clean run on the current workflow revision is still required before closing the reproduction gate. The baseline and acceptance rule remain unchanged.
+
+
+## Repeatability confirmation — 16 October 2026
+
+A second independent clean-checkout Python 3.11 execution also passed the identical reconciliation on the historical kernel: [run #38857522352](https://github.com/culprit-k/VITALIS/actions/runs/38857522352), source commit `af597e866fa1fa62bfe504807f534064d30ea58e`. It matched 42/42 pairs and 84/84 scalar values with zero mismatches. Aggregate-only artifact [12028541322](https://github.com/culprit-k/VITALIS/actions/runs/38857522352/artifacts/12028541322), SHA-256 `f18089da065bd6f01cc874752b0a09cc598a0a5113bc92da713301cc4e4f84e6`, independently reports the same Set A/Set B source fingerprints and loaded OpenBLAS `SkylakeX`.
+
+Together with [run #38857500125](https://github.com/culprit-k/VITALIS/actions/runs/38857500125), this gives **two consecutive matching clean-checkout results using the historical kernel**. Both were run with unchanged evaluator/model/baseline/tolerance. The follow-on run with the guard moved ahead of NumPy-based tests is also in progress; its purpose is to validate the safer early-failure path, not to change numerical results.
