@@ -24,6 +24,7 @@ def warm(inference):
         ts = NOW.replace(second=index)
         inference.ingest(Observation("heart_rate", ts, 70, "bpm"))
         inference.ingest(Observation("spo2", ts, 98, "%"))
+        inference.score(ts)
 
 
 def test_missing_predictor_is_explicitly_unavailable_not_zero():
