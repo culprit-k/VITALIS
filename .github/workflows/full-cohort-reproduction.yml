@@ -3,7 +3,7 @@ name: full-cohort-reproduction
 # Avoid duplicate expensive cohort runs for the same branch; newer commits supersede older runs.
 concurrency:
   group: vitalis-full-cohort-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 on:
   workflow_dispatch:
@@ -63,10 +63,6 @@ on:
 
 permissions:
   contents: read
-
-concurrency:
-  group: vitalis-full-cohort-reproduction
-  cancel-in-progress: false
 
 jobs:
   reproduce:
