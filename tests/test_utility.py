@@ -92,3 +92,34 @@ def test_patient_cluster_bootstrap_is_reproducible_and_rejects_small_replicate_c
         MOD.patient_cluster_bootstrap_utility_uncertainty(
             y, p, groups, times, thresholds=[.5], missed_window_costs=[1], n_bootstrap=19,
         )
+
+
+@pytest.mark.parametrize("kwargs", [
+    {"thresholds": [True], "missed_window_costs": [1]},
+    {"thresholds": ["0.5"], "missed_window_costs": [1]},
+    {"thresholds": [.5], "missed_window_costs": [True]},
+    {"thresholds": [.5], "missed_window_costs": ["10"]},
+    {"thresholds": [.5], "missed_window_costs": [1], "alert_cost": True},
+])
+def test_rejects_boolean_or_string_cost_configuration(kwargs):
+    y, p, groups, times = fixture()
+    with pytest.raises(ValueError):
+        MOD.evaluate_utility_operating_points(y, p, groups, times, **kwargs)
+
+
+def test_rejects_noninteger_patient_time_indices():
+    y, p, groups, times = fixture()
+    with pytest.raises(ValueError, match="patient_time_indices"):
+        MOD.evaluate_utility_operating_points(
+            y, p, groups, times.astype(float) + 0.5,
+            thresholds=[.5], missed_window_costs=[1], refractory_hours=1,
+        )
+
+
+def test_rejects_reappearing_patient_ids():
+    y, p, groups, times = fixture()
+    groups = np.array([0, 0, 1, 1, 0, 0, 2, 2])
+    with pytest.raises(ValueError, match="contiguous"):
+        MOD.evaluate_utility_operating_points(
+            y, p, groups, times, thresholds=[.5], missed_window_costs=[1], refractory_hours=1,
+        )
