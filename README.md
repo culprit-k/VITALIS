@@ -162,3 +162,16 @@ The intended integration architecture, plain-language explanation, proposed comp
 - The Mermaid architecture diagram in that guide can be rendered by GitHub directly.
 
 **Important:** this is a proposed research prototype architecture. Sensor adapters and the physical device are not yet confirmed as implemented. VITALIS is not clinically validated and must not guide patient care.
+
+
+## Integrated twin/supervised interface (research-only)
+
+A deterministic synthetic demonstration of the versioned interface is available:
+
+```bash
+python scripts/demo_integrated_inference.py
+```
+
+The adapter in `src/vitalis/integrated_inference.py` keeps the adaptive twin's heuristic deviation/trajectory fields separate from supervised horizon probabilities. By default the demo has **no trained supervised model loaded**, so it intentionally reports the supervised outputs as unavailable with null probabilities rather than inventing zeros. A caller may inject a frozen predictor only with explicit model, calibration, and feature-schema version metadata. This interface does not itself train or load the retrospective horizon model, establish calibration quality, or make the output clinically meaningful. The GitHub Actions workflow smoke-tests this demo and the contract tests are part of pytest.
+
+See [the interface contract](docs/STREAMING_SUPERVISED_INTERFACE.md) and [release acceptance matrix](docs/RELEASE_ACCEPTANCE_MATRIX.md). VITALIS remains research-only and must not be used to guide patient care.
