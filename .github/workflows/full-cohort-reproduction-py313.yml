@@ -2,29 +2,11 @@ name: full-cohort-reproduction-py313-diagnostic
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - work/strict-reproducibility-gate
-  pull_request:
-    branches:
-      - work/exact-checkout-reproduction
-    paths:
-      - ".github/workflows/full-cohort-reproduction-py313.yml"
-      - "pyproject.toml"
-      - "scripts/build_feature_cache.py"
-      - "scripts/evaluate_horizon_cross_cohort.py"
-      - "scripts/verify_source_manifest.py"
-      - "src/vitalis/horizon.py"
-      - "src/vitalis/validation.py"
-      - "constraints/reproduction-py313.txt"
-      - "docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md"
-      - "docs/REPRODUCTION_FAILURE_TRIAGE_2026-10-15.md"
-
 permissions:
   contents: read
 
 concurrency:
-  group: vitalis-full-cohort-py313-${{ github.head_ref || github.ref_name }}
+  group: vitalis-full-cohort-py313-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
   # Preserve diagnostic runs across commits; supersede pending work, not active executions.
   cancel-in-progress: false
 
