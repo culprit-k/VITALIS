@@ -2,20 +2,21 @@
 
 **Repository:** https://github.com/culprit-k/VITALIS  
 **Branch:** `work/strict-reproducibility-gate`  
-**Verified source commit:** `49d13fc769d8596cae76fddd2974962563a074d5`  
+**Latest documentation commit:** `93de456b4e42272144bab72163091a3265fec661`  
+**Verified code-bearing source commit:** `49d13fc769d8596cae76fddd2974962563a074d5`  
 **Pull request:** https://github.com/culprit-k/VITALIS/pull/2  
 **Disposition:** reproducible research prototype; not a clinical release.
 
 ## Current execution evidence
 
-All checks below were observed on the exact verified branch head above:
+The following latest-head workflows completed successfully on 16 October 2026 for documentation commit `93de456b4e42272144bab72163091a3265fec661`:
 
-- Standard CI, including compileall, source manifest, repository hygiene, reachable-history audit, synthetic twin stream demo, integrated-inference demo, and pytest: https://github.com/culprit-k/VITALIS/actions/runs/38876716745 — passed.
-- Reporting/dashboard tests: https://github.com/culprit-k/VITALIS/actions/runs/38876716839 — passed.
-- Pinned Python 3.11 clean-checkout full-cohort workflow: https://github.com/culprit-k/VITALIS/actions/runs/38876716891 — passed.
-- Python 3.13 full-cohort diagnostic: https://github.com/culprit-k/VITALIS/actions/runs/38876716750 — passed as a diagnostic, not the acceptance environment.
-- Pinned Python 3.11 reconciliation: 42/42 mean/sample-standard-deviation pairs and 84/84 scalar values matched the preserved aggregate under the existing six-decimal rule; zero mismatches. The workflow retained an aggregate-only artifact with provenance. Artifact: https://github.com/culprit-k/VITALIS/actions/runs/38876716891/artifacts/12037026308
-- The latest pinned full-cohort job reports 218 tests passed. The standard workflow additionally runs the two synthetic demos and the reachable Git history/privacy heuristic scan.
+- Standard CI, including compileall, source manifest, repository hygiene, reachable-history audit, synthetic twin stream demo, integrated-inference demo, and pytest: https://github.com/culprit-k/VITALIS/actions/runs/38880081362 — passed.
+- Reporting/dashboard tests: https://github.com/culprit-k/VITALIS/actions/runs/38880081293 — passed.
+- Pinned Python 3.11 clean-checkout full-cohort workflow: https://github.com/culprit-k/VITALIS/actions/runs/38880081272 — passed.
+- Full-cohort pytest: 218 passed.
+- Pinned Python 3.11 reconciliation: 42/42 mean/sample-standard-deviation pairs and 84/84 scalar values matched the preserved aggregate under the existing six-decimal rule; zero mismatches. The workflow retained an aggregate-only artifact with provenance. Artifact: https://github.com/culprit-k/VITALIS/actions/runs/38880081272/artifacts/12037367815
+- Python 3.13 diagnostic: https://github.com/culprit-k/VITALIS/actions/runs/38880082111 — failed at the baseline-compatible CPU preflight because the runner did not expose required AVX-512F. It stopped before Python setup, dataset download, or evaluation. This is a runner-compatibility diagnostic, not evidence of model failure, and Python 3.13 is not the acceptance environment.
 
 The official Challenge 2019 cohort counts recorded by the source audit are:
 
