@@ -38,6 +38,7 @@ class IntegratedResearchInference:
         model_version: str | None = None,
         calibration_version: str | None = None,
         feature_schema_version: str | None = None,
+        expected_feature_names: tuple[str, ...] | None = None,
     ) -> None:
         if predictor is not None and not all(
             isinstance(item, str) and item.strip()
@@ -47,11 +48,23 @@ class IntegratedResearchInference:
                 "predictor requires model_version, calibration_version, "
                 "and feature_schema_version"
             )
+        if predictor is not None and (
+            not expected_feature_names
+            or any(not isinstance(name, str) or not name for name in expected_feature_names)
+            or len(set(expected_feature_names)) != len(expected_feature_names)
+        ):
+            raise ValueError(
+                "predictor requires unique, non-empty expected_feature_names "
+                "matching its frozen feature schema"
+            )
         self.stream = stream
         self.predictor = predictor
         self.model_version = model_version
         self.calibration_version = calibration_version
         self.feature_schema_version = feature_schema_version
+        self.expected_feature_names = (
+            tuple(expected_feature_names) if expected_feature_names is not None else None
+        )
 
     def ingest(self, observation: Observation) -> bool:
         """Validate and forward an observation to the timestamped stream."""
@@ -104,6 +117,14 @@ class IntegratedResearchInference:
             elif supervised_features is None:
                 item["reason"] = "supervised features unavailable"
             else:
+                supplied_names = set(supervised_features)
+                expected_names = set(self.expected_feature_names or ())
+                if supplied_names != expected_names:
+                    missing = sorted(expected_names - supplied_names)
+                    extra = sorted(supplied_names - expected_names)
+                    raise ValueError(
+                        f"feature schema mismatch; missing={missing}, extra={extra}"
+                    )
                 features: dict[str, float] = {}
                 for key, raw in supervised_features.items():
                     if not isinstance(key, str) or not key:
