@@ -38,7 +38,8 @@ permissions:
 jobs:
   reproduce:
     name: Clean-checkout Set A to Set B reproduction
-    runs-on: ubuntu-latest
+    # Pin the image family; the SkylakeX CPU preflight below independently validates instruction support.
+    runs-on: ubuntu-22.04
     timeout-minutes: 360
     env:
       PYTHONHASHSEED: "0"
