@@ -1,6 +1,6 @@
 # Git-history privacy and artifact audit
 
-**Status:** audit tooling added; a full-history run and human triage are pending CI.
+**Status:** automated reachable-history scan passed on current PR head; human triage and independent privacy/security review remain pending.
 
 ## What it scans
 
@@ -25,3 +25,8 @@ The report lists rule names, paths, blob hashes, and counts only. It never print
 - The current-tree guard, this history scanner, and independent privacy/security review cover different risks; none replaces the others.
 
 VITALIS remains research-only. This audit does not establish clinical validity or authorize patient-data collection.
+
+
+## CI checkpoint — 16 October 2026
+
+The current-head standard workflow [#38875089161](https://github.com/culprit-k/VITALIS/actions/runs/38875089161) completed the `Audit reachable Git history for data artifacts and high-confidence secrets` step successfully on commit `f46bfa7ecf56631a3b4ff8b1e8c97e95abdcb6a3`. Its retained log reports 780 commits, 760 unique blobs, and `findings_count: 0`. This is a positive automated scan result, not proof that no sensitive material was ever exposed. The scan covers commits/blobs reachable from refs fetched into that CI checkout and uses heuristic patterns; a human should review scope and findings/limitations, and any available GitHub secret-scanning results separately. Do not claim independent security review has occurred.

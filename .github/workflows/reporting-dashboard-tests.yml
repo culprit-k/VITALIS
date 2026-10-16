@@ -1,0 +1,52 @@
+name: reporting-dashboard-tests
+
+on:
+  push:
+    branches:
+      - work/strict-reproducibility-gate
+    paths:
+      - ".github/workflows/reporting-dashboard-tests.yml"
+      - "src/vitalis/reporting.py"
+      - "tests/test_reporting.py"
+      - "dashboard/app.py"
+      - "pyproject.toml"
+  pull_request:
+    branches:
+      - work/exact-checkout-reproduction
+    paths:
+      - ".github/workflows/reporting-dashboard-tests.yml"
+      - "src/vitalis/reporting.py"
+      - "tests/test_reporting.py"
+      - "dashboard/app.py"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+jobs:
+  reporting-dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.17"
+          cache: pip
+
+      - name: Install project, dashboard, and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev,dashboard,bootstrap-accelerated]"
+
+      - name: Compile reporting and dashboard code
+        run: python -m compileall -q src scripts dashboard tests
+
+      - name: Lint changed Python components
+        run: ruff check src/vitalis/reporting.py tests/test_reporting.py dashboard/app.py
+
+      - name: Run full test suite
+        run: pytest

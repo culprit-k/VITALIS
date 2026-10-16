@@ -661,3 +661,36 @@ The next implementation layer has now been added on the existing research branch
 - [ ] Validate source-change metadata against real device adapters; replacement cannot be detected if source identifiers are absent or unreliable. Multi-rate synchronization, real-device quality flags, and any hardware-specific protocol remain open.
 
 **Boundary:** these are synthetic software regressions, not medical-device verification or clinical evidence. No hardware purchases or patient-care use are justified by these tests.
+
+
+## Software completion checkpoint — 15 October 2026
+
+### Completed in this checkpoint
+
+- Added `src/vitalis/reporting.py`, a schema-aware normalizer for aggregate-only baseline, cross-cohort horizon, and source-verified summary JSON.
+- Added `tests/test_reporting.py` for supported schemas, invalid horizons, non-finite values, unsupported formats, and rejection of known row-level prediction fields.
+- Updated `dashboard/app.py` to render baseline and horizon aggregates, show run/protocol provenance, limit uploads to 10 MiB, and reject unsupported or known row-level report structures.
+- Added [aggregate dashboard usage and privacy guide](AGGREGATE_REPORT_DASHBOARD.md).
+- Added a dedicated [reporting/dashboard CI workflow](../.github/workflows/reporting-dashboard-tests.yml) to compile the project, lint the changed components, and run the full test suite.
+- Updated the README to link the dashboard guide.
+
+### Verification state
+
+The new files are committed on `work/strict-reproducibility-gate`. The GitHub integration did not return a workflow run associated with the latest commit at the time of this update, and the environment cannot resolve `github.com` for a local checkout. Therefore the new dashboard code is **not yet marked test-passing**; confirm the dedicated workflow result before treating this milestone as verified.
+
+### Remaining software/research gates
+
+1. Confirm the reporting/dashboard CI run passes; fix any lint, dependency, or test failures without changing the experiment acceptance rules.
+2. Finish the pinned clean-checkout full-cohort run and repeat it. Investigate the five temporal aggregate discrepancies documented in [the discrepancy audit](TEMPORAL_REPRODUCIBILITY_DISCREPANCY_AUDIT_2026-10-15.md).
+3. Keep the historical baseline unchanged. If the original result provenance cannot be reconstructed, preserve both results and require independent review of a separately versioned replacement-baseline decision.
+4. Freeze a research candidate only after the reproducibility decision is reviewed; prepare the independent-cohort lockfile and obtain qualified clinical/statistical, data-governance, and ethics determinations before any new-cohort evaluation.
+5. Do not begin live sensor ingestion, patient-facing alerts, hardware integration for patient care, or clinical deployment. The adaptive twin and forecasting models remain research software.
+
+VITALIS remains research-only and must not be used to guide patient care.
+
+
+### Verification update — reporting/dashboard CI (15 October 2026)
+
+- [x] Dedicated reporting/dashboard workflow passed on commit `493888e3c4a3c5d5a64867f9599d409f799064b1`: [workflow run 38682236905](https://github.com/culprit-k/VITALIS/actions/runs/38682236905). Compilation and Ruff checks passed; the full suite passed **192 tests**.
+- [x] General repository CI passed on commit `56a8b7b25208b8562ce1f271a87d4c5ef21a8ccc`: [workflow run 38682236904](https://github.com/culprit-k/VITALIS/actions/runs/38682236904), with **192 tests passed** and source/history audit steps successful.
+- [ ] The full-cohort clean-checkout reproduction is still running. The fresh Set A and Set B caches have completed, and the nine horizon × seed evaluation is in progress. Reconciliation and aggregate-artifact checks are still pending; do not mark Step 2 complete until the run ends and the predeclared rule is assessed.

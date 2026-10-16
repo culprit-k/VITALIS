@@ -143,3 +143,35 @@ The [clinical translation and regulatory roadmap](docs/CLINICAL_TRANSLATION_AND_
 - Initial market: **Uzbekistan**. Initial intended deployment: **research only**, beginning with offline retrospective analysis of authorized, de-identified data.
 - No live hospital feed, prospective patient monitoring, clinician-facing score, patient-care influence, or clinical marketing is authorized by this project status. The pathway for software-specific registration and study governance requires written confirmation from the competent Uzbekistan authorities and host institution.
 - This documentation is a planning aid, not legal advice, medical-device classification, ethics approval, data-processing permission, regulatory authorization, or clinical validation.
+
+
+### Strict source-reproduction gate
+
+The documented provenance exception for full-cohort runs is tracked in the [strict source and full-cohort reproduction runbook](docs/STRICT_SOURCE_REPRODUCIBILITY_RUNBOOK.md). It defines clean-checkout/blob checks, environment capture, fresh-cache requirements, Set-B evaluation-only safeguards, and aggregate-output reconciliation. The gate remains open until a fresh, byte-verified full-cohort run and independent review are recorded; do not treat previous reconstructed-working-copy results as exact-source reproduction.
+
+
+## Aggregate report dashboard
+
+The dashboard now validates and displays baseline and full-cohort horizon aggregate reports. See [dashboard usage and privacy boundaries](docs/AGGREGATE_REPORT_DASHBOARD.md). It accepts aggregate-only JSON and does not fit models or make clinical recommendations.
+
+## Hardware integration roadmap
+
+The intended integration architecture, plain-language explanation, proposed components, sensor data contract, inference cycle, safety gates and current implementation gaps are documented here:
+
+- **[Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)** — how the software and proposed physiology twin could connect to sensors and an embedded gateway, which parts are needed, how the pipeline works, and what remains to be built.
+- The Mermaid architecture diagram in that guide can be rendered by GitHub directly.
+
+**Important:** this is a proposed research prototype architecture. Sensor adapters and the physical device are not yet confirmed as implemented. VITALIS is not clinically validated and must not guide patient care.
+
+
+## Integrated twin/supervised interface (research-only)
+
+A deterministic synthetic demonstration of the versioned interface is available:
+
+```bash
+python scripts/demo_integrated_inference.py
+```
+
+The adapter in `src/vitalis/integrated_inference.py` keeps the adaptive twin's heuristic deviation/trajectory fields separate from supervised horizon probabilities. By default the demo has **no trained supervised model loaded**, so it intentionally reports the supervised outputs as unavailable with null probabilities rather than inventing zeros. A caller may inject a frozen predictor only with explicit model, calibration, and feature-schema version metadata. This interface does not itself train or load the retrospective horizon model, establish calibration quality, or make the output clinically meaningful. The GitHub Actions workflow smoke-tests this demo and the contract tests are part of pytest.
+
+See [the interface contract](docs/STREAMING_SUPERVISED_INTERFACE.md) and [release acceptance matrix](docs/RELEASE_ACCEPTANCE_MATRIX.md). VITALIS remains research-only and must not be used to guide patient care.

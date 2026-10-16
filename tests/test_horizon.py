@@ -82,3 +82,30 @@ def test_patient_cluster_bootstrap_returns_intervals():
     assert interval["lower_95"] is not None
     assert interval["upper_95"] is not None
     assert interval["requested_replicates"] == 20
+
+
+def test_alert_threshold_and_refractory_boundary_are_explicit():
+    result = evaluate_horizon_alerts(
+        targets=[0, 0, 0, 0, 0],
+        probabilities=[0.5, 0.99, 0.5, 0.5, 0.5],
+        patient_ids=["a"] * 5,
+        patient_time_indices=[0, 1, 2, 3, 6],
+        threshold=0.5,
+        refractory_hours=3,
+    )
+    # Threshold is inclusive; alerts inside the refractory interval are
+    # suppressed, while an alert exactly three hours later is allowed.
+    assert result["alerts_total"] == 3
+
+
+def test_alert_refractory_clock_resets_for_each_patient():
+    result = evaluate_horizon_alerts(
+        targets=[0, 0, 0, 0, 0, 0],
+        probabilities=[0.5] * 6,
+        patient_ids=["a", "a", "a", "b", "b", "b"],
+        patient_time_indices=[0, 1, 3, 0, 1, 3],
+        threshold=0.5,
+        refractory_hours=3,
+    )
+    assert result["patients"] == 2
+    assert result["alerts_total"] == 4
