@@ -80,3 +80,21 @@ This is stronger evidence for hardware-dependent floating-point differences than
 - Set B remains evaluation-only. No model, threshold, or feature changes may be selected based on Set B. Do not export patient-level predictions or identifiers.
 
 VITALIS remains a retrospective research prototype, not clinically validated and not for patient-care decisions.
+
+
+## Current-source clean-checkout reproduction — 16 October 2026
+
+The latest pinned Python 3.11 full-cohort workflow [#38840196351](https://github.com/culprit-k/VITALIS/actions/runs/38840196351) completed successfully on exact source commit `2de041462e2ff4df2872dbcd98983ed3e121b86b` (workflow event SHA `f30d7e07dd52f64e578f7c26fb46e707b4f548f5`). It rebuilt both feature caches from the official cohort source in ephemeral runner storage, passed cohort/cache audits, completed all nine horizon/seed evaluations (18 model fits), verified aggregate-only outputs, and passed the unchanged six-decimal reconciliation: **42/42 mean/sample-SD pairs and 84/84 scalar values matched**. The optional physiology-ablation and Platt-calibration analyses were skipped because extended analyses were not enabled; this does not affect the core acceptance run.
+
+The same-source Python 3.13 diagnostic [#38840196302](https://github.com/culprit-k/VITALIS/actions/runs/38840196302) also completed and reported 42/42 pairs and 84/84 scalar matches, but remains diagnostic-only and is not an acceptance gate.
+
+The two artifacts have matching official source-cohort content fingerprints and matching audited cache fingerprints for both Set A and Set B, including schema, ordered source-file list, X/y/group arrays, feature summaries, cohort counts, and patient-block checks. The metric tables in the two reports also agree at the reported precision. This is positive evidence that the current source and cache construction reproduce the preserved aggregate under these runs, including across the two tested Python versions. It does **not** resolve the previously observed same-commit Python 3.11 CPU-dispatch discrepancy from commit `dfe00af5dd5611b82a27381c9bf9841b37e5e0ca`; that historical evidence remains valid and should not be deleted or rewritten.
+
+### Decision and next stage
+
+- Record the pinned Python 3.11 acceptance gate as **passed for source commit `2de041462e2ff4df2872dbcd98983ed3e121b86b` in this run**. Do not generalize this to a guarantee of deterministic reproduction on every runner.
+- Preserve the historical baseline and six-decimal rule unchanged.
+- Preserve both aggregate-only artifacts and their provenance. No raw data, row-level predictions, patient identifiers, or feature caches are committed.
+- Next stage is a reproducibility-hardening review: compare numerical-backend diagnostics from the two new artifacts, determine whether the workflow captures enough runtime/CPU-dispatch metadata to explain the earlier same-commit variance, and add a controlled synthetic regression test for threshold-adjacent alert/refractory behavior if needed. Any model/threshold change or replacement baseline requires a separate reviewed protocol.
+- Extended physiology ablation and Platt calibration have **not** been run in this workflow; they remain separate research analyses, not prerequisites to claiming the core reproduction gate passed.
+- Independent statistical/clinical review and genuinely external validation remain open. Set B is still evaluation-only, and VITALIS remains a retrospective research prototype, not clinically validated and not for patient-care decisions.
