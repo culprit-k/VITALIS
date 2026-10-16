@@ -4,6 +4,10 @@
 
 > **Research prototype only.** VITALIS is not a medical device or a clinically validated decision-support system. Do not use it to guide patient care.
 
+## Open the demo on a phone
+
+The synthetic adaptive-twin sandbox can be hosted in Streamlit Community Cloud and opened in Safari: follow [Phone deployment instructions](docs/PHONE_DEPLOYMENT.md). Choose `dashboard/twin_demo.py` as the app file. A repository maintainer must complete the one-time deployment and authorize GitHub access; GitHub alone does not run the app. The demo is synthetic-only and is not a clinical sepsis predictor.
+
 ## Research goals
 
 - Build a reproducible, auditable cohort pipeline.
