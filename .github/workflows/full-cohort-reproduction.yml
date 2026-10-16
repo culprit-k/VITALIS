@@ -7,6 +7,10 @@ concurrency:
   cancel-in-progress: false
 
 on:
+  # One-time current-main reproduction rerun; this branch is temporary and is not intended to merge.
+  push:
+    branches:
+      - work/current-main-full-cohort-rerun
   workflow_dispatch:
     inputs:
       run_extended_analyses:
