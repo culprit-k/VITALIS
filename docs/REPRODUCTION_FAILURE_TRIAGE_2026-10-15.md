@@ -98,3 +98,12 @@ The two artifacts have matching official source-cohort content fingerprints and 
 - Next stage is a reproducibility-hardening review: compare numerical-backend diagnostics from the two new artifacts, determine whether the workflow captures enough runtime/CPU-dispatch metadata to explain the earlier same-commit variance, and add a controlled synthetic regression test for threshold-adjacent alert/refractory behavior if needed. Any model/threshold change or replacement baseline requires a separate reviewed protocol.
 - Extended physiology ablation and Platt calibration have **not** been run in this workflow; they remain separate research analyses, not prerequisites to claiming the core reproduction gate passed.
 - Independent statistical/clinical review and genuinely external validation remain open. Set B is still evaluation-only, and VITALIS remains a retrospective research prototype, not clinically validated and not for patient-care decisions.
+
+
+## Controlled backend-dispatch mitigation — 16 October 2026
+
+The same-source discrepancy was observed alongside different OpenBLAS CPU dispatch configurations (successful run: Intel Xeon Platinum 8573C / `SkylakeX`; discrepant run: AMD EPYC 7763 / `Haswell`). This is evidence of an environment difference, not proof that CPU dispatch alone caused the five metric mismatches.
+
+To test that hypothesis without touching the experiment, the Python 3.11 acceptance workflow and Python 3.13 diagnostic workflow now set `OPENBLAS_CORETYPE=Haswell` in the job environment, while retaining the existing one-thread settings and exact package pins. The workflows also record this variable in the aggregate-only numerical-backend diagnostics. The evaluator source, baseline JSON, six-decimal comparison rule, split, seeds, horizons, threshold, and Set B evaluation-only boundary remain unchanged.
+
+**Status: mitigation submitted; not yet proven.** The next full-cohort runs must finish on the new workflow revision. Accept the mitigation only if the pinned Python 3.11 clean-checkout run passes the unchanged 42-pair/84-scalar reconciliation and a repeat run also passes; inspect both artifacts to confirm the environment setting was captured. If the mismatch persists, retain the failures and continue isolating sources of floating-point variation rather than relaxing the gate.
