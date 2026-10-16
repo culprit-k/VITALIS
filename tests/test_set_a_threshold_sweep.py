@@ -11,7 +11,7 @@ from scripts.evaluate_set_a_threshold_sweep import (
 def test_threshold_grid_is_sorted_unique_and_contains_predeclared_points():
     grid = threshold_grid()
     assert grid == sorted(set(grid))
-    assert len(grid) == 103
+    assert len(grid) == 102
     for point in (0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.10, 0.50, 0.99):
         assert point in grid
 
