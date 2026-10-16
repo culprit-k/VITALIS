@@ -1,4 +1,4 @@
-"Research-only adapter exposing twin and supervised outputs separately.
+"""Research-only adapter exposing twin and supervised outputs separately.
 
 The adapter does not train/load a model and does not fuse heuristic twin scores
 with supervised probabilities. A caller must inject a frozen predictor explicitly.
