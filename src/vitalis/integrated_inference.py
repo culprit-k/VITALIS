@@ -1,4 +1,4 @@
-"""Research-only adapter exposing twin and supervised outputs separately.
+"Research-only adapter exposing twin and supervised outputs separately.
 
 The adapter does not train/load a model and does not fuse heuristic twin scores
 with supervised probabilities. A caller must inject a frozen predictor explicitly.
@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from math import isfinite
+from numbers import Real
 from typing import Callable, Mapping, Any
 
 from vitalis.stream import Observation, TimestampedTwinStream
@@ -83,8 +84,14 @@ class IntegratedResearchInference:
         yield null probabilities and explicit statuses rather than false zeroes.
         """
         observed_at = _timestamp(timestamp)
-        if not horizons or any(h not in SUPPORTED_HORIZONS for h in horizons):
-            raise ValueError("horizons must be a non-empty subset of (1, 3, 6)")
+        if (
+            not horizons
+            or any(
+                isinstance(h, bool) or not isinstance(h, int) or h not in SUPPORTED_HORIZONS
+                for h in horizons
+            )
+        ):
+            raise ValueError("horizons must be a non-empty subset of integer values (1, 3, 6)")
         if len(set(horizons)) != len(horizons):
             raise ValueError("horizons must not contain duplicates")
 
@@ -117,6 +124,8 @@ class IntegratedResearchInference:
             elif supervised_features is None:
                 item["reason"] = "supervised features unavailable"
             else:
+                if any(not isinstance(key, str) or not key for key in supervised_features):
+                    raise ValueError("feature names must be non-empty strings")
                 supplied_names = set(supervised_features)
                 expected_names = set(self.expected_feature_names or ())
                 if supplied_names != expected_names:
@@ -127,16 +136,16 @@ class IntegratedResearchInference:
                     )
                 features: dict[str, float] = {}
                 for key, raw in supervised_features.items():
-                    if not isinstance(key, str) or not key:
-                        raise ValueError("feature names must be non-empty strings")
-                    try:
-                        value = float(raw)
-                    except (TypeError, ValueError) as exc:
-                        raise ValueError(f"feature {key!r} must be numeric") from exc
+                    if isinstance(raw, bool) or not isinstance(raw, Real):
+                        raise ValueError(f"feature {key!r} must be a real numeric scalar")
+                    value = float(raw)
                     if not isfinite(value):
                         raise ValueError(f"feature {key!r} must be finite")
                     features[key] = value
-                probability = float(self.predictor(features, horizon))
+                raw_probability = self.predictor(features, horizon)
+                if isinstance(raw_probability, bool) or not isinstance(raw_probability, Real):
+                    raise ValueError("supervised predictor must return a numeric scalar probability")
+                probability = float(raw_probability)
                 if not isfinite(probability) or not 0.0 <= probability <= 1.0:
                     raise ValueError("supervised predictor must return a finite probability in [0, 1]")
                 item.update(status="scored", probability=probability)
