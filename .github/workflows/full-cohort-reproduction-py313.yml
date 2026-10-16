@@ -2,6 +2,19 @@ name: full-cohort-reproduction-py313-diagnostic
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - work/exact-checkout-reproduction
+    paths:
+      - ".github/workflows/full-cohort-reproduction-py313.yml"
+      - "pyproject.toml"
+      - "scripts/build_feature_cache.py"
+      - "scripts/evaluate_horizon_cross_cohort.py"
+      - "scripts/verify_source_manifest.py"
+      - "src/vitalis/horizon.py"
+      - "src/vitalis/validation.py"
+      - "constraints/reproduction-py313.txt"
+      - "results/horizon_cross_cohort_2026-10-14.json"
 permissions:
   contents: read
 
