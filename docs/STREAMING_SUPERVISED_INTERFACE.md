@@ -17,7 +17,7 @@ Do not average, multiply, add, or otherwise fuse the twin heuristic score with s
 2. `TimestampedTwinStream.ingest()` rejects unknown channels, naive timestamps, mismatched units, non-good quality, non-finite/missing values, and non-increasing per-channel timestamps.
 3. `TimestampedTwinStream.score(timestamp)` filters stale measurements and calls the adaptive twin with the latest fresh frame.
 4. `AdaptivePhysiologicalTwin.update(frame)` returns heuristic deviation/trajectory fields. Its configuration values are engineering defaults, not clinically selected thresholds.
-5. The supervised horizon workflow is currently run through offline scripts and evaluation artifacts. It is **not yet a streaming inference service** and is not wired into the twin's update loop.
+5. `src/vitalis/integrated_inference.py` now exposes a versioned research output envelope and accepts an optional injected predictor callable. The demo deliberately supplies no model and therefore returns explicit unavailable/null probabilities. The offline horizon workflow is still not automatically loaded as a streaming model artifact; caller must supply a frozen predictor and matching version metadata.
 
 ## Integration envelope
 
@@ -49,7 +49,7 @@ A future application-level adapter may return a versioned envelope with two inde
 }
 ```
 
-This is a proposed envelope, not an implemented API or guarantee that all fields already exist. The adapter must not manufacture missing model outputs. If features are unavailable, the model is not loaded, inputs fail quality checks, or model/version metadata do not match, return an explicit unavailable status and a null probability rather than zero.
+The envelope is implemented in `src/vitalis/integrated_inference.py`; the example above is a field-semantics sketch, not a literal output snapshot. The adapter must not manufacture missing model outputs. If features are unavailable, the model is not loaded, inputs fail quality checks, or model/version metadata do not match, return an explicit unavailable status and a null probability rather than zero.
 
 ## Required invariants
 
