@@ -143,4 +143,18 @@ The first fresh Python 3.11 clean-checkout run with the historical OpenBLAS kern
 
 Its backend record confirms Python 3.11.17 / NumPy 2.3.5 / OpenBLAS 0.3.30, Intel Xeon Platinum 8573C, environment setting `OPENBLAS_CORETYPE=SkylakeX`, and loaded OpenBLAS architecture `SkylakeX`. Fresh source cohort audits, caches, cache-integrity audit, and all nine horizon-by-seed evaluations passed. The historical baseline, evaluator, fixed threshold, patient-disjoint split, seeds, horizons, tolerance, and evaluation-only Set B boundary were unchanged.
 
-The root-cause mitigation is therefore **supported by one successful controlled clean-checkout reproduction**, but release acceptance still requires a second successful clean run on the current revision where the CPU guard executes before NumPy import/tests. If the assigned runner lacks SkylakeX-compatible AVX-512F, the expected safe outcome is an early preflight failure; do not relax the reference kernel or reconciliation rule.
+The root-cause mitigation is now supported by **two successful controlled clean-checkout Python 3.11 reproductions**, each passing 42/42 mean/sample-SD pairs and 84/84 scalar values with zero mismatches under the unchanged six-decimal rule. See runs [#38857500125](https://github.com/culprit-k/VITALIS/actions/runs/38857500125) and [#38857522352](https://github.com/culprit-k/VITALIS/actions/runs/38857522352). The follow-on workflow with the CPU guard placed before NumPy-based tests is still being verified; this is a workflow-safety check. If the assigned runner lacks SkylakeX-compatible AVX-512F, the expected safe outcome is an early preflight failure; do not relax the reference kernel or reconciliation rule.
+
+
+## Repeatable baseline reproduction evidence — 16 October 2026
+
+Both current clean-checkout Python 3.11 result artifacts independently pass the reference reconciliation with zero mismatches:
+
+| Run | Source commit | Pairs / scalars | Result artifact |
+|---|---|---:|---|
+| [#38857500125](https://github.com/culprit-k/VITALIS/actions/runs/38857500125) | `08f47f5613be539a2743f8629405cae52339ef16` | 42/42, 84/84 | [Artifact 12027304973](https://github.com/culprit-k/VITALIS/actions/runs/38857500125/artifacts/12027304973) |
+| [#38857522352](https://github.com/culprit-k/VITALIS/actions/runs/38857522352) | `af597e866fa1fa62bfe504807f534064d30ea58e` | 42/42, 84/84 | [Artifact 12028541322](https://github.com/culprit-k/VITALIS/actions/runs/38857522352/artifacts/12028541322) |
+
+Both artifact diagnostics report Intel Xeon Platinum 8573C, OpenBLAS 0.3.30, `OPENBLAS_CORETYPE=SkylakeX`, and loaded architecture `SkylakeX`. Both also record matching ordered source-file fingerprints for official Set A and Set B. The first passing artifact digest is `deaf2a49f1e3469bd2c4feaaeb186aff682e422ecf21063e2435ecfb94c99ec6`; the second is `f18089da065bd6f01cc874752b0a09cc598a0a5113bc92da713301cc4e4f84e6`.
+
+These repeat runs support CPU-kernel dispatch as the cause of the earlier discrepancies. No historical baseline, acceptance tolerance, model, feature matrix, seeds, horizons, split, threshold, or evaluation cohort changed to achieve these passes.
