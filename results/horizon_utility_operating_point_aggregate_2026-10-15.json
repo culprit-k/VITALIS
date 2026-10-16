@@ -1,0 +1,600 @@
+{
+  "project": "VITALIS",
+  "run_type": "set_a_only_utility_operating_point_cost_sensitivity",
+  "date": "2026-10-15",
+  "cohorts": {
+    "set_a": {
+      "patients": 20336,
+      "rows": 790215,
+      "positive_hourly_labels": 17136
+    },
+    "set_b": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780
+    }
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "horizons_hours": [
+      1,
+      3,
+      6
+    ],
+    "models": [
+      "static",
+      "temporal"
+    ],
+    "set_a_split": "patient-disjoint 60% train / 20% calibration / 20% untouched operating-point holdout",
+    "recalibration": "Platt fit on Set-A calibration patients only",
+    "threshold_grid": [
+      0.001,
+      0.005,
+      0.01,
+      0.05,
+      0.5
+    ],
+    "missed_window_costs_relative_to_one_alert": [
+      1,
+      10,
+      100,
+      500,
+      1000
+    ],
+    "alert_cost": 1,
+    "refractory_hours": 6,
+    "bootstrap_replicates": 20,
+    "set_b_used_for_threshold_selection": false,
+    "row_level_predictions_committed": false
+  },
+  "provenance": {
+    "local_working_copy": "reconstructed local working copy; not byte-identically verified against checked-in GitHub source",
+    "reason": "available local caches were used because a clean source checkout was not verified",
+    "status": "exploratory utility analysis; checked-in implementation separately passed GitHub Actions"
+  },
+  "elapsed_seconds_sum": 249.71,
+  "fit_warnings_count": 0,
+  "results": [
+    {
+      "horizon_hours": 1,
+      "model": "static",
+      "mean_operating_points_across_seeds": [
+        {
+          "threshold": 0.001,
+          "sensitivity": 0.962334,
+          "ppv": 0.002381,
+          "alerts_per_at_risk_patient_day": 4.038678,
+          "window_coverage": 0.190005
+        },
+        {
+          "threshold": 0.005,
+          "sensitivity": 0.239838,
+          "ppv": 0.014314,
+          "alerts_per_at_risk_patient_day": 0.287313,
+          "window_coverage": 0.057909
+        },
+        {
+          "threshold": 0.01,
+          "sensitivity": 0.081969,
+          "ppv": 0.016602,
+          "alerts_per_at_risk_patient_day": 0.074885,
+          "window_coverage": 0.025215
+        },
+        {
+          "threshold": 0.05,
+          "sensitivity": 0.007,
+          "ppv": 0.06775,
+          "alerts_per_at_risk_patient_day": 0.004807,
+          "window_coverage": 0.003988
+        },
+        {
+          "threshold": 0.5,
+          "sensitivity": 0,
+          "ppv": null,
+          "alerts_per_at_risk_patient_day": 0,
+          "window_coverage": 0
+        }
+      ],
+      "cost_candidates": {
+        "1": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "10": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.05
+          ],
+          "agreement_across_seeds": false
+        },
+        "100": {
+          "threshold_by_seed": [
+            0.01,
+            0.01,
+            0.005
+          ],
+          "agreement_across_seeds": false
+        },
+        "500": {
+          "threshold_by_seed": [
+            0.005,
+            0.005,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        },
+        "1000": {
+          "threshold_by_seed": [
+            0.001,
+            0.001,
+            0.001
+          ],
+          "agreement_across_seeds": true
+        }
+      },
+      "cost_candidate_seed_order": [
+        42,
+        123,
+        2026
+      ]
+    },
+    {
+      "horizon_hours": 1,
+      "model": "temporal",
+      "mean_operating_points_across_seeds": [
+        {
+          "threshold": 0.001,
+          "sensitivity": 0.962395,
+          "ppv": 0.002568,
+          "alerts_per_at_risk_patient_day": 3.908549,
+          "window_coverage": 0.186085
+        },
+        {
+          "threshold": 0.005,
+          "sensitivity": 0.27665,
+          "ppv": 0.013351,
+          "alerts_per_at_risk_patient_day": 0.343141,
+          "window_coverage": 0.066317
+        },
+        {
+          "threshold": 0.01,
+          "sensitivity": 0.102445,
+          "ppv": 0.018341,
+          "alerts_per_at_risk_patient_day": 0.087164,
+          "window_coverage": 0.031306
+        },
+        {
+          "threshold": 0.05,
+          "sensitivity": 0.006016,
+          "ppv": 0.043853,
+          "alerts_per_at_risk_patient_day": 0.005126,
+          "window_coverage": 0.001038
+        },
+        {
+          "threshold": 0.5,
+          "sensitivity": 0,
+          "ppv": null,
+          "alerts_per_at_risk_patient_day": 0,
+          "window_coverage": 0
+        }
+      ],
+      "cost_candidates": {
+        "1": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "10": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.05
+          ],
+          "agreement_across_seeds": false
+        },
+        "100": {
+          "threshold_by_seed": [
+            0.01,
+            0.01,
+            0.005
+          ],
+          "agreement_across_seeds": false
+        },
+        "500": {
+          "threshold_by_seed": [
+            0.005,
+            0.005,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        },
+        "1000": {
+          "threshold_by_seed": [
+            0.001,
+            0.001,
+            0.001
+          ],
+          "agreement_across_seeds": true
+        }
+      },
+      "cost_candidate_seed_order": [
+        42,
+        123,
+        2026
+      ]
+    },
+    {
+      "horizon_hours": 3,
+      "model": "static",
+      "mean_operating_points_across_seeds": [
+        {
+          "threshold": 0.001,
+          "sensitivity": 1,
+          "ppv": 0.006649,
+          "alerts_per_at_risk_patient_day": 4.279374,
+          "window_coverage": 0.508559
+        },
+        {
+          "threshold": 0.005,
+          "sensitivity": 0.807848,
+          "ppv": 0.010965,
+          "alerts_per_at_risk_patient_day": 2.742806,
+          "window_coverage": 0.474411
+        },
+        {
+          "threshold": 0.01,
+          "sensitivity": 0.393794,
+          "ppv": 0.031813,
+          "alerts_per_at_risk_patient_day": 0.617425,
+          "window_coverage": 0.250715
+        },
+        {
+          "threshold": 0.05,
+          "sensitivity": 0.055092,
+          "ppv": 0.07755,
+          "alerts_per_at_risk_patient_day": 0.033397,
+          "window_coverage": 0.029333
+        },
+        {
+          "threshold": 0.5,
+          "sensitivity": 0,
+          "ppv": 0,
+          "alerts_per_at_risk_patient_day": 0.000224,
+          "window_coverage": 0
+        }
+      ],
+      "cost_candidates": {
+        "1": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "10": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "100": {
+          "threshold_by_seed": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "agreement_across_seeds": true
+        },
+        "500": {
+          "threshold_by_seed": [
+            0.005,
+            0.005,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        },
+        "1000": {
+          "threshold_by_seed": [
+            0.005,
+            0.005,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        }
+      },
+      "cost_candidate_seed_order": [
+        42,
+        123,
+        2026
+      ]
+    },
+    {
+      "horizon_hours": 3,
+      "model": "temporal",
+      "mean_operating_points_across_seeds": [
+        {
+          "threshold": 0.001,
+          "sensitivity": 1,
+          "ppv": 0.006652,
+          "alerts_per_at_risk_patient_day": 4.279205,
+          "window_coverage": 0.506469
+        },
+        {
+          "threshold": 0.005,
+          "sensitivity": 0.817983,
+          "ppv": 0.012481,
+          "alerts_per_at_risk_patient_day": 2.473212,
+          "window_coverage": 0.450913
+        },
+        {
+          "threshold": 0.01,
+          "sensitivity": 0.445994,
+          "ppv": 0.028519,
+          "alerts_per_at_risk_patient_day": 0.649015,
+          "window_coverage": 0.274112
+        },
+        {
+          "threshold": 0.05,
+          "sensitivity": 0.060362,
+          "ppv": 0.073372,
+          "alerts_per_at_risk_patient_day": 0.034338,
+          "window_coverage": 0.03348
+        },
+        {
+          "threshold": 0.5,
+          "sensitivity": 0,
+          "ppv": null,
+          "alerts_per_at_risk_patient_day": 0,
+          "window_coverage": 0
+        }
+      ],
+      "cost_candidates": {
+        "1": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "10": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.05
+          ],
+          "agreement_across_seeds": false
+        },
+        "100": {
+          "threshold_by_seed": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "agreement_across_seeds": true
+        },
+        "500": {
+          "threshold_by_seed": [
+            0.005,
+            0.005,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        },
+        "1000": {
+          "threshold_by_seed": [
+            0.005,
+            0.005,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        }
+      },
+      "cost_candidate_seed_order": [
+        42,
+        123,
+        2026
+      ]
+    },
+    {
+      "horizon_hours": 6,
+      "model": "static",
+      "mean_operating_points_across_seeds": [
+        {
+          "threshold": 0.001,
+          "sensitivity": 1,
+          "ppv": 0.01387,
+          "alerts_per_at_risk_patient_day": 4.303146,
+          "window_coverage": 1
+        },
+        {
+          "threshold": 0.005,
+          "sensitivity": 0.986379,
+          "ppv": 0.014294,
+          "alerts_per_at_risk_patient_day": 4.234375,
+          "window_coverage": 0.992079
+        },
+        {
+          "threshold": 0.01,
+          "sensitivity": 0.823567,
+          "ppv": 0.022246,
+          "alerts_per_at_risk_patient_day": 2.819672,
+          "window_coverage": 0.886512
+        },
+        {
+          "threshold": 0.05,
+          "sensitivity": 0.135165,
+          "ppv": 0.10925,
+          "alerts_per_at_risk_patient_day": 0.101444,
+          "window_coverage": 0.163412
+        },
+        {
+          "threshold": 0.5,
+          "sensitivity": 0.000175,
+          "ppv": 0.006849,
+          "alerts_per_at_risk_patient_day": 0.001262,
+          "window_coverage": 0.000983
+        }
+      ],
+      "cost_candidates": {
+        "1": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "10": {
+          "threshold_by_seed": [
+            0.05,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": false
+        },
+        "100": {
+          "threshold_by_seed": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "agreement_across_seeds": true
+        },
+        "500": {
+          "threshold_by_seed": [
+            0.005,
+            0.001,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        },
+        "1000": {
+          "threshold_by_seed": [
+            0.005,
+            0.001,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        }
+      },
+      "cost_candidate_seed_order": [
+        42,
+        123,
+        2026
+      ]
+    },
+    {
+      "horizon_hours": 6,
+      "model": "temporal",
+      "mean_operating_points_across_seeds": [
+        {
+          "threshold": 0.001,
+          "sensitivity": 1,
+          "ppv": 0.01387,
+          "alerts_per_at_risk_patient_day": 4.303025,
+          "window_coverage": 1
+        },
+        {
+          "threshold": 0.005,
+          "sensitivity": 0.984123,
+          "ppv": 0.014695,
+          "alerts_per_at_risk_patient_day": 4.161472,
+          "window_coverage": 0.993062
+        },
+        {
+          "threshold": 0.01,
+          "sensitivity": 0.830907,
+          "ppv": 0.025153,
+          "alerts_per_at_risk_patient_day": 2.534246,
+          "window_coverage": 0.906995
+        },
+        {
+          "threshold": 0.05,
+          "sensitivity": 0.148587,
+          "ppv": 0.108347,
+          "alerts_per_at_risk_patient_day": 0.100776,
+          "window_coverage": 0.167523
+        },
+        {
+          "threshold": 0.5,
+          "sensitivity": 0.001578,
+          "ppv": 0.037815,
+          "alerts_per_at_risk_patient_day": 0.001622,
+          "window_coverage": 0.001967
+        }
+      ],
+      "cost_candidates": {
+        "1": {
+          "threshold_by_seed": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "agreement_across_seeds": true
+        },
+        "10": {
+          "threshold_by_seed": [
+            0.05,
+            0.5,
+            0.05
+          ],
+          "agreement_across_seeds": false
+        },
+        "100": {
+          "threshold_by_seed": [
+            0.01,
+            0.01,
+            0.01
+          ],
+          "agreement_across_seeds": true
+        },
+        "500": {
+          "threshold_by_seed": [
+            0.005,
+            0.001,
+            0.005
+          ],
+          "agreement_across_seeds": false
+        },
+        "1000": {
+          "threshold_by_seed": [
+            0.005,
+            0.001,
+            0.001
+          ],
+          "agreement_across_seeds": false
+        }
+      },
+      "cost_candidate_seed_order": [
+        42,
+        123,
+        2026
+      ]
+    }
+  ],
+  "limitations": [
+    "Costs are abstract sensitivity scenarios, not clinically elicited or economically validated.",
+    "Set-A holdout results are development diagnostics; thresholds must not be selected from Set B.",
+    "A new independent cohort is required for final evaluation after a policy is frozen.",
+    "The target forecasts entry into the Challenge SepsisLabel-positive window, not independently observed biological sepsis onset.",
+    "Alerts outside forecast-positive windows are not verified clinical false alarms.",
+    "Twenty bootstrap replicates were used in these utility-focused reruns; uncertainty intervals are preliminary and were not used to select thresholds.",
+    "VITALIS remains research-only and is not clinically validated."
+  ]
+}

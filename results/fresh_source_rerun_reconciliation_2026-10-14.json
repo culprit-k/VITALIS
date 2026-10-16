@@ -1,0 +1,92 @@
+{
+  "project": "VITALIS",
+  "date": "2026-10-14",
+  "run_type": "exact_source_runner_rerun_using_existing_local_feature_caches",
+  "repository": "culprit-k/VITALIS",
+  "pull_request": 1,
+  "branch": "work/exact-checkout-reproduction",
+  "audited_pr_head_before_this_report": "8564e12f47b1fb6de02a918e8caae4e203225868",
+  "clean_git_clone_completed": false,
+  "clone_blocker": "git clone failed because this runtime could not resolve github.com DNS; this is not a fresh Git checkout reproduction.",
+  "source_provenance": {
+    "scripts/build_feature_cache.py": "eba7dda1532675c2e3f21476b0bba2cead537e78",
+    "scripts/evaluate_cross_cohort_recalibration.py": "fe355c4b7b77b322ae5c134fe7fdc0b9cbb73200",
+    "scripts/evaluate_cross_cohort.py": "dc736ef7a7fe31c477d4626971dd5b0abd255d2f",
+    "scripts/bootstrap_heldout_scores_fast.py": "92b41af5f96f251ce39a222d026c23fd9102a15b",
+    "tests/test_cross_cohort_recalibration.py": "4c368280996cb64a8f58fdba6acdf57026feb71e",
+    "tests/test_evaluate_cross_cohort.py": "77930cd4607653fcef6bdbb290e158f574678ad5",
+    "tests/test_bootstrap_heldout_scores_fast.py": "db529f218e2792932e5064b1c0139fdcedaff367"
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0",
+    "blas_threads": 1
+  },
+  "data_provenance": {
+    "feature_caches_reused_from_prior_local_run": true,
+    "set_a": {
+      "patients": 20336,
+      "rows": 790215,
+      "positive_hourly_labels": 17136
+    },
+    "set_b": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780
+    },
+    "score_archives_written_outside_repository": true,
+    "score_archives_committed": false
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "set_a_split": "60% training / 20% calibration validation / 20% unused, patient-disjoint",
+    "set_b_role": "evaluation-only; no fitting, recalibration, feature selection, or threshold selection"
+  },
+  "comparison_to": "results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json",
+  "all_patient_and_row_split_counts_match": true,
+  "auroc_auprc_exactly_match_at_reported_float_precision": true,
+  "max_absolute_delta_across_raw_metrics": 9.803269307440132e-14,
+  "max_absolute_delta_across_recalibrated_metrics": 4.565792188770956e-15,
+  "per_seed": [
+    {
+      "seed": 42,
+      "train_rows": 473301,
+      "validation_rows": 158883,
+      "unused_rows": 158031,
+      "max_raw_delta": 5.1514348342607263e-14,
+      "max_recalibrated_delta": 1.6930901125533637e-15
+    },
+    {
+      "seed": 123,
+      "train_rows": 470100,
+      "validation_rows": 160790,
+      "unused_rows": 159325,
+      "max_raw_delta": 9.803269307440132e-14,
+      "max_recalibrated_delta": 4.565792188770956e-15
+    },
+    {
+      "seed": 2026,
+      "train_rows": 474841,
+      "validation_rows": 157439,
+      "unused_rows": 157935,
+      "max_raw_delta": 1.454392162258955e-14,
+      "max_recalibrated_delta": 1.8370721610594387e-15
+    }
+  ],
+  "tests": {
+    "source_verification_workspace": "18 passed",
+    "scope_note": "Not a fresh clone or full current-PR checkout; the full current-branch suite was not rerun from a clean clone."
+  },
+  "limitations": [
+    "This is an exact-source runner rerun using existing local derived caches, not a fresh-clone reproduction.",
+    "A clean clone and fresh cache build remain pending until GitHub DNS/network access is available.",
+    "Independent clinical/statistical review remains pending.",
+    "VITALIS remains research-only and is not clinically validated."
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "project": "VITALIS",
+  "run_type": "cross_cohort_train_A_test_B_exact_source_reproduction",
+  "date": "2026-10-14",
+  "dataset": {
+    "training_setA": {
+      "patients": 20336,
+      "hourly_rows": 790215,
+      "positive_hourly_labels": 17136
+    },
+    "training_setB": {
+      "patients": 20000,
+      "hourly_rows": 761995,
+      "positive_hourly_labels": 10780
+    }
+  },
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "split_unit": "patient",
+    "set_a_train_fraction": 0.6,
+    "set_a_holdout_fraction": 0.4,
+    "set_b_test": "all patients in training_setB",
+    "model": "median imputation with missingness indicators, standard scaling, balanced logistic regression (max_iter=150, tol=1e-3)",
+    "threshold": 0.5,
+    "threshold_note": "fixed research comparison only; not clinically selected",
+    "sd_note": "Sample standard deviation across three Set-A training subsamples; not a confidence interval",
+    "test_predictions_exported": false,
+    "set_b_used_for_tuning": false
+  },
+  "source_execution_reconciliation": {
+    "repository": "culprit-k/VITALIS",
+    "branch": "work/exact-checkout-reproduction",
+    "source_commit": "efa17fc60b71402202c466d8f956f97f39273d19",
+    "script_path": "scripts/evaluate_cross_cohort.py",
+    "github_git_blob_sha": "f700bf0848cd718301d9693c3dae13444a9bfe8b",
+    "local_script_git_blob_sha": "f700bf0848cd718301d9693c3dae13444a9bfe8b",
+    "local_script_sha256": "43331ec53ac834809f92323d10c9dd3417afb338a607689b66a0e6d039e2e1f4",
+    "exact_script_bytes_verified": true,
+    "full_git_checkout_verified": false,
+    "execution": "Each seed was run separately against existing local memory-mapped Set-A and Set-B caches after the combined three-seed invocation exceeded the runtime window.",
+    "per_seed_local_output_sha256": {
+      "42": "1c9f836c2769f19c298fd97e25934c5532d8a3ed6f328df730ac842fb1074051",
+      "123": "12a9f5e7cd737e3be0541d498e2fee377fc994092bd2a3a6066d1e3c2f4df279",
+      "2026": "d8c219f733737f0c645fc96d1dd1900db845b5157c38490a3868481f1e0357d4"
+    },
+    "local_combined_summary_sha256": "9d71efbbac85b4b5c140fa56c73dbdc858a7e938c0bcaca92e9d281851bee7cf",
+    "raw_data_caches_and_per_row_outputs_committed": false
+  },
+  "aggregate_metrics_mean_and_sample_sd": {
+    "static": {
+      "auroc": [
+        0.6750165964,
+        0.0058241693
+      ],
+      "auprc": [
+        0.0454946361,
+        0.0017931824
+      ],
+      "brier_score": [
+        0.1658924105,
+        0.0057336224
+      ],
+      "sensitivity": [
+        0.4765306122,
+        0.0195032556
+      ],
+      "specificity": [
+        0.7970745171,
+        0.0133800864
+      ],
+      "ppv": [
+        0.0326431219,
+        0.0012001616
+      ],
+      "npv": [
+        0.990665378,
+        0.000225763
+      ]
+    },
+    "temporal": {
+      "auroc": [
+        0.7319108333,
+        0.0064185000
+      ],
+      "auprc": [
+        0.0580947577,
+        0.0014806835
+      ],
+      "brier_score": [
+        0.097222273,
+        0.0021598542
+      ],
+      "sensitivity": [
+        0.3828695114,
+        0.0047267373
+      ],
+      "specificity": [
+        0.9229883145,
+        0.0021876069
+      ],
+      "ppv": [
+        0.0666187956,
+        0.0016968907
+      ],
+      "npv": [
+        0.9904963982,
+        0.000068883
+      ]
+    }
+  },
+  "per_seed_metrics": {
+    "42": {
+      "set_a_train_patients": 12201,
+      "set_a_unused_holdout_patients": 8135,
+      "set_b_test_patients": 20000,
+      "set_a_train_rows": 473301,
+      "set_a_unused_holdout_rows": 316914,
+      "set_b_test_rows": 761995,
+      "set_a_train_positive_labels": 10474,
+      "set_a_unused_holdout_positive_labels": 6662,
+      "set_b_positive_labels": 10780,
+      "static": {
+        "auroc": 0.674175388,
+        "auprc": 0.045182738,
+        "brier_score": 0.159826335,
+        "sensitivity": 0.460482375,
+        "specificity": 0.812021858,
+        "ppv": 0.033959063,
+        "npv": 0.990555667
+      },
+      "temporal": {
+        "auroc": 0.731632558,
+        "auprc": 0.058509576,
+        "brier_score": 0.095704686,
+        "sensitivity": 0.388033395,
+        "specificity": 0.923108564,
+        "ppv": 0.067527645,
+        "npv": 0.990576387
+      }
+    },
+    "123": {
+      "set_a_train_patients": 12201,
+      "set_a_unused_holdout_patients": 8135,
+      "set_b_test_patients": 20000,
+      "set_a_train_rows": 470100,
+      "set_a_unused_holdout_rows": 320115,
+      "set_b_test_rows": 761995,
+      "set_a_train_positive_labels": 10126,
+      "set_a_unused_holdout_positive_labels": 7010,
+      "set_b_positive_labels": 10780,
+      "static": {
+        "auroc": 0.669658773,
+        "auprc": 0.043877863,
+        "brier_score": 0.166628392,
+        "sensitivity": 0.470871985,
+        "specificity": 0.792986029,
+        "ppv": 0.031608838,
+        "npv": 0.990515574
+      },
+      "temporal": {
+        "auroc": 0.725635997,
+        "auprc": 0.056450906,
+        "brier_score": 0.099695029,
+        "sensitivity": 0.381818182,
+        "specificity": 0.920743063,
+        "ppv": 0.064661064,
+        "npv": 0.99045737
+      }
+    },
+    "2026": {
+      "set_a_train_patients": 12201,
+      "set_a_unused_holdout_patients": 8135,
+      "set_b_test_patients": 20000,
+      "set_a_train_rows": 474841,
+      "set_a_unused_holdout_rows": 315374,
+      "set_b_test_rows": 761995,
+      "set_a_train_positive_labels": 10178,
+      "set_a_unused_holdout_positive_labels": 6958,
+      "set_b_positive_labels": 10780,
+      "static": {
+        "auroc": 0.681215628,
+        "auprc": 0.047423307,
+        "brier_score": 0.171222505,
+        "sensitivity": 0.498237477,
+        "specificity": 0.786215664,
+        "ppv": 0.032361465,
+        "npv": 0.990924893
+      },
+      "temporal": {
+        "auroc": 0.738463945,
+        "auprc": 0.059323791,
+        "brier_score": 0.096267104,
+        "sensitivity": 0.378756957,
+        "specificity": 0.925113316,
+        "ppv": 0.067667678,
+        "npv": 0.990455437
+      }
+    }
+  },
+  "feature_availability_warnings": {
+    "static": "Set-A training had no observed values for feature index 7 (EtCO2); the median imputer skipped it.",
+    "temporal": "Set-A training had no observed values for feature indices 7, 61, 62, and 63 (EtCO2 and its lag/delta/rolling-mean features); the median imputer skipped them.",
+    "interpretation": "The Set-A-trained models do not use these all-empty EtCO2 columns. This is a feature-availability limitation, not evidence that Set-B EtCO2 improves prediction."
+  },
+  "comparison_to_historical_reconstructed_artifact": {
+    "historical_file": "results/cross_cohort_train_A_test_B_2026-10-14.json",
+    "historical_artifact_modified": false,
+    "status": "Metrics differ from the earlier reconstructed-harness artifact; the exact-source values are recorded separately rather than silently overwriting the historical results.",
+    "historical_static_mean": {
+      "auroc": 0.6780926383,
+      "auprc": 0.0463924587,
+      "brier_score": 0.1648990958
+    },
+    "historical_temporal_mean": {
+      "auroc": 0.7356862716,
+      "auprc": 0.0597446551,
+      "brier_score": 0.0968801959
+    }
+  },
+  "limitations": [
+    "Retrospective evaluation on official Challenge 2019 cohorts; Set B is a separate cohort but not prospective clinical validation.",
+    "Hourly challenge-label metrics are not patient-level event sensitivity, lead time, or real-world clinical false-alarm rates.",
+    "The fixed 0.5 threshold is not a clinically selected operating point.",
+    "Standard deviations across three Set-A training subsamples are not confidence intervals.",
+    "The exact script bytes were verified and executed, but a full Git checkout was not available in this runtime.",
+    "The historical reconstructed-harness aggregate differs and remains preserved with its provenance caveat.",
+    "No patient-level predictions, identifiers, or raw records are exported; local caches and per-seed output files remain outside Git."
+  ]
+}

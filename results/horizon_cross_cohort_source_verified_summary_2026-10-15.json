@@ -1,0 +1,309 @@
+{
+  "project": "VITALIS",
+  "run_date": "2026-10-15",
+  "status": "fresh full-cohort source-blob-verified local reproduction; clean-checkout/environment-lock and independent-review gates remain open",
+  "repository": "culprit-k/VITALIS",
+  "branch": "work/strict-reproducibility-gate",
+  "source_revision": "bfa78a9cfc6a045feb2edff57c0dc6d2b82e4641",
+  "archive_sha256": "b67472a9cfc549b5d2fc911475b952e52d264287d0be864fad5ef94781a2d8e6",
+  "source_blob_hashes": {
+    "scripts/build_feature_cache.py": "eba7dda1532675c2e3f21476b0bba2cead537e78",
+    "scripts/evaluate_horizon_cross_cohort.py": "891b84ad4a5da039f1dc38411211c503c971167c",
+    "src/vitalis/horizon.py": "7d275dfb23ec86be25bdca26b9c30fc639887630",
+    "src/vitalis/validation.py": "8a2cabc1ef08194b4873934529c1ba72833f4f41"
+  },
+  "cohorts": {
+    "set_a": {
+      "patients": 20336,
+      "hourly_rows": 790215,
+      "positive_hourly_challenge_labels": 17136,
+      "features": 109,
+      "cache_chunks": 4
+    },
+    "set_b": {
+      "patients": 20000,
+      "hourly_rows": 761995,
+      "positive_hourly_challenge_labels": 10780,
+      "features": 109,
+      "cache_chunks": 4
+    }
+  },
+  "protocol": {
+    "horizons_hours": [
+      1,
+      3,
+      6
+    ],
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "models": [
+      "static baseline logistic regression",
+      "temporal-feature logistic regression"
+    ],
+    "set_a_split": "patient-disjoint 60% training / 40% unused holdout",
+    "set_b": "evaluation-only; no fitting, feature selection, calibration, threshold selection, or model changes",
+    "threshold": 0.5,
+    "refractory_hours": 6,
+    "bootstrap_replicates": 200,
+    "bootstrap_unit": "patient",
+    "raw_patient_data_or_row_level_predictions_committed": false
+  },
+  "runtime": {
+    "elapsed_seconds": 355.799,
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0",
+    "blas_threads": 1,
+    "fit_warnings": 0,
+    "focused_horizon_tests_passed": 12,
+    "full_repository_ci": {
+      "run_url": "https://github.com/culprit-k/VITALIS/actions/runs/38676169821",
+      "tests_passed": 183,
+      "elapsed_seconds": 4.42
+    }
+  },
+  "reconciliation": {
+    "baseline": "results/horizon_cross_cohort_2026-10-14.json",
+    "metrics_compared": 42,
+    "mean_and_sd_pairs_matching_at_6_decimal_places": 42,
+    "all_match": true,
+    "full_local_aggregate_sha256": "13daeb6bb2b83c8df79bbf2cf056756fe21509c221c5fe7399ecca811335fda4"
+  },
+  "aggregate_metrics": [
+    {
+      "horizon_hours": 1,
+      "model": "static",
+      "auroc": {
+        "mean": 0.663385,
+        "sd": 0.002217
+      },
+      "auprc": {
+        "mean": 0.003793,
+        "sd": 0.000219
+      },
+      "brier_score": {
+        "mean": 0.193701,
+        "sd": 0.005846
+      },
+      "sensitivity": {
+        "mean": 0.528473,
+        "sd": 0.008167
+      },
+      "specificity": {
+        "mean": 0.73232,
+        "sd": 0.011334
+      },
+      "ppv": {
+        "mean": 0.002476,
+        "sd": 0.000069
+      },
+      "alerts_per_at_risk_patient_day": {
+        "mean": 1.792175,
+        "sd": 0.142768
+      },
+      "future_positive_window_coverage": {
+        "mean": 0.120058,
+        "sd": 0.003821
+      }
+    },
+    {
+      "horizon_hours": 1,
+      "model": "temporal",
+      "auroc": {
+        "mean": 0.65689,
+        "sd": 0.010999
+      },
+      "auprc": {
+        "mean": 0.00317,
+        "sd": 0.000148
+      },
+      "brier_score": {
+        "mean": 0.131964,
+        "sd": 0.008834
+      },
+      "sensitivity": {
+        "mean": 0.400798,
+        "sd": 0.027363
+      },
+      "specificity": {
+        "mean": 0.842405,
+        "sd": 0.014651
+      },
+      "ppv": {
+        "mean": 0.003191,
+        "sd": 0.000108
+      },
+      "alerts_per_at_risk_patient_day": {
+        "mean": 1.461593,
+        "sd": 0.113243
+      },
+      "future_positive_window_coverage": {
+        "mean": 0.117156,
+        "sd": 0.01223
+      }
+    },
+    {
+      "horizon_hours": 3,
+      "model": "static",
+      "auroc": {
+        "mean": 0.681317,
+        "sd": 0.004288
+      },
+      "auprc": {
+        "mean": 0.013583,
+        "sd": 0.000165
+      },
+      "brier_score": {
+        "mean": 0.180597,
+        "sd": 0.005457
+      },
+      "sensitivity": {
+        "mean": 0.521326,
+        "sd": 0.017032
+      },
+      "specificity": {
+        "mean": 0.763299,
+        "sd": 0.014716
+      },
+      "ppv": {
+        "mean": 0.008421,
+        "sd": 0.000242
+      },
+      "alerts_per_at_risk_patient_day": {
+        "mean": 1.506671,
+        "sd": 0.038862
+      },
+      "future_positive_window_coverage": {
+        "mean": 0.328618,
+        "sd": 0.007135
+      }
+    },
+    {
+      "horizon_hours": 3,
+      "model": "temporal",
+      "auroc": {
+        "mean": 0.680004,
+        "sd": 0.014513
+      },
+      "auprc": {
+        "mean": 0.012639,
+        "sd": 0.000478
+      },
+      "brier_score": {
+        "mean": 0.131344,
+        "sd": 0.003472
+      },
+      "sensitivity": {
+        "mean": 0.415134,
+        "sd": 0.010141
+      },
+      "specificity": {
+        "mean": 0.853067,
+        "sd": 0.004982
+      },
+      "ppv": {
+        "mean": 0.010771,
+        "sd": 0.000415
+      },
+      "alerts_per_at_risk_patient_day": {
+        "mean": 1.276286,
+        "sd": 0.080706
+      },
+      "future_positive_window_coverage": {
+        "mean": 0.293435,
+        "sd": 0.014854
+      }
+    },
+    {
+      "horizon_hours": 6,
+      "model": "static",
+      "auroc": {
+        "mean": 0.686763,
+        "sd": 0.004962
+      },
+      "auprc": {
+        "mean": 0.028594,
+        "sd": 0.000336
+      },
+      "brier_score": {
+        "mean": 0.17455,
+        "sd": 0.006209
+      },
+      "sensitivity": {
+        "mean": 0.51471,
+        "sd": 0.015396
+      },
+      "specificity": {
+        "mean": 0.783984,
+        "sd": 0.013984
+      },
+      "ppv": {
+        "mean": 0.019026,
+        "sd": 0.00063
+      },
+      "alerts_per_at_risk_patient_day": {
+        "mean": 1.399416,
+        "sd": 0.051793
+      },
+      "future_positive_window_coverage": {
+        "mean": 0.601741,
+        "sd": 0.01741
+      }
+    },
+    {
+      "horizon_hours": 6,
+      "model": "temporal",
+      "auroc": {
+        "mean": 0.686375,
+        "sd": 0.013809
+      },
+      "auprc": {
+        "mean": 0.026433,
+        "sd": 0.001021
+      },
+      "brier_score": {
+        "mean": 0.142186,
+        "sd": 0.005156
+      },
+      "sensitivity": {
+        "mean": 0.445697,
+        "sd": 0.009864
+      },
+      "specificity": {
+        "mean": 0.841347,
+        "sd": 0.009706
+      },
+      "ppv": {
+        "mean": 0.022373,
+        "sd": 0.001314
+      },
+      "alerts_per_at_risk_patient_day": {
+        "mean": 1.256563,
+        "sd": 0.105401
+      },
+      "future_positive_window_coverage": {
+        "mean": 0.568009,
+        "sd": 0.020328
+      }
+    }
+  ],
+  "limitations": [
+    "The target is entry into the Challenge SepsisLabel-positive window, not independently observed sepsis onset.",
+    "Set B is a second cohort within the same benchmark, not prospective clinical validation.",
+    "The fixed threshold is a research reference; PPV is low and alert burden remains substantial.",
+    "Runtime used Python 3.13.5 rather than the runbook baseline Python 3.11; dependencies are recorded but not fully locked.",
+    "The four core pipeline blobs were verified exactly, but a full clean Git checkout and full-tree source manifest were not completed.",
+    "Independent statistical/clinical review, ethics/governance sign-off, and external/prospective validation remain open."
+  ],
+  "clinical_status": "Research only; not a medical device or clinically validated decision-support system.",
+  "github_clean_checkout_workflow": {
+    "run_url": "https://github.com/culprit-k/VITALIS/actions/runs/38677774161",
+    "status": "in_progress",
+    "head_sha": "bfa78a9cfc6a045feb2edff57c0dc6d2b82e4641",
+    "note": "Not counted as successful until the workflow completes and aggregate outputs are reviewed."
+  }
+}

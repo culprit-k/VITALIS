@@ -1,0 +1,94 @@
+{
+  "status": "TEMPLATE_NOT_APPROVED",
+  "protocol_version": "TODO",
+  "model_commit_sha": "TODO",
+  "environment_lock_hash": "TODO",
+  "feature_schema_hash": "TODO",
+  "model_artifact_hash": "TODO",
+  "population": "TODO: intended population and care setting",
+  "prediction_index_time": "TODO: exact index-time definition",
+  "event_definition": "TODO: independently defined endpoint and event time",
+  "primary_endpoint": "TODO: one prespecified primary endpoint",
+  "analysis_plan_version": "TODO",
+  "evaluation_cohort": {
+    "name": "TODO: genuinely new independent cohort",
+    "independent": false,
+    "data_manifest_sha256": "TODO"
+  },
+  "target": {
+    "definition": "TODO",
+    "claim_type": "proxy-label prediction",
+    "challenge_label_proxy": true,
+    "independently_adjudicated": false
+  },
+  "horizons_hours": [
+    1,
+    3,
+    6
+  ],
+  "thresholds": [
+    0.005,
+    0.01
+  ],
+  "primary_metrics": [
+    "TODO"
+  ],
+  "secondary_metrics": [
+    "TODO"
+  ],
+  "subgroup_plan": [
+    "TODO"
+  ],
+  "missing_data_plan": [
+    "TODO"
+  ],
+  "stopping_rules": [
+    "TODO"
+  ],
+  "frozen_policy": {
+    "model_family": "TODO",
+    "preprocessing": "TODO",
+    "calibration": "TODO",
+    "feature_set": "TODO",
+    "refractory_hours": 6,
+    "threshold_selection_frozen": false
+  },
+  "approvals": {
+    "clinical_owner": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "independent_statistician": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "data_governance": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "ethics_determination": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    },
+    "software_reviewer": {
+      "approved": false,
+      "reviewer": "",
+      "date": ""
+    }
+  },
+  "utility_policy": {
+    "cost_definition": "missed_window_cost * missed_forecast_positive_windows + alert_cost * all_alerts",
+    "alert_cost": "TODO: positive numeric cost unit for one alert",
+    "missed_window_costs_relative_to_one_alert": [
+      "TODO: predeclared positive numeric scenarios"
+    ],
+    "primary_cost_scenario": "TODO: positive numeric value included in missed_window_costs_relative_to_one_alert",
+    "selection_rule": "TODO: exact rule for choosing a development candidate on Set A only",
+    "candidate_selection_cohort": "TODO: patient-disjoint Set A operating-point holdout; never Set B",
+    "clinical_cost_justification": "TODO: independent clinical/statistical rationale or explicitly exploratory-only status"
+  }
+}

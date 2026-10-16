@@ -1,0 +1,147 @@
+{
+  "project": "VITALIS",
+  "run_type": "cross_cohort_paired_patient_cluster_bootstrap_exact_source",
+  "date": "2026-10-14",
+  "dataset": {
+    "training_setB": {
+      "patients": 20000,
+      "hourly_rows": 761995,
+      "positive_hourly_labels": 10780,
+      "positive_hourly_label_prevalence": 0.014147074455869133
+    }
+  },
+  "protocol": {
+    "model_split_seeds": [
+      42,
+      123,
+      2026
+    ],
+    "replicates_per_seed": 200,
+    "bootstrap_seed_rule": "model split seed + 90000",
+    "method": "Paired patient-cluster percentile bootstrap; sample patients with replacement and assign multiplicity weights to all rows from each sampled patient; exact tie-aware weighted AUROC, average precision, and Brier score",
+    "score_generation": "The exact checked-in scripts/evaluate_cross_cohort.py was executed for each seed and wrote paired raw Set-B scores to local-only NPZ archives outside the repository.",
+    "set_b_usage": "Evaluation only; not used for model fitting, feature selection, or threshold selection",
+    "patient_level_scores_committed": false,
+    "raw_data_or_caches_committed": false
+  },
+  "source_provenance": {
+    "repository": "culprit-k/VITALIS",
+    "branch": "work/exact-checkout-reproduction",
+    "evaluator_script_blob_sha": "dc736ef7a7fe31c477d4626971dd5b0abd255d2f",
+    "evaluator_test_blob_sha": "77930cd4607653fcef6bdbb290e158f574678ad5",
+    "bootstrap_script_blob_sha": "8b7f8d9d377554a5809e7d8741b0c4f277e218d2",
+    "local_git_blob_shas_match_github": true,
+    "focused_local_tests": "12 passed",
+    "full_git_checkout_verified": false,
+    "local_archive_location": "/mnt/data/vitalis-local/heldout-scores-exact (not committed)"
+  },
+  "seeds": [
+    {
+      "model_split_seed": 42,
+      "bootstrap_seed": 90042,
+      "test_patients": 20000,
+      "test_rows": 761995,
+      "positive_hourly_labels": 10780,
+      "valid_replicates": 200,
+      "elapsed_bootstrap_seconds": 29.68,
+      "score_archive_sha256": "c1164a185b1518f4b33d92ff8728137ed51d36cf18ce49b19ec281e145803c8b",
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.057509,
+          "ci_95_percentile": [
+            0.050083,
+            0.064192
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.013466,
+          "ci_95_percentile": [
+            0.011195,
+            0.016127
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.064122,
+          "ci_95_percentile": [
+            -0.065108,
+            -0.06316
+          ]
+        }
+      }
+    },
+    {
+      "model_split_seed": 123,
+      "bootstrap_seed": 90123,
+      "test_patients": 20000,
+      "test_rows": 761995,
+      "positive_hourly_labels": 10780,
+      "valid_replicates": 200,
+      "elapsed_bootstrap_seconds": 30.29,
+      "score_archive_sha256": "2ac8b7525cf642fd0457ddabc4dc17c58b2865472004716028bc9dc21db4c4f8",
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.055679,
+          "ci_95_percentile": [
+            0.047849,
+            0.063553
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.012661,
+          "ci_95_percentile": [
+            0.010303,
+            0.015334
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.066932,
+          "ci_95_percentile": [
+            -0.068031,
+            -0.066094
+          ]
+        }
+      }
+    },
+    {
+      "model_split_seed": 2026,
+      "bootstrap_seed": 92026,
+      "test_patients": 20000,
+      "test_rows": 761995,
+      "positive_hourly_labels": 10780,
+      "valid_replicates": 200,
+      "elapsed_bootstrap_seconds": 29.93,
+      "score_archive_sha256": "26d864e677eb4a56e5cd173b497a16b230688138bae817bfc3cc06308ca39231",
+      "temporal_minus_static": {
+        "auroc": {
+          "mean_bootstrap_difference": 0.057311,
+          "ci_95_percentile": [
+            0.050915,
+            0.064002
+          ]
+        },
+        "auprc": {
+          "mean_bootstrap_difference": 0.012025,
+          "ci_95_percentile": [
+            0.009993,
+            0.01504
+          ]
+        },
+        "brier_score": {
+          "mean_bootstrap_difference": -0.07495,
+          "ci_95_percentile": [
+            -0.075973,
+            -0.074042
+          ]
+        }
+      }
+    }
+  ],
+  "interpretation": "In these exact-source, split-specific retrospective comparisons, temporal-minus-static AUROC and AUPRC intervals were above zero and Brier differences below zero for all three Set-A training splits. This is conditional uncertainty for the benchmark's hourly labels, not independent external validation, patient-event sensitivity, lead time, clinical calibration, or utility evidence.",
+  "limitations": [
+    "Only 200 bootstrap replicates were completed for each seed; intervals are still preliminary and should be upgraded to 1,000 replicates if runtime permits.",
+    "A 1,000-replicate attempt with the exact-source bootstrap runner exceeded the execution window; no complete 1,000-replicate result is claimed.",
+    "The full Git checkout was not verified because GitHub DNS resolution failed; the exact source blobs were verified by Git blob SHA.",
+    "The historical reconstructed-harness cross-cohort metrics remain discrepant and the root cause is unresolved; the historical artifact is preserved.",
+    "These are retrospective hourly challenge-label results, not clinical validation."
+  ]
+}

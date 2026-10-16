@@ -1,0 +1,133 @@
+{
+  "project": "VITALIS",
+  "document": "Uzbekistan research-readiness register",
+  "version": "0.1",
+  "review_date": "2026-10-15",
+  "market": "Republic of Uzbekistan",
+  "initial_deployment_category": "research_only",
+  "current_decision": "NOT_CLEARED_FOR_HUMAN_SUBJECT_OR_CLINICAL_WORKFLOW_USE",
+  "intended_first_mode": "offline retrospective analysis of authorized, de-identified data",
+  "prohibited_current_modes": [
+    "prospective patient recruitment or collection",
+    "live hospital feeds or silent-mode monitoring of real patients",
+    "display of individual scores to treating clinicians",
+    "diagnosis, triage, treatment, escalation, or other care decisions",
+    "commercial distribution or clinical marketing"
+  ],
+  "gates": [
+    {
+      "id": "UZ-01",
+      "name": "Research intended-use statement",
+      "status": "open",
+      "evidence_required": ["signed intended-use statement", "population and exclusions", "outputs and limitations", "explicit no-care-influence boundary"],
+      "accountable_role": "product owner and clinical lead",
+      "stop_condition": "do not expand beyond synthetic-only work until the research scope is approved"
+    },
+    {
+      "id": "UZ-02",
+      "name": "Data access and lawful basis",
+      "status": "blocked_for_local_patient_data",
+      "evidence_required": ["data provenance and license", "data-owner authorization", "approved study protocol", "data-use agreement"],
+      "accountable_role": "principal investigator, data custodian, institutional legal/privacy lead",
+      "stop_condition": "do not receive or process local patient-level data before written authorization"
+    },
+    {
+      "id": "UZ-03",
+      "name": "Anonymization and re-identification risk",
+      "status": "blocked_for_local_patient_data",
+      "evidence_required": ["documented anonymization method", "re-identification risk assessment", "review of longitudinal time-series risk", "aggregate-output review procedure"],
+      "legal_reference": "Uzbekistan Law ZRU-547 on Personal Data, including Articles 16 and 18 in the current consolidated text",
+      "accountable_role": "data protection lead and data custodian",
+      "stop_condition": "pseudonymization alone must not be treated as anonymization"
+    },
+    {
+      "id": "UZ-04",
+      "name": "Ethics and research governance route",
+      "status": "open",
+      "evidence_required": ["written determination of required review body", "consent or waiver determination", "site and sponsor approvals where applicable", "monitoring and reporting plan"],
+      "accountable_role": "principal investigator/sponsor and ethics liaison",
+      "stop_condition": "no recruitment, prospective collection, or silent-mode evaluation before written determination and required approvals"
+    },
+    {
+      "id": "UZ-05",
+      "name": "Cross-border transfer and hosting",
+      "status": "blocked_for_local_patient_data",
+      "evidence_required": ["storage-location decision", "written legal review of transfer conditions", "recipient and contract inventory", "security and retention controls", "database registration/localization applicability assessment"],
+      "legal_reference": "Uzbekistan Law ZRU-547 on Personal Data, including Article 15 on cross-border transfer in the current consolidated text",
+      "accountable_role": "data controller and institutional legal/privacy lead",
+      "stop_condition": "no transfer outside Uzbekistan is assumed permissible without a study-specific written determination"
+    },
+    {
+      "id": "UZ-06",
+      "name": "Medical-software regulatory status",
+      "status": "open",
+      "evidence_required": ["written response from competent Uzbekistan authority", "identified current binding instruments", "scope triggers for registration and clinical evaluation"],
+      "legal_reference": "Cabinet of Ministers Resolution No. 738, effective 2026-02-26",
+      "authority_starting_point": "Center for Pharmaceutical Product Safety / Committee on New Medical Technology",
+      "accountable_role": "Uzbekistan regulatory affairs lead",
+      "stop_condition": "do not claim exemption, device classification, or authorization based on this register"
+    },
+    {
+      "id": "UZ-07",
+      "name": "Security and data lifecycle",
+      "status": "partial",
+      "evidence_required": ["threat model", "role-based access", "approved storage", "audit logging", "retention/deletion", "backup/recovery", "incident response"],
+      "accountable_role": "institution IT and security lead",
+      "stop_condition": "no real patient data until the host institution approves the environment"
+    },
+    {
+      "id": "UZ-08",
+      "name": "Research protocol and statistical plan",
+      "status": "partial",
+      "evidence_required": ["independent event reference standard", "cohort eligibility and exclusions", "frozen endpoints and analysis plan", "subgroup and uncertainty plan", "documented model/policy freeze"],
+      "accountable_role": "principal investigator and independent statistician",
+      "stop_condition": "existing Set B must not be reused for threshold selection"
+    },
+    {
+      "id": "UZ-09",
+      "name": "Clean-checkout reproducibility",
+      "status": "open",
+      "evidence_required": ["fresh checkout and caches", "commit/source hashes", "locked environment", "exact commands", "result reconciliation"],
+      "accountable_role": "engineering lead",
+      "stop_condition": "do not describe reconstructed-working-copy results as exact-source reproduction"
+    },
+    {
+      "id": "UZ-10",
+      "name": "Clinical validation and authorization",
+      "status": "not_established",
+      "evidence_required": ["new independent cohort", "independently defined/adjudicated event timing", "appropriate external/prospective evidence", "regulatory and ethics approvals", "risk/usability/cybersecurity evidence"],
+      "accountable_role": "clinical sponsor, qualified reviewers, and competent authorities",
+      "stop_condition": "no patient-care use, clinical claims, or marketing"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Law of the Republic of Uzbekistan No. ZRU-547 on Personal Data, current consolidated text",
+      "url": "https://lex.uz/en/acts/4396428",
+      "reviewed": "2026-10-15",
+      "use": "personal data, research anonymization, health data, cross-border transfer"
+    },
+    {
+      "name": "Cabinet of Ministers Resolution No. 738",
+      "url": "https://lex.uz/en/docs/7861699",
+      "effective_date": "2026-02-26",
+      "use": "current medical equipment registration procedure starting point"
+    },
+    {
+      "name": "Center for Pharmaceutical Product Safety",
+      "url": "https://www.uzpharm-control.uz/en/",
+      "use": "official regulator starting point"
+    },
+    {
+      "name": "Committee on New Medical Technology",
+      "url": "https://en.regmed.uz/department_cnmt.php",
+      "use": "official regulator starting point"
+    },
+    {
+      "name": "Ethics Review of Biomedical Research in Uzbekistan: Policy and Program Gaps (2024)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11464834/",
+      "use": "secondary research context only; not binding law"
+    }
+  ],
+  "disclaimer": "Planning register only. Not legal advice, official classification, ethics approval, permission to process data, medical-device registration, or clinical validation."
+}

@@ -9,11 +9,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
       - name: Install package and development dependencies
-        run: python -m pip install -e ".[dev]"
+        run: python -m pip install -e ".[dev,bootstrap-accelerated]"
+      - name: Compile Python source and demo scripts
+        run: python -m compileall -q src scripts dashboard tests
+      - name: Verify source blobs and capture external environment manifest
+        run: python scripts/verify_source_manifest.py --output /tmp/vitalis-source-manifest.json
+      - name: Check repository data-artifact hygiene
+        run: python scripts/check_repository_hygiene.py
+      - name: Audit reachable Git history for data artifacts and high-confidence secrets
+        run: python scripts/audit_git_history.py --json-output /tmp/vitalis-history-audit.json
+      - name: Smoke-test synthetic timestamped twin stream
+        run: python scripts/demo_adaptive_twin.py --seed 2026 > /tmp/vitalis-twin-demo.jsonl
+      - name: Smoke-test integrated twin/supervised interface
+        run: python scripts/demo_integrated_inference.py > /tmp/vitalis-integrated-demo.jsonl
       - name: Run tests
         run: pytest
+      - name: Retain source and history audit manifests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitalis-source-audit-${{ github.sha }}
+          path: |
+            /tmp/vitalis-source-manifest.json
+            /tmp/vitalis-history-audit.json
+          if-no-files-found: ignore
+          retention-days: 30

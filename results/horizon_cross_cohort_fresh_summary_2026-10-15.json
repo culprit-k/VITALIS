@@ -1,0 +1,84 @@
+{
+  "project": "VITALIS",
+  "run_type": "fresh_local_full_cohort_cross_cohort_future_challenge_label_evaluation",
+  "run_date": "2026-10-15",
+  "status": "Fresh data evaluation completed; strict byte-verified source-reproduction and independent-review gates remain open.",
+  "cohorts": {
+    "set_a": {"patients": 20336, "hourly_rows": 790215, "positive_hourly_challenge_labels": 17136},
+    "set_b": {"patients": 20000, "hourly_rows": 761995, "positive_hourly_challenge_labels": 10780}
+  },
+  "archive": {
+    "sha256": "b67472a9cfc549b5d2fc911475b952e52d264287d0be864fad5ef94781a2d8e6",
+    "matches_historical_run": true,
+    "zip_integrity": "pass",
+    "files": 40336,
+    "source_columns": 41,
+    "malformed_rows": 0,
+    "nonbinary_labels": 0,
+    "label_reversions": 0,
+    "feature_count": 109,
+    "feature_schema_sha256": "ba90d9e671c872ce034eacc6492863d14207ecf5e5f6ce4c6a2e629af730e499"
+  },
+  "source_provenance": {
+    "repository": "culprit-k/VITALIS",
+    "branch": "work/strict-reproducibility-gate",
+    "code_commit_used_as_reference": "7d01c5777a73093701ceceee30412a0d057d2ed0",
+    "cache_builder_blob_sha": "eba7dda1532675c2e3f21476b0bba2cead537e78",
+    "evaluator_blob_sha": "891b84ad4a5da039f1dc38411211c503c971167c",
+    "execution_note": "Cache-building and evaluation logic were reconstructed locally from checked-in source content fetched through GitHub. This runtime did not execute from a clean, byte-verified Git checkout; this is a fresh data rerun, not closure of the strict source-reproduction gate."
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.8.0",
+    "scipy": "1.17.0"
+  },
+  "protocol": {
+    "horizons_hours": [1, 3, 6],
+    "seeds": [42, 123, 2026],
+    "models": ["static", "temporal"],
+    "set_a_split": "patient-disjoint 60% training / 40% held-out unused",
+    "set_b": "evaluation-only; no fitting, feature selection, calibration, or threshold selection",
+    "threshold": 0.5,
+    "refractory_hours": 6,
+    "patient_cluster_bootstrap_replicates": 200,
+    "model_fit_count": 18,
+    "raw_data_exported": false,
+    "caches_exported": false,
+    "row_level_predictions_exported": false
+  },
+  "aggregate_metrics_mean_plus_minus_sample_sd_across_seeds": [
+    {"horizon_hours": 1, "model": "static", "auroc": [0.663385, 0.002217], "auprc": [0.003793, 0.000219], "brier_score": [0.193701, 0.005846], "sensitivity_at_0_5": 0.528473, "ppv_at_0_5": 0.002476, "alerts_per_at_risk_patient_day": [1.792175, 0.142768], "future_positive_window_coverage": [0.120058, 0.003821]},
+    {"horizon_hours": 1, "model": "temporal", "auroc": [0.656909, 0.010975], "auprc": [0.003170, 0.000149], "brier_score": [0.131943, 0.008864], "sensitivity_at_0_5": 0.401161, "ppv_at_0_5": 0.003194, "alerts_per_at_risk_patient_day": [1.461986, 0.112620], "future_positive_window_coverage": [0.117882, 0.011326]},
+    {"horizon_hours": 3, "model": "static", "auroc": [0.681317, 0.004288], "auprc": [0.013583, 0.000165], "brier_score": [0.180597, 0.005457], "sensitivity_at_0_5": 0.521326, "ppv_at_0_5": 0.008421, "alerts_per_at_risk_patient_day": [1.506671, 0.038862], "future_positive_window_coverage": [0.328618, 0.007135]},
+    {"horizon_hours": 3, "model": "temporal", "auroc": [0.680004, 0.014513], "auprc": [0.012639, 0.000478], "brier_score": [0.131345, 0.003473], "sensitivity_at_0_5": 0.415134, "ppv_at_0_5": 0.010771, "alerts_per_at_risk_patient_day": [1.276274, 0.080704], "future_positive_window_coverage": [0.293798, 0.015117]},
+    {"horizon_hours": 6, "model": "static", "auroc": [0.686763, 0.004962], "auprc": [0.028594, 0.000336], "brier_score": [0.174550, 0.006209], "sensitivity_at_0_5": 0.514710, "ppv_at_0_5": 0.019026, "alerts_per_at_risk_patient_day": [1.399416, 0.051793], "future_positive_window_coverage": [0.601741, 0.017410]},
+    {"horizon_hours": 6, "model": "temporal", "auroc": [0.686375, 0.013809], "auprc": [0.026433, 0.001021], "brier_score": [0.142186, 0.005156], "sensitivity_at_0_5": 0.445697, "ppv_at_0_5": 0.022373, "alerts_per_at_risk_patient_day": [1.256563, 0.105401], "future_positive_window_coverage": [0.568009, 0.020328]}
+  ],
+  "reconciliation_vs_2026_10_14_historical_aggregate": {
+    "historical_result_blob_sha": "9c474785f0d179c5a2b7e87d0fb2cbcf35dc8b90",
+    "cohort_counts_and_target_eligible_rows": "match exactly",
+    "maximum_absolute_differences_vs_historical_rounded_metrics": {
+      "auroc": 0.00005329,
+      "auprc": 0.00000135,
+      "brier_score": 0.00006050,
+      "alerts_per_at_risk_patient_day": 0.00111411,
+      "future_positive_window_coverage": 0.00217593
+    },
+    "notable_differences": [
+      "1-hour, seed 42, temporal model: AUROC delta +0.00005329, Brier delta -0.00006050, alert-rate delta +0.00111411/day, coverage delta +0.00217593.",
+      "3-hour, seed 2026, temporal model: coverage delta +0.00108858."
+    ],
+    "formal_acceptance_tolerance": "not predeclared; reconciliation is descriptive only",
+    "conclusion": "Do not mark aggregate reconciliation complete until the clean-checkout source and Python/dependency environment are matched and discrepancies are investigated."
+  },
+  "limitations": [
+    "The target is entry into the Challenge SepsisLabel-positive window, not independently observed sepsis onset; the Challenge label already uses a six-hour lead convention.",
+    "Set B is another Challenge training cohort, not prospective or independent clinical validation.",
+    "Threshold and refractory period are research defaults, not clinically selected alarm settings.",
+    "Alerts outside forecast-positive windows are not verified clinical false alarms; window coverage is not event-level sensitivity.",
+    "Brier scores are from uncalibrated class-weighted logistic regression and do not establish clinical calibration.",
+    "Independent statistical/source review remains pending. VITALIS is research-only and must not guide patient care."
+  ]
+}

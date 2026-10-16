@@ -1,5 +1,7 @@
 # VITALIS next steps and current status
 
+> For a plain-language overview of the current stage, findings, limitations, and ordered release gates, see [PROJECT_STATUS.md](PROJECT_STATUS.md).
+
 ## Phase 1 status: completed within exploratory scope
 
 - [x] Established research repository, dataset protocol, model card, baseline pipeline, tests, and reproducible workflow.
@@ -108,13 +110,13 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added paired patient-cluster bootstrap intervals for temporal-minus-static AUROC, AUPRC, and Brier score to the cache-backed evaluator; intervals resample patients, not hourly rows. Full-cohort interval execution is pending.
 - [x] Bootstrap probabilities and group vectors remain in memory; the runner writes aggregate intervals only.
 - [x] Added deterministic tests for paired bootstrap reproducibility, input validation, and aggregate-only output. CI result is pending: https://github.com/culprit-k/VITALIS/actions/runs/38560507472.
-- [x] Reported seed-specific intervals separately without pooling test rows across split seeds. Only 20 replicates per seed completed, so intervals are preliminary and too coarse for final inferential claims. [ ] Repeat with 200–1,000 replicates after runtime optimization.
+- [x] Preserved the initial 20-replicate pilot as preliminary. The follow-up exact-source raw and recalibrated analyses now use 1,000 paired patient-cluster replicates per seed; see [the final aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json).
 
 
 ## Preliminary full-cohort uncertainty results
 
 - [x] Committed aggregate-only paired patient-cluster bootstrap results for seeds 42, 123, and 2026. Temporal AUROC differences were positive across all three seeds; Brier differences were negative; AUPRC interval crossed zero for seed 123. See [report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
-- [ ] Increase bootstrap replicates to at least 200–1,000 and verify the checked-in source bytes are the ones actually executed before treating the intervals as final research results.
+- [x] Increased exact-source cross-cohort bootstrap to 1,000 replicates per seed and probability stream; checked-in source hashes and accelerated-runner parity checks are recorded in the final [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md).
 
 
 ## 200-replicate paired bootstrap milestone (2026-10-14)
@@ -132,7 +134,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added randomized tied-score parity tests against scikit-learn; corrected a zero-weight score-threshold edge case discovered by CI.
 - [x] GitHub Actions passed after the fix: https://github.com/culprit-k/VITALIS/actions/runs/38562541833.
 - [x] Re-ran the 200-replicate analysis for each split seed in separate local processes; aggregate intervals are documented in [the report](FULL_COHORT_PAIRED_BOOTSTRAP.md).
-- [ ] A 1,000-replicate full-cohort attempt exceeded the local five-minute execution window before producing a complete artifact. Do not treat it as a result. Further optimize runtime or run the bootstrap over retained held-out score vectors before increasing repetitions.
+- [x] The initial full-cohort 1,000-replicate attempt exceeded the local execution window. This was resolved by running the accelerated, tie-aware bootstrap over retained local score vectors in deterministic chunks; the final 1,000-replicate aggregate is committed.
 - [ ] Strict byte-for-byte source execution remains unverified; local evaluation files were reconstructed and are not an unchanged checkout of the repository blobs.
 
 
@@ -160,7 +162,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Verified both local official cohorts: training_setA (20,336 patients; 790,215 rows; 17,136 positive hourly challenge-label rows) and training_setB (20,000 patients; 761,995 rows; 10,780 positive hourly challenge-label rows).
 - [x] Ran a patient-disjoint cross-cohort experiment: train on a 60% patient subset of set A and evaluate on every patient in set B, across seeds 42, 123, and 2026. Aggregate-only results: [cross-cohort report](FULL_COHORT_CROSS_COHORT_RESULTS.md), [summary JSON](../results/cross_cohort_train_A_test_B_2026-10-14.json).
 - [x] Added `scripts/evaluate_cross_cohort.py` and regression tests. This experiment evaluates both static and temporal feature sets; row-level predictions and raw patient data remain local.
-- [ ] Run the checked-in script from an exact repository checkout against the local caches and reconcile results; the first local analysis used a reconstructed working copy, so source-byte identity remains open.
+- [x] Retrieved `scripts/evaluate_cross_cohort.py` from the current branch, verified the local Git blob SHA against GitHub (`f700bf0848cd718301d9693c3dae13444a9bfe8b`), and executed the exact script against both local caches for seeds 42, 123, and 2026 (one seed per invocation). Aggregate-only exact-source results are in [the reproduction JSON](../results/cross_cohort_exact_source_reproduction_2026-10-14.json). A full Git checkout was not verified because local GitHub DNS was unavailable.
 - [ ] Investigate calibration and cohort shift before drawing probability or clinical conclusions. Temporal features improved AUROC/AUPRC here but had lower sensitivity at the fixed 0.5 threshold; no operating point is clinically selected.
 - [ ] External/prospective validation, clinical/statistical supervision, and governance review remain required before any patient-facing research.
 
@@ -214,7 +216,7 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Added `tests/test_cross_cohort_recalibration.py` for patient isolation, deterministic splits, validation-only recalibrator inputs, invalid-input handling, and aggregate-only metrics.
 - [x] Documented the reproduction command in [the cross-cohort recalibration report](CROSS_COHORT_RECALIBRATION_PILOT.md).
 - [x] GitHub Actions passed for the checked-in runner and regression tests (run https://github.com/culprit-k/VITALIS/actions/runs/38583831584). This verifies the software tests, not exact reproduction of the local aggregate results.
-- [ ] Execute the checked-in runner from an exact repository checkout against local set-A/set-B caches and reconcile its aggregate output against the prior reconstructed-harness artifact. Do not claim exact source reproduction until that run is performed.
+- [x] Executed the byte-identical checked-in recalibration runner against local Set-A/Set-B caches for seeds 42, 123, and 2026; the seven focused tests passed and reruns matched the stored source-verified outputs (exactly for seeds 42/123, within 1.5e-14 for seed 2026). The runtime could not verify a full Git checkout because GitHub DNS resolution failed. See [reproducibility reconciliation](CROSS_COHORT_REPRODUCIBILITY_RECONCILIATION.md) and [JSON](../results/cross_cohort_reproducibility_reconciliation_2026-10-14.json).
 
 
 ## Current handover checkpoint — cross-cohort recalibration (14 October 2026)
@@ -222,8 +224,9 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Confirmed the latest main-branch workflow run for `Track checked-in cross-cohort recalibration runner` completed successfully: https://github.com/culprit-k/VITALIS/actions/runs/38583831584.
 - [x] Confirmed the preceding documentation update workflow also passed: https://github.com/culprit-k/VITALIS/actions/runs/38583816179.
 - [x] The checked-in runner uses patient-disjoint 60/20/20 partitions in set A, fits Platt recalibration on set-A validation predictions only, scores set B in chunks, and writes aggregate-only results. Set B is not used for fitting or threshold selection.
-- [ ] Run `scripts/evaluate_cross_cohort_recalibration.py` from a byte-identical checkout against the local set-A and set-B caches; compare the resulting aggregate JSON against `results/cross_cohort_validation_A_recalibration_test_B_3seed_2026-10-14.json`. Current local network DNS has prevented establishing source-byte identity, so do not claim exact reproduction yet.
-- [ ] Add paired patient-cluster uncertainty intervals for cross-cohort results using held-out set-B predictions, while keeping score vectors and patient group IDs outside Git. Preserve split-specific results and avoid treating three seed SDs as confidence intervals.
+- [x] Retrieved the cache builder, recalibration runner, and focused test source from `main` commit `90ce87677b1e1692c3a6f04f7394f9ce59cf7481`; each local blob hash matched the GitHub blob SHA. Built local-only caches and ran seeds 42, 123, and 2026 against all 20,000 set-B patients. Focused tests passed (7/7); aggregate-only output is in [the source-verified JSON](../results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json) and [report](CROSS_COHORT_RECALIBRATION_SOURCE_VERIFIED.md). A full `git clone` still could not resolve `github.com` DNS, so this is byte-identical-source execution, not a verified full checkout. Raw metrics reconcile to floating-point precision; recalibrated probability metrics have small but nonzero discrepancies versus the historical reconstructed-harness artifact, which is retained unchanged.
+- [x] Independently reran the exact-source recalibration CLI for each seed; stored aggregate outputs matched to floating-point precision and the focused test suite passed again. See the [cross-cohort reproducibility reconciliation](CROSS_COHORT_REPRODUCIBILITY_RECONCILIATION.md).
+- [x] Added exact-source paired patient-cluster bootstrap intervals for raw Set-B static-versus-temporal scores (200 replicates per training split); row-level score archives remain local-only. Aggregate-only results: [exact-source bootstrap JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json) and [cross-cohort report](FULL_COHORT_CROSS_COHORT_RESULTS.md). A 1,000-replicate attempt exceeded the runtime window; 200-replicate intervals remain preliminary.
 - [ ] Audit subgroup performance and calibration without using set B to tune model or recalibrator. Suppress small cells and frame results as exploratory.
 - [ ] Document the final pre-specified evaluation protocol and obtain statistical/clinical governance review before any prospective or patient-facing study. VITALIS remains research-only.
 
@@ -233,7 +236,8 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 - [x] Generated local-only held-out Set B score archives for seeds 42, 123, and 2026; archives include labels, patient groups, and raw/recalibrated model scores and remain outside Git.
 - [x] Ran an exploratory paired patient-cluster bootstrap comparing temporal vs static models for raw and Set-A-validation-recalibrated probabilities (20 replicates per seed/stream).
 - [x] Committed aggregate-only pilot intervals: [JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_20x3_2026-10-14.json) and [report](CROSS_COHORT_RECALIBRATION_PILOT.md).
-- [ ] Upgrade the bootstrap to at least 1,000 replicates per seed/stream using an optimized implementation; current 20-replicate intervals are rough pilot estimates only.
+- [x] Generated raw Set-B score archives using the exact checked-in evaluator (source blob verified) and ran the checked-in bootstrap script for 200 replicates per seed. See [exact-source bootstrap results](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json). A 1,000-replicate attempt did not complete within the execution window.
+- [x] Optimized the cross-cohort bootstrap and completed 1,000 exact-source replicates per seed for raw and Set-A-validation-Platt-recalibrated scores. See [the 1,000-replicate aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md). The earlier reconstructed-harness 20-replicate pilot remains distinct and is not treated as source-verified.
 - [ ] Run score generation from an exact repository checkout and reconcile the aggregate results; current score-generation source identity remains unverified.
 - [ ] Continue with a pre-specified subgroup robustness audit, suppress small cells, and keep Set B out of all model/recalibrator/threshold tuning.
 
@@ -241,7 +245,452 @@ VITALIS is not validated for diagnosis, triage, treatment, or real patient-care 
 
 - [x] Started upgrading the Set-B paired patient-cluster bootstrap beyond the 20-replicate pilot. A Numba-accelerated local implementation completed 1,000 valid patient-cluster replicates for seed 42 using raw probabilities.
 - [x] Added the aggregate-only partial result: [seed 42 raw stream, 1,000 replicates](../results/cross_cohort_paired_bootstrap_seed42_raw_1000_2026-10-14.json). Temporal-minus-static AUROC difference was +0.0575 (95% percentile interval +0.0497 to +0.0647), AUPRC difference +0.0135 (+0.0111 to +0.0167), and Brier difference -0.0641 (-0.0650 to -0.0632).
-- [ ] Complete the remaining five seed/stream analyses (seed 42 recalibrated; seeds 123 and 2026 raw and recalibrated). Do not describe the 1,000-replicate cross-cohort phase as complete until all six are done.
+- [x] Completed all six seed/stream analyses: raw and recalibrated probabilities for seeds 42, 123, and 2026, 1,000 replicates each. Aggregate-only results are committed in [the 1,000-replicate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json).
 - [ ] Validate the optimized bootstrap implementation against the checked-in bootstrap runner on synthetic tied-score fixtures and compare its results against the existing 20-replicate pilot where applicable.
 - [ ] Exact source-byte identity for model fitting and score generation remains open; the current scores came from reconstructed local runner logic. This is not external or prospective clinical validation.
+- [x] Added an operator-facing [exact-checkout reproduction runbook](EXACT_CHECKOUT_REPRODUCTION.md) with clean-checkout checks, cache-build commands, the committed runner invocation, reconciliation criteria, and data-safety boundaries. This documents the procedure; the exact-checkout data run itself remains pending.
 
+
+
+## Source-verified cross-cohort recalibration run (14 October 2026)
+
+- [x] Validated the local archive aggregate totals: set A 20,336 patients / 790,215 rows / 17,136 positive hourly labels; set B 20,000 patients / 761,995 rows / 10,780 positive hourly labels. Both schemas had 41 columns with no schema-mismatch or empty patient files.
+- [x] Executed the byte-identical checked-in cache builder and recalibration runner source blobs for seeds 42, 123, and 2026; the set-B cohort was evaluation-only and output was aggregate-only.
+- [x] Focused tests passed (7/7); GitHub Actions test run 38589529596 completed successfully.
+- [x] Added [source-verified aggregate JSON](../results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json) and [reconciliation report](CROSS_COHORT_RECALIBRATION_SOURCE_VERIFIED.md). Historical artifact remains unchanged.
+- [ ] Investigate the modest recalibrated Brier/log-loss/mean-probability discrepancy versus the prior reconstructed harness; prior environment metadata is insufficient to attribute it conclusively.
+- [ ] Address the EtCO2 feature-availability shift before interpreting cross-cohort performance: EtCO2 is absent in all set-A rows but present in 57,636 set-B rows; the set-A-fitted imputer drops EtCO2 and its derived features, so set-B values are unused. Assess a pre-specified feature policy without tuning on set B.
+- [ ] Obtain a full clean Git checkout once DNS/network access is available to close the remaining full-checkout provenance detail. Do not mislabel the current run as a full checkout.
+- [ ] Continue with pre-specified subgroup and higher-replicate uncertainty analysis; keep patient-level records, caches, group IDs, and row-level predictions outside Git. VITALIS remains research-only.
+
+## Cross-cohort feature-availability audit (14 October 2026)
+
+- [x] Audited finite-value availability across all 109 cached feature columns in Set A (20,336 patients / 790,215 hourly rows) and Set B (20,000 patients / 761,995 hourly rows); aggregate-only report: [feature availability audit](CROSS_COHORT_FEATURE_AVAILABILITY_AUDIT.md) and [JSON](../results/cross_cohort_feature_availability_audit_2026-10-14.json).
+- [x] Found four features entirely missing in Set A but observed in Set B: EtCO2 and its lag, delta, and rolling-mean derivatives. Also found 45 features with at least a 5-percentage-point difference in finite hourly-row rate.
+- [x] Pre-specified the analysis boundary: Set-A training data determines feature eligibility; freeze the feature list before validation/test; Set B remains evaluation-only and must not be used for feature selection or tuning.
+- [ ] Before a new performance experiment, inspect the existing cache-builder temporal feature semantics and measurement conventions; define a Set-A-only minimum-coverage rule and document it before fitting.
+- [ ] Run a sensitivity analysis with the frozen eligible-feature policy and compare it to the existing baseline; report performance and missingness separately, without selecting the policy based on Set-B metrics.
+- [ ] Feature availability alone does not prove measurement comparability or explain causality. VITALIS remains research-only; no clinical validity or utility claim follows from this audit.
+
+## Cross-cohort feature-coverage sensitivity analysis (14 October 2026)
+
+- [x] Completed a Set-A-training-only 5% finite-coverage sensitivity rule across seeds 42, 123, and 2026; Set B remained evaluation-only. See [coverage sensitivity report](CROSS_COHORT_COVERAGE_SENSITIVITY.md) and [aggregate JSON](../results/cross_cohort_coverage_sensitivity_2026-10-14.json).
+- [x] Static ranking metrics decreased slightly under the filter (mean AUROC 0.6750 to 0.6687; AUPRC 0.0455 to 0.0436); temporal ranking metrics were similar/slightly higher (AUROC 0.7319 to 0.7335; AUPRC 0.0581 to 0.0583). This is a descriptive sensitivity result, not evidence that the 5% cutoff is optimal.
+- [x] The eligibility list was derived only from each Set-A training partition; recalibration used the disjoint Set-A validation partition. Set B was not used for feature eligibility, fitting, recalibration, or threshold selection.
+- [ ] The 5% cutoff is an exploratory policy, not clinically justified. Before adopting any feature-coverage cutoff, obtain domain/statistical justification or specify it externally and freeze it before final evaluation.
+- [ ] Further investigate large availability shifts among features retained by the policy; finite-value rates alone do not establish comparable measurement practice or missingness mechanisms.
+- [ ] Full clean-checkout provenance remains open because GitHub DNS was unavailable during local execution; the sensitivity wrapper itself is local-only and is not a checked-in CLI. VITALIS remains research-only.
+
+## Reproducible feature-availability audit CLI (14 October 2026)
+
+- [x] Added `scripts/audit_feature_availability.py`, which reads local feature caches in bounded chunks, validates cache dimensions/schema, and writes aggregate finite-value counts/rates only.
+- [x] Added unit tests for finite counts, cohort shift reporting, schema/shape errors, and threshold validation: `tests/test_feature_availability_audit.py`.
+- [x] Added a runbook: [reproducing the feature-availability audit](REPRODUCING_FEATURE_AVAILABILITY_AUDIT.md).
+- [ ] Confirm GitHub Actions on the current PR head before treating this step as CI-verified.
+- [ ] When feasible, compare the CLI's aggregate output against the previously recorded audit JSON using local caches; keep raw caches and all row-level data outside Git.
+- [ ] This audit is descriptive only. Do not use Set B to select features, tune models, or choose thresholds; no clinical validity or utility claim follows.
+
+## Patient-level feature-availability and missingness-pattern audit (14 October 2026)
+
+- [x] Added `scripts/audit_patient_level_availability.py` to aggregate feature availability by patient from local caches; it validates dimensions, group counts, and contiguous patient slices.
+- [x] Added regression tests for patient-level aggregation and invalid cache layouts: `tests/test_patient_level_availability_audit.py`.
+- [x] Recorded aggregate results and interpretation limits: [patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and [aggregate JSON](../results/patient_level_feature_availability_audit_2026-10-14.json).
+- [x] Observed marked patient-level coverage shifts: DBP 63.69% of Set-A patients vs 99.87% Set B; HCO3 97.37% vs 2.08%; BaseExcess 62.21% vs 2.79%; EtCO2 0% vs 16.08%. Respiratory rate availability was similar (~99.8%) across both cohorts.
+- [x] Reported unadjusted differences in patient-level any-positive-label rates by feature availability as descriptive only; these do not identify missingness mechanisms or establish causality.
+- [x] Reviewed the official PhysioNet/CinC 2019 documentation and added duration-stratified patient-level availability summaries. The broad record-duration strata show availability gradients, but large cohort differences persist; workflow/severity explanations remain hypotheses, not findings. See [patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and [aggregate JSON](../results/patient_level_feature_availability_audit_2026-10-14.json).
+- [x] GitHub Actions test workflow passed on branch head `1bad4990f63387c9427770e8bdf4baf9bf4fac20` (run https://github.com/culprit-k/VITALIS/actions/runs/38598858712). No patient-level records, identifiers, or predictions are committed; VITALIS remains research-only.
+
+
+## Duration-stratified missingness and source-provenance follow-up (14 October 2026)
+
+- [x] Reviewed the official PhysioNet/CinC Challenge 2019 documentation for cohort provenance, hourly data semantics, variable definitions, missing-value meaning, and six-hour label timing: https://physionet.org/content/challenge-2019/1.0.0/.
+- [x] Extended `scripts/audit_patient_level_availability.py` to report patient-level availability overall and within record-duration bands (1–24, 25–48, 49–72, and 73+ hours), including descriptive availability by ever-positive challenge-label status.
+- [x] Added regression coverage for duration-stratified output and updated the aggregate-only results and report.
+- [x] Found that longer records generally have higher availability for FiO2, pH, and lactate in both cohorts, but broad duration stratification does not remove the large cross-cohort differences in DBP, HCO3/BaseExcess, or EtCO2.
+- [x] Documented that positive-label status and availability are associated in several strata, while explicitly noting that the outcome is any positive label over the full record and feature availability can include post-label measurements. This is not prospective predictive evidence or causal adjustment.
+- [x] GitHub Actions passed for the duration-stratified audit code/tests (run https://github.com/culprit-k/VITALIS/actions/runs/38595875000). Reran the exact checked-in script against local Set A/Set B caches; verified the local script/test Git blob SHAs against GitHub, passed the three committed tests locally, and reconciled all cohort totals and 11 feature-level aggregate metrics with the committed artifact. See the source-reproduction section of [the patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and provenance in [the aggregate JSON](../results/patient_level_feature_availability_audit_2026-10-14.json).
+- [x] Reviewed the original Challenge paper and clarified that public Set A and Set B correspond to different hospital systems and different EMR systems (BIDMC, 20,336 patients; Emory University Hospital, 20,000 patients). This makes hospital/EMR domain shift a well-grounded concern, but does not identify the exact cause of individual feature shifts. See [patient-level audit report](PATIENT_LEVEL_AVAILABILITY_AUDIT.md) and [aggregate JSON provenance](../results/patient_level_feature_availability_audit_2026-10-14.json).
+
+
+## Patient-level audit reproduction and cohort provenance closeout (14 October 2026)
+
+- [x] Re-executed the exact checked-in patient-level audit script against local Set A/Set B feature caches after verifying the local Git blob SHA against GitHub; the exact committed tests also passed locally (3 passed).
+- [x] Reconciled cohort totals, record-length summaries, and all 11 features' patient-availability/unadjusted-label association metrics with the existing aggregate artifact; metrics matched within (10^{-12}). Duration-stratum counts and ever-positive-label rates matched, and reported availability rates matched at displayed precision.
+- [x] Recorded the local aggregate output SHA-256 and exact source/test blob SHAs in the aggregate JSON. Local caches and the full source-run output remain outside Git.
+- [x] Reviewed the original Challenge paper to map Set A to hospital system A (Beth Israel Deaconess Medical Center) and Set B to hospital system B (Emory University Hospital); the paper identifies different EMR systems and describes measurement-density differences across the public cohorts.
+- [ ] Obtain clinical/statistical review before choosing a final minimum-coverage policy. The 5% Set-A coverage threshold remains exploratory and must not be called optimal or clinically justified.
+- [x] GitHub Actions test workflow passed on PR head `1bad4990f63387c9427770e8bdf4baf9bf4fac20` after the exact-source results, reconciliation documentation, and metric regression tests were added (run https://github.com/culprit-k/VITALIS/actions/runs/38598858712).
+- [ ] Do not attribute feature shifts to specific ordering workflows or missingness mechanisms without further evidence. Keep Set B evaluation-only and do not use it for feature selection, calibration, or tuning.
+
+
+## Exact-source cross-cohort evaluator reproduction (14 October 2026)
+
+- [x] Verified that the local evaluator's Git blob SHA exactly matches the checked-in GitHub source, then executed the exact script against the local Set-A and Set-B caches for seeds 42, 123, and 2026. The three seeds were run separately after the combined invocation exceeded the runtime window.
+- [x] Recorded aggregate-only results, per-seed metrics, source hashes, local output hashes, and limitations in [the exact-source JSON](../results/cross_cohort_exact_source_reproduction_2026-10-14.json); updated the [cross-cohort report](FULL_COHORT_CROSS_COHORT_RESULTS.md).
+- [x] Confirmed the exact-source mean AUROC/AUPRC/Brier scores are 0.6750/0.0455/0.1659 for static features and 0.7319/0.0581/0.0972 for temporal features. Across the three training subsamples, temporal features have higher ranking metrics but lower sensitivity at the fixed 0.5 threshold; this remains retrospective benchmark evidence only.
+- [x] Preserved the older reconstructed-harness JSON unchanged and documented that its metrics differ from the exact-source run. Do not present the historical values as reproduced by the checked-in CLI until the discrepancy is explained.
+- [x] Recorded that Set-A-all-empty EtCO2 columns are skipped by the imputer; Set-B EtCO2 values are not used by this Set-A-trained model. Set B remains evaluation-only.
+- [x] Compared historical reconstructed-harness metrics with exact-source metrics and documented the differences in [the reconciliation report](CROSS_COHORT_REPRODUCIBILITY_RECONCILIATION.md) and [JSON](../results/cross_cohort_reproducibility_reconciliation_2026-10-14.json). The root cause remains unresolved because the historical artifact lacks source/split provenance; both artifacts are preserved, and the exact-source values are canonical for the checked-in evaluator.
+- [ ] Review cross-cohort calibration/domain shift with clinical/statistical supervision. The fixed 0.5 threshold is not clinically selected, and this is not prospective validation or clinical utility evidence.
+
+
+## Cross-cohort reproducibility discrepancy review (14 October 2026)
+
+- [x] Compared the older reconstructed-harness aggregate with the exact-source evaluator output. The old artifact reported static/temporal mean AUROC 0.67809/0.73569; the exact-source evaluator reported 0.67502/0.73191. AUPRC and Brier score differences are also recorded in the reconciliation report.
+- [x] Added `tests/test_evaluate_cross_cohort.py` to check the evaluator's AUROC/AUPRC/Brier calculations against scikit-learn, verify the fixed 0.5 threshold confusion matrix including exact-threshold behavior, and ensure the metrics payload contains no patient-level scores or identifiers. Local focused validation: 9 tests passed across the evaluator metric tests and recalibration tests.
+- [x] Confirmed the exact-source recalibration runner reproduces its stored outputs on rerun for all three seeds (seeds 42 and 123 exact equality; seed 2026 max absolute metric difference 1.5e-14). Its raw Set-B metrics agree with the exact-source evaluator to floating-point precision.
+- [x] Added [a dedicated discrepancy report](CROSS_COHORT_REPRODUCIBILITY_RECONCILIATION.md) and [aggregate-only reconciliation JSON](../results/cross_cohort_reproducibility_reconciliation_2026-10-14.json). Historical results were preserved unchanged.
+- [ ] Root cause of the old simple-evaluator discrepancy remains unresolved: the historical artifact lacks the source hash, environment, and training-split detail needed to attribute it to a particular difference. Do not guess or consolidate the artifacts until the old harness is recoverable.
+- [ ] Obtain independent clinical/statistical review of the feature-coverage policy and cross-cohort interpretation; do not treat retrospective challenge metrics as clinical validation.
+
+
+## Exact-source cross-cohort raw-score uncertainty (14 October 2026)
+
+- [x] Extended `scripts/evaluate_cross_cohort.py` with an opt-in `--local-score-archive-dir` option. It rejects output directories inside the repository and writes only the required paired arrays (`y`, synthetic patient-group indices, static probabilities, temporal probabilities) to compressed NPZ files outside Git. Default behavior remains aggregate-only JSON.
+- [x] Added regression tests for metric parity with scikit-learn, the fixed 0.5 threshold boundary, private archive path enforcement, archive schema, and vector validation. Local focused tests passed (12/12); GitHub Actions also passed on code-bearing PR head `c0064adf78c40140e65a1d7bc0603d22b25b04d6` (run https://github.com/culprit-k/VITALIS/actions/runs/38600885999).
+- [x] Verified the modified evaluator and tests by Git blob SHA against GitHub; generated score archives locally for all Set-B patients for seeds 42, 123, and 2026. Model metrics matched the previously verified exact-source outputs within 2.4e-14.
+- [x] Ran the checked-in paired patient-cluster bootstrap for 200 replicates per seed. Aggregate-only results are in [the JSON artifact](../results/cross_cohort_paired_patient_cluster_bootstrap_exact_source_200x3_2026-10-14.json). The archives remain outside Git.
+- [x] The first unoptimized 1,000-replicate attempt exceeded the execution window; the accelerated tie-aware runner now completes the 1,000-replicate analysis in deterministic chunks. Chunk offsets were validated against a full 400-replicate run.
+- [x] Generated exact-source recalibrated score vectors outside Git and completed the 1,000-replicate bootstrap for all three seeds. The 20-replicate reconstructed-harness pilot remains historical and separate.
+
+
+## Exact-source recalibrated-score uncertainty checkpoint (14 October 2026)
+
+- [x] Added an opt-in `--local-score-archive-dir` to `scripts/evaluate_cross_cohort_recalibration.py`. It refuses archive directories inside the repository and writes raw and Platt-recalibrated Set-B score vectors only to the requested local directory. Patient group values are replaced with synthetic contiguous indices.
+- [x] Added tests for archive path enforcement, vector validation, archive schema, and synthetic group indices. Focused tests pass locally (15 tests across recalibration and cross-cohort evaluator suites).
+- [x] Executed the updated runner for seeds 42, 123, and 2026 against the local Set-A/Set-B caches. Local runner blob SHA matches GitHub (`fe355c4b7b77b322ae5c134fe7fdc0b9cbb73200`); aggregate metrics reproduce the prior source-verified outputs to a maximum absolute difference below `1e-12` per seed. Six score archives were validated (761,995 rows, 20,000 synthetic patient groups, 10,780 positive labels each) and remain outside Git.
+- [x] Preserved the earlier checked-in-runner 200-replicate analysis as a historical checkpoint: [aggregate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_200x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED.md).
+- [x] Added `scripts/bootstrap_heldout_scores_fast.py`, a Numba-accelerated, tie-aware paired patient-cluster bootstrap runner. Added the optional `bootstrap-accelerated` dependency extra and CI installation. Its 25 synthetic tied-score fixtures matched scikit-learn metrics; 7 focused tests passed locally.
+- [x] Compared the accelerated implementation's first 200 replicates against the checked-in bootstrap runner for all six seed/probability-stream combinations; aggregate means and percentile endpoints matched within 4e-14 absolute difference.
+- [x] Completed 1,000 valid paired patient-cluster bootstrap replicates for each of seeds 42, 123, and 2026, for both raw and Set-A-validation-Platt-recalibrated probabilities. Aggregate-only results: [1,000-replicate JSON](../results/cross_cohort_paired_patient_cluster_bootstrap_raw_and_recalibrated_exact_source_1000x3_2026-10-14.json) and [report](CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md). Row-level score archives and chunk differences remain outside Git.
+- [x] GitHub Actions test workflow passed on code-bearing head `da7d33a43c363f24c48f77eb6ca79576175fdce9` (run https://github.com/culprit-k/VITALIS/actions/runs/38606538416), including the accelerated bootstrap tests. Audit the complete PR diff before marking it ready for review.
+- [ ] Exact clean Git checkout provenance, independent methodological review, and Set-A-only justification for the exploratory feature-coverage threshold remain open. Set B stays evaluation-only; no clinical validation claim is supported.
+
+
+## Release-readiness checkpoint after 1,000-replicate analysis (14 October 2026)
+
+- [x] Exact-source raw and recalibrated uncertainty analysis completed at 1,000 replicates for each of seeds 42, 123, and 2026; aggregate JSON and interpretation report are committed.
+- [x] GitHub Actions test workflow passed on code-bearing commit `da7d33a43c363f24c48f77eb6ca79576175fdce9` (run https://github.com/culprit-k/VITALIS/actions/runs/38606538416). Subsequent changes are documentation-only.
+- [x] Repository-diff privacy audit: 34 changed files consist of scripts, tests, docs, workflow configuration, and aggregate JSON. No raw score archives, patient-level cache files, or PSV/CSV/parquet data files are included.
+- [x] README links the final cross-cohort report and uncertainty analysis and explains the optional acceleration dependency.
+- [ ] Obtain a full clean Git checkout and rerun the reproduction commands from that checkout when network/DNS access permits; current source-byte identity was verified through Git blob hashes, not a successful full clone.
+- [ ] Obtain independent clinical/statistical review of the cross-cohort interpretation and exploratory Set-A feature-coverage policy. Do not call the 5% cutoff optimal or clinically justified.
+- [ ] Keep PR #1 draft and unmerged until the clean-checkout/release review is complete. VITALIS remains research-only; prospective external validation and clinical oversight would be required before any clinical-use claim.
+
+
+## Release-readiness audit (14 October 2026)
+
+- [x] Inspected PR #1 metadata, full base-to-head changed-path summary, latest available CI run, and existing review submissions/threads. The PR is open, draft, and unmerged; no submitted review or inline review thread was present at audit time.
+- [x] Added [the research-release readiness audit](RELEASE_READINESS_AUDIT.md), separating verified gates from outstanding blockers and explicitly limiting release claims to retrospective research evidence.
+- [x] Latest available GitHub Actions run at audit start (run [38606955158](https://github.com/culprit-k/VITALIS/actions/runs/38606955158)) passed the install and test steps. This does not replace a clean local full-cohort reproduction.
+- [x] Performed a changed-path privacy review: no raw cohort files, row-level NPZ score archives, or cache arrays appear in the 34-file PR diff. This is not a full repository-history or secret scan.
+- [ ] Complete the fresh-clone reproduction runbook with authorized local data and record the actual checkout/environment/source hashes and reconciliation results.
+- [ ] Obtain independent clinical/statistical review of split and label semantics, calibration interpretation, domain shift, bootstrap estimand, and the exploratory 5% feature-coverage rule.
+- [ ] Review full repository history for accidentally committed sensitive artifacts/secrets, address all reviewer findings, and rerun CI after any code changes.
+- [ ] Keep PR #1 draft and unmerged until the outstanding release gates are completed and an explicit merge decision is made. VITALIS remains research-only and is not clinically validated.
+
+
+## Exact-source rerun checkpoint (14 October 2026)
+
+- [x] Retried `git clone https://github.com/culprit-k/VITALIS.git`; it failed because the runtime could not resolve `github.com`. The fresh-clone gate remains open; do not call this a clean-checkout reproduction.
+- [x] Reran the exact-source recalibration runner separately for seeds 42, 123, and 2026 using the available local Set-A/Set-B feature caches and verified source blob hashes against the PR branch. All patient/row split counts matched the previous source-verified artifact; AUROC/AUPRC matched exactly at reported precision, with maximum absolute raw metric difference below 1e-12 and recalibrated difference below 5e-15.
+- [x] Added [the rerun reconciliation report](FRESH_SOURCE_RERUN_RECONCILIATION.md) and [aggregate-only JSON](../results/fresh_source_rerun_reconciliation_2026-10-14.json). Row-level score archives stayed outside the repository.
+- [x] Verified GitHub Actions `tests` workflow passed on current PR head `a0103df503a574f097045a34062e5f3abf229b60` (run https://github.com/culprit-k/VITALIS/actions/runs/38608383356, completed 14 October 2026 17:39 UTC). This confirms CI for the current head but does not close the clean-clone, fresh-cache, history-wide audit, or independent-review gates.
+- [ ] Complete a fresh clone and fresh cache build from authorized source data when network/DNS access permits; run the full current PR test suite from that checkout and record the checkout commit and clean status.
+- [ ] Obtain independent clinical/statistical review and perform a history-wide sensitive-artifact/secret audit before deciding whether to mark PR #1 ready or merge it.
+
+
+## Phase 3: online adaptive twin software (started 2026-10-14)
+
+The next implementation layer has now been added on the existing research branch:
+
+- [x] Add `src/vitalis/adaptive_twin.py`: causal rolling and frozen-reference baselines, normalized deviation, two-sided CUSUM for gradual drift, equal-weight physiological-system aggregation, EWMA trajectory score/direction, missingness coverage, persistence, and per-channel scale floors.
+- [x] Add `src/vitalis/stream.py`: timestamp-aware observations, expected-unit validation, quality-flag rejection, per-channel freshness, out-of-order sample rejection, and session reset.
+- [x] Add focused tests for baseline causality, CUSUM gradual-shift detection, per-channel scale floors, baseline-update suppression, multisystem persistence, missing data, trajectory direction, session reset, unit checks, timestamps, freshness, out-of-order samples, and end-to-end stream-to-twin integration.
+- [x] Add `scripts/demo_adaptive_twin.py` and `dashboard/twin_demo.py`, deterministic CLI and interactive synthetic-data demonstrations that do not read or generate real patient records.
+- [x] Document the mathematical definition, output semantics, and validation boundaries in [Adaptive twin implementation](ADAPTIVE_TWIN_IMPLEMENTATION.md).
+- [x] GitHub Actions passed on commit `4b3aa798af04a0819ce1523cb9bae672dcc9dddf`, including `compileall`, the synthetic timestamped-stream smoke test, and the full pytest suite: https://github.com/culprit-k/VITALIS/actions/runs/38612764680.
+- [ ] Run the full suite from a clean checkout and verify the demo from a fresh environment.
+- [x] Add synthetic edge-case tests for flatline-like histories, spike suppression, gradual drift/CUSUM, per-channel freshness and future timestamps, and correlated channels grouped by physiological system.
+- [x] Add an explicit identified-source replacement rule: reset the affected channel history/reference/CUSUM and aggregate trajectory continuity, preserve other channels, and count source changes. Add regression tests and document the behavior.
+- [ ] Validate replacement detection against real device/source metadata and define behavior when source identity is absent or unreliable; hardware-specific validation remains open.
+- [ ] Build a supervised, leakage-safe future-outcome model with a clearly defined prediction horizon. The current challenge label's six-hour lead convention is not evidence for a calibrated 1–3 hour forecast.
+- [ ] Add explicit directionality and per-channel noise/freshness configuration with evidence-based settings; current score weights and cutoffs are engineering defaults, not clinical thresholds.
+- [ ] Complete independent statistical/clinical review and all repository security/reproducibility gates before considering any prospective study.
+
+**Important boundary:** the new online component detects within-person deviation patterns; it is not yet a complete physiological digital twin, calibrated sepsis probability model, or validated time-to-deterioration predictor. Do not use it for patient care.
+
+**Hardware gate:** do not select sensor parts or claim device performance until timestamping, units, sample quality, expected sampling policies, compute requirements, and the software validation contract have been reviewed. The current stream adapter defines a software input boundary, not a hardware specification.
+
+
+## Phase 4: supervised future-label forecasting (started 2026-10-14)
+
+- [x] Add a separate target builder that predicts whether a positive Challenge SepsisLabel occurs within the next 1, 3, or 6 hourly rows, while the current label is zero.
+- [x] Exclude current-positive rows and each patient's final H rows; enforce contiguous patient blocks and never shift labels across patients.
+- [x] Add patient-disjoint train/validation/test modeling with training-only preprocessing, fixed reference threshold, aggregate-only outputs, patient-level warning burden, and patient-cluster bootstrap intervals.
+- [x] Add tests for horizon alignment, patient-boundary isolation, eligible tail rows, alert refractory periods, warning-window coverage, and bootstrap intervals.
+- [x] Document the exact target semantics and limitations in [Horizon forecasting](HORIZON_FORECASTING.md).
+- [x] GitHub Actions passed on commit `2b56ad2a91ede9081ae56e51ed72b9dcfaf4aa6e`: https://github.com/culprit-k/VITALIS/actions/runs/38614183618. All 118 tests passed, including an end-to-end synthetic-PSV horizon training test.
+- [ ] Run the full-cohort 1/3/6-hour experiments from a clean environment using the authorized local dataset; record aggregate-only outputs and split seed.
+- [ ] Repeat on predeclared seeds and evaluate train-Set-A/test-Set-B generalization without tuning on Set B.
+- [ ] Review forecast-window coverage, alert burden per at-risk patient-day, warning time relative to challenge-label entry, and patient-cluster uncertainty before interpreting any result.
+- [ ] Obtain independent clinical/statistical review. These labels do not provide an independent onset timestamp, and no clinical alert policy is established.
+
+**Interpretation boundary:** the new model forecasts entry into the Challenge SepsisLabel-positive window. Because the challenge label already incorporates a six-hour lead convention, a 1/3/6-hour forecast here is not a claim of sepsis onset prediction within 1/3/6 hours. All threshold, refractory, and alert metrics are retrospective research settings, not clinical operating points.
+
+
+## Phase 5: full-cohort horizon cross-cohort evaluation (started 2026-10-14)
+
+- [x] Add `scripts/evaluate_horizon_cross_cohort.py` to train static and temporal future-label models on a patient-disjoint Set A training subset and evaluate all eligible Set B patients.
+- [x] Enforce expected official cohort counts and feature-schema agreement; fail closed when the cache does not match the source cohort.
+- [x] Keep Set B evaluation-only: no fitting, feature selection, calibration, or threshold tuning on Set B.
+- [x] Add synthetic-cache tests for target alignment and end-to-end Set A→Set B evaluation.
+- [x] Document cache build chunks and the full-cohort run in [Horizon cross-cohort execution](HORIZON_CROSS_COHORT_EXECUTION.md).
+- [x] Confirm GitHub Actions passes for the cross-cohort horizon tests: [run #513](https://github.com/culprit-k/VITALIS/actions/runs/38616619520), 120 tests passed.
+- [x] Build both official feature caches locally, outside Git, from verified Set A and Set B archives; counts and schemas passed integrity checks.
+- [x] Run all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours) and retain aggregate-only JSON outside the repository; elapsed time 384.8 seconds.
+- [x] Review model metrics, patient-level warning burden, and patient-cluster intervals without tuning on Set B; results are recorded in [full-cohort horizon results](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md).
+- [ ] Obtain independent statistical/clinical review before any clinical claim.
+
+**Current execution boundary:** the code and synthetic tests can be validated through GitHub Actions, but the official full-cohort runs require the authorized local Set A and Set B feature caches. Those caches and any row-level predictions must not be uploaded to GitHub. The horizon target remains future Challenge-label entry, not independently observed sepsis onset.
+
+
+### Full-cohort horizon result summary (2026-10-14)
+
+- The nine seed × horizon runs completed on the full verified caches. Set B remained evaluation-only.
+- Static mean AUROC/AUPRC across seeds was 0.6634/0.00379 (1 h), 0.6813/0.01358 (3 h), and 0.6868/0.02859 (6 h). Temporal means were 0.6569/0.00317, 0.6800/0.01264, and 0.6864/0.02643, respectively.
+- At the fixed 0.5 threshold, PPV remained very low and alert burden high; neither model should be promoted as a clinical alert policy.
+- Class-weighted model probabilities were not calibrated; Brier scores were much worse than a constant-prevalence predictor. A training-only calibration protocol and independent statistical review remain required.
+- See [full results and limitations](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) and the committed [aggregate-only result JSON](../results/horizon_cross_cohort_2026-10-14.json). Raw caches and individual predictions were not uploaded.
+
+### Horizon calibration results (2026-10-15)
+
+- [x] Completed all nine horizon × seed combinations on the verified full Set A and Set B caches: 18 static/temporal model fits, 217.7 seconds summed runtime, and zero captured fit warnings.
+- [x] Added [aggregate-only calibration metrics](../results/horizon_calibration_summary_2026-10-15.json) and the [calibration/operating-point report](HORIZON_CALIBRATION_RESULTS_2026-10-15.md); updated the [protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [x] Used patient-disjoint Set A 60/20/20 training/calibration/untouched-holdout partitions. Platt recalibration was fit only on Set A calibration patients. Set B remained final evaluation only and no threshold was selected from it.
+- [x] Recalibration greatly reduced raw class-weighted Brier scores. However, calibrated Set-B Brier scores remained slightly worse than the constant-prevalence reference for every horizon/model pair; probabilities are not established as adequate clinical risk estimates.
+- [x] Added `src/vitalis/calibration_uncertainty.py` to compute patient-cluster percentile intervals for calibrated Brier score, log loss, mean probability, fixed-bin ECE, Brier-minus-prevalence-reference, and paired calibrated-minus-raw Brier difference; wired it into the horizon calibration runner with a default of 200 replicates.
+- [x] Added focused reproducibility, scikit-learn metric-parity, input-validation, patient-boundary, and aggregate-only tests in `tests/test_calibration_uncertainty.py`.
+- [x] Completed the updated full-cohort uncertainty workflow in nine bounded horizon/seed invocations: 200 patient-cluster bootstrap replicates for each of 18 model/horizon/seed fits; 235.5 seconds summed runtime and zero captured fit warnings. Results: [uncertainty report](HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) and [aggregate-only JSON](../results/horizon_calibration_uncertainty_summary_2026-10-15.json).
+- [x] Paired calibrated-minus-raw Brier intervals were below zero in every seed/model/horizon run. Many intervals for calibrated Brier minus the prevalence-reference score crossed zero, so added calibration is not proof of adequate risk estimation.
+- [ ] Next: define a utility-based operating-point framework on development data with explicit costs for missed windows and alerts; do not select thresholds on Set B. Any selected policy needs a new independent evaluation cohort.
+- [ ] Independent clinical/statistical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
+
+## Phase 6: calibration uncertainty review (15 October 2026)
+
+- [x] Add patient-cluster percentile bootstrap uncertainty for Set B calibrated Brier score, log loss, mean predicted probability, fixed-bin ECE, Brier-minus-prevalence-reference, and paired calibrated-minus-raw Brier difference.
+- [x] Run all nine predeclared seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 h) with 200 patient-cluster bootstrap replicates per model/horizon/seed; 18 fitted model combinations, 3,600 bootstrap replicates total.
+- [x] Preserve Set B as final evaluation only. Calibration remains fit on patient-disjoint Set A calibration patients; no threshold was selected from Set B.
+- [x] Record aggregate-only results in [calibration uncertainty report](HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) and [JSON](../results/horizon_calibration_uncertainty_summary_2026-10-15.json).
+- [x] Results support a clear reduction in Brier score after Platt recalibration versus raw class-weighted probabilities, but do not establish adequate clinical calibration or robust improvement over a constant-prevalence Brier reference. The seed-specific CI envelopes are descriptive, not pooled intervals.
+- [x] Completed a predeclared paired patient-cluster comparison of Platt-calibrated static versus temporal Set-B predictions for AUROC, AUPRC, Brier score, and log loss; report and aggregate-only JSON are linked below. No threshold or model setting was selected from Set B.
+- [ ] Independent statistical/clinical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
+
+## Phase 7: paired model comparison (15 October 2026)
+
+- [x] Add a paired patient-cluster bootstrap comparing static and temporal Platt-calibrated probabilities on identical Set-B eligible rows.
+- [x] Report temporal-minus-static differences for AUROC, AUPRC, Brier score, and log loss; resample whole patients and precompute score-tie groups for efficient bootstrap calculation.
+- [x] Add unit tests against scikit-learn point metrics and explicit patient-resampling intervals, plus a synthetic end-to-end evaluator test.
+- [x] Run all nine seed × horizon combinations with 200 paired bootstrap replicates per run (1,800 paired replicates); 319.0 seconds summed runtime and zero captured fit warnings.
+- [x] Commit [paired comparison results](HORIZON_PAIRED_MODEL_COMPARISON_RESULTS_2026-10-15.md) and [aggregate-only JSON](../results/horizon_paired_model_comparison_aggregate_2026-10-15.json).
+- [x] Findings: temporal AUROC differences were positive with seed-specific intervals above zero at 1 h and 6 h, but not consistently at 3 h; AUPRC intervals overlapped zero at all horizons; temporal log loss was lower across all horizons; Brier differences were inconclusive at 1 h and 3 h and favored temporal at 6 h. These are descriptive retrospective comparisons, not grounds to select a model using Set B.
+- [x] Defined and integrated a cost-sensitive utility framework on the patient-disjoint Set-A operating-point holdout. It reports sensitivity, PPV, alerts per at-risk patient-day, missed/covered forecast-positive windows, window coverage, and label-relative warning time across explicit missed-window cost scenarios. Default ratios (1, 10, 100, 500, 1,000 per alert-cost unit) are illustrative, not clinically elicited. See [utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [operating-point protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [x] Completed all nine seed × horizon utility-focused runs on the available local Set-A/Set-B caches for both static and temporal models (18 fits; 249.7 seconds summed; zero captured fit warnings). Aggregate-only results: [utility report](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json). The local reconstructed working copy is not claimed as byte-identically verified exact-source execution; these reruns used 20 bootstrap replicates for ancillary uncertainty summaries.
+- [x] Prepared [the independent utility-cost review checklist](UTILITY_COST_REVIEW_CHECKLIST.md) to make external review of cost assumptions, label semantics, and metric interpretation actionable.
+- [ ] Obtain independent clinical/statistical justification of cost ratios and review the results before any policy choice. Do not use Set B to select a threshold; reserve a new independent cohort for final evaluation.
+- [ ] Independent clinical/statistical review, external/prospective validation, and governance review remain required. VITALIS remains research-only.
+
+
+
+## Phase 8: utility-based operating-point framework (15 October 2026)
+
+- [x] Add a cost-sensitive operating-point function that compares missed forecast-positive windows against total alert burden under explicit, configurable cost ratios: `src/vitalis/utility.py`.
+- [x] Integrate utility summaries into the horizon calibration evaluator, limited to the untouched patient-disjoint Set-A operating-point holdout. Set B remains evaluation-only and cannot rank or select thresholds.
+- [x] Add focused unit tests for required metrics, cost-scenario reporting, and invalid inputs; add an integration assertion to the evaluator test.
+- [x] Document the cost definition, illustrative scenarios, selection discipline, and limitations in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration protocol](HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md).
+- [x] GitHub Actions passed on latest code-bearing head `c10e0912aaf27a62e49e99fad40350c7604fbb4f` (run [38630430309](https://github.com/culprit-k/VITALIS/actions/runs/38630430309)); full suite: 144 passed. An earlier test assertion mismatch was corrected before this successful run.
+- [x] Completed the nine-run utility-focused analysis using available local caches and committed aggregate-only results at [the report](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json). Provenance remains qualified: the run used a reconstructed local working copy, not a byte-identically verified checkout; 20 bootstrap replicates were ancillary only.
+- [x] Keep raw data, caches, and row-level predictions outside Git; committed output is aggregate-only.
+- [ ] Obtain independent clinical/statistical review of relative cost scenarios. Current defaults (1, 10, 100, 500, 1,000 missed-window units per alert-cost unit) are illustrative engineering assumptions, not validated utility weights.
+- [ ] Freeze any development policy only after cost assumptions and selection rules are reviewed and predeclared. Do not select a threshold on Set B, whose results have already been inspected; a new independent cohort is required.
+
+**Boundary:** the utility score is a retrospective Challenge-label proxy, not clinical utility. The target is entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 9: independent-evaluation readiness (15 October 2026)
+
+- [x] Draft the [independent-cohort evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md), including model freeze, independent event definition, predeclared metrics, reproducibility requirements, and staged evaluation boundaries.
+- [x] Link the protocol and [utility-cost review checklist](UTILITY_COST_REVIEW_CHECKLIST.md) from the README.
+- [ ] Obtain independent clinical/statistical review of the utility assumptions and endpoint semantics; record the reviewer's decision and required changes.
+- [ ] Complete a clean-checkout, pinned-environment reproduction and history-wide privacy/secret audit; runtime DNS limitations have prevented a verified clean clone so far.
+- [ ] Obtain data-governance/ethics approval and a genuinely new independent cohort with clinically defined/adjudicated event timing before external validation. Set B is already inspected and must not be reused for threshold selection.
+- [ ] Freeze the model, calibration, threshold, refractory policy, endpoints, and analysis plan before accessing independent-cohort outcomes. Prospective silent-mode and clinical-impact studies require separate approvals and are not authorized by this protocol.
+
+**Boundary:** these are project-readiness tasks, not evidence of clinical readiness. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 10: independent-evaluation freeze gate (15 October 2026)
+
+- [x] Added an intentionally incomplete machine-readable lockfile scaffold: `configs/independent_evaluation_lockfile.template.json`.
+- [x] Added `scripts/validate_evaluation_lockfile.py` to reject unfrozen policies, missing endpoint/configuration fields, Set B reuse, Challenge-proxy labels used for clinical-onset claims, invalid thresholds/horizons, and missing independent reviewer/governance sign-offs.
+- [x] Added synthetic unit tests in `tests/test_evaluation_lockfile.py` and documented the workflow in [the independent-evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md) and README.
+- [x] Strengthen the freeze-gate validator to require hexadecimal commit/artifact hashes with the expected lengths; add regression coverage for malformed hashes in `tests/test_evaluation_lockfile.py`.
+- [x] GitHub Actions passed after the validator/hash regression changes (run https://github.com/culprit-k/VITALIS/actions/runs/38632635525; compile, synthetic stream smoke test, and full test suite succeeded).
+- [ ] Complete the lockfile privately only after the cohort, event definition, cost assumptions, model policy, and reviewers are identified; do not put a completed lockfile containing sensitive study metadata in public Git.
+- [ ] Obtain a genuinely new cohort, data-governance/ethics determination, and independent clinical/statistical approval. Set B remains unavailable for threshold selection.
+- [ ] Complete clean-checkout reproduction and history-wide privacy/security review. The project remains research-only; this validation helper does not confer clinical validity or authorize a prospective study.
+
+
+
+## Phase 8: utility-based operating-point framework (15 October 2026)
+
+- [x] Add `src/vitalis/utility.py` to compare threshold candidates under explicit missed-window versus alert-cost scenarios.
+- [x] Integrate cost-sensitivity summaries into the calibration evaluator for the untouched, patient-disjoint Set-A operating-point holdout only. Set B is not used for threshold selection.
+- [x] Evaluate the predeclared threshold grid across all nine seed × horizon combinations (seeds 42, 123, 2026; horizons 1, 3, 6 hours), for static and temporal models; 18 fits completed with zero captured fit warnings.
+- [x] Commit aggregate-only results and report: [utility operating-point results](HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate JSON](../results/horizon_utility_operating_point_aggregate_2026-10-15.json).
+- [x] Add focused utility tests, an independent cost-review checklist, and framework documentation.
+- [x] Record provenance: the full-cohort analysis used a reconstructed local working copy and is not claimed as byte-identically verified execution of the checked-in source. The analysis used 20 bootstrap replicates for ancillary uncertainty summaries; these are preliminary.
+- [ ] Confirm successful GitHub Actions on the latest code-bearing head.
+- [ ] Obtain independent clinician/statistician review of the target semantics, alert burden, and illustrative missed-window cost ratios (1, 10, 100, 500, 1,000 relative units per alert-cost unit).
+- [ ] Freeze any development candidate only after review, then evaluate it on a new independent cohort. Do not reuse inspected Set B for threshold selection.
+- [ ] Complete clean-checkout reproduction, privacy/security review, governance review, and prospective/clinical validation gates before any clinical-use claim.
+
+**Boundary:** the target is future entry into the Challenge SepsisLabel-positive window, not independently observed biological onset. The weighted cost proxy is not clinical utility. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 11: repository data-artifact hygiene guard (15 October 2026)
+
+- [x] Add \`scripts/check_repository_hygiene.py\` to fail CI when the current working tree contains common data/cache/model-artifact extensions or files larger than 5 MiB.
+- [x] Add regression tests for forbidden extensions, oversized files, invalid inputs, and ignored Git/cache directories in \`tests/test_repository_hygiene.py\`.
+- [x] Run the guard in GitHub Actions before the test suite.
+- [x] Confirmed CI passed on PR head `86776762479dd450e20821da8e6f0b50c482e21d` (run [38639673606](https://github.com/culprit-k/VITALIS/actions/runs/38639673606)); the repository-artifact hygiene step passed.
+- [ ] Separately complete a history-wide privacy/secret audit. This guard checks the current tree only and does not prove that sensitive artifacts were never committed in earlier revisions.
+- [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before considering a research release.
+
+**Boundary:** the guard reduces the chance of accidentally adding row-level data or score archives in future commits; it is not a substitute for secret scanning, history review, data governance, or clinical validation.
+
+
+## Phase 12: historical repository privacy audit (15 October 2026)
+
+- [x] Add scripts/audit_git_history.py to scan all commits/blobs reachable from local refs for historical data/artifact paths, oversized blobs, and high-confidence credential patterns without printing matched secret values.
+- [x] Add regression tests for a deleted data-file path, a synthetic credential pattern, an oversized historical blob, shallow-clone rejection, and invalid repository roots.
+- [x] Configure CI checkout to fetch full history and run the audit alongside the current-tree hygiene guard.
+- [x] Document scope, safe triage, and incident-response boundaries in [Git-history privacy audit](GIT_HISTORY_PRIVACY_AUDIT.md).
+- [x] Confirmed the CI reachable-history audit passed on PR head `86776762479dd450e20821da8e6f0b50c482e21d` (run [38639673606](https://github.com/culprit-k/VITALIS/actions/runs/38639673606)): 563 commits, 544 unique blobs, and zero configured-pattern findings in fetched refs.
+- [ ] Complete a separate manual/GitHub security review; the scanner is heuristic and does not replace provider secret scanning.
+- [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical/governance review before any research release.
+
+**Boundary:** this tooling is a preventive/detection gate. It does not prove that sensitive data was never exposed, and it does not change or rewrite repository history automatically.
+
+
+## Phase 11: automated repository-history privacy gate (15 October 2026)
+
+- [x] Confirmed the current PR workflow checks out full Git history (fetch-depth: 0), runs current-tree data-artifact hygiene, and invokes scripts/audit_git_history.py across commits/blobs reachable from fetched refs.
+- [x] The current PR-head workflow passed on fb58d0fecacd741a3755d932fc423315ce5c2d6b: [GitHub Actions run 38634604467](https://github.com/culprit-k/VITALIS/actions/runs/38634604467). The job completed compile checks, current-tree hygiene, reachable-history audit, synthetic stream smoke test, and **164 tests passed**.
+- [x] The history-audit command returned success, meaning no findings matched its configured data-artifact, oversized-blob, or high-confidence credential patterns in the refs scanned by that run.
+- [ ] Treat this as a heuristic gate only. Confirm that all relevant refs/tags were fetched, manually triage any future finding, and retain independent provider secret scanning and privacy review.
+- [ ] Complete the full-cohort reproduction from a clean checkout and fresh caches on a machine with GitHub network access. The current runtime still cannot resolve github.com; the successful GitHub Actions checkout validates CI, not the local full-cohort reproduction.
+- [ ] Obtain independent clinical/statistical review of endpoint semantics, cost assumptions, and model/threshold policy; obtain required governance/ethics determination and a genuinely new independent cohort before external/prospective evaluation.
+
+**Current decision:** the utility-analysis implementation and automated software/privacy checks are in place, but the independent-evaluation and clean-reproduction gates remain open. Keep PR #1 draft and unmerged. VITALIS remains research-only and is not clinically validated.
+
+
+## Phase 13: clinical translation and regulatory readiness (15 October 2026)
+
+- [x] Add [clinical translation and regulatory roadmap](CLINICAL_TRANSLATION_AND_REGULATORY_ROADMAP.md) with intended-use, target-market, QMS/design-control, risk, software lifecycle, cybersecurity, clinical-evaluation, governance, and post-market workstreams.
+- [x] Link the roadmap from the README and record the current safety boundary: VITALIS is a retrospective research prototype, not a clinically validated device.
+- [ ] Choose the first target jurisdiction and approve the exact intended-use statement, population, setting, intended user, clinical claim, output, and exclusions.
+- [ ] Appoint accountable clinical, statistical, regulatory/quality, cybersecurity, privacy/data-governance, and human-factors owners.
+- [ ] Complete clean-checkout/fresh-cache reproduction, reconcile historical metric discrepancies, and close the history-wide privacy/security review with independent triage.
+- [ ] Establish the appropriate quality management system, controlled design records, risk file, software lifecycle evidence, traceability, usability evidence, and cybersecurity plan.
+- [ ] Obtain governance/ethics and data permissions; establish a new independent cohort with an independently defined/adjudicated reference standard and a frozen statistical analysis plan.
+- [ ] Complete external retrospective validation, then appropriately approved prospective silent-mode evaluation; only consider an interventional study after clinical/regulatory review.
+- [ ] Determine and satisfy all applicable jurisdiction-specific regulatory submission, authorization, labeling, and post-market requirements before any clinical marketing or deployment.
+
+**Gate status:** this roadmap and repository changes are planning artifacts only. They do not establish QMS conformity, regulatory classification, ethics approval, clinical validity, or authorization. Keep PR #1 draft/unmerged; keep VITALIS research-only and out of patient-care decisions.
+
+
+## Phase 14: Uzbekistan research-readiness gate (15 October 2026)
+
+- [x] Confirmed the first target market as Uzbekistan and the intended first deployment category as research.
+- [x] Added the [Uzbekistan research-readiness dossier](UZBEKISTAN_RESEARCH_READINESS.md) and machine-readable [readiness register](../configs/regulatory/uzbekistan_research_readiness.json).
+- [x] Recorded the initial boundary as offline retrospective analysis of authorized, de-identified data only; no patient-care influence, live feeds, prospective silent mode, or clinical marketing.
+- [x] Reviewed official starting points for Uzbekistan's Personal Data Law and current medical-equipment registration procedure, plus published context on ethics-review pathway uncertainty. The document explicitly distinguishes binding legal sources from secondary research and lists authority questions instead of inferring an exemption.
+- [ ] Obtain written host-institution ethics/governance and data-protection determinations before accessing Uzbekistan patient-level data.
+- [ ] Obtain written classification/pathway advice from the Center for Pharmaceutical Product Safety / Committee on New Medical Technology for the exact intended use and scope-change triggers.
+- [ ] Name the host institution, principal investigator, data controller/custodian, and qualified Uzbekistan regulatory/legal contact; approve the study-specific data-management plan.
+- [ ] Complete clean-checkout/fresh-cache reproduction and independent clinical/statistical review. A new independently defined/adjudicated cohort is still required for external clinical evidence.
+
+**Gate status:** this is a planning milestone, not approval. No patient-level Uzbek data should be received or processed until required permissions and determinations are in place. VITALIS remains research-only and must not guide patient care.
+
+
+## Phase 15: utility-policy freeze gate hardening (15 October 2026)
+
+- [x] Extend \`configs/independent_evaluation_lockfile.template.json\` with explicit utility cost definition, alert-cost unit, missed-window cost scenarios, primary scenario, Set-A-only candidate-selection rule, and independent rationale/exploratory status.
+- [x] Extend \`scripts/validate_evaluation_lockfile.py\` to reject missing/placeholding cost policy, non-positive or non-finite costs, duplicate scenarios, and a candidate-selection rule that names Set B.
+- [x] Add regression tests for incomplete utility policy, Set-B threshold-selection language, and invalid cost assumptions.
+- [x] Update the independent evaluation protocol and README to describe the additional freeze requirements.
+- [x] GitHub Actions passed on code-bearing commit `c6c70ec5609e4fffe0e93744f068ed1919268682` (run [38638008891](https://github.com/culprit-k/VITALIS/actions/runs/38638008891)): **168 tests passed**, repository-artifact hygiene passed, and the reachable-history scanner reported zero configured-pattern findings. CI caught two issues during development: the Set-B phrase guard initially matched a valid prohibition, and the primary scenario needed numeric membership validation; both were corrected before this passing run.
+
+**Boundary:** the validator checks completeness and simple invariants only. It cannot establish that cost weights are medically defensible, that approvals are authentic, or that a model is safe. Keep the completed study lockfile private; do not use Set B for threshold selection. Independent review, a new cohort, clean-checkout reproduction, and governance approvals remain open.
+
+
+## Phase 16: utility-ranking uncertainty and stability (15 October 2026)
+
+- [x] Add patient-cluster percentile-bootstrap intervals for row sensitivity, row PPV, alerts per at-risk patient-day, forecast-positive-window coverage, and weighted cost per at-risk patient-day at each predeclared threshold.
+- [x] Add per-cost-scenario selection-frequency summaries to show how often each threshold is the minimum-cost candidate when whole patients are resampled.
+- [x] Integrate the uncertainty calculation only on the untouched patient-disjoint Set-A operating-point holdout; Set B remains evaluation-only.
+- [x] Add focused reproducibility, interval-schema, selection-frequency, invalid-replicate-count, and evaluator-integration tests.
+- [x] Document the uncertainty estimand and limitations in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md).
+- [x] GitHub Actions passed on code-bearing head `f486b1cdc3cc6bd40a3196d2a3fdd87dc2171294` (run [38639195327](https://github.com/culprit-k/VITALIS/actions/runs/38639195327)): compile, repository-artifact hygiene, reachable-history audit, synthetic stream smoke test, and full test suite all passed.
+- [x] Completed all nine seed × horizon utility-bootstrap runs on the available reconstructed local working copy: 18 model fits, 200 whole-patient bootstrap replicates per fit (3,600 total), 151.741 seconds summed runtime, and zero captured fit warnings. Set B was not loaded or used. Aggregate report: [utility bootstrap results](HORIZON_UTILITY_BOOTSTRAP_RESULTS_2026-10-15.md); aggregate-only JSON: [utility bootstrap summary](../results/horizon_utility_bootstrap_summary_2026-10-15.json).
+- [x] Recorded the local runtime versions and SHA-256 hashes of the reconstructed runner, utility, horizon, calibration-uncertainty, and Set-A cache-metadata files in the report. These hashes improve auditability but do not establish byte-identical source reproduction.
+- [ ] Obtain independent clinical/statistical review of cost ratios, target-window definition, and interpretation. Selection frequency is not clinical optimality.
+- [ ] Keep Set B unavailable for threshold selection. A frozen development candidate requires a new independent cohort with independently defined/adjudicated event timing plus governance/ethics approval before external or prospective evaluation.
+
+**Boundary:** bootstrap intervals are conditional on this development cohort and the chosen model/cost assumptions. They do not include uncertainty in the cost ratios, model selection process, domain shift, or label validity. VITALIS remains research-only and must not guide patient care.
+
+
+## Adaptive-twin edge hardening checkpoint (15 October 2026)
+
+- [x] Added synthetic tests for flatline-like histories, single-channel spike suppression, correlated channels grouped by physiological system, and explicit channel-to-system mapping.
+- [x] Added per-channel freshness policy validation, stale/future timestamp tests, and regression coverage for identified sensor-source replacement.
+- [x] Implemented a source-replacement safeguard: when an identified source changes, reset that channel's history/reference/CUSUM and clear aggregate trajectory continuity while preserving other channel histories. Source-change counts are surfaced in stream outputs.
+- [x] Documented behavior and remaining limitations in [Adaptive twin implementation](ADAPTIVE_TWIN_IMPLEMENTATION.md).
+- [x] GitHub Actions passed on commit \`4d21df9985a523414113ebc8b2455ca384b80c9d\` (run [38642262376](https://github.com/culprit-k/VITALIS/actions/runs/38642262376)): compile, repository artifact hygiene, reachable-history audit, synthetic stream smoke test, and **179 tests passed**.
+- [ ] Validate source-change metadata against real device adapters; replacement cannot be detected if source identifiers are absent or unreliable. Multi-rate synchronization, real-device quality flags, and any hardware-specific protocol remain open.
+
+**Boundary:** these are synthetic software regressions, not medical-device verification or clinical evidence. No hardware purchases or patient-care use are justified by these tests.
+
+
+## Software completion checkpoint — 15 October 2026
+
+### Completed in this checkpoint
+
+- Added `src/vitalis/reporting.py`, a schema-aware normalizer for aggregate-only baseline, cross-cohort horizon, and source-verified summary JSON.
+- Added `tests/test_reporting.py` for supported schemas, invalid horizons, non-finite values, unsupported formats, and rejection of known row-level prediction fields.
+- Updated `dashboard/app.py` to render baseline and horizon aggregates, show run/protocol provenance, limit uploads to 10 MiB, and reject unsupported or known row-level report structures.
+- Added [aggregate dashboard usage and privacy guide](AGGREGATE_REPORT_DASHBOARD.md).
+- Added a dedicated [reporting/dashboard CI workflow](../.github/workflows/reporting-dashboard-tests.yml) to compile the project, lint the changed components, and run the full test suite.
+- Updated the README to link the dashboard guide.
+
+### Verification state
+
+The new files are committed on `work/strict-reproducibility-gate`. The GitHub integration did not return a workflow run associated with the latest commit at the time of this update, and the environment cannot resolve `github.com` for a local checkout. Therefore the new dashboard code is **not yet marked test-passing**; confirm the dedicated workflow result before treating this milestone as verified.
+
+### Remaining software/research gates
+
+1. Confirm the reporting/dashboard CI run passes; fix any lint, dependency, or test failures without changing the experiment acceptance rules.
+2. Finish the pinned clean-checkout full-cohort run and repeat it. Investigate the five temporal aggregate discrepancies documented in [the discrepancy audit](TEMPORAL_REPRODUCIBILITY_DISCREPANCY_AUDIT_2026-10-15.md).
+3. Keep the historical baseline unchanged. If the original result provenance cannot be reconstructed, preserve both results and require independent review of a separately versioned replacement-baseline decision.
+4. Freeze a research candidate only after the reproducibility decision is reviewed; prepare the independent-cohort lockfile and obtain qualified clinical/statistical, data-governance, and ethics determinations before any new-cohort evaluation.
+5. Do not begin live sensor ingestion, patient-facing alerts, hardware integration for patient care, or clinical deployment. The adaptive twin and forecasting models remain research software.
+
+VITALIS remains research-only and must not be used to guide patient care.
+
+
+### Verification update — reporting/dashboard CI (15 October 2026)
+
+- [x] Dedicated reporting/dashboard workflow passed on commit `493888e3c4a3c5d5a64867f9599d409f799064b1`: [workflow run 38682236905](https://github.com/culprit-k/VITALIS/actions/runs/38682236905). Compilation and Ruff checks passed; the full suite passed **192 tests**.
+- [x] General repository CI passed on commit `56a8b7b25208b8562ce1f271a87d4c5ef21a8ccc`: [workflow run 38682236904](https://github.com/culprit-k/VITALIS/actions/runs/38682236904), with **192 tests passed** and source/history audit steps successful.
+- [ ] The full-cohort clean-checkout reproduction is still running. The fresh Set A and Set B caches have completed, and the nine horizon × seed evaluation is in progress. Reconciliation and aggregate-artifact checks are still pending; do not mark Step 2 complete until the run ends and the predeclared rule is assessed.

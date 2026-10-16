@@ -1,0 +1,132 @@
+{
+  "project": "VITALIS",
+  "date": "2026-10-14",
+  "run_type": "cross_cohort_reproducibility_discrepancy_and_recalibration_rerun",
+  "exact_source_recalibration_rerun": {
+    "repository": "culprit-k/VITALIS",
+    "source_branch_at_initial_verification": "main",
+    "source_commit": "90ce87677b1e1692c3a6f04f7394f9ce59cf7481",
+    "source_blob_shas": {
+      "scripts/build_feature_cache.py": "eba7dda1532675c2e3f21476b0bba2cead537e78",
+      "scripts/evaluate_cross_cohort_recalibration.py": "a14e4706f0560a677b788f1a2aa4e18dfc237852",
+      "tests/test_cross_cohort_recalibration.py": "0abe395b83b06a9152543f52b6e7598137f225c0"
+    },
+    "local_git_blob_shas_match": true,
+    "focused_tests": "7 passed in 0.82 seconds",
+    "rerun_environment": "Python environment used for local VITALIS cache analysis; local Set A/Set B caches were read in memory-mapped mode.",
+    "seeds": {
+      "42": {
+        "status": "rerun_completed_and_metrics_exactly_match_saved_source_verified_output",
+        "max_absolute_metric_delta": 0,
+        "output_sha256": "5197ef0d175282264f4bdcc38b58ee68d343536b78e886c834c18bbb3f406c0f"
+      },
+      "123": {
+        "status": "rerun_completed_and_metrics_exactly_match_saved_source_verified_output",
+        "max_absolute_metric_delta": 0,
+        "output_sha256": "e3ef004b110724f10de965a3ead771bb7b5065334069357b3879cae684912d9e"
+      },
+      "2026": {
+        "status": "rerun_completed_with_thread_limits_and_matches_saved_output_to_floating_point_precision",
+        "max_absolute_metric_delta": 1.454392162258955e-14,
+        "comparison_tolerance": 1e-12,
+        "output_sha256": "29e91223bc59e8283520b5a796b5937c939be99532f51dd082a3165dec4225e7"
+      }
+    },
+    "data_boundary": "Raw patient records, caches, patient-group vectors, and row-level predictions remain outside Git."
+  },
+  "cross_cohort_discrepancy": {
+    "historical_artifact": "results/cross_cohort_train_A_test_B_2026-10-14.json",
+    "historical_artifact_blob_sha": "a744622fbfdf5eaa4dccb09be97546d99e744f90",
+    "exact_source_artifact": "results/cross_cohort_exact_source_reproduction_2026-10-14.json",
+    "exact_source_script_blob_sha": "f700bf0848cd718301d9693c3dae13444a9bfe8b",
+    "historical_artifact_preserved_unchanged": true,
+    "mean_metric_comparison": {
+      "static": {
+        "auroc": {
+          "historical": 0.6780926383,
+          "exact_source": 0.6750165964,
+          "delta_exact_minus_historical": -0.0030760419
+        },
+        "auprc": {
+          "historical": 0.0463924587,
+          "exact_source": 0.0454946361,
+          "delta_exact_minus_historical": -0.0008978226
+        },
+        "brier_score": {
+          "historical": 0.1648990958,
+          "exact_source": 0.1658924105,
+          "delta_exact_minus_historical": 0.0009933147
+        },
+        "sensitivity": {
+          "historical": 0.4777674706,
+          "exact_source": 0.4765306122,
+          "delta_exact_minus_historical": -0.0012368584
+        },
+        "specificity": {
+          "historical": 0.7996104089,
+          "exact_source": 0.7970745171,
+          "delta_exact_minus_historical": -0.0025358918
+        },
+        "ppv": {
+          "historical": 0.0330908201,
+          "exact_source": 0.0326431219,
+          "delta_exact_minus_historical": -0.0004476982
+        },
+        "npv": {
+          "historical": 0.9907150069,
+          "exact_source": 0.9906653778,
+          "delta_exact_minus_historical": -0.0000496291
+        }
+      },
+      "temporal": {
+        "auroc": {
+          "historical": 0.7356862716,
+          "exact_source": 0.7319108333,
+          "delta_exact_minus_historical": -0.0037754383
+        },
+        "auprc": {
+          "historical": 0.0597446551,
+          "exact_source": 0.0580947577,
+          "delta_exact_minus_historical": -0.0016498974
+        },
+        "brier_score": {
+          "historical": 0.0968801959,
+          "exact_source": 0.0972222734,
+          "delta_exact_minus_historical": 0.0003420775
+        },
+        "sensitivity": {
+          "historical": 0.3848484848,
+          "exact_source": 0.3828695114,
+          "delta_exact_minus_historical": -0.0019789734
+        },
+        "specificity": {
+          "historical": 0.9250272337,
+          "exact_source": 0.9229883145,
+          "delta_exact_minus_historical": -0.0020389192
+        },
+        "ppv": {
+          "historical": 0.0686438583,
+          "exact_source": 0.0666187956,
+          "delta_exact_minus_historical": -0.0020250627
+        },
+        "npv": {
+          "historical": 0.9905473718,
+          "exact_source": 0.9904963982,
+          "delta_exact_minus_historical": -0.0000509736
+        }
+      }
+    },
+    "known_facts": [
+      "The historical artifact does not record per-seed training row counts, a source hash for the original model-fitting harness, or enough execution-environment details to identify the cause of the metric differences.",
+      "The checked-in exact-source evaluator was executed from bytes whose Git blob SHA matches the GitHub source.",
+      "The exact-source evaluator and the checked-in recalibration runner produce nearly identical raw Set-B metrics under the shared 60% Set-A training split; any differences are at floating-point-scale for these shared raw metrics."
+    ],
+    "root_cause": "Unresolved. A split, feature-cache construction, model configuration, or environment difference in the historical reconstructed harness is plausible, but the available historical artifact cannot distinguish these possibilities. Do not state any of them as the established cause.",
+    "disposition": "Retain both artifacts, treat exact-source values as canonical for the checked-in evaluator, and do not silently overwrite historical results."
+  },
+  "limitations": [
+    "The full Git checkout remains unverified because the runtime could not resolve GitHub DNS; source-byte identity was verified by Git blob hashes.",
+    "Set B remains evaluation-only and was not used to fit models, recalibrators, choose features, or select thresholds.",
+    "These are retrospective hourly challenge-label metrics, not prospective clinical validation or evidence of clinical utility."
+  ]
+}

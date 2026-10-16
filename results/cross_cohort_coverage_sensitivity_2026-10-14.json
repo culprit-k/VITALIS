@@ -1,0 +1,195 @@
+{
+  "project": "VITALIS",
+  "date": "2026-10-14",
+  "run_type": "setA_training_only_feature_coverage_sensitivity_setB_evaluation",
+  "protocol": {
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "set_a_split": "60% train / 20% validation / 20% unused; patient-disjoint",
+    "feature_eligibility": "retain feature if >=5% finite among Set-A training rows for each seed",
+    "coverage_threshold": 0.05,
+    "recalibration": "Platt fitted on Set-A validation predictions only",
+    "set_b": "evaluation only; not used for feature eligibility, fitting, recalibration, or threshold selection",
+    "row_level_predictions_exported": false,
+    "model_fitting_source": "local sensitivity wrapper; uses byte-identical checked-in runner helpers for patient splits, Platt recalibration, and metrics; wrapper is not a checked-in CLI"
+  },
+  "cohorts": {
+    "set_a": {
+      "patients": 20336,
+      "rows": 790215,
+      "positive_hourly_labels": 17136
+    },
+    "set_b": {
+      "patients": 20000,
+      "rows": 761995,
+      "positive_hourly_labels": 10780
+    }
+  },
+  "filtered_results_mean_and_sample_sd_across_seeds": {
+    "static": {
+      "raw_set_b": {
+        "auroc": {
+          "mean": 0.668677,
+          "sample_sd": 0.00749
+        },
+        "auprc": {
+          "mean": 0.043604,
+          "sample_sd": 0.001773
+        },
+        "brier_score": {
+          "mean": 0.164736,
+          "sample_sd": 0.005059
+        },
+        "log_loss": {
+          "mean": 0.519098,
+          "sample_sd": 0.010465
+        },
+        "mean_predicted_probability": {
+          "mean": 0.366273,
+          "sample_sd": 0.007983
+        }
+      },
+      "recalibrated_set_b": {
+        "auroc": {
+          "mean": 0.668677,
+          "sample_sd": 0.00749
+        },
+        "auprc": {
+          "mean": 0.043604,
+          "sample_sd": 0.001773
+        },
+        "brier_score": {
+          "mean": 0.014081,
+          "sample_sd": 0.000182
+        },
+        "log_loss": {
+          "mean": 0.071806,
+          "sample_sd": 0.000234
+        },
+        "mean_predicted_probability": {
+          "mean": 0.018695,
+          "sample_sd": 0.000554
+        }
+      },
+      "feature_counts_by_seed": {
+        "42": {
+          "baseline": 40,
+          "eligible": 29
+        },
+        "123": {
+          "baseline": 40,
+          "eligible": 30
+        },
+        "2026": {
+          "baseline": 40,
+          "eligible": 30
+        }
+      }
+    },
+    "temporal": {
+      "raw_set_b": {
+        "auroc": {
+          "mean": 0.733466,
+          "sample_sd": 0.007082
+        },
+        "auprc": {
+          "mean": 0.058294,
+          "sample_sd": 0.001622
+        },
+        "brier_score": {
+          "mean": 0.096545,
+          "sample_sd": 0.002642
+        },
+        "log_loss": {
+          "mean": 0.350706,
+          "sample_sd": 0.006447
+        },
+        "mean_predicted_probability": {
+          "mean": 0.26208,
+          "sample_sd": 0.005814
+        }
+      },
+      "recalibrated_set_b": {
+        "auroc": {
+          "mean": 0.733466,
+          "sample_sd": 0.007082
+        },
+        "auprc": {
+          "mean": 0.058294,
+          "sample_sd": 0.001622
+        },
+        "brier_score": {
+          "mean": 0.013838,
+          "sample_sd": 0.000036
+        },
+        "log_loss": {
+          "mean": 0.068844,
+          "sample_sd": 0.000211
+        },
+        "mean_predicted_probability": {
+          "mean": 0.013313,
+          "sample_sd": 0.000795
+        }
+      },
+      "feature_counts_by_seed": {
+        "42": {
+          "baseline": 109,
+          "eligible": 78
+        },
+        "123": {
+          "baseline": 109,
+          "eligible": 79
+        },
+        "2026": {
+          "baseline": 109,
+          "eligible": 79
+        }
+      }
+    }
+  },
+  "baseline_reference": {
+    "source": "results/cross_cohort_validation_A_recalibration_test_B_source_verified_2026-10-14.json",
+    "static": {
+      "raw_set_b": {
+        "auroc": 0.675017,
+        "auprc": 0.045495,
+        "brier_score": 0.165892,
+        "log_loss": 0.522278,
+        "mean_predicted_probability": 0.367623
+      },
+      "recalibrated_set_b": {
+        "auroc": 0.675017,
+        "auprc": 0.045495,
+        "brier_score": 0.014071,
+        "log_loss": 0.071721,
+        "mean_predicted_probability": 0.018862
+      }
+    },
+    "temporal": {
+      "raw_set_b": {
+        "auroc": 0.731911,
+        "auprc": 0.058095,
+        "brier_score": 0.097222,
+        "log_loss": 0.352586,
+        "mean_predicted_probability": 0.263268
+      },
+      "recalibrated_set_b": {
+        "auroc": 0.731911,
+        "auprc": 0.058095,
+        "brier_score": 0.01383,
+        "log_loss": 0.068996,
+        "mean_predicted_probability": 0.013361
+      }
+    }
+  },
+  "limitations": [
+    "5% coverage threshold is exploratory and not clinically justified.",
+    "Three-seed standard deviations are not confidence intervals.",
+    "Metrics are hourly challenge-label metrics, not patient-level clinical event or utility metrics.",
+    "Set B is a held-out cohort in the same benchmark, not independent real-world validation.",
+    "The local sensitivity wrapper was not a checked-in CLI; no source-byte identity claim is made for the wrapper."
+  ]
+}

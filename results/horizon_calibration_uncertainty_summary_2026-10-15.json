@@ -1,0 +1,235 @@
+{
+  "project": "VITALIS",
+  "run_type": "patient_cluster_bootstrap_for_horizon_calibration_metrics",
+  "run_date": "2026-10-15",
+  "cohorts": {
+    "set_a": {
+      "patients": 20336,
+      "hourly_rows": 790215,
+      "positive_hourly_challenge_labels": 17136
+    },
+    "set_b": {
+      "patients": 20000,
+      "hourly_rows": 761995,
+      "positive_hourly_challenge_labels": 10780
+    }
+  },
+  "protocol": {
+    "horizons_hours": [
+      1,
+      3,
+      6
+    ],
+    "seeds": [
+      42,
+      123,
+      2026
+    ],
+    "models": [
+      "static",
+      "temporal"
+    ],
+    "bootstrap_replicates": 200,
+    "bootstrap_unit": "whole patient",
+    "metrics": [
+      "calibrated Brier",
+      "log loss",
+      "mean predicted probability",
+      "fixed-bin ECE",
+      "Brier minus observed-prevalence reference",
+      "paired calibrated-minus-raw Brier difference"
+    ],
+    "set_b_used_for_fit_calibration_or_threshold_selection": false,
+    "elapsed_seconds": 235.459,
+    "fit_warning_count": 0,
+    "export_policy": "aggregate metrics only; no patient identifiers or row-level predictions"
+  },
+  "aggregation_note": "Means and sample SD are across seeds. The interval envelope is the minimum lower and maximum upper endpoint among three seed-specific patient-cluster percentile intervals; it is not a pooled confidence interval.",
+  "aggregate_by_horizon": [
+    {
+      "horizon_hours": 1,
+      "models": {
+        "static": {
+          "brier_minus_prevalence_reference": {
+            "mean": 0.0000152757,
+            "sd_across_seeds": 0.000012,
+            "seed_interval_envelope": [
+              0.00000274683,
+              0.0000502364
+            ]
+          },
+          "paired_calibrated_minus_raw_brier": {
+            "mean": -0.178258,
+            "sd_across_seeds": 0.0055,
+            "seed_interval_envelope": [
+              -0.187872,
+              -0.170811
+            ]
+          },
+          "fixed_bin_ece": {
+            "mean": 0.000958865,
+            "sd_across_seeds": 0.00025,
+            "seed_interval_envelope": [
+              0.000635109,
+              0.00133325
+            ]
+          }
+        },
+        "temporal": {
+          "brier_minus_prevalence_reference": {
+            "mean": 0.0000138428,
+            "sd_across_seeds": 0.000012,
+            "seed_interval_envelope": [
+              -9.09856e-8,
+              0.0000468486
+            ]
+          },
+          "paired_calibrated_minus_raw_brier": {
+            "mean": -0.111865,
+            "sd_across_seeds": 0.0044,
+            "seed_interval_envelope": [
+              -0.118331,
+              -0.1038
+            ]
+          },
+          "fixed_bin_ece": {
+            "mean": 0.000510198,
+            "sd_across_seeds": 0.00012,
+            "seed_interval_envelope": [
+              0.00028663,
+              0.000719086
+            ]
+          }
+        }
+      }
+    },
+    {
+      "horizon_hours": 3,
+      "models": {
+        "static": {
+          "brier_minus_prevalence_reference": {
+            "mean": 0.0000415861,
+            "sd_across_seeds": 0.000048,
+            "seed_interval_envelope": [
+              -0.00000497146,
+              0.000162168
+            ]
+          },
+          "paired_calibrated_minus_raw_brier": {
+            "mean": -0.164243,
+            "sd_across_seeds": 0.0028,
+            "seed_interval_envelope": [
+              -0.170945,
+              -0.158691
+            ]
+          },
+          "fixed_bin_ece": {
+            "mean": 0.00237687,
+            "sd_across_seeds": 0.00026,
+            "seed_interval_envelope": [
+              0.00182328,
+              0.00297108
+            ]
+          }
+        },
+        "temporal": {
+          "brier_minus_prevalence_reference": {
+            "mean": 0.0000118642,
+            "sd_across_seeds": 0.000017,
+            "seed_interval_envelope": [
+              -0.0000136512,
+              0.0000655701
+            ]
+          },
+          "paired_calibrated_minus_raw_brier": {
+            "mean": -0.10979,
+            "sd_across_seeds": 0.0067,
+            "seed_interval_envelope": [
+              -0.120664,
+              -0.101935
+            ]
+          },
+          "fixed_bin_ece": {
+            "mean": 0.00121073,
+            "sd_across_seeds": 0.00016,
+            "seed_interval_envelope": [
+              0.000718875,
+              0.00161489
+            ]
+          }
+        }
+      }
+    },
+    {
+      "horizon_hours": 6,
+      "models": {
+        "static": {
+          "brier_minus_prevalence_reference": {
+            "mean": 0.000092972,
+            "sd_across_seeds": 0.00012,
+            "seed_interval_envelope": [
+              -0.0000402653,
+              0.000409899
+            ]
+          },
+          "paired_calibrated_minus_raw_brier": {
+            "mean": -0.160562,
+            "sd_across_seeds": 0.0065,
+            "seed_interval_envelope": [
+              -0.171776,
+              -0.15271
+            ]
+          },
+          "fixed_bin_ece": {
+            "mean": 0.00452654,
+            "sd_across_seeds": 0.00062,
+            "seed_interval_envelope": [
+              0.00335067,
+              0.00577655
+            ]
+          }
+        },
+        "temporal": {
+          "brier_minus_prevalence_reference": {
+            "mean": 0.0000335222,
+            "sd_across_seeds": 0.000079,
+            "seed_interval_envelope": [
+              -0.0000600674,
+              0.000247561
+            ]
+          },
+          "paired_calibrated_minus_raw_brier": {
+            "mean": -0.115306,
+            "sd_across_seeds": 0.0078,
+            "seed_interval_envelope": [
+              -0.125397,
+              -0.103347
+            ]
+          },
+          "fixed_bin_ece": {
+            "mean": 0.00254608,
+            "sd_across_seeds": 0.00026,
+            "seed_interval_envelope": [
+              0.00190322,
+              0.00345831
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "interpretation": [
+    "Paired calibrated-minus-raw Brier intervals were below zero for every seed/model/horizon run, so recalibration consistently improved Brier score relative to raw class-weighted probabilities.",
+    "Many Brier-minus-prevalence-reference intervals crossed zero, especially at 3 and 6 hours; the point estimates alone do not establish a reliable improvement over a prevalence-only reference.",
+    "The prevalence reference uses the evaluated cohort's observed prevalence and is descriptive, not a deployable baseline trained independently of the test data.",
+    "Intervals quantify patient-sampling uncertainty conditional on the fixed Set B cohort and fitted models; they do not establish prospective validity, clinical utility, or safety."
+  ],
+  "limitations": [
+    "The Challenge label already incorporates a six-hour lead convention; targets predict entry into the Challenge-positive label window, not independently observed biological onset.",
+    "Set B is a second Challenge training cohort, not prospective external clinical validation.",
+    "Alerts outside future-positive windows are not verified clinical false alarms.",
+    "VITALIS remains research-only and is not clinically validated."
+  ],
+  "report": "docs/HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md",
+  "implementation_provenance": "Full Git checkout was unavailable because runtime GitHub DNS/network access failed; full-cohort evaluation used a locally reconstructed working copy and is not claimed as byte-identical source reproduction. The checked-in runner and tests passed GitHub Actions."
+}

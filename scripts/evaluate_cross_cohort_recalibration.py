@@ -83,6 +83,54 @@ def patient_disjoint_three_way_split(y: np.ndarray, groups: np.ndarray, seed: in
     return train_idx, val_idx, unused_idx
 
 
+def validate_local_score_archive_dir(directory: Path, repository_root: Path) -> Path:
+    """Resolve a score archive directory and reject paths inside the repository."""
+    resolved = directory.expanduser().resolve()
+    root = repository_root.resolve()
+    if resolved == root or root in resolved.parents:
+        raise ValueError("local score archives must be stored outside the repository")
+    return resolved
+
+
+def write_local_score_archives(
+    directory: Path,
+    seed: int,
+    labels: np.ndarray,
+    patient_groups: np.ndarray,
+    static_raw: np.ndarray,
+    temporal_raw: np.ndarray,
+    static_recalibrated: np.ndarray,
+    temporal_recalibrated: np.ndarray,
+) -> list[Path]:
+    """Write paired raw/recalibrated vectors using synthetic group indices."""
+    y = np.asarray(labels, dtype=np.int8)
+    groups = np.asarray(patient_groups)
+    vectors = (static_raw, temporal_raw, static_recalibrated, temporal_recalibrated)
+    if any(np.asarray(vector).ndim != 1 or len(vector) != len(y) for vector in vectors):
+        raise ValueError("labels and all score vectors must be aligned one-dimensional arrays")
+    if groups.ndim != 1 or len(groups) != len(y):
+        raise ValueError("patient groups must align with labels")
+    if not np.isin(y, [0, 1]).all():
+        raise ValueError("labels must be binary")
+    if any(not np.isfinite(vector).all() or np.any((np.asarray(vector) < 0) | (np.asarray(vector) > 1)) for vector in vectors):
+        raise ValueError("score vectors must be finite and in [0, 1]")
+    directory.mkdir(parents=True, exist_ok=True)
+    _, synthetic_groups = np.unique(groups, return_inverse=True)
+    outputs = []
+    for stream, static, temporal in (
+        ("raw", static_raw, temporal_raw),
+        ("recalibrated", static_recalibrated, temporal_recalibrated),
+    ):
+        path = directory / f"heldout_scores_seed_{seed}_{stream}.npz"
+        np.savez_compressed(
+            path, y=y, groups=synthetic_groups.astype(np.int32, copy=False),
+            p_static=np.asarray(static, dtype=np.float64),
+            p_temporal=np.asarray(temporal, dtype=np.float64),
+        )
+        outputs.append(path)
+    return outputs
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--set-a-cache", type=Path, required=True)
@@ -90,9 +138,19 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, nargs="+", default=[42, 123, 2026])
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--predict-chunk-rows", type=int, default=50000)
+    ap.add_argument("--local-score-archive-dir", type=Path, default=None,
+                     help="Optional local-only directory outside the repository for row-level NPZ scores")
     args = ap.parse_args()
     if args.predict_chunk_rows < 1:
         ap.error("--predict-chunk-rows must be positive")
+    if args.local_score_archive_dir is not None:
+        try:
+            args.local_score_archive_dir = validate_local_score_archive_dir(
+                args.local_score_archive_dir, Path(__file__).resolve().parents[1]
+            )
+        except ValueError as exc:
+            ap.error(str(exc))
+        args.local_score_archive_dir.mkdir(parents=True, exist_ok=True)
 
     ma = json.loads((args.set_a_cache / "meta.json").read_text())
     mb = json.loads((args.set_b_cache / "meta.json").read_text())
@@ -137,6 +195,7 @@ def main() -> None:
             "set_b_used_for_fit_or_recalibration": False,
             "models": {},
         }
+        score_vectors = {}
         for name, ix in feature_sets:
             model = make_pipeline(
                 SimpleImputer(strategy="median", add_indicator=True),
@@ -155,6 +214,7 @@ def main() -> None:
                 raw_parts.append(raw)
                 recal_parts.append(apply_platt_recalibrator(recalibrator, raw))
             raw_b, recal_b = np.concatenate(raw_parts), np.concatenate(recal_parts)
+            score_vectors[name] = {"raw": raw_b, "recalibrated": recal_b}
             run["models"][name] = {
                 "fit_warnings": [str(w.message) for w in caught],
                 "raw_set_b": probability_metrics(yb, raw_b),
@@ -167,6 +227,14 @@ def main() -> None:
                 f"recal_Brier={run['models'][name]['recalibrated_set_b']['brier_score']:.5f}",
                 flush=True,
             )
+        if args.local_score_archive_dir is not None:
+            archive_paths = write_local_score_archives(
+                args.local_score_archive_dir, seed, yb, gb,
+                score_vectors["static"]["raw"], score_vectors["temporal"]["raw"],
+                score_vectors["static"]["recalibrated"], score_vectors["temporal"]["recalibrated"],
+            )
+            for archive_path in archive_paths:
+                print(f"wrote local-only score archive: {archive_path}", flush=True)
         runs.append(run)
 
     aggregate = {}
@@ -196,7 +264,8 @@ def main() -> None:
             "models": "static and temporal balanced logistic regression with median imputation, missingness indicators, and standard scaling",
             "recalibration": "one-dimensional logistic (Platt) recalibration fit on set A validation predictions only",
             "threshold_selection": "none",
-            "row_level_predictions_exported": False,
+            "row_level_predictions_exported": args.local_score_archive_dir is not None,
+            "row_level_prediction_archives": "local-only outside repository" if args.local_score_archive_dir is not None else "not exported",
         },
         "source_provenance": "Aggregate runner records intended protocol; exact-checkout data execution must be separately verified.",
         "aggregate_mean_and_sample_sd_across_seeds": aggregate,
