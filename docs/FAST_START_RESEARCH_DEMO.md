@@ -29,10 +29,14 @@ Install the package, tests, and dashboard:
 ```bash
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev,dashboard]"
+python scripts/doctor.py
+python scripts/doctor.py --dashboard
 python -m pytest
 ```
 
-Do not proceed to expensive cohort runs if the test suite fails. Save the failing test output and fix the underlying issue first.
+The doctor command checks the supported Python version, core dependencies, and imports for the twin, timestamped stream, integrated interface, and aggregate-reporting modules. The `--dashboard` option also checks that Streamlit is installed. It does not assess model quality or clinical readiness.
+
+Do not proceed to expensive cohort runs if the environment check or test suite fails. Save the failing output and fix the underlying issue first.
 
 ## 3. Start the interactive synthetic twin demo
 
@@ -78,6 +82,7 @@ For full-cohort runs, use the pinned workflow and verify source/environment mani
 ## Troubleshooting
 
 - **Import error for `vitalis`:** activate the virtual environment and repeat `python -m pip install -e ".[dev,dashboard]"`.
+- **Doctor reports a missing dependency:** activate the environment and rerun the install command above.
 - **Streamlit command not found:** confirm the environment is active and install the dashboard extra.
 - **Tests fail:** do not start the full cohort workflow. Record the failing test and fix it first.
 - **No trained supervised model:** this is expected in the synthetic demo. Probabilities are intentionally unavailable; the demo is not a patient risk calculator.
