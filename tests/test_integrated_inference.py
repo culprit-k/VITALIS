@@ -112,3 +112,48 @@ def test_naive_score_timestamp_is_rejected():
     inference = make_inference()
     with pytest.raises(ValueError, match="timezone-aware"):
         inference.score(datetime(2026, 10, 16, 12))
+
+
+@pytest.mark.parametrize("bad_horizons", [(True,), (1.0,), (2,), (), (1, 1)])
+def test_invalid_horizon_types_and_values_are_rejected(bad_horizons):
+    inference = make_inference()
+    with pytest.raises(ValueError, match="horizons"):
+        inference.score(NOW, horizons=bad_horizons)
+
+
+@pytest.mark.parametrize("bad_feature", [True, "1.0", None])
+def test_non_numeric_feature_values_are_rejected(bad_feature):
+    inference = make_inference(
+        lambda features, horizon: 0.5,
+        model_version="m1",
+        calibration_version="c1",
+        feature_schema_version="f1",
+        expected_feature_names=("x",),
+    )
+    with pytest.raises(ValueError, match="real numeric scalar"):
+        inference.score(NOW, supervised_features={"x": bad_feature})
+
+
+@pytest.mark.parametrize("bad_probability", [True, "0.5", None, [0.5]])
+def test_non_scalar_or_non_numeric_predictor_outputs_are_rejected(bad_probability):
+    inference = make_inference(
+        lambda features, horizon: bad_probability,
+        model_version="m1",
+        calibration_version="c1",
+        feature_schema_version="f1",
+        expected_feature_names=("x",),
+    )
+    with pytest.raises(ValueError, match="numeric scalar probability"):
+        inference.score(NOW, supervised_features={"x": 1.0})
+
+
+def test_mixed_invalid_feature_names_fail_with_value_error():
+    inference = make_inference(
+        lambda features, horizon: 0.5,
+        model_version="m1",
+        calibration_version="c1",
+        feature_schema_version="f1",
+        expected_feature_names=("x",),
+    )
+    with pytest.raises(ValueError, match="feature names"):
+        inference.score(NOW, supervised_features={"x": 1.0, 2: 3.0})
