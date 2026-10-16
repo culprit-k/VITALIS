@@ -48,3 +48,14 @@ No patient-level predictions or identifiers may be exported. Set B remains evalu
 5. If the historical local run cannot be reconstructed, preserve it as historical evidence and request independent review of a separately versioned replacement baseline. Do not silently replace the baseline.
 
 The acceptance rule in `docs/HORIZON_RECONCILIATION_ACCEPTANCE_RULE.md` remains unchanged. VITALIS remains research-only and is not clinically validated.
+
+
+## Same-cache comparison: current Python 3.13 diagnostic vs earlier Python 3.11 pass — 16 October 2026
+
+The completed Python 3.13 diagnostic workflow [#38831794049](https://github.com/culprit-k/VITALIS/actions/runs/38831794049) used source commit `33fa7f6362e44ee126ddbebd20be6dc9738a12cb`. It completed source/cohort audits, rebuilt both caches, ran all nine horizon/seed combinations, and retained aggregate-only outputs. Its diagnostic comparison is 37/42 mean/sample-SD pairs and 75/84 scalar matches; this is not the acceptance gate.
+
+The previously successful pinned Python 3.11 run [#38748749241](https://github.com/culprit-k/VITALIS/actions/runs/38748749241) reports 42/42 pairs and 84/84 scalar matches, but it used source commit `d0c149a0941ba26139ec6793436896f504be8bd6`. Its source manifest records the evaluator blob for `scripts/evaluate_horizon_cross_cohort.py` as `5739a64807b970f0c945404896fc5536dba687da`; the current branch and the Python 3.13 run use blob `891b84ad4a5da039f1dc38411211c503c971167c`. Therefore, the earlier Python 3.11 pass is not a same-source reproduction of the current evaluator and must not be used to claim the current acceptance gate passes.
+
+There is useful positive evidence: the cache-integrity audit hashes are identical between these artifacts for both cohorts, including schema, ordered source file list, X/y/group arrays, feature summaries, cohort counts, and patient-block checks. The source cohort fingerprints also match. Thus the audited data/cache identity is consistent, while the evaluator source revision differs. This isolates the next required experiment: run the pinned Python 3.11 acceptance workflow against the current evaluator source blob `891b84ad4a5da039f1dc38411211c503c971167c`, then compare its aggregate output and model diagnostics with the Python 3.13 run on the same source. Do not attribute the discrepancy to Python/BLAS until this same-source comparison is complete.
+
+The concurrency-only workflow maintenance commit `b626ca6f723b293820a17175a11396018112ab29` fixed duplicate concurrency configuration and was intended to allow a fresh pinned workflow to run without cancelling another expensive cohort job. Preserve both prior artifacts; do not overwrite the historical baseline or relax the six-decimal acceptance rule.
