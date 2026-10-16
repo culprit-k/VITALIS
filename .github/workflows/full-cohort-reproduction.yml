@@ -511,7 +511,8 @@ jobs:
           }
           out = root / "vitalis-reconciliation.json"
           out.write_text(json.dumps(result, indent=2) + "\n")
-          print(json.dumps({k: v for k, v in result.items() if k != "mismatches"}, indent=2))
+          # Always print exact failing metric keys and both values so failures are actionable.
+          print(json.dumps(result, indent=2, sort_keys=True))
           if result["status"] != "pass":
               raise SystemExit("Reconciliation failed; preserve both outputs and investigate without changing the predeclared rule.")
           PY
