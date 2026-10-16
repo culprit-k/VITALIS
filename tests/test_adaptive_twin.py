@@ -233,3 +233,32 @@ def test_rejects_nonfinite_or_nonpositive_custom_scale_floors():
             channels=["heart_rate"],
             scale_floors={"heart_rate": 0},
         )
+
+
+def test_nonfinite_sensor_values_are_treated_as_missing_without_corrupting_state():
+    t = twin()
+    warm(t)
+    result = t.update({
+        "heart_rate": float("inf"),
+        "spo2": float("-inf"),
+        "respiratory_rate": float("nan"),
+    })
+    assert result["state"] == "insufficient_data"
+    assert result["eligible"] is False
+    assert result["trajectory_score"] is None
+    for channel in result["channels"].values():
+        if channel["z_score"] is not None:
+            assert channel["z_score"] == channel["z_score"]
+            assert abs(channel["z_score"]) != float("inf")
+
+
+def test_twin_reset_is_deterministic_for_reused_instance():
+    t = twin()
+    warm(t)
+    first = t.update({"heart_rate": 110, "spo2": 90, "respiratory_rate": 28})
+    t.reset()
+    warm(t)
+    second = t.update({"heart_rate": 110, "spo2": 90, "respiratory_rate": 28})
+    assert first["state"] == second["state"]
+    assert first["trajectory_score"] == second["trajectory_score"]
+    assert first["channels"]["heart_rate"]["z_score"] == second["channels"]["heart_rate"]["z_score"]
