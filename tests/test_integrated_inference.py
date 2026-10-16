@@ -50,6 +50,7 @@ def test_supervised_outputs_keep_distinct_horizons_and_versions():
         model_version="model-sha",
         calibration_version="cal-sha",
         feature_schema_version="features-v1",
+        expected_feature_names=("heart_rate",),
     )
     warm(inference)
     result = inference.score(
@@ -76,10 +77,24 @@ def test_invalid_probability_fails_closed(bad):
         model_version="m1",
         calibration_version="c1",
         feature_schema_version="f1",
+        expected_feature_names=("x",),
+        expected_feature_names=("x",),
     )
     warm(inference)
     with pytest.raises(ValueError, match="finite probability"):
         inference.score(NOW.replace(second=3), supervised_features={"x": 1.0})
+
+
+def test_feature_schema_mismatch_is_rejected():
+    inference = make_inference(
+        lambda features, horizon: 0.5,
+        model_version="m1",
+        calibration_version="c1",
+        feature_schema_version="f1",
+        expected_feature_names=("expected",),
+    )
+    with pytest.raises(ValueError, match="feature schema mismatch"):
+        inference.score(NOW, supervised_features={"unexpected": 1.0})
 
 
 def test_nonfinite_features_are_rejected():
