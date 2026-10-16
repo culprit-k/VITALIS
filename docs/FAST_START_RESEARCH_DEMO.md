@@ -68,7 +68,11 @@ Upload an **aggregate-only JSON report** produced by a VITALIS evaluation workfl
 
 Never upload raw patient records, row-level predictions, patient identifiers, feature caches, or individual score archives. Keep source datasets and generated cohort caches outside the repository.
 
-## 5. Run research analysis only after setup passes
+## 5. Check current project status and release gates
+
+Read [Project Status](PROJECT_STATUS.md) before interpreting results. It records the latest verified main commit, the older full-cohort run's exact source SHA, and the remaining release blockers.
+
+## 6. Run research analysis only after setup passes
 
 Use the documented protocols in:
 
