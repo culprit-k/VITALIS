@@ -78,7 +78,6 @@ def test_invalid_probability_fails_closed(bad):
         calibration_version="c1",
         feature_schema_version="f1",
         expected_feature_names=("x",),
-        expected_feature_names=("x",),
     )
     warm(inference)
     with pytest.raises(ValueError, match="finite probability"):
@@ -103,6 +102,7 @@ def test_nonfinite_features_are_rejected():
         model_version="m1",
         calibration_version="c1",
         feature_schema_version="f1",
+        expected_feature_names=("x",),
     )
     with pytest.raises(ValueError, match="must be finite"):
         inference.score(NOW, supervised_features={"x": float("nan")})
