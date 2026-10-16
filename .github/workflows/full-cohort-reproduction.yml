@@ -341,7 +341,7 @@ jobs:
             --output "$RUNNER_TEMP/horizon_cross_cohort_clean_checkout.json"
 
       - name: Run predeclared patient-relative physiology ablation
-        if: ${{ inputs.run_extended_analyses == true }}
+        if: ${{ inputs.run_extended_analyses == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[extended-analysis]')) }}
         run: |
           python scripts/evaluate_physiological_features.py \
             --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
@@ -354,7 +354,7 @@ jobs:
             --output "$RUNNER_TEMP/vitalis_physiological_feature_ablation.json"
 
       - name: Run patient-disjoint Set A Platt calibration experiment
-        if: ${{ inputs.run_extended_analyses == true }}
+        if: ${{ inputs.run_extended_analyses == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[extended-analysis]')) }}
         run: |
           PYTHONPATH="$GITHUB_WORKSPACE${PYTHONPATH:+:$PYTHONPATH}" python scripts/evaluate_set_a_platt_calibration.py \
             --set-a-cache "$RUNNER_TEMP/vitalis-cache-set-a" \
@@ -365,7 +365,7 @@ jobs:
             --output "$RUNNER_TEMP/vitalis_set_a_platt_calibration.json"
 
       - name: Verify Set A calibration partitioning and aggregate-only outputs
-        if: ${{ inputs.run_extended_analyses == true && success() }}
+        if: ${{ success() && (inputs.run_extended_analyses == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[extended-analysis]'))) }}
         run: |
           python - <<'PY'
           import json, os
@@ -393,7 +393,7 @@ jobs:
           PY
 
       - name: Verify probability-quality diagnostics are aggregate-only and complete
-        if: ${{ inputs.run_extended_analyses == true && success() }}
+        if: ${{ success() && (inputs.run_extended_analyses == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[extended-analysis]'))) }}
         run: |
           python - <<'PY'
           import json, os
