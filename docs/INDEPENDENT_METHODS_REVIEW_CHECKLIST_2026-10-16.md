@@ -89,9 +89,14 @@ Evidence: `docs/RELEASE_ACCEPTANCE_MATRIX.md`, `docs/GIT_HISTORY_PRIVACY_AUDIT.m
 
 ## Current known blockers (do not mark complete without evidence)
 
-1. Current-head full-cohort reproduction and cross-runtime diagnostic are pending as of the document's creation.
+1. **Automated reproduction gates now pass on commit `f46bfa7ecf56631a3b4ff8b1e8c97e95abdcb6a3`:** pinned Python 3.11 run [#38875089170](https://github.com/culprit-k/VITALIS/actions/runs/38875089170) passed 42/42 pairs and 84/84 scalars with zero mismatches; Python 3.13 diagnostic [#38875089216](https://github.com/culprit-k/VITALIS/actions/runs/38875089216) completed successfully as a diagnostic, not the acceptance gate.
 2. No independent reviewer sign-off has yet been obtained.
-3. The full Git-history privacy/secret scan and human triage remain pending.
+3. The automated reachable-history scan passed in standard CI with 780 commits, 760 unique blobs, and zero findings; human scope/limitation triage and independent privacy/security review remain pending.
 4. No independent external clinical cohort, prospective silent-mode evaluation, or clinical utility evaluation exists.
 
 **Non-negotiable:** do not modify the historical baseline, acceptance tolerance, fixed evaluation threshold, patient split, seeds, horizons, or Set B isolation rule to obtain a pass. Keep PR #2 draft/open/unmerged until the release decision is explicitly made.
+
+
+## Automated evidence update — 16 October 2026
+
+The standard tests and reporting/dashboard tests pass on current head `f46bfa7ecf56631a3b4ff8b1e8c97e95abdcb6a3` ([standard](https://github.com/culprit-k/VITALIS/actions/runs/38875089161), [dashboard](https://github.com/culprit-k/VITALIS/actions/runs/38875089165)). The clean-checkout Python 3.11 full-cohort run [#38875089170](https://github.com/culprit-k/VITALIS/actions/runs/38875089170) passes unchanged reconciliation (42/42 pairs, 84/84 scalars, zero mismatches). Python 3.13 diagnostic [#38875089216](https://github.com/culprit-k/VITALIS/actions/runs/38875089216) completed successfully and remains diagnostic-only. The automated history scanner found zero matches in 780 reachable commits/760 blobs; independent methods review, human privacy/security triage, and an explicit release decision have not occurred and must not be marked complete by automation.
