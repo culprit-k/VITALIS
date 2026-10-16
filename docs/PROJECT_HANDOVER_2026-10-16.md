@@ -90,3 +90,15 @@ No patient-connected sensor hardware, embedded firmware, clinical monitor integr
 - Set B is evaluation-only and must not be used to choose features, calibrators, thresholds, or models.
 - AUROC/AUPRC measure ranking, not calibration or clinical utility. Report Brier/log loss, sensitivity, PPV, and alert burden alongside ranking metrics.
 - VITALIS is a research prototype, not a medical device or validated clinical decision-support system. Never use its output to make patient-care decisions.
+
+
+## Verified main-branch reproduction update — 16 October 2026
+
+The current `main` commit `426ac5dd2a8076fb192bcebd0b1c8f838bf72906` completed the clean-checkout full-cohort workflow successfully: [GitHub Actions run 38889950689](https://github.com/culprit-k/VITALIS/actions/runs/38889950689). All preflight, source provenance, Python 3.11, numerical backend, unit-test, official cohort download, source audit, fresh cache, 1/3/6-hour evaluation, physiology ablation, patient-disjoint Set A calibration, aggregate-output, and baseline reconciliation steps passed.
+
+- Reconciliation remained unchanged: 42/42 metric mean/sample-SD pairs and 84/84 scalar values matched at the predeclared six-decimal rule; zero mismatches.
+- The aggregate-only artifact is available at [artifact 12042469450](https://github.com/culprit-k/VITALIS/actions/runs/38889950689/artifacts/12042469450).
+- The full report, including exact metrics and interpretation, is in [MAIN_BRANCH_FULL_COHORT_REPRODUCTION_2026-10-16.md](MAIN_BRANCH_FULL_COHORT_REPRODUCTION_2026-10-16.md).
+- Main finding: the baseline reproduces, but there is no clear overall model winner. Patient-relative physiology improves AUROC over the temporal baseline but worsens Brier at all horizons. Platt calibration sharply reduces Brier for class-balanced models but leaves effectively zero sensitivity at the fixed 0.5 threshold.
+- Set B remained evaluation-only. It must not be used to select a threshold or calibrator.
+- The workflow passing is a reproducibility milestone, not clinical validation. Independent statistical/methods review, an independent clinical cohort, prospective/governance evidence, and the human release decision remain open. Do not begin patient-connected hardware or clinical deployment based on these results.
