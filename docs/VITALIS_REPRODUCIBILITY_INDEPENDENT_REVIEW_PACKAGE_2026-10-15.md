@@ -11,8 +11,32 @@
 - Python 3.13 diagnostic run [38843467715](https://github.com/culprit-k/VITALIS/actions/runs/38843467715) also completed successfully on the same source commit and matched **42/42 pairs, 84/84 scalars, zero mismatches** against the unchanged historical reference. Aggregate-only artifact: [12023100824](https://github.com/culprit-k/VITALIS/actions/runs/38843467715/artifacts/12023100824). This diagnostic workflow is not itself the acceptance gate.
 - I compared the two retained aggregate JSON files: Set B test metrics and patient-warning metrics for all nine horizon/seed runs and both baseline models were identical between these Python 3.11 and Python 3.13 executions. This closes the same-source cross-runtime comparison for this pair of runs; it does not establish cross-hardware determinism or explain the earlier five mismatches.
 - Mean temporal-model Set B metrics across seeds (research threshold 0.5): 1 h AUROC 0.656890, AUPRC 0.003170, Brier 0.131964, sensitivity 0.400798, PPV 0.003191, alerts per at-risk patient-day 1.4616, future-positive-window coverage 0.1172; 3 h AUROC 0.680004, AUPRC 0.012639, Brier 0.131344, sensitivity 0.415134, PPV 0.010771, alerts/day 1.2763, coverage 0.2934; 6 h AUROC 0.686375, AUPRC 0.026433, Brier 0.142186, sensitivity 0.445697, PPV 0.022373, alerts/day 1.2566, coverage 0.5680. The very low PPV and alert burden are important limitations; these results do not establish clinical utility.
-- The push-triggered extended-analysis run [38843462832](https://github.com/culprit-k/VITALIS/actions/runs/38843462832) is still in progress. The core nine-run evaluation has completed and the physiology ablation step is running; calibration and final artifact validation have not yet completed. No new ablation/calibration results are claimed here.
+- At the time of this update, the push-triggered extended-analysis run was still in progress. Its final status and results are recorded in the separate 16 October section above.
 - Set A remains the model-development/calibration cohort and Set B remains evaluation-only. No raw cohort data, patient identifiers, caches, or row-level predictions are included in the retained artifacts. The historical baseline and six-decimal acceptance rule were not changed.
+
+## Extended-analysis results and reproducibility discrepancy — 16 October 2026
+
+The extended run [#38843462832](https://github.com/culprit-k/VITALIS/actions/runs/38843462832), on source commit `62fe82e1dc1c8ea06fe8c8f74d495d935d8b8db7`, completed both the predeclared physiology ablation and Set A calibration experiment and uploaded aggregate-only artifacts. However, its core baseline reconciliation **failed**: 37/42 mean/sample-SD pairs and 75/84 scalar values matched; five temporal-model metrics failed the six-decimal acceptance rule. This run must be retained as a failure, not relabeled as a pass. The passing core run [#38843467722](https://github.com/culprit-k/VITALIS/actions/runs/38843467722) and this failing extended run used the same source commit.
+
+The numerical-backend diagnostics show a different runner/backend configuration: the failing extended run used an AMD EPYC 7763 host with OpenBLAS architecture dispatch `Haswell`; the successful run's recorded backend used an Intel Xeon Platinum 8573C host with OpenBLAS `SkylakeX`. This is a plausible contributor to numerical variation, not proof that CPU dispatch alone caused every mismatch. Do not change the acceptance rule or baseline to hide the discrepancy. The currently running core reproduction on the documentation commit must also be checked before the reproduction gate is considered robust.
+
+### Fresh physiology-ablation result (extended run #38843462832)
+
+| Horizon | Temporal baseline AUROC / AUPRC / Brier | Temporal + patient-relative physiology AUROC / AUPRC / Brier | Sensitivity baseline → candidate | PPV baseline → candidate |
+|---:|---:|---:|---:|---:|
+| 1 h | 0.656890 / 0.003170 / 0.131964 | 0.666282 / 0.003479 / 0.138077 | 0.400798 → 0.428364 | 0.003191 → 0.003248 |
+| 3 h | 0.680004 / 0.012639 / 0.131345 | 0.689820 / 0.013419 / 0.135656 | 0.415134 → 0.440400 | 0.010771 → 0.011123 |
+| 6 h | 0.686375 / 0.026433 / 0.142186 | 0.695591 / 0.027696 / 0.145114 | 0.445697 → 0.465526 | 0.022373 → 0.023065 |
+
+Values are means across seeds. The candidate improves ranking and sensitivity modestly, but worsens Brier score at every horizon. PPV remains very low. Decision: **do not promote the physiology candidate as the best model**; probability quality and alert burden still need work.
+
+### Fresh Set A calibration comparison (extended run #38843462832)
+
+The experiment successfully used patient-disjoint Set A fit/calibration/unused-holdout partitions and kept Set B evaluation-only. It compared balanced and unweighted objectives for the temporal baseline and physiology model. Under the fixed 0.5 diagnostic threshold, Platt scaling often compresses probabilities so strongly that sensitivity is zero or nearly zero. The unweighted models already produce low Brier scores largely because predicted probabilities are tiny in this rare-label setting, while sensitivity at 0.5 is zero or nearly zero. Brier improvement alone therefore does **not** demonstrate useful calibration. The monotone Platt transform does not materially improve AUROC/AUPRC, and no Set B threshold tuning was performed.
+
+Decision: **do not promote the Platt-calibrated outputs for alerts**. Next model experiment should use a predeclared, prevalence-aware objective and choose any candidate operating point using only patient-disjoint Set A validation, then freeze it before a single Set B evaluation. Report calibration intercept/slope, Brier, log loss, AUROC/AUPRC, sensitivity, PPV, alerts per at-risk patient-day, and patient-cluster uncertainty together.
+
+These findings are retrospective research metrics against Challenge `SepsisLabel` window-entry targets, not clinical sepsis onset. Set B is not an external clinical validation cohort; no alert threshold here is clinically approved.
 
 ## Historical verification status update — 15 October 2026, 11:00 Uzbekistan time
 
