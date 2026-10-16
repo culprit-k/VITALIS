@@ -59,3 +59,24 @@ The previously successful pinned Python 3.11 run [#38748749241](https://github.c
 There is useful positive evidence: the cache-integrity audit hashes are identical between these artifacts for both cohorts, including schema, ordered source file list, X/y/group arrays, feature summaries, cohort counts, and patient-block checks. The source cohort fingerprints also match. Thus the audited data/cache identity is consistent, while the evaluator source revision differs. This isolates the next required experiment: run the pinned Python 3.11 acceptance workflow against the current evaluator source blob `891b84ad4a5da039f1dc38411211c503c971167c`, then compare its aggregate output and model diagnostics with the Python 3.13 run on the same source. Do not attribute the discrepancy to Python/BLAS until this same-source comparison is complete.
 
 The concurrency-only workflow maintenance commit `b626ca6f723b293820a17175a11396018112ab29` fixed duplicate concurrency configuration and was intended to allow a fresh pinned workflow to run without cancelling another expensive cohort job. Preserve both prior artifacts; do not overwrite the historical baseline or relax the six-decimal acceptance rule.
+
+
+## Same-commit Python 3.11 CPU-dispatch comparison — 16 October 2026
+
+Two fresh full-cohort runs of the same source commit `dfe00af5dd5611b82a27381c9bf9841b37e5e0ca`, both using Python 3.11.17 and the same pinned scientific package versions, produced different baseline reconciliation outcomes:
+
+- Passing PR-triggered run [#38837327041](https://github.com/culprit-k/VITALIS/actions/runs/38837327041): 42/42 mean/sample-SD pairs and 84/84 scalar values matched at six decimal places.
+- Failing push-triggered run [#38837321948](https://github.com/culprit-k/VITALIS/actions/runs/38837321948): 37/42 pairs and 75/84 scalar values matched; five temporal-model pairs failed.
+- The two artifacts have identical Set A/Set B cache-array hashes (X, y, and patient groups), schema hashes, ordered source-file hashes, and cohort audit counts. Their `pip freeze` outputs match, and neither artifact reports model-fit warnings.
+- The captured OpenBLAS 0.3.30 runtime dispatch differs: the failing run reports `Haswell`; the passing run reports `SkylakeX`. Both report one BLAS thread. NumPy's build configuration lists the same OpenBLAS build, but runtime CPU dispatch selects different kernels.
+
+This is stronger evidence for hardware-dependent floating-point differences than the prior cross-Python comparison. It still does not prove that CPU dispatch is the sole cause of every mismatch. Differences in temporal score metrics and threshold-based alert counts indicate that small numerical changes can cross the fixed 0.5 threshold and affect downstream warning metrics.
+
+### Current decision
+
+- The optional extended-analysis CI condition is fixed in commit `dfe00af5dd5611b82a27381c9bf9841b37e5e0ca`; that correction does not resolve the same-commit numerical variation.
+- Keep the six-decimal rule and the 14 October historical baseline unchanged pending independent review. Do not count one successful run as proof of reliable reproducibility when another run of the same commit fails.
+- Next, make the numerical backend/runner policy explicit and validate it in a controlled experiment. Any choice that changes numerical results or requires a new reference aggregate must be documented as a separately versioned baseline with independent review; never overwrite the historical file silently.
+- Set B remains evaluation-only. No model, threshold, or feature changes may be selected based on Set B. Do not export patient-level predictions or identifiers.
+
+VITALIS remains a retrospective research prototype, not clinically validated and not for patient-care decisions.
