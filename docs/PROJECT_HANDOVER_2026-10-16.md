@@ -1,19 +1,18 @@
 # VITALIS research prototype handover — 16 October 2026
 
 **Repository:** https://github.com/culprit-k/VITALIS  
-**Branch:** `work/strict-reproducibility-gate`  
-**Latest documentation commit:** `93de456b4e42272144bab72163091a3265fec661`  
-**Verified code-bearing source commit:** `49d13fc769d8596cae76fddd2974962563a074d5`  
-**Pull request:** https://github.com/culprit-k/VITALIS/pull/2  
+**Default branch:** `main`  
+**Main integration commit:** `e4dd10bff7159a7bf419ed2ccae690edd0dcb479`  
+**Reproducibility changes PR:** https://github.com/culprit-k/VITALIS/pull/2 (merged)  
 **Disposition:** reproducible research prototype; not a clinical release.
 
 ## Current execution evidence
 
-The following latest-head workflows completed successfully on 16 October 2026 for documentation commit `93de456b4e42272144bab72163091a3265fec661`:
+The following evidence was verified across the reproducibility branch and subsequent `main` integration on 16 October 2026. The current `main` commit has a passing standard test workflow; the full-cohort acceptance evidence below is from the pinned Python 3.11 clean-checkout workflow on the documented reproducibility commit, not a new full-cohort run on `main`:
 
-- Standard CI, including compileall, source manifest, repository hygiene, reachable-history audit, synthetic twin stream demo, integrated-inference demo, and pytest: https://github.com/culprit-k/VITALIS/actions/runs/38880081362 — passed.
-- Reporting/dashboard tests: https://github.com/culprit-k/VITALIS/actions/runs/38880081293 — passed.
-- Pinned Python 3.11 clean-checkout full-cohort workflow: https://github.com/culprit-k/VITALIS/actions/runs/38880081272 — passed.
+- Standard CI, including compileall, source manifest, repository hygiene, reachable-history audit, synthetic twin stream demo, integrated-inference demo, and pytest: https://github.com/culprit-k/VITALIS/actions/runs/38880081362 — passed on the reproducibility branch.
+- Reporting/dashboard tests: https://github.com/culprit-k/VITALIS/actions/runs/38880081293 — passed on the reproducibility branch.
+- Pinned Python 3.11 clean-checkout full-cohort workflow: https://github.com/culprit-k/VITALIS/actions/runs/38880081272 — passed on the reproducibility branch.
 - Full-cohort pytest: 218 passed.
 - Pinned Python 3.11 reconciliation: 42/42 mean/sample-standard-deviation pairs and 84/84 scalar values matched the preserved aggregate under the existing six-decimal rule; zero mismatches. The workflow retained an aggregate-only artifact with provenance. Artifact: https://github.com/culprit-k/VITALIS/actions/runs/38880081272/artifacts/12037367815
 - Python 3.13 diagnostic: https://github.com/culprit-k/VITALIS/actions/runs/38880082111 — failed at the baseline-compatible CPU preflight because the runner did not expose required AVX-512F. It stopped before Python setup, dataset download, or evaluation. This is a runner-compatibility diagnostic, not evidence of model failure, and Python 3.13 is not the acceptance environment.
@@ -79,7 +78,11 @@ Obtain the PhysioNet/CinC Challenge 2019 dataset under its access terms, then ru
 3. **Calibration/operating point:** the Set-A Platt experiment has near-zero sensitivity at the fixed 0.5 reference threshold. The threshold is experimental, not clinically selected; alert burden/PPV remains a major limitation.
 4. **Twin integration:** the adaptive twin produces a unitless heuristic deviation/trajectory score, not a sepsis probability. A frozen supervised model artifact is not wired into the demo, so trained-model inference is not available through that demo.
 5. **Clinical evidence:** no prospective silent-mode study, independent external clinical validation, clinical utility study, or patient-benefit evidence exists. No claim of patentability, regulatory clearance, or clinical readiness is made here.
-6. **Release decision:** PR #2 remains draft and unmerged until the independent review and final human release decision are recorded.
+6. **Repository integration:** PR #2 is merged and the reproducibility work is present on `main`. That merge is a code/documentation integration milestone, not clinical release approval. A new full-cohort run on `main` and independent human review remain separate gates.
+
+## Hardware and deployment boundary
+
+No patient-connected sensor hardware, embedded firmware, clinical monitor integration, or bedside deployment has been built or validated in this repository. Any hardware phase must start with a non-patient bench prototype and a documented interface/safety plan; it must not be connected to patients or used for treatment decisions. Sensor accuracy, synchronization, missing-data behavior, electrical safety, cybersecurity, and device/regulatory requirements need separate engineering and expert review.
 
 ## Scientific interpretation guardrails
 
