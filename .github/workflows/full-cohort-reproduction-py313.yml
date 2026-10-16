@@ -36,6 +36,8 @@ jobs:
       PYTHONHASHSEED: "0"
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
+      # Force the same supported OpenBLAS kernel across heterogeneous GitHub-hosted CPUs.
+      OPENBLAS_CORETYPE: "Haswell"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
       AWS_RETRY_MODE: standard
@@ -149,7 +151,7 @@ jobs:
               "cpu_model": cpu_model,
               "numpy_version": np.__version__,
               "thread_environment": {key: os.environ.get(key) for key in (
-                  "PYTHONHASHSEED", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                  "PYTHONHASHSEED", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "OPENBLAS_CORETYPE",
                   "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS")},
               "threadpools": threadpool_info(),
               "numpy_build_configuration": config_buffer.getvalue(),
