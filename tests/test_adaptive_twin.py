@@ -192,3 +192,44 @@ def test_custom_channels_must_have_explicit_system_mapping():
         assert "channel_systems" in str(exc)
     else:
         raise AssertionError("unmapped channel should be rejected")
+
+
+def test_unknown_observation_keys_are_ignored_without_state_creation():
+    t = twin()
+    warm(t)
+    result = t.update({
+        "heart_rate": 70,
+        "spo2": 98,
+        "respiratory_rate": 16,
+        "patient_id": "must-not-become-a-channel",
+        "unconfigured_sensor": 999,
+    })
+    assert "patient_id" not in result["channels"]
+    assert "unconfigured_sensor" not in result["channels"]
+    assert set(t.states) == {"heart_rate", "spo2", "respiratory_rate"}
+
+
+def test_reset_channel_clears_history_and_trajectory_continuity():
+    t = twin()
+    warm(t)
+    t.update({"heart_rate": 110, "spo2": 90, "respiratory_rate": 28})
+    t.reset_channel("heart_rate")
+    result = t.update({"heart_rate": 75, "spo2": 97, "respiratory_rate": 17})
+    assert result["channels"]["heart_rate"]["history_count"] == 0
+    assert result["channels"]["heart_rate"]["baseline"] is None
+    assert result["trajectory_direction"] is None
+
+
+def test_rejects_nonfinite_or_nonpositive_custom_scale_floors():
+    import pytest
+
+    with pytest.raises(ValueError, match="finite and positive"):
+        AdaptivePhysiologicalTwin(
+            channels=["heart_rate"],
+            scale_floors={"heart_rate": float("nan")},
+        )
+    with pytest.raises(ValueError, match="finite and positive"):
+        AdaptivePhysiologicalTwin(
+            channels=["heart_rate"],
+            scale_floors={"heart_rate": 0},
+        )
