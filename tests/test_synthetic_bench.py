@@ -90,6 +90,9 @@ def test_source_replacement_is_counted_and_starts_new_channel_history():
     replacement_time = at + timedelta(minutes=1)
     assert stream.ingest(obs("heart_rate", replacement_time, 74, source="bench-B"))
     assert stream.source_change_counts["heart_rate"] == 1
+    # The stream buffers accepted observations; the twin consumes the replacement
+    # sample only when the next aligned frame is scored.
+    stream.score(replacement_time)
     assert stream.twin.states["heart_rate"].values == [74.0]
 
 
