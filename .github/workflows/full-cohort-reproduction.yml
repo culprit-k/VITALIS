@@ -23,6 +23,8 @@ on:
       - "scripts/evaluate_set_a_threshold_sweep.py"
       - "tests/test_set_a_threshold_sweep.py"
       - "docs/SET_A_OPERATING_THRESHOLD_PROTOCOL.md"
+      # Re-run strict reproduction when the four-gate acceptance plan changes.
+      - "docs/FOUR_GATE_EXECUTION_PLAN_2026-10-17.md"
       - "scripts/evaluate_set_a_platt_calibration.py"
       - "scripts/evaluate_physiological_features.py"
       - "src/vitalis/calibration_uncertainty.py"
