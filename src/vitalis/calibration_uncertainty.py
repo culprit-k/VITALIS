@@ -6,6 +6,114 @@ import numpy as np
 DEFAULT_CALIBRATION_BINS = (0.0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 0.5, 1.0)
 
 
+def patient_cluster_calibration_intercept_slope(labels, probabilities, patient_ids) -> dict[str, object]:
+    """Estimate calibration intercept/slope with patient-cluster sandwich intervals.
+
+    Fit the descriptive logistic recalibration regression outcome ~ intercept +
+    slope * logit(predicted probability), without applying a transformation to
+    the scores. The covariance uses patient-level score sums (CR1 finite-sample
+    correction); intervals are asymptotic normal 95% intervals conditional on
+    the frozen predictions and cohort. Separation or non-identifiable inputs
+    yield explicit undefined statuses rather than fabricated finite estimates.
+    """
+    from scipy.optimize import minimize
+    from scipy.special import expit
+
+    y = np.asarray(labels, dtype=np.int8)
+    p = np.asarray(probabilities, dtype=np.float64)
+    groups = np.asarray(patient_ids)
+    if y.ndim != 1 or p.ndim != 1 or groups.ndim != 1 or len(y) == 0 or not (len(y) == len(p) == len(groups)):
+        raise ValueError("labels, probabilities and patient_ids must be nonempty aligned vectors")
+    if not np.isin(y, [0, 1]).all() or not np.isfinite(p).all() or np.any((p < 0) | (p > 1)):
+        raise ValueError("labels must be binary and probabilities finite in [0, 1]")
+    if groups.dtype.kind in "fc" and np.isnan(groups).any():
+        raise ValueError("patient_ids cannot be missing")
+    if groups.dtype.kind == "O" and any(x is None or (isinstance(x, float) and np.isnan(x)) for x in groups):
+        raise ValueError("patient_ids cannot be missing")
+    boundaries = np.r_[0, np.flatnonzero(groups[1:] != groups[:-1]) + 1, len(groups)]
+    seen = set()
+    for start, end in zip(boundaries[:-1], boundaries[1:]):
+        value = groups[start].item() if hasattr(groups[start], "item") else groups[start]
+        if value in seen:
+            raise ValueError("patient rows must form contiguous blocks")
+        seen.add(value)
+    n_patients = len(boundaries) - 1
+    undefined = {
+        "calibration_intercept": None,
+        "calibration_slope": None,
+        "calibration_intercept_standard_error": None,
+        "calibration_slope_standard_error": None,
+        "calibration_intercept_slope_intervals_95": None,
+    }
+    method = "patient-cluster sandwich covariance (CR1 finite-sample correction), asymptotic normal 95% intervals"
+    if n_patients < 2:
+        return {**undefined, "calibration_intercept_slope_status": "undefined_too_few_patients",
+                "calibration_intercept_slope_uncertainty_method": method}
+    if len(np.unique(y)) < 2:
+        return {**undefined, "calibration_intercept_slope_status": "undefined_single_class_target",
+                "calibration_intercept_slope_uncertainty_method": method}
+    clipped = np.clip(p, 1e-12, 1 - 1e-12)
+    logits = np.log(clipped / (1.0 - clipped))
+    if float(np.ptp(logits)) <= 1e-12:
+        return {**undefined, "calibration_intercept_slope_status": "undefined_constant_predicted_log_odds",
+                "calibration_intercept_slope_uncertainty_method": method}
+    design = np.column_stack((np.ones(len(y), dtype=np.float64), logits))
+
+    def objective(beta):
+        eta = design @ beta
+        return float(np.sum(np.logaddexp(0.0, eta) - y * eta))
+
+    def gradient(beta):
+        eta = design @ beta
+        return design.T @ (expit(eta) - y)
+
+    prevalence = float(y.mean())
+    beta0 = np.asarray([np.log(prevalence / (1 - prevalence)) - float(logits.mean()), 1.0])
+    fit = minimize(objective, beta0, jac=gradient, method="L-BFGS-B",
+                   bounds=((-25.0, 25.0), (-25.0, 25.0)),
+                   options={"maxiter": 2000, "ftol": 1e-12, "gtol": 1e-8})
+    if not fit.success:
+        return {**undefined, "calibration_intercept_slope_status": "undefined_optimization_failed",
+                "calibration_intercept_slope_uncertainty_method": method}
+    beta = np.asarray(fit.x, dtype=np.float64)
+    if np.any(np.abs(beta) >= 24.99):
+        return {**undefined, "calibration_intercept_slope_status": "undefined_boundary_solution_possible_separation",
+                "calibration_intercept_slope_uncertainty_method": method}
+    fitted = expit(design @ beta)
+    weights = fitted * (1.0 - fitted)
+    information = design.T @ (weights[:, None] * design)
+    try:
+        bread = np.linalg.inv(information)
+    except np.linalg.LinAlgError:
+        return {**undefined, "calibration_intercept_slope_status": "undefined_singular_information",
+                "calibration_intercept_slope_uncertainty_method": method}
+    residual = y - fitted
+    row_scores = design * residual[:, None]
+    cluster_scores = np.add.reduceat(row_scores, boundaries[:-1], axis=0)
+    meat = cluster_scores.T @ cluster_scores
+    correction = (n_patients / (n_patients - 1)) * ((len(y) - 1) / max(len(y) - 2, 1))
+    covariance = bread @ meat @ bread * correction
+    if not np.isfinite(covariance).all() or np.any(np.diag(covariance) < 0):
+        return {**undefined, "calibration_intercept_slope_status": "undefined_invalid_covariance",
+                "calibration_intercept_slope_uncertainty_method": method}
+    standard_errors = np.sqrt(np.diag(covariance))
+    limits = np.column_stack((beta - 1.959963984540054 * standard_errors,
+                              beta + 1.959963984540054 * standard_errors))
+    return {
+        "calibration_intercept": float(beta[0]),
+        "calibration_slope": float(beta[1]),
+        "calibration_intercept_standard_error": float(standard_errors[0]),
+        "calibration_slope_standard_error": float(standard_errors[1]),
+        "calibration_intercept_slope_intervals_95": {
+            "calibration_intercept": {"lower": float(limits[0, 0]), "upper": float(limits[0, 1])},
+            "calibration_slope": {"lower": float(limits[1, 0]), "upper": float(limits[1, 1])},
+        },
+        "calibration_intercept_slope_status": "estimated",
+        "calibration_intercept_slope_uncertainty_method": method,
+        "calibration_intercept_slope_patients": int(n_patients),
+    }
+
+
 def patient_cluster_bootstrap_calibration_metrics(
     labels,
     probabilities,

@@ -54,9 +54,13 @@ def test_paired_brier_bootstrap_is_paired_and_aggregate_only():
 
 def test_calibration_summary_is_descriptive_and_does_not_transform_probabilities():
     y = np.asarray([0, 0, 0, 1, 0, 1, 0, 0], dtype=np.int8)
-    p = np.asarray([0.1, 0.2, 0.15, 0.7, 0.3, 0.6, 0.05, 0.2])
-    result = calibration_summary(y, p)
+    p = np.asarray([0.1, 0.7, 0.15, 0.2, 0.8, 0.6, 0.05, 0.4])
+    groups = np.repeat(np.arange(4), 2)
+    result = calibration_summary(y, p, groups)
     assert np.isfinite(result["calibration_intercept_slope_fixed_1"])
     assert np.isfinite(result["calibration_intercept_free_slope"])
     assert np.isfinite(result["calibration_slope"])
+    cluster = result["patient_cluster_intercept_slope_uncertainty"]
+    assert cluster["calibration_intercept_slope_status"] == "estimated"
+    assert cluster["calibration_intercept_slope_intervals_95"] is not None
     assert "no calibration transformation applied" in result["interpretation"]
