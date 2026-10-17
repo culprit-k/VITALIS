@@ -56,7 +56,7 @@ def test_probability_metrics_include_prevalence_reference_and_aggregate_only_bin
 
 def test_probability_metrics_report_calibration_intercept_and_slope():
     y = np.array([0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0], dtype=np.int8)
-    p = np.array([.1, .4, .3, .7, .2, .6, .55, .45, .8, .3, .65, .9, .15, .25, .5, .4])
+    p = np.array([.1, .4, .3, .35, .2, .6, .55, .45, .8, .3, .65, .9, .15, .25, .5, .7])
     out = MOD.probability_metrics(y, p)
 
     assert out["calibration_intercept_slope_status"] == "estimated"
