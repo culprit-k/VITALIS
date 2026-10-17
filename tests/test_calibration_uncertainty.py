@@ -40,6 +40,47 @@ def test_point_estimates_match_sklearn_brier_and_log_loss():
     assert out["point_estimates"]["brier_minus_constant_prevalence_reference"] == pytest.approx(brier_score_loss(y, p) - prevalence * (1-prevalence))
 
 
+def test_patient_cluster_calibration_intercept_slope_reports_robust_intervals():
+    y0 = np.array([0, 0, 0, 1, 0, 1, 0, 0], dtype=np.int8)
+    p0 = np.array([0.1, 0.7, 0.15, 0.2, 0.8, 0.6, 0.05, 0.4])
+    groups = np.repeat(np.arange(30), len(y0))
+    y = np.tile(y0, 30)
+    p = np.tile(p0, 30)
+
+    out = MOD.patient_cluster_calibration_intercept_slope(y, p, groups)
+
+    assert out["calibration_intercept_slope_status"] == "estimated"
+    assert np.isfinite(out["calibration_intercept"])
+    assert np.isfinite(out["calibration_slope"])
+    assert out["calibration_intercept_standard_error"] >= 0
+    assert out["calibration_slope_standard_error"] >= 0
+    intervals = out["calibration_intercept_slope_intervals_95"]
+    assert intervals["calibration_intercept"]["lower"] <= out["calibration_intercept"]
+    assert intervals["calibration_intercept"]["upper"] >= out["calibration_intercept"]
+    assert intervals["calibration_slope"]["lower"] <= out["calibration_slope"]
+    assert intervals["calibration_slope"]["upper"] >= out["calibration_slope"]
+    assert out["calibration_intercept_slope_patients"] == 30
+    assert "patient-cluster sandwich" in out["calibration_intercept_slope_uncertainty_method"]
+
+
+def test_patient_cluster_calibration_intercept_slope_handles_nonidentifiable_inputs():
+    out = MOD.patient_cluster_calibration_intercept_slope(
+        np.array([0, 0, 0, 0], dtype=np.int8),
+        np.array([0.1, 0.2, 0.3, 0.4]),
+        np.repeat(np.arange(2), 2),
+    )
+    assert out["calibration_intercept"] is None
+    assert out["calibration_slope"] is None
+    assert out["calibration_intercept_slope_status"] == "undefined_single_class_target"
+
+
+def test_patient_cluster_calibration_intercept_slope_rejects_noncontiguous_groups():
+    with pytest.raises(ValueError, match="contiguous"):
+        MOD.patient_cluster_calibration_intercept_slope(
+            [0, 1, 0, 1], [0.1, 0.8, 0.2, 0.7], [1, 2, 1, 2]
+        )
+
+
 def test_rejects_patient_reappearance_and_bad_vectors():
     with pytest.raises(ValueError, match="contiguous"):
         MOD.patient_cluster_bootstrap_calibration_metrics([0, 1, 0], [.1, .8, .2], [1, 2, 1], n_bootstrap=20)
