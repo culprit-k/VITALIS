@@ -455,13 +455,19 @@ jobs:
         if: ${{ success() && (inputs.run_extended_analyses == true || (github.event_name == 'push' && contains(github.event.head_commit.message, '[extended-analysis]'))) }}
         run: |
           python - <<'PY'
-          import json, os
+          import json, math, os
           from pathlib import Path
           p = Path(os.environ["RUNNER_TEMP"]) / "vitalis_physiological_feature_ablation.json"
           if not p.exists():
               raise SystemExit("Required physiology/probability-quality artifact is missing.")
           d = json.loads(p.read_text())
           assert len(d.get("runs", [])) == 9, "Expected 9 horizon/seed runs."
+          allowed_calibration_status = {
+              "estimated", "undefined_too_few_patients", "undefined_single_class_target",
+              "undefined_constant_predicted_log_odds", "undefined_optimization_failed",
+              "undefined_boundary_solution_possible_separation", "undefined_singular_information",
+              "undefined_invalid_covariance",
+          }
           for run in d["runs"]:
               models = run["models"]
               assert "temporal_baseline" in models
@@ -469,13 +475,34 @@ jobs:
               for name in ("temporal_baseline", "temporal_plus_personal_physiology"):
                   cal = models[name]["set_b_row_metrics"].get("calibration_diagnostics")
                   assert cal and cal["calibration_fit_converged"], f"Missing calibration diagnostics: {name}"
+                  cluster = cal.get("patient_cluster_intercept_slope_uncertainty")
+                  assert isinstance(cluster, dict), f"Missing patient-cluster calibration uncertainty: {name}"
+                  status = cluster.get("calibration_intercept_slope_status")
+                  assert status in allowed_calibration_status, f"Unknown calibration fit status: {name}: {status}"
+                  intervals = cluster.get("calibration_intercept_slope_intervals_95")
+                  if status == "estimated":
+                      assert intervals and cluster.get("calibration_intercept") is not None
+                      assert cluster.get("calibration_slope") is not None
+                      assert math.isfinite(float(cluster["calibration_intercept_standard_error"]))
+                      assert math.isfinite(float(cluster["calibration_slope_standard_error"]))
+                      for coefficient in ("calibration_intercept", "calibration_slope"):
+                          bounds = intervals.get(coefficient)
+                          point = float(cluster[coefficient])
+                          assert bounds and math.isfinite(float(bounds["lower"])) and math.isfinite(float(bounds["upper"]))
+                          assert float(bounds["lower"]) <= point <= float(bounds["upper"])
+                  else:
+                      assert intervals is None, f"Undefined calibration fit must not expose intervals: {name}"
+                      assert cluster.get("calibration_intercept") is None
+                      assert cluster.get("calibration_slope") is None
               paired = run.get("paired_probability_quality", {}).get("temporal_baseline_vs_candidate_brier")
               assert paired and paired["bootstrap_replicates"] == 200
               assert paired["bootstrap_unit"] == "Set B patient cluster"
               assert "patient_ids" not in json.dumps(run).lower()
+              assert '"predictions"' not in json.dumps(run).lower()
           assert d["protocol"]["Set_B_role"] == "evaluation only"
           assert d["protocol"]["no_Set_B_fit_or_selection"] is True
           print(json.dumps({"runs": len(d["runs"]), "calibration_diagnostics": "complete",
+            "patient_cluster_calibration_intervals": "complete-or-explicitly-undefined",
             "paired_brier_intervals": "complete", "Set_B_role": "evaluation only",
             "row_level_predictions_retained": False}, indent=2))
           PY
