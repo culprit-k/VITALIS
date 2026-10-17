@@ -64,7 +64,7 @@ jobs:
       AWS_MAX_ATTEMPTS: "5"
     steps:
       - name: Checkout exact source commit (not synthetic PR merge commit)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
@@ -91,7 +91,7 @@ jobs:
           }
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11.17"
           cache: pip
@@ -637,7 +637,7 @@ jobs:
 
       - name: Retain aggregate outputs and provenance (no patient-level artifacts)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vitalis-clean-checkout-reproduction-${{ github.sha }}
           path: |
