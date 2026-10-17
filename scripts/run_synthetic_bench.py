@@ -91,7 +91,7 @@ def run_bench(frames: int = 1000) -> dict[str, Any]:
     assert not fault.ingest(Observation("heart_rate", at + timedelta(seconds=1), 70, "beats/min"))
     assert not fault.ingest(Observation("spo2", at + timedelta(seconds=1), math.nan, "%"))
     assert not fault.ingest(Observation("spo2", at + timedelta(seconds=1), 98, "%", quality="poor"))
-    assert not fault.ingest(Observation("heart_rate", at + timedelta(seconds=1), 72, "bpm", source="synthetic-A"))
+    assert not fault.ingest(Observation("heart_rate", at, 72, "bpm", source="synthetic-A"))
     fault.score(at + timedelta(seconds=MAX_AGE_SECONDS + 2))
     stale_coverage_zero = fault.score(at + timedelta(seconds=MAX_AGE_SECONDS + 2))["coverage"] == 0
 
@@ -104,6 +104,10 @@ def run_bench(frames: int = 1000) -> dict[str, Any]:
     assert fault.ingest(Observation("heart_rate", replacement_time, 74, "bpm", source="synthetic-B"))
     fault.score(replacement_time)
     source_replacement_counted = fault.source_change_counts["heart_rate"] == 1
+    bad_unit_rejected = fault.rejected["bad_unit"] == 1
+    non_finite_value_rejected = fault.rejected["bad_value"] == 1
+    poor_quality_rejected = fault.rejected["bad_quality"] == 1
+    out_of_order_rejected = fault.rejected["out_of_order"] == 1
     fault.reset()
     reset_clears_state = fault.twin.steps == 0 and all(not state.values for state in fault.twin.states.values())
     reset_coverage_zero = fault.score(replacement_time + timedelta(seconds=1))["coverage"] == 0
@@ -115,10 +119,10 @@ def run_bench(frames: int = 1000) -> dict[str, Any]:
     functional_checks = {
         "valid_replay_completed": len(signature) == frames,
         "deterministic_replay": deterministic,
-        "bad_unit_rejected": fault.rejected["bad_unit"] == 1,
-        "non_finite_value_rejected": fault.rejected["bad_value"] == 1,
-        "poor_quality_rejected": fault.rejected["bad_quality"] == 1,
-        "out_of_order_rejected": fault.rejected["out_of_order"] == 1,
+        "bad_unit_rejected": bad_unit_rejected,
+        "non_finite_value_rejected": non_finite_value_rejected,
+        "poor_quality_rejected": poor_quality_rejected,
+        "out_of_order_rejected": out_of_order_rejected,
         "stale_data_not_scored": stale_coverage_zero,
         "valid_data_recovers_after_dropout": recovery_coverage_full,
         "source_replacement_counted": source_replacement_counted,
