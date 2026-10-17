@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from typing import TextIO
 
 from vitalis.adaptive_twin import AdaptivePhysiologicalTwin, TwinConfig
-from vitalis.stream import DEFAULT_UNITS, Observation, TimestampedTwinStream
+from vitalis.stream import Observation, TimestampedTwinStream
 
 SOURCE = "esp32-synthetic-v1"
 CHANNELS = {"heart_rate": "bpm", "spo2": "%"}
