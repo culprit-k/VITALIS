@@ -12,11 +12,11 @@ The software research prototype is releasable only when the following are true:
 - [x] Cohort-count and cache-integrity audits passed in run #39008672530: Set A 20,336 patients / 790,215 rows; Set B 20,000 / 761,995; zero malformed rows, nonbinary labels, or label reversions; patient blocks contiguous and lengths consistent. Set B remained evaluation-only; see the artifact and [execution report](https://github.com/culprit-k/VITALIS/blob/main/docs/MAIN_BRANCH_FULL_COHORT_REPRODUCTION_2026-10-16.md).
 - [x] Frozen-baseline reconciliation passed in run #39008672530: 42/42 metric mean/sample-SD pairs and 84/84 scalar values matched at six decimal places; zero mismatches. Independent review is still required; the historical baseline was not overwritten.
 - [ ] All probability models are compared to prevalence-only baselines; calibration is reported with Brier score, log loss, calibration intercept/slope, reliability bins, and uncertainty.
-- [ ] Operating-point selection uses Set A development patients only. Set B is evaluated once after decisions are frozen; no Set B threshold, calibration, or model selection.
-- [ ] The adaptive twin and the supervised forecast are shown as separate outputs. A twin deviation score is not a probability of sepsis.
-- [ ] Synthetic-stream and input-validation tests cover units, timestamps, missing/stale data, out-of-order samples, reset/patient isolation, flatlines, and gradual shifts.
-- [ ] Dashboard accepts aggregate metrics only; no raw patient data, patient IDs, row-level predictions, or caches are included in release artifacts.
-- [ ] Model card, data provenance, limitations, run commands, and artifact checksums are included.
+- [ ] New operating-point development must use patient-disjoint Set A development data only. Set B has already been examined in historical exploratory analyses and must never be reused for further threshold, calibration, feature, or model selection. Any final frozen policy needs evaluation on a genuinely new independent cohort; Set B is not prospective validation.
+- [x] The adaptive twin and supervised forecast are separate outputs: `src/vitalis/integrated_inference.py` keeps their contracts distinct, and `tests/test_integrated_inference.py` verifies that the twin heuristic is not the supervised probability and that missing predictors remain unavailable.
+- [x] Synthetic-stream and input-validation coverage is present in `tests/test_stream.py` and `tests/test_adaptive_twin.py`: units, timezone-aware timestamps, stale/future/out-of-order samples, reset and patient-state isolation, flatlines, and gradual shifts have regression tests. This is software-level synthetic coverage, not sensor/device validation.
+- [x] Aggregate-only dashboard behavior is implemented in `dashboard/app.py` and covered by `tests/test_reporting.py`; the inspected full-cohort artifact contains aggregate metrics and provenance, not raw cohort files, feature caches, patient identifiers, or row-level predictions.
+- [x] Model card, data provenance, limitations, reproducible run commands, and artifact checksums are documented in `docs/MODEL_CARD.md`, the clean-checkout report/runbook, the README, and this gate.
 - [ ] PR review completed; release tag only after the checks above pass.
 
 ## What the prototype can output
