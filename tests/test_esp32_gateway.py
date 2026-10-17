@@ -76,12 +76,12 @@ def test_stdin_replay_reports_aggregate_summary_only():
 
 
 def test_duplicate_channel_sequence_is_rejected_even_with_a_new_timestamp():
-    rows = "\\n".join([
+    rows = "\n".join([
         payload(seq=0, elapsed_ms=0),
         payload(seq=0, elapsed_ms=0, channel="spo2", value=98.0, unit="%"),
         # Same sequence/channel with a changed timestamp must not be treated as new data.
         payload(seq=0, elapsed_ms=500, value=73.0),
-    ]) + "\\n"
+    ]) + "\n"
     output = StringIO()
     assert run_lines(StringIO(rows), output=output) == 2
     lines = [json.loads(line) for line in output.getvalue().splitlines()]
@@ -97,12 +97,12 @@ def test_duplicate_channel_sequence_is_rejected_even_with_a_new_timestamp():
 
 
 def test_global_sequence_regression_is_rejected():
-    rows = "\\n".join([
+    rows = "\n".join([
         payload(seq=0, elapsed_ms=0),
         payload(seq=0, elapsed_ms=0, channel="spo2", value=98.0, unit="%"),
         payload(seq=2, elapsed_ms=2000),
         payload(seq=1, elapsed_ms=1000, channel="spo2", value=97.8, unit="%"),
-    ]) + "\\n"
+    ]) + "\n"
     output = StringIO()
     assert run_lines(StringIO(rows), output=output) == 2
     lines = [json.loads(line) for line in output.getvalue().splitlines()]
@@ -129,7 +129,7 @@ def test_end_to_end_synthetic_gateway_replay_reaches_twin_without_raw_output():
             value=98.0 - seq * 0.05, unit="%",
         ))
     output = StringIO()
-    assert run_lines(StringIO("\\n".join(messages) + "\\n"), output=output) == 0
+    assert run_lines(StringIO("\n".join(messages) + "\n"), output=output) == 0
     lines = [json.loads(line) for line in output.getvalue().splitlines()]
     summaries = [item for item in lines if item["type"] == "vitalis_twin_summary"]
     session = lines[-1]
