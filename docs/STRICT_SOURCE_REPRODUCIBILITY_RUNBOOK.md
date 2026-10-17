@@ -1,6 +1,6 @@
 # Strict source and full-cohort reproduction gate
 
-**Status:** procedure defined; a fresh clean-checkout, environment-captured full-cohort reproduction has **not** yet been completed. The environment is recorded but not fully locked until a reviewed lock file or immutable container is adopted. Do not mark this gate complete until a reviewer can inspect the command logs and aggregate comparison.
+**Status as of 17 October 2026:** the strict clean-checkout, environment-captured full-cohort procedure has completed successfully on the PR #17 head later merged to `main`: [run #39008672530](https://github.com/culprit-k/VITALIS/actions/runs/39008672530) passed 42/42 metric mean/sample-SD pairs and 84/84 scalar checks under the unchanged six-decimal rule. A new run targeting the code snapshot based on main commit `c7e8622d2ff883a1ece3e2f76d06d890947b690d` is being retried at [run #39016343505](https://github.com/culprit-k/VITALIS/actions/runs/39016343505); do not count it as passed until it completes and its artifact is reviewed. The environment is pinned but the host CPU must expose AVX-512F for the historical SkylakeX OpenBLAS kernel; incompatible runners must fail closed. Independent review remains required.
 
 ## Goal
 
