@@ -152,11 +152,11 @@ def run_one(ma, Xa, ya, ga, mb, Xb, yb, gb, horizon, seed, boot):
             },
             "set_b_raw": {
                 "metrics": raw_metrics,
-                "calibration": calibration_summary(tb.targets, p_raw),
+                "calibration": calibration_summary(tb.targets, p_raw, tb.patient_ids),
             },
             "set_b_platt_calibrated": {
                 "metrics": calibrated_metrics,
-                "calibration": calibration_summary(tb.targets, p_calibrated),
+                "calibration": calibration_summary(tb.targets, p_calibrated, tb.patient_ids),
             },
             "paired_brier_raw_vs_calibrated": paired_brier_cluster_bootstrap(
                 tb.targets, p_raw, p_calibrated, tb.patient_ids, boot, seed + horizon * 100000
