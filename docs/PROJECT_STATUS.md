@@ -1,5 +1,18 @@
 # VITALIS — project status in plain language
 
+## Exact post-merge reproduction — PASS (17 October 2026)
+
+- **Current main commit tested:** `eefad3664019a690c4520986875e05a9c9fe0b6f`.
+- **Strict full-cohort run:** [#39041430942](https://github.com/culprit-k/VITALIS/actions/runs/39041430942), all 30 workflow steps passed.
+- **Standard CI:** [#39041430943](https://github.com/culprit-k/VITALIS/actions/runs/39041430943), passed on the same commit.
+- **Aggregate/provenance artifact:** [#12105668062](https://github.com/culprit-k/VITALIS/actions/runs/39041430942/artifacts/12105668062), 230,276 bytes; expires 16 November 2026 at 15:51:36 UTC. ZIP SHA-256: `df475890f4671b215a1b3fa25e0affa34cd7b078f23c110b20104c974379f245` (matches the GitHub artifact digest).
+- **Frozen reconciliation:** PASS; 42/42 mean/sample-SD pairs and 84/84 scalar values matched at the unchanged six-decimal rule, with zero mismatches.
+- **Scope:** official Set A/Set B audits, fresh feature caches, nine predeclared 1/3/6-hour × three-seed evaluations, physiology ablation, patient-disjoint Set A calibration, Set A-only threshold sweep, aggregate-only checks, and provenance retention passed. Set B remained evaluation-only.
+- **Artifact inspection:** aggregate reports, manifests, fingerprints and protocols only; no raw cohort files, feature-cache files, patient identifiers, or individual predictions found.
+- **Scientific boundary:** Set B is a Challenge benchmark cohort, not genuinely external clinical validation. The prediction target is entry into the Challenge `SepsisLabel` positive window, not independently adjudicated sepsis onset. Retrospective reproduction is not clinical validation; independent review, physical bench/safety work, and external-cohort/governance work remain open.
+
+---
+
 **Status date:** 17 October 2026
 
 ## Fresh exact-current-main reproduction — PASS
