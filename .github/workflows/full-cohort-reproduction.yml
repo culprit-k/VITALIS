@@ -472,7 +472,7 @@ jobs:
               models = run["models"]
               assert "temporal_baseline" in models
               assert "temporal_plus_personal_physiology" in models
-              for name in ("temporal_baseline", "temporal_plus_personal_physiology"):
+              for name in ("static_baseline", "temporal_baseline", "temporal_plus_personal_physiology"):
                   cal = models[name]["set_b_row_metrics"].get("calibration_diagnostics")
                   assert cal and cal["calibration_fit_converged"], f"Missing calibration diagnostics: {name}"
                   cluster = cal.get("patient_cluster_intercept_slope_uncertainty")
