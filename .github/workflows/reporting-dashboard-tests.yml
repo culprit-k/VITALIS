@@ -3,7 +3,9 @@ name: reporting-dashboard-tests
 on:
   push:
     branches:
-      - work/strict-reproducibility-gate
+      - main
+      - "work/**"
+      - "ci/**"
     paths:
       - ".github/workflows/reporting-dashboard-tests.yml"
       - "src/vitalis/reporting.py"
@@ -12,13 +14,14 @@ on:
       - "pyproject.toml"
   pull_request:
     branches:
-      - work/exact-checkout-reproduction
+      - main
     paths:
       - ".github/workflows/reporting-dashboard-tests.yml"
       - "src/vitalis/reporting.py"
       - "tests/test_reporting.py"
       - "dashboard/app.py"
       - "pyproject.toml"
+  workflow_dispatch:
 
 permissions:
   contents: read
