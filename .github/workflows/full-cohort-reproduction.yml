@@ -16,12 +16,19 @@ on:
         default: true
   push:
     branches:
+      - main
       - work/set-a-threshold-sweep-implementation
     paths:
       - ".github/workflows/full-cohort-reproduction.yml"
       - "scripts/evaluate_set_a_threshold_sweep.py"
       - "tests/test_set_a_threshold_sweep.py"
       - "docs/SET_A_OPERATING_THRESHOLD_PROTOCOL.md"
+      - "scripts/evaluate_set_a_platt_calibration.py"
+      - "scripts/evaluate_physiological_features.py"
+      - "src/vitalis/calibration_uncertainty.py"
+      - "tests/test_calibration_uncertainty.py"
+      - "tests/test_set_a_platt_calibration.py"
+      - "tests/test_horizon_calibration.py"
   pull_request:
     branches:
       - work/exact-checkout-reproduction
