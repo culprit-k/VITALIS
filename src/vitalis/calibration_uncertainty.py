@@ -87,11 +87,10 @@ def patient_cluster_calibration_intercept_slope(labels, probabilities, patient_i
     except np.linalg.LinAlgError:
         return {**undefined, "calibration_intercept_slope_status": "undefined_singular_information",
                 "calibration_intercept_slope_uncertainty_method": method}
-    meat = np.zeros((2, 2), dtype=np.float64)
     residual = y - fitted
-    for start, end in zip(boundaries[:-1], boundaries[1:]):
-        score = design[start:end].T @ residual[start:end]
-        meat += np.outer(score, score)
+    row_scores = design * residual[:, None]
+    cluster_scores = np.add.reduceat(row_scores, boundaries[:-1], axis=0)
+    meat = cluster_scores.T @ cluster_scores
     correction = (n_patients / (n_patients - 1)) * ((len(y) - 1) / max(len(y) - 2, 1))
     covariance = bread @ meat @ bread * correction
     if not np.isfinite(covariance).all() or np.any(np.diag(covariance) < 0):
