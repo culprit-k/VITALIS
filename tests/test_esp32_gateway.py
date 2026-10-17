@@ -149,14 +149,14 @@ def test_gateway_reboot_banner_resets_sequence_and_twin_session():
     ready = json.dumps({
         "type": "vitalis_gateway_ready", "mode": "synthetic_only", "schema": 1
     })
-    rows = "\\n".join([
+    rows = "\n".join([
         ready,
         payload(seq=0, elapsed_ms=0),
         payload(seq=0, elapsed_ms=0, channel="spo2", value=98.0, unit="%"),
         ready,
         payload(seq=0, elapsed_ms=0),
         payload(seq=0, elapsed_ms=0, channel="spo2", value=97.9, unit="%"),
-    ]) + "\\n"
+    ]) + "\n"
     output = StringIO()
     assert run_lines(StringIO(rows), output=output) == 0
     lines = [json.loads(line) for line in output.getvalue().splitlines()]
