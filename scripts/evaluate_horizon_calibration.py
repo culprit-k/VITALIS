@@ -17,6 +17,8 @@ import warnings
 from pathlib import Path
 
 import numpy as np
+from scipy.optimize import minimize
+from scipy.special import expit
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, brier_score_loss, confusion_matrix, log_loss, roc_auc_score
@@ -115,6 +117,79 @@ def apply_platt_recalibrator(model: LogisticRegression, probabilities: np.ndarra
     return np.clip(model.predict_proba(logits)[:, 1], 1e-6, 1 - 1e-6)
 
 
+def calibration_intercept_slope(labels: np.ndarray, probabilities: np.ndarray) -> dict[str, object]:
+    """Estimate descriptive logistic calibration intercept/slope on frozen predictions.
+
+    Fits logit(observed outcome) = intercept + slope * logit(predicted risk)
+    by unpenalized maximum likelihood. Coefficients are bounded only to detect
+    separation/extreme non-identifiability; a boundary solution is returned as
+    undefined rather than reported as a finite calibration estimate. This
+    function is diagnostic only: it never changes probabilities or thresholds.
+    """
+    y = np.asarray(labels, dtype=np.int8)
+    p = np.asarray(probabilities, dtype=np.float64)
+    if y.ndim != 1 or p.ndim != 1 or len(y) == 0 or len(y) != len(p):
+        raise ValueError("labels and probabilities must be nonempty aligned vectors")
+    if not np.isin(y, [0, 1]).all() or not np.isfinite(p).all() or np.any((p < 0) | (p > 1)):
+        raise ValueError("labels or probabilities are invalid")
+    undefined = {
+        "calibration_intercept": None,
+        "calibration_slope": None,
+    }
+    if len(np.unique(y)) < 2:
+        return {
+            **undefined,
+            "calibration_intercept_slope_status": "undefined_single_class_target",
+            "calibration_intercept_slope_method": "unpenalized logistic MLE on logit(predicted risk)",
+        }
+    clipped = np.clip(p, 1e-12, 1 - 1e-12)
+    logits = np.log(clipped / (1.0 - clipped))
+    if float(np.ptp(logits)) <= 1e-12:
+        return {
+            **undefined,
+            "calibration_intercept_slope_status": "undefined_constant_predicted_log_odds",
+            "calibration_intercept_slope_method": "unpenalized logistic MLE on logit(predicted risk)",
+        }
+
+    def objective(parameters: np.ndarray) -> float:
+        eta = parameters[0] + parameters[1] * logits
+        return float(np.sum(np.logaddexp(0.0, eta) - y * eta))
+
+    def gradient(parameters: np.ndarray) -> np.ndarray:
+        eta = parameters[0] + parameters[1] * logits
+        residual = expit(eta) - y
+        return np.asarray([residual.sum(), residual @ logits], dtype=np.float64)
+
+    prevalence = float(y.mean())
+    initial_intercept = np.log(prevalence / (1 - prevalence)) - float(logits.mean())
+    fit = minimize(
+        objective,
+        np.asarray([np.clip(initial_intercept, -24.0, 24.0), 1.0]),
+        jac=gradient,
+        method="L-BFGS-B",
+        bounds=((-25.0, 25.0), (-25.0, 25.0)),
+        options={"maxiter": 2000, "ftol": 1e-12, "gtol": 1e-8},
+    )
+    at_boundary = bool(np.any(np.abs(np.asarray(fit.x)) >= 24.99))
+    if not fit.success:
+        status = "undefined_optimization_failed"
+        values = undefined
+    elif at_boundary:
+        status = "undefined_boundary_solution_possible_separation"
+        values = undefined
+    else:
+        status = "estimated"
+        values = {
+            "calibration_intercept": float(fit.x[0]),
+            "calibration_slope": float(fit.x[1]),
+        }
+    return {
+        **values,
+        "calibration_intercept_slope_status": status,
+        "calibration_intercept_slope_method": "unpenalized logistic MLE of outcome on logit(predicted risk); boundary-limited fits are undefined",
+    }
+
+
 def probability_metrics(labels: np.ndarray, probabilities: np.ndarray) -> dict[str, object]:
     y, p = np.asarray(labels, dtype=np.int8), np.asarray(probabilities, dtype=np.float64)
     if y.ndim != 1 or p.ndim != 1 or len(y) == 0 or len(y) != len(p):
@@ -141,6 +216,7 @@ def probability_metrics(labels: np.ndarray, probabilities: np.ndarray) -> dict[s
         "auprc": float(average_precision_score(y, p)),
         "fixed_bin_expected_calibration_error": float(ece),
         "calibration_bins": bins,
+        **calibration_intercept_slope(y, p),
     }
 
 
