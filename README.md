@@ -64,15 +64,37 @@ Run the synthetic streaming demonstration of the adaptive physiological twin:
 python scripts/demo_adaptive_twin.py
 ```
 
+## Synthetic ESP32 software bench
+
+The USB gateway is implemented for **generated test values only**. It sends heart-rate and SpO₂ toy signals from an ESP32-S3 over USB serial to the Python timestamped stream and adaptive twin. It has no sensor drivers, Wi-Fi, patient connection, or clinical output.
+
+- [Gateway architecture, setup, and failure checks](docs/ESP32_SYNTHETIC_GATEWAY.md)
+- [Synthetic replay benchmark results](docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md)
+- [Physical bench record template](docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md)
+
+Run receiver tests without hardware:
+
+```bash
+pytest -q tests/test_esp32_gateway.py tests/test_stream.py
+```
+
+With a board later, upload `firmware/esp32_synthetic_gateway/esp32_synthetic_gateway.ino`, install `pyserial`, then run `python scripts/receive_esp32_stream.py --port <YOUR_SERIAL_PORT>`. The exact USB port depends on the operating system and board. Physical serial testing remains outstanding; do not connect sensors or people to this synthetic bench.
+
+
 This script uses generated values only. It illustrates baseline warm-up, deviation scoring, multisystem aggregation, and trajectory direction; it is not clinical evidence.
 
-For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.\n\nFor the synthetic adaptive-twin sandbox: `streamlit run dashboard/twin_demo.py`. It uses generated signals only and shows heuristic trajectory behavior, not clinical predictions.
+For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
+
+For the synthetic adaptive-twin sandbox: `streamlit run dashboard/twin_demo.py`. It uses generated signals only and shows heuristic trajectory behavior, not clinical predictions.
 
 ## Adaptive twin component
 
-- [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.\n- `src/vitalis/stream.py` adds a timestamped input contract with unit checks, freshness handling, quality flags, out-of-order rejection, and session reset; device-specific acquisition is still future work.
+- [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.
+- `src/vitalis/stream.py` adds a timestamped input contract with unit checks, freshness handling, quality flags, out-of-order rejection, and session reset; device-specific acquisition is still future work.
 - [VITALIS-PB research specification](docs/VITALIS_PB_ALGORITHM.md) defines the separate retrospective patient-baseline feature experiment.
-- The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** itself estimate a calibrated clinical risk.\n- `scripts/train_horizon_model.py` adds separate 1-, 3-, and 6-hour future-Challenge-label forecasting experiments with patient-disjoint splits and patient-level warning-burden metrics. `scripts/evaluate_horizon_cross_cohort.py` trains on a patient-disjoint Set A subset and evaluates all eligible Set B patients, with Set B used only for final evaluation. These horizons refer to entry into the challenge-positive label window, not independently observed sepsis onset. See [Horizon forecasting protocol](docs/HORIZON_FORECASTING.md) and [cross-cohort execution checklist](docs/HORIZON_CROSS_COHORT_EXECUTION.md).\n- [Full-cohort horizon results](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) records the completed 1/3/6-hour Set A→Set B evaluation across three seeds, including patient-level warning burden and limitations. The results do not support clinical use; raw caches and individual predictions remain local-only.
+- The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** itself estimate a calibrated clinical risk.
+- `scripts/train_horizon_model.py` adds separate 1-, 3-, and 6-hour future-Challenge-label forecasting experiments with patient-disjoint splits and patient-level warning-burden metrics. `scripts/evaluate_horizon_cross_cohort.py` trains on a patient-disjoint Set A subset and evaluates all eligible Set B patients, with Set B used only for final evaluation. These horizons refer to entry into the challenge-positive label window, not independently observed sepsis onset. See [Horizon forecasting protocol](docs/HORIZON_FORECASTING.md) and [cross-cohort execution checklist](docs/HORIZON_CROSS_COHORT_EXECUTION.md).
+- [Full-cohort horizon results](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) records the completed 1/3/6-hour Set A→Set B evaluation across three seeds, including patient-level warning burden and limitations. The results do not support clinical use; raw caches and individual predictions remain local-only.
 
 ## Data safety and label semantics
 
