@@ -75,7 +75,7 @@ def make_stream() -> TimestampedTwinStream:
 
 def run_lines(lines: TextIO, *, output: TextIO = sys.stdout) -> int:
     """Process input lines without writing raw messages or per-sample values to disk."""
-    session_start = datetime.now(timezone.utc)
+    session_start: datetime | None = None
     stream = make_stream()
     accepted = rejected = banners = 0
     last_seq = -1
@@ -84,11 +84,26 @@ def run_lines(lines: TextIO, *, output: TextIO = sys.stdout) -> int:
         if not line:
             continue
         try:
-            parsed = parse_message(line, session_start)
+            provisional_anchor = session_start or datetime.now(timezone.utc)
+            parsed = parse_message(line, provisional_anchor)
             if parsed is None:
                 banners += 1
                 continue
             seq, observation = parsed
+            if session_start is None:
+                # The ESP32 elapsed clock began at boot, possibly before the
+                # laptop receiver started. Anchor the first sample to receipt
+                # time, then preserve subsequent elapsed-time differences.
+                elapsed = observation.timestamp - provisional_anchor
+                session_start = datetime.now(timezone.utc) - elapsed
+                observation = Observation(
+                    observation.channel,
+                    session_start + elapsed,
+                    observation.value,
+                    observation.unit,
+                    quality=observation.quality,
+                    source=observation.source,
+                )
             if seq < last_seq:
                 raise ValueError("sequence number regressed")
             last_seq = seq
