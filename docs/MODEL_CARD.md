@@ -20,7 +20,7 @@ The script reports row-level AUROC, AUPRC, Brier score, threshold-specific sensi
 - Hourly observations are correlated, so row-level metrics can overstate effective sample size.
 - A fixed threshold of 0.5 is a reference point, not a clinically justified operating point.
 - Missingness and measurement frequency may encode care processes and introduce bias.
-- Calibration, event-level detection, alert burden, subgroup performance, and uncertainty require additional analysis.
+- Retrospective calibration and alert-burden analyses exist, but results do not establish clinically usable probabilities or a safe operating point. The project reports Brier/log loss against a constant-prevalence reference, reliability bins/ECE, and patient-cluster uncertainty for selected metrics; calibration intercept/slope and patient-cluster sandwich intervals are implemented as diagnostics, but their updated full-cohort artifact is pending.
 - No claim of clinical utility, novelty, or patentability is made.
 
 ## Governance
@@ -36,10 +36,10 @@ The horizon workflow compares static and temporal logistic-regression features. 
 ### Findings that constrain intended use
 
 - Full-cohort cross-cohort metrics are documented in [the horizon results report](FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md). Differences between static and temporal ranking performance are small or horizon-dependent in this evaluation; no model is selected as clinically superior.
-- Platt recalibration reduces Brier score relative to raw class-weighted scores, but calibrated Set-B Brier scores remained slightly worse than the constant-prevalence reference across model/horizon pairs. This does not establish adequate probability calibration.
+- Platt recalibration reduces Brier score relative to raw class-weighted scores, but calibrated Set-B Brier scores remained slightly worse than the constant-prevalence reference across model/horizon pairs. This does not establish adequate probability calibration. General calibration evaluation now records intercept/slope point estimates and explicit undefined states; a further diagnostic reports patient-cluster sandwich standard errors and asymptotic 95% intervals on frozen scores. These are conditional retrospective diagnostics and do not recalibrate predictions or establish clinical utility. The latest-main full-cohort workflow [#39019018791](https://github.com/culprit-k/VITALIS/actions/runs/39019018791) is in progress; do not cite its results until the aggregate artifact and strict reconciliation have been inspected.
 - The paired comparison reports conditional patient-cluster intervals for AUROC, AUPRC, Brier score, and log loss in [the paired results report](HORIZON_PAIRED_MODEL_COMPARISON_RESULTS_2026-10-15.md). It is descriptive retrospective evidence, not independent validation or a license to tune on Set B.
 - The cost-sensitive operating-point framework and its uncertainty analysis are described in [the utility framework](UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the utility bootstrap report](HORIZON_UTILITY_BOOTSTRAP_RESULTS_2026-10-15.md). At a 6-hour horizon and threshold 0.005, reported mean forecast-window coverage was about 99.3%, but burden was about 4.20 alerts per at-risk patient-day and row-level PPV about 1.45%. The preferred threshold changes under different assumed missed-window costs. These costs are illustrative, not clinician-elicited; no threshold is endorsed.
-- Some full-cohort artifacts were generated from a reconstructed local working copy because runtime DNS prevented a verified clean checkout. Those results are explicitly provenance-qualified and are not claimed as byte-identically reproduced from a clean source checkout.
+- Legacy full-cohort reports generated from reconstructed local working copies remain provenance-qualified and are not claimed as byte-identical clean-checkout reproductions. Separate successful clean-checkout full-cohort artifacts are linked in the [project status](PROJECT_STATUS.md); the newest reproduction, including patient-cluster calibration coefficient intervals, is pending.
 
 ## Evidence gaps
 
