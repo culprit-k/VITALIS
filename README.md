@@ -64,6 +64,8 @@ Run the synthetic streaming demonstration of the adaptive physiological twin:
 python scripts/demo_adaptive_twin.py
 ```
 
+This script uses generated values only. It illustrates baseline warm-up, deviation scoring, multisystem aggregation, and trajectory direction; it is not clinical evidence.
+
 ## Synthetic ESP32 software bench
 
 The USB gateway is implemented for **generated test values only**. It sends heart-rate and SpO₂ toy signals from an ESP32-S3 over USB serial to the Python timestamped stream and adaptive twin. It has no sensor drivers, Wi-Fi, patient connection, or clinical output.
@@ -79,9 +81,6 @@ pytest -q tests/test_esp32_gateway.py tests/test_stream.py
 ```
 
 With a board later, upload `firmware/esp32_synthetic_gateway/esp32_synthetic_gateway.ino`, install `pyserial`, then run `python scripts/receive_esp32_stream.py --port <YOUR_SERIAL_PORT>`. The exact USB port depends on the operating system and board. Physical serial testing remains outstanding; do not connect sensors or people to this synthetic bench.
-
-
-This script uses generated values only. It illustrates baseline warm-up, deviation scoring, multisystem aggregation, and trajectory direction; it is not clinical evidence.
 
 For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
 
