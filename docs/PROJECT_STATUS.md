@@ -2,6 +2,14 @@
 
 **Status date:** 17 October 2026
 
+## Fresh exact-current-main reproduction — PASS
+
+- **Run:** [#39036226875, attempt 2](https://github.com/culprit-k/VITALIS/actions/runs/39036226875), completed successfully on exact `main` commit `0ff7d98e2b83a5b09c78e70f56ec067145f931e1`; all 30 workflow steps passed.
+- **Artifact:** [#12104191016](https://github.com/culprit-k/VITALIS/actions/runs/39036226875/artifacts/12104191016), 230,027 bytes, ZIP SHA-256 `7239edbab428cd0efb90cef4044566a516ce0923cc126e949ad4fc71f6217940`; 30-day retention.
+- **Reconciliation:** 42/42 mean/sample-SD pairs and 84/84 scalar values matched under the unchanged six-decimal rule; zero mismatches. Preserved evaluator `scripts/evaluate_horizon_cross_cohort.py` still matches baseline blob `891b84ad4a5da039f1dc38411211c503c971167c` exactly.
+- **Cohort audit:** Set A 20,336 patients / 790,215 rows / 17,136 positive labels; Set B 20,000 patients / 761,995 rows / 10,780 positive labels. No malformed rows, nonbinary labels, or label reversions. Set B remained evaluation-only.
+- The inspected artifact contains aggregate reports, manifests, fingerprints, and protocols only; no raw cohort files, feature caches, row-level predictions, or patient identifiers. The result remains retrospective Challenge-label forecasting, not clinical validation or prediction of independently adjudicated sepsis onset.
+
 ## Verified checkpoint — extended reproduction and synthetic bench
 
 This checkpoint supersedes older run-status statements below where they differ.
