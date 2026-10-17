@@ -3,7 +3,7 @@
 **Status date:** 17 October 2026  
 **Repository:** `culprit-k/VITALIS`  
 **Verified threshold-sweep merge commit:** `8c5d7b75a653dff7b1af4773a55b663b43c7740f`  
-**CI verification on the post-merge main snapshot:** triggered by this status update; result pending.
+**Latest main CI verification:** [Tests run #1376](https://github.com/culprit-k/VITALIS/actions/workflows/tests.yml) succeeded on commit `f21e0563ca4ee4cdb961ca4f4950de400437ac47` (45 seconds; all steps shown passed, one artifact listed). This verifies the standard software CI on that snapshot; it is not the full-cohort experiment or clinical validation.
 
 > **Safety boundary:** VITALIS is a research prototype only. It is not a medical device or a clinically validated sepsis warning system. Do not use outputs to guide diagnosis, triage, treatment, or patient care.
 
