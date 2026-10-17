@@ -97,7 +97,7 @@ for step in range(steps):
     for channel, value in available.items():
         if value is not None:
             label, unit, _ = CHANNELS[channel]
-            stream.ingest(Observation(channel, timestamp, value, unit))
+            stream.ingest(Observation(channel, timestamp, value, {"°C": "degC"}.get(unit, unit)))
     result = stream.score(timestamp)
     rows.append({
         "step": step + 1, "time": timestamp.strftime("%H:%M"),
