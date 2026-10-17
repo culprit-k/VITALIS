@@ -7,7 +7,7 @@ Research and education on longitudinal physiological modeling using retrospectiv
 Not for patient care, diagnosis, triage, treatment decisions, or real-time deployment. Not a medical device.
 
 ## Data
-The initial planned dataset is PhysioNet/CinC Challenge 2019. Dataset-specific terms apply. The challenge label uses a six-hour lead convention.
+The current retrospective benchmark is the official PhysioNet/CinC Challenge 2019 Set A and Set B. Dataset-specific terms apply; source files and derived patient-level caches remain outside Git and workflow cohort files are downloaded to ephemeral runner storage. Set B is a separate cohort within the same challenge, not an independent external clinical cohort. The challenge label already uses a six-hour lead convention and is not independently adjudicated biological sepsis onset.
 
 ## Methods
 The current baseline workflow uses logistic regression with median imputation, missingness indicators, and standard scaling. A temporal variant adds per-patient lagged values, one-step differences, and trailing means. Splits are at the patient level.
