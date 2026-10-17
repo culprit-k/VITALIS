@@ -142,3 +142,27 @@ def test_end_to_end_synthetic_gateway_replay_reaches_twin_without_raw_output():
     assert all("value" not in item for item in lines)
     assert all("trajectory_score" not in item or item["type"] == "vitalis_twin_summary"
                for item in lines)
+
+
+
+def test_gateway_reboot_banner_resets_sequence_and_twin_session():
+    ready = json.dumps({
+        "type": "vitalis_gateway_ready", "mode": "synthetic_only", "schema": 1
+    })
+    rows = "\\n".join([
+        ready,
+        payload(seq=0, elapsed_ms=0),
+        payload(seq=0, elapsed_ms=0, channel="spo2", value=98.0, unit="%"),
+        ready,
+        payload(seq=0, elapsed_ms=0),
+        payload(seq=0, elapsed_ms=0, channel="spo2", value=97.9, unit="%"),
+    ]) + "\\n"
+    output = StringIO()
+    assert run_lines(StringIO(rows), output=output) == 0
+    lines = [json.loads(line) for line in output.getvalue().splitlines()]
+    session = lines[-1]
+    assert session["type"] == "gateway_session_summary"
+    assert session["accepted_messages"] == 4
+    assert session["rejected_messages"] == 0
+    assert session["ready_banners"] == 2
+    assert all("value" not in item for item in lines)
