@@ -89,6 +89,14 @@ def run_lines(lines: TextIO, *, output: TextIO = sys.stdout) -> int:
             parsed = parse_message(line, provisional_anchor)
             if parsed is None:
                 banners += 1
+                if session_start is not None:
+                    # A repeated ready banner indicates a gateway reboot. Start
+                    # a clean in-memory twin session so the device sequence can
+                    # restart at zero without mixing pre- and post-reboot data.
+                    stream.reset()
+                    session_start = None
+                    last_seq = -1
+                    last_seq_by_channel.clear()
                 continue
             seq, observation = parsed
             if session_start is None:
