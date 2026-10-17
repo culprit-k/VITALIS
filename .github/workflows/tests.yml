@@ -32,9 +32,12 @@ jobs:
         run: python scripts/demo_adaptive_twin.py --seed 2026 > /tmp/vitalis-twin-demo.jsonl
       - name: Smoke-test integrated twin/supervised interface
         run: python scripts/demo_integrated_inference.py > /tmp/vitalis-integrated-demo.jsonl
+      - name: Run aggregate-only synthetic replay bench
+        run: python scripts/run_synthetic_bench.py --frames 1000 --output /tmp/vitalis-synthetic-replay-bench.json
       - name: Run tests
         run: pytest
-      - name: Retain source and history audit manifests
+      - name: Retain source, history audit, and synthetic bench report
+
         if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -42,5 +45,6 @@ jobs:
           path: |
             /tmp/vitalis-source-manifest.json
             /tmp/vitalis-history-audit.json
+            /tmp/vitalis-synthetic-replay-bench.json
           if-no-files-found: ignore
           retention-days: 30
