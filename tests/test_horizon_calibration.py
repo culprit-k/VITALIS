@@ -54,6 +54,39 @@ def test_probability_metrics_include_prevalence_reference_and_aggregate_only_bin
                for b in out["calibration_bins"])
 
 
+def test_probability_metrics_report_calibration_intercept_and_slope():
+    y = np.array([0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0], dtype=np.int8)
+    p = np.array([.1, .4, .3, .7, .2, .6, .55, .45, .8, .3, .65, .9, .15, .25, .5, .4])
+    out = MOD.probability_metrics(y, p)
+
+    assert out["calibration_intercept_slope_status"] == "estimated"
+    assert np.isfinite(out["calibration_intercept"])
+    assert np.isfinite(out["calibration_slope"])
+    assert out["calibration_intercept_slope_method"].startswith("unpenalized logistic MLE")
+
+
+def test_calibration_intercept_slope_is_undefined_for_single_class_target():
+    out = MOD.calibration_intercept_slope(
+        np.array([0, 0, 0, 0], dtype=np.int8),
+        np.array([.01, .02, .03, .04]),
+    )
+
+    assert out["calibration_intercept"] is None
+    assert out["calibration_slope"] is None
+    assert out["calibration_intercept_slope_status"] == "undefined_single_class_target"
+
+
+def test_calibration_intercept_slope_is_undefined_for_constant_predictions():
+    out = MOD.calibration_intercept_slope(
+        np.array([0, 1, 0, 1], dtype=np.int8),
+        np.array([.2, .2, .2, .2]),
+    )
+
+    assert out["calibration_intercept"] is None
+    assert out["calibration_slope"] is None
+    assert out["calibration_intercept_slope_status"] == "undefined_constant_predicted_log_odds"
+
+
 def test_threshold_metrics_fixed_boundary_and_confusion_counts():
     out = MOD.threshold_metrics(np.array([0, 0, 1, 1]), np.array([.1, .5, .5, .9]), .5)
     assert out["confusion_matrix"] == {"tn": 1, "fp": 1, "fn": 0, "tp": 2}
