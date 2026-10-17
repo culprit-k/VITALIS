@@ -13,7 +13,7 @@ on:
         description: "Also run physiology ablation and calibration (adds substantial runtime)"
         required: false
         type: boolean
-        default: false
+        default: true
   push:
     branches:
       - work/set-a-threshold-sweep-implementation
