@@ -17,6 +17,7 @@ on:
   push:
     branches:
       - work/set-a-threshold-sweep-implementation
+      - work/current-main-full-cohort-rerun-2026-10-17
     paths:
       - ".github/workflows/full-cohort-reproduction.yml"
       - "scripts/evaluate_set_a_threshold_sweep.py"
