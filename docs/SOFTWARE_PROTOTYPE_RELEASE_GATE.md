@@ -7,7 +7,7 @@
 The software research prototype is releasable only when the following are true:
 
 - [ ] Clean-checkout installation works from the documented pinned environment.
-- [x] Unit, integration, and repository-hygiene tests pass on commit `f21e0563ca4ee4cdb961ca4f4950de400437ac47` (GitHub Actions `tests #1376`, successful; [workflow page](https://github.com/culprit-k/VITALIS/actions/workflows/tests.yml)). This check does not establish that the later documentation-only commit has its own CI run.
+- [x] Unit, integration, and repository-hygiene tests pass on commit `f21e0563ca4ee4cdb961ca4f4950de400437ac47`: [GitHub Actions run #39014090824](https://github.com/culprit-k/VITALIS/actions/runs/39014090824) succeeded; all 243 tests passed. The run uploaded [source/history audit artifact](https://github.com/culprit-k/VITALIS/actions/runs/39014090824/artifacts/12093623017) (`vitalis-source-audit-f21e0563ca4ee4cdb961ca4f4950de400437ac47`, 1,715 bytes; SHA-256 `c60823982f5e90619ca48f768c1fc732827825b4204ecffe669a9c5bd2b8610c`). This is an audit-manifest artifact, not the full-cohort aggregate-results artifact. It does not establish CI for later documentation-only commits.
 - [ ] The full Set A/Set B workflow completes and emits a validated aggregate artifact.
 - [ ] Cohort counts, patient-disjoint splits, label/horizon alignment, and data leakage checks pass.
 - [ ] Historical baseline discrepancies are resolved by source-level evidence, or explicitly remain open while a separately versioned clean-checkout reference is independently repeated and reviewed. The historical baseline is never overwritten.
