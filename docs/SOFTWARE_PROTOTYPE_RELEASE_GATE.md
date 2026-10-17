@@ -7,7 +7,7 @@
 The software research prototype is releasable only when the following are true:
 
 - [ ] Clean-checkout installation works from the documented pinned environment.
-- [ ] Unit, integration, and repository-hygiene tests pass.
+- [x] Unit, integration, and repository-hygiene tests pass on commit `f21e0563ca4ee4cdb961ca4f4950de400437ac47` (GitHub Actions `tests #1376`, successful; [workflow page](https://github.com/culprit-k/VITALIS/actions/workflows/tests.yml)). This check does not establish that the later documentation-only commit has its own CI run.
 - [ ] The full Set A/Set B workflow completes and emits a validated aggregate artifact.
 - [ ] Cohort counts, patient-disjoint splits, label/horizon alignment, and data leakage checks pass.
 - [ ] Historical baseline discrepancies are resolved by source-level evidence, or explicitly remain open while a separately versioned clean-checkout reference is independently repeated and reviewed. The historical baseline is never overwritten.
