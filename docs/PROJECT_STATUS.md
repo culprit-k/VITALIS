@@ -1,5 +1,21 @@
 # VITALIS — project status in plain language
 
+## Latest strict full-cohort retry — PASS (17 October 2026)
+
+- **Source commit tested:** `2f14fb556981645d79642ed30a2a964ecadc5ffa` (the documentation-only parent immediately before PR #31 and PR #32; the evaluator and experiment code were unchanged by those later documentation merges).
+- **Workflow:** [#39048849550, attempt 3](https://github.com/culprit-k/VITALIS/actions/runs/39048849550), all 30 steps passed after two earlier attempts correctly failed closed because the hosted runner did not expose AVX-512F. Attempt 3 used a compatible runner; no evaluator or tolerance was changed.
+- **Standard CI on the tested source commit:** [#39048849554](https://github.com/culprit-k/VITALIS/actions/runs/39048849554), passed.
+- **Retained artifact:** [#12109506730](https://github.com/culprit-k/VITALIS/actions/runs/39048849550/artifacts/12109506730), 230,270 bytes, expires 16 November 2026 at 17:51:59 UTC. ZIP SHA-256 verified locally and matches GitHub's digest: `065c56393492c2b549eb6bd6b70663dbef47a157d7dd073ef9b4bb0434fa4948`.
+- **Frozen reconciliation:** PASS; 42/42 metric mean/sample-SD pairs and 84/84 scalar values matched after rounding to the unchanged six-decimal rule; zero mismatches.
+- **Cohort audits:** Set A 20,336 patients / 790,215 hourly rows / 17,136 positive labels; Set B 20,000 / 761,995 / 10,780. No malformed rows, nonbinary labels, or label reversions.
+- **Scope:** 1/3/6-hour horizons, seeds 42/123/2026, static and temporal models, patient-cluster bootstrap (200 replicates), physiology ablation, patient-disjoint Set A calibration, Set A-only threshold sweep, cache integrity, and aggregate-only artifact checks completed. Set B remained evaluation-only.
+- **Artifact contents inspected:** aggregate report and metrics, cohort/source manifests, fingerprints, cache-integrity summaries, reconciliation, calibration/threshold aggregate diagnostics, and protocol files; no raw cohort files, feature-cache arrays, patient identifiers, or row-level predictions were included.
+- **Interpretation:** Set B is another Challenge training cohort, not external clinical validation. At 1/3/6 hours the temporal model does not outperform the static baseline on AUROC/AUPRC in these results; PPV remains very low. The target is entry into the Challenge `SepsisLabel` positive window, not independently adjudicated sepsis onset. This remains retrospective software reproduction, not clinical validation.
+
+**Current branch note:** PR #31 and PR #32 subsequently merged documentation-only changes into `main`; their standard CI passed. The latest `main` commit is `7c4affe0913d13dadb5a37e1dd35666e9a9dbb97`. A fresh strict reproduction on that exact documentation-only tip has not yet been run, so the run above is not mislabelled as testing that later SHA.
+
+---
+
 ## Exact post-merge reproduction — PASS (17 October 2026)
 
 - **Current main commit tested:** `eefad3664019a690c4520986875e05a9c9fe0b6f`.
