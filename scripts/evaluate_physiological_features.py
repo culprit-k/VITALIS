@@ -14,6 +14,7 @@ from threadpoolctl import threadpool_limits
 from vitalis.features import add_patient_baseline_features
 from vitalis.horizon import build_future_challenge_targets, evaluate_horizon_alerts, patient_cluster_bootstrap_horizon_alerts
 from vitalis.validation import assert_disjoint_patient_splits
+from vitalis.calibration_uncertainty import patient_cluster_calibration_intercept_slope
 
 VITALS = ("HR", "O2Sat", "Temp", "SBP", "MAP", "DBP", "Resp")
 BASE = ("HR","O2Sat","Temp","SBP","MAP","DBP","Resp","EtCO2","BaseExcess","HCO3","FiO2","pH","PaCO2","SaO2","AST","BUN","Alkalinephos","Calcium","Chloride","Creatinine","Bilirubin_direct","Glucose","Lactate","Magnesium","Phosphate","Potassium","Bilirubin_total","TroponinI","Hct","Hgb","PTT","WBC","Fibrinogen","Platelets","Age","Gender","Unit1","Unit2","HospAdmTime","ICULOS")
@@ -64,8 +65,8 @@ def paired_brier_cluster_bootstrap(y, p_base, p_candidate, groups, n_bootstrap, 
       "point_estimate":point,"ci_95_percentile":{"lower":float(np.quantile(deltas,.025)),"upper":float(np.quantile(deltas,.975))},
       "bootstrap_replicates":int(n_bootstrap),"bootstrap_unit":"Set B patient cluster","unique_patients":int(len(unique))}
 
-def calibration_summary(y,p):
-    """Descriptive calibration only; no recalibration is fitted or applied."""
+def calibration_summary(y,p,patient_ids):
+    """Descriptive calibration metrics and cluster-robust uncertainty; no score transformation."""
     from scipy.optimize import minimize
     y=np.asarray(y,dtype=np.int8); p=np.clip(np.asarray(p,dtype=float),1e-7,1-1e-7)
     logit=np.log(p/(1-p))
@@ -80,10 +81,12 @@ def calibration_summary(y,p):
         z=np.clip(theta[0]+theta[1]*logit,-40,40)
         return float(np.sum(np.logaddexp(0,z)-y*z))
     fit=minimize(objective,np.array([0.0,1.0]),method="L-BFGS-B",bounds=[(-30,30),(-20,20)])
+    cluster_diagnostics=patient_cluster_calibration_intercept_slope(y,p,patient_ids)
     return {"calibration_intercept_slope_fixed_1":float(intercept),
       "calibration_intercept_free_slope":float(fit.x[0]),"calibration_slope":float(fit.x[1]),
       "calibration_fit_converged":bool(fit.success),
-      "interpretation":"Descriptive Set B diagnostics only; no calibration transformation applied."}
+      "patient_cluster_intercept_slope_uncertainty":cluster_diagnostics,
+      "interpretation":"Descriptive Set B diagnostics only; no calibration transformation applied. Intercept/slope uncertainty uses patient-cluster sandwich intervals conditional on frozen predictions."}
 
 def digest(a):
     a=np.ascontiguousarray(np.asarray(a))
@@ -122,7 +125,7 @@ def run_one(ma,Xa,ya,ga,mb,Xb,yb,gb,horizon,seed,threshold,refractory,boot):
         with threadpool_limits(limits=1): p=model.predict_proba(test_X)[:,1]
         row_metrics=metric(tb.targets,p,threshold)
         predictions[name]=np.asarray(p,dtype=np.float64).copy()
-        row_metrics['calibration_diagnostics']=calibration_summary(tb.targets,p)
+        row_metrics['calibration_diagnostics']=calibration_summary(tb.targets,p,tb.patient_ids)
         alert=evaluate_horizon_alerts(tb.targets,p,tb.patient_ids,tb.patient_time_indices,threshold=threshold,refractory_hours=refractory)
         ci=patient_cluster_bootstrap_horizon_alerts(tb.targets,p,tb.patient_ids,tb.patient_time_indices,threshold=threshold,refractory_hours=refractory,n_bootstrap=boot,seed=seed)
         clf=model[-1]
