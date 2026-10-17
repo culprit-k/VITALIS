@@ -79,6 +79,7 @@ def run_lines(lines: TextIO, *, output: TextIO = sys.stdout) -> int:
     stream = make_stream()
     accepted = rejected = banners = 0
     last_seq = -1
+    last_seq_by_channel: dict[str, int] = {}
     for raw_line in lines:
         line = raw_line.strip()
         if not line:
@@ -106,7 +107,11 @@ def run_lines(lines: TextIO, *, output: TextIO = sys.stdout) -> int:
                 )
             if seq < last_seq:
                 raise ValueError("sequence number regressed")
+            previous_channel_seq = last_seq_by_channel.get(observation.channel, -1)
+            if seq <= previous_channel_seq:
+                raise ValueError("duplicate or regressed channel sequence")
             last_seq = seq
+            last_seq_by_channel[observation.channel] = seq
             if not stream.ingest(observation):
                 rejected += 1
                 continue
