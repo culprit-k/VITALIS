@@ -27,6 +27,8 @@ Evidence: `docs/HORIZON_CROSS_COHORT_EXECUTION.md`, `docs/SET_A_PLATT_CALIBRATIO
 
 ### 3. Probability quality and calibration
 - [ ] Interpret AUROC/AUPRC separately from Brier score, log loss, calibration intercept/slope, and reliability bins.
+- [ ] Review the new calibration intercept/slope estimator and its patient-cluster sandwich standard errors/asymptotic 95% intervals; confirm the report labels these as conditional retrospective diagnostics, not prospective uncertainty or a clinical calibration claim.
+- [ ] Confirm non-identifiable fits are explicitly undefined rather than assigned plausible-looking coefficient estimates; inspect optimizer/separation status and interval calculation assumptions.
 - [ ] Compare against a constant-prevalence predictor using identical eligible rows.
 - [ ] Review whether low Brier values are dominated by rare positive labels rather than useful risk ranking.
 - [ ] Treat the Platt experiment as unsuccessful for the fixed 0.5 alert reference because sensitivity is near zero; do not describe it as a usable calibration win.
@@ -96,6 +98,12 @@ Evidence: `docs/RELEASE_ACCEPTANCE_MATRIX.md`, `docs/GIT_HISTORY_PRIVACY_AUDIT.m
 
 **Non-negotiable:** do not modify the historical baseline, acceptance tolerance, fixed evaluation threshold, patient split, seeds, horizons, or Set B isolation rule to obtain a pass. Keep PR #2 draft/open/unmerged until the release decision is explicitly made.
 
+
+## Automated evidence update — 17 October 2026
+
+- PR #19 added calibration intercept/slope diagnostics; PR #21 added patient-cluster sandwich standard errors and asymptotic 95% intervals on frozen predictions. PR #22 added workflow assertions for complete/valid interval fields or explicit undefined states in future full-cohort artifacts. Standard CI passed 249 tests on code merge commit `4eb3d15c024b2a1d295f657c2cb96e7eb9ff16bd`; the artifact guard PR branch standard and dashboard checks passed 16/16 steps each.
+- Latest-code-snapshot full-cohort workflow [#39019018791](https://github.com/culprit-k/VITALIS/actions/runs/39019018791) has passed source/environment preflight, cohort integrity/cache checks and core 1/3/6-hour evaluation. Patient-relative physiology ablation is currently running; calibration, threshold sweep, artifact validation and frozen-baseline reconciliation remain pending. Its artifact predates PR #22's new guard and must be manually inspected if the run completes.
+- No independent reviewer sign-off is claimed by these automated results; this checklist remains uncompleted until a qualified reviewer documents a decision.
 
 ## Automated evidence update — 16 October 2026
 
