@@ -114,3 +114,12 @@ Gate 4 remains open until the required approvals and independent-cohort protocol
 ## Overall release rule
 
 All four gates are separate. Passing software CI or reproducing benchmark aggregates does not close independent review, hardware safety, external validation, or governance. VITALIS remains a research prototype and must not be used to guide diagnosis, triage, treatment, or patient care.
+
+
+## Exact-current-main release verification request — 18 October 2026
+
+- **Requested source:** current `main` tip before this checkpoint: `40d60c8a78694e2fb1cb91b4d6af8fff981ffc3d`.
+- **Reason:** the most recent strict full-cohort reproduction passed on an earlier source commit (`14440230ff19bd1ade378374c47158cda321f628`), before the later ESP32 gateway/reboot-handling changes. It must not be described as a reproduction of the current source.
+- **Action:** this plan update intentionally triggers the existing `full-cohort-reproduction` workflow through its documented `main` path filter. The workflow must check out its exact event commit, preserve evaluator blob `891b84ad4a5da039f1dc38411211c503c971167c`, retain six-decimal mean/sample-SD reconciliation, and keep Set B evaluation-only.
+- **Acceptance:** wait for the run to complete; verify all workflow steps, reconciliation counts, source/environment manifests, and retained aggregate-only artifact contents. If the hosted runner fails its AVX-512F preflight, report that as an infrastructure block and do not change the evaluator or tolerance.
+- **Release boundary:** standard CI passing is not a substitute for this run. This checkpoint does not authorize publication or deployment. VITALIS remains private and research-only; independent review, physical bench testing, and external-cohort/governance gates remain open.
