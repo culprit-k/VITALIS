@@ -3,6 +3,16 @@
 **Status date:** 17 October 2026  
 **Scope:** research software and non-clinical bench planning only. This document does not certify clinical validity, ethics approval, regulatory status, or hardware safety.
 
+## Evidence checkpoint — 17 October 2026
+
+- **Gate 1 extended evaluation:** passed on source commit `df99be7b1400c508e75b7e1e8e66077d6dabe6f7` in [run #39029868475, attempt 2](https://github.com/culprit-k/VITALIS/actions/runs/39029868475). The workflow verified the preserved evaluator blob, ran the full predeclared 1/3/6-hour × three-seed evaluation, physiology ablation, patient-disjoint Set A calibration, Set A-only threshold sweep, aggregate-only checks, and strict reconciliation. The result was 42/42 mean/sample-SD pairs and 84/84 scalar matches, zero mismatches, using the unchanged six-decimal rule. Artifact: [#12102345008](https://github.com/culprit-k/VITALIS/actions/runs/39029868475/artifacts/12102345008), SHA-256 `ea8312843827ee875371f92020deb7275d677ebc2dd36864d86bcb437f2e0fa5`. The later main commit `ef22ef2` adds the synthetic bench harness and docs/tests only; the evaluator and cohort-analysis implementation were not changed.
+- **Gate 3 software replay:** [PR #27](https://github.com/culprit-k/VITALIS/pull/27) merged as `ef22ef2da4c1680da75bca2161043ce9b72fb45c`. [CI run #39035622219](https://github.com/culprit-k/VITALIS/actions/runs/39035622219) passed all 10 synthetic functional checks on 1,000 frames; p95 latency 0.3571 ms and throughput 4,917.8 frames/s on a GitHub-hosted runner. This is software replay only, not physical hardware-in-the-loop testing.
+- **Gate 2 remains open** until a qualified independent clinician/statistician/methods reviewer provides written findings.
+- **Gate 3 remains open** until the intended bench computer is measured and the physical dummy-load/disconnect/recovery and applicable engineering-safety reviews are completed.
+- **Gate 4 remains open** until external-cohort access and protocol, institutional/ethics/privacy/security determinations, and relevant safety/regulatory governance are documented.
+
+Do not infer clinical utility from these retrospective benchmark or synthetic software results.
+
 ## Gate 1 — Extended full-cohort evaluation on the current source
 
 The strict clean-checkout run #39024691664 passed the core Set A-to-Set B reproduction and the unchanged 42-pair / 84-scalar six-decimal reconciliation. That workflow explicitly skipped physiology ablation, Set A Platt calibration, threshold sweep, and the probability-quality artifact checks. Do not describe those extended analyses as verified by the core run.

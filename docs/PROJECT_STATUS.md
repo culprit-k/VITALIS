@@ -1,6 +1,18 @@
 # VITALIS — project status in plain language
 
-**Status date:** 17 October 2026  
+**Status date:** 17 October 2026
+
+## Verified checkpoint — extended reproduction and synthetic bench
+
+This checkpoint supersedes older run-status statements below where they differ.
+
+- **Extended clean-checkout reproduction passed:** [GitHub Actions run #39029868475, attempt 2](https://github.com/culprit-k/VITALIS/actions/runs/39029868475), source commit `df99be7b1400c508e75b7e1e8e66077d6dabe6f7`. All workflow steps passed, including the three-seed 1/3/6-hour evaluation, physiology ablation, patient-disjoint Set A Platt calibration, Set A-only threshold sweep, aggregate-only assertions, and baseline reconciliation. The preserved evaluator blob `891b84ad4a5da039f1dc38411211c503c971167c` was verified.
+- **Baseline reconciliation:** 42/42 metric mean/sample-SD pairs and 84/84 scalar values matched under the unchanged six-decimal rule; zero mismatches. Reconciliation report is retained in the run artifact.
+- **Artifact inspected:** [aggregate/provenance artifact #12102345008](https://github.com/culprit-k/VITALIS/actions/runs/39029868475/artifacts/12102345008), 229,363 bytes, ZIP SHA-256 `ea8312843827ee875371f92020deb7275d677ebc2dd36864d86bcb437f2e0fa5`. It contains aggregate reports, source/environment manifests, cohort/cache fingerprints, and protocols; no raw cohort files, feature caches, individual patient identifiers, or row-level predictions were found. The artifact is retained for 30 days.
+- **Synthetic software bench merged:** [PR #27](https://github.com/culprit-k/VITALIS/pull/27), merge commit `ef22ef2da4c1680da75bca2161043ce9b72fb45c`. The 1,000-frame run [#39035622219](https://github.com/culprit-k/VITALIS/actions/runs/39035622219) passed all 10 functional checks; median latency 0.1893 ms, p95 0.3571 ms, max 0.3878 ms, throughput 4,917.8 frames/s, and Python-traced peak memory 191,468 bytes on a GitHub-hosted Linux/Python 3.11.17 runner. These are host-specific software measurements, not hardware or clinical evidence. The current-main standard CI also passed on merge commit `ef22ef2`: [run #39035690980](https://github.com/culprit-k/VITALIS/actions/runs/39035690980).
+- **Still open:** independent scientific review; physical dummy-load testing and qualified safety review; and genuinely external-cohort validation plus institutional, ethics, privacy, and regulatory governance. Set B is a benchmark evaluation cohort, not an external clinical cohort. The prediction target is entry into the Challenge `SepsisLabel` positive window, not independently adjudicated biological sepsis onset.
+
+**Research-only boundary:** no diagnosis, triage, treatment, patient-care, clinical performance, or medical-device readiness claims are supported. The evaluator, six-decimal tolerance, Set B evaluation-only role, and aggregate-only output rule were not changed.  
 **Repository:** `culprit-k/VITALIS`  
 **Verified threshold-sweep merge commit:** `8c5d7b75a653dff7b1af4773a55b663b43c7740f`
 **Latest code fix:** PR #24 merged as `d59291a4a63a610eb6d7223109a56c246acaa19b` to pass patient IDs into calibration diagnostics; standard CI passed 249 tests. Strict full-cohort rerun queued on the updated main snapshot: [run #39024691664](https://github.com/culprit-k/VITALIS/actions/runs/39024691664).  
