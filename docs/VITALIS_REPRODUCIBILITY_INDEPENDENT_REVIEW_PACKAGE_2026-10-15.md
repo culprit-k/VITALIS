@@ -5,6 +5,15 @@
 **Working branch:** `work/strict-reproducibility-gate`  
 **Purpose:** Give an independent reviewer a compact, privacy-safe route to assess the full-cohort reproduction and its limits.
 
+## Latest evidence — 17 October 2026
+
+- **Extended full-cohort workflow passed:** [run #39029868475, attempt 2](https://github.com/culprit-k/VITALIS/actions/runs/39029868475), source commit `df99be7b1400c508e75b7e1e8e66077d6dabe6f7`. All steps passed, including the full predeclared 1/3/6-hour × three-seed evaluation, physiology ablation, patient-disjoint Set A Platt calibration, Set A-only threshold sweep, probability-quality/artifact guards, and six-decimal baseline reconciliation.
+- **Reconciliation:** 42/42 mean/sample-SD pairs and 84/84 scalar values matched, zero mismatches. The preserved evaluator source blob `891b84ad4a5da039f1dc38411211c503c971167c` was verified before evaluation.
+- **Artifact:** [#12102345008](https://github.com/culprit-k/VITALIS/actions/runs/39029868475/artifacts/12102345008), 229,363 bytes, SHA-256 `ea8312843827ee875371f92020deb7275d677ebc2dd36864d86bcb437f2e0fa5`. It includes aggregate-only metrics and provenance, with no raw cohorts, caches, individual identifiers, or row-level predictions found during inspection.
+- **Synthetic software bench:** [PR #27](https://github.com/culprit-k/VITALIS/pull/27) merged as `ef22ef2da4c1680da75bca2161043ce9b72fb45c`; [run #39035622219](https://github.com/culprit-k/VITALIS/actions/runs/39035622219) passed 10/10 functional checks across 1,000 generated frames. Host-specific p95 latency was 0.3571 ms and throughput 4,917.8 frames/s. This is not physical hardware or clinical validation.
+- **Independent review is still pending.** The reviewer must independently assess source/data provenance, patient-disjoint partitions, calibration and uncertainty, endpoint/lead-time semantics, alert burden, cohort shift, privacy, and allowed claims. No author self-certification is a substitute for this review.
+- **Other open gates:** physical dummy-load and qualified safety review; external cohort plus institutional, ethics, privacy/security, and regulatory governance. Set B is not an external clinical cohort; the target is Challenge-label-window entry, not independently adjudicated sepsis onset.
+
 ## Current checkpoint — 17 October 2026
 
 This section supersedes earlier statements below where run/commit status differs. The historical failure reports remain preserved; none has been overwritten.
