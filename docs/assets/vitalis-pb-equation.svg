@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="230" viewBox="0 0 1000 230">
+<rect width="1000" height="230" rx="22" fill="#111827"/>
+<rect x="2" y="2" width="996" height="226" rx="20" fill="none" stroke="#8b5cf6" stroke-width="2"/>
+<text x="36" y="42" font-family="Arial,sans-serif" font-size="17" font-weight="700" fill="#c4b5fd" letter-spacing="2">VITALIS-PB · PATIENT-SPECIFIC FEATURES</text>
+<text x="38" y="99" font-family="Arial,sans-serif" font-size="25" fill="#f8fafc">bᵢⱼₜ = median { xᵢⱼτ : τ &lt; t }</text>
+<text x="38" y="147" font-family="Arial,sans-serif" font-size="25" fill="#f8fafc">dᵢⱼₜ = xᵢⱼₜ − bᵢⱼₜ</text>
+<path d="M38 169 H962" stroke="#374151" stroke-width="1.5"/>
+<circle cx="47" cy="198" r="5" fill="#a78bfa"/>
+<text x="62" y="204" font-family="Arial,sans-serif" font-size="16" fill="#cbd5e1">b = median of valid past observations only</text>
+<circle cx="553" cy="198" r="5" fill="#34d399"/>
+<text x="568" y="204" font-family="Arial,sans-serif" font-size="16" fill="#cbd5e1">d = current value minus personal baseline</text>
+</svg>
