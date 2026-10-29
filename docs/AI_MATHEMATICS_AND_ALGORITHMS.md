@@ -25,7 +25,7 @@ The two outputs are deliberately not added, averaged, multiplied, or fused. The 
 
 An observation is represented by a channel, timestamp, numeric value, unit, quality flag, and optional source. The timestamped adapter checks known channels, timezone-aware timestamps, units, non-finite/missing values, quality status, freshness, monotonically increasing per-channel timestamps, and explicitly identified source changes.
 
-\`\`\`text
+```text
 observation
     ↓
 channel + unit + timestamp + quality checks
@@ -33,7 +33,7 @@ channel + unit + timestamp + quality checks
 fresh, valid per-channel frame
     ↓
 adaptive twin (only when enough data are available)
-\`\`\`
+```
 
 These are software input checks, not proof that a physical sensor is accurate. The current adapter does not provide sophisticated asynchronous sensor synchronisation or comprehensive artifact detection.
 
@@ -143,9 +143,9 @@ The implementation also tracks consecutive channel deviations and cross-system c
 
 ### What the adaptive-twin states mean
 
-The implementation can emit states such as \`insufficient_data\`, \`within_person_range\`, \`deviation_detected\`, \`marked_deviation\`, \`persistent_multisystem_deviation\`, \`cumulative_shift_detected\`, and \`cumulative_multisystem_shift\`.
+The implementation can emit states such as `insufficient_data`, `within_person_range`, `deviation_detected`, `marked_deviation`, `persistent_multisystem_deviation`, `cumulative_shift_detected`, and `cumulative_multisystem_shift`.
 
-These names summarise the algorithm's configured rules. They do not describe a diagnosis, severity classification, validated time-to-deterioration estimate, or clinical action. A \`trajectory_score\` is a unitless heuristic.
+These names summarise the algorithm's configured rules. They do not describe a diagnosis, severity classification, validated time-to-deterioration estimate, or clinical action. A `trajectory_score` is a unitless heuristic.
 
 ## 6. VITALIS-PB: causal patient-baseline feature engineering
 
@@ -185,7 +185,7 @@ The configured horizons are \(H\in\{1,3,6\}\). The last \(H\) rows per patient a
 
 </div>
 
-**Crucial label definition:** PhysioNet/CinC Challenge 2019's supplied \`SepsisLabel\` already uses a six-hour lead convention. These experiments forecast entry into that challenge-positive label window. They do not predict an independently adjudicated biological sepsis-onset time. Set B is a held-out benchmark evaluation partition within the same challenge—not independent external clinical validation.
+**Crucial label definition:** PhysioNet/CinC Challenge 2019's supplied `SepsisLabel` already uses a six-hour lead convention. These experiments forecast entry into that challenge-positive label window. They do not predict an independently adjudicated biological sepsis-onset time. Set B is a held-out benchmark evaluation partition within the same challenge—not independent external clinical validation.
 
 ## 8. Keep twin and supervised outputs independent
 
@@ -223,7 +223,7 @@ The validation work still matters as much as the formulas. The research programm
 - [Research model card](MODEL_CARD.md)
 - [Strict source reproducibility runbook](STRICT_SOURCE_REPRODUCIBILITY_RUNBOOK.md)
 - [Independent evaluation protocol](INDEPENDENT_EVALUATION_PROTOCOL.md)
-- Run the synthetic adaptive-twin example locally: \`python scripts/demo_adaptive_twin.py\`
+- Run the synthetic adaptive-twin example locally: `python scripts/demo_adaptive_twin.py`
 
 ---
 
