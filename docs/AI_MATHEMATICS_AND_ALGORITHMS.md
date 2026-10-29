@@ -42,14 +42,14 @@ These are software input checks, not proof that a physical sensor is accurate. T
 For channel \(j\) at time \(t\), let \(H_{j,t}\) contain previous accepted observations only. The current observation is scored **before** it can update its own history.
 
 $$
-m_{j,t}=\operatorname{median}(H_{j,t})
+m_{j,t}=\mathrm{median}(H_{j,t})
 $$
 
 $$
-s_{j,t}=\max\left(1.4826\,\operatorname{MAD}(H_{j,t}),\epsilon_j\right)
+s_{j,t}=\max\left(1.4826\,\mathrm{MAD}(H_{j,t}),\epsilon_j\right)
 $$
 
-Here, \(\operatorname{MAD}(H)=\operatorname{median}(|x-m|)\). The factor 1.4826 is a conventional robust scale conversion for normally distributed data; the numerical floor \(\epsilon_j\) prevents division by a vanishing scale. Channel-specific floors can be configured because values can use different units.
+Here, \(\mathrm{MAD}(H)=\mathrm{median}(|x-m|)\). The factor 1.4826 is a conventional robust scale conversion for normally distributed data; the numerical floor \(\epsilon_j\) prevents division by a vanishing scale. Channel-specific floors can be configured because values can use different units.
 
 <div align="center">
 
@@ -152,7 +152,7 @@ These names summarise the algorithm's configured rules. They do not describe a d
 The separate retrospective VITALIS-PB feature generator creates personal-baseline features for patient \(i\), variable \(j\), and row \(t\), using valid observations strictly before \(t\):
 
 $$
-b_{i,j,t}=\operatorname{median}\{x_{i,j,\tau}:\tau<t,\ x_{i,j,\tau}\text{ observed}\}
+b_{i,j,t}=\mathrm{median}\{x_{i,j,\tau}:\tau<t,\ x_{i,j,\tau}\text{ observed}\}
 $$
 
 $$
