@@ -85,10 +85,10 @@ This is the mathematical heart of VITALIS. The diagrams below are original, topi
 
 For channel \(j\) at time \(t\), the twin uses earlier accepted observations \(H_{j,t}\):
 
-$$
-m_{j,t}=\mathrm{median}(H_{j,t}),\qquad
-s_{j,t}=\max(1.4826\,\mathrm{MAD}(H_{j,t}),\epsilon_j)
-$$
+```text
+m[j,t] = median(H[j,t])
+s[j,t] = max(1.4826 * MAD(H[j,t]), epsilon[j])
+```
 
 The median is less sensitive than the mean to a single extreme observation. The robust scale floor \(\epsilon_j\) avoids a vanishing denominator; it is a numerical engineering parameter, not a validated sensor-noise or clinical threshold. The current value is scored **before** it can update the history.
 
@@ -100,10 +100,10 @@ The median is less sensitive than the mean to a single extreme observation. The 
 
 ### 2. Standardized deviation — how far from the reference?
 
-$$
-z_{j,t}=\frac{x_{j,t}-m_{j,t}}{s_{j,t}},\qquad
-z^0_{j,t}=\frac{x_{j,t}-m^0_j}{s^0_j}
-$$
+```text
+z[j,t]  = (x[j,t] - m[j,t]) / s[j,t]
+z0[j,t] = (x[j,t] - m0[j]) / s0[j]
+```
 
 VITALIS compares the current value with both a rolling baseline and a frozen initial reference. It clips the larger absolute standardized deviation to a bounded, unitless channel score \(q_{j,t}\in[0,1]\). This score is **not** a sepsis probability.
 
@@ -115,13 +115,13 @@ VITALIS compares the current value with both a rolling baseline and a frozen ini
 
 ### 3. CUSUM — help reveal gradual drift
 
-$$
-C^+_{j,t}=\max(0,C^+_{j,t-1}+z^0_{j,t}-k)
-$$
+```text
+C_plus[j,t] = max(0, C_plus[j,t-1] + z0[j,t] - k)
+```
 
-$$
-C^-_{j,t}=\max(0,C^-_{j,t-1}-z^0_{j,t}-k)
-$$
+```text
+C_minus[j,t] = max(0, C_minus[j,t-1] - z0[j,t] - k)
+```
 
 The twin tracks positive and negative departures from the frozen reference. A configured shift condition is reached when \(\max(C^+_{j,t},C^-_{j,t})\ge h\). Parameters \(k\) and \(h\) need validation and are **not** clinical alarm cutoffs.
 
@@ -135,10 +135,10 @@ The twin tracks positive and negative departures from the frozen reference. A co
 
 Channels are averaged within each represented physiological system; the available systems then receive equal weight. An exponentially weighted moving average (EWMA) smooths the result:
 
-$$
-u_t=\frac{1}{|G_t|}\sum_{g\in G_t}Q_{g,t},\qquad
-S_t=\alpha u_t+(1-\alpha)S_{t-1}
-$$
+```text
+u[t] = average(Q[g,t] for each represented system g)
+S[t] = alpha * u[t] + (1 - alpha) * S[t-1]
+```
 
 The twin also tracks data coverage, persistent channel deviations, and cross-system concordance. It withholds an eligible summary unless minimum data coverage, scored-channel count, and represented-system count are met. Weights and thresholds are configurable engineering defaults, not learned medical weights.
 
@@ -152,10 +152,10 @@ The twin also tracks data coverage, persistent channel deviations, and cross-sys
 
 A separate feature generator uses valid observations strictly before row \(t\) to calculate a personal baseline, raw deviation, and robust normalized deviation:
 
-$$
-b_{i,j,t}=\mathrm{median}\{x_{i,j,\tau}:\tau<t\},\qquad
-d_{i,j,t}=x_{i,j,t}-b_{i,j,t}
-$$
+```text
+b[i,j,t] = median of valid x[i,j,tau] values where tau < t
+d[i,j,t] = x[i,j,t] - b[i,j,t]
+```
 
 The experimental model can also use current values, lags, one-step deltas, and trailing six-row means. The supervised logistic-regression workflow fits preprocessing only on training folds and keeps patient groups separate across train/validation/test. This is a research feature experiment—not proof of clinical utility, novelty, or patentability.
 
@@ -169,9 +169,9 @@ The experimental model can also use current values, lags, one-step deltas, and t
 
 For current Challenge label \(Y_{i,t}=0\), the experimental target asks whether any label becomes positive in the next \(H\) hourly rows:
 
-$$
-Y^{(H)}_{i,t}=\mathbb{1}\left[Y_{i,t}=0\land\max_{r=1,\ldots,H}Y_{i,t+r}=1\right]
-$$
+```text
+Y_future[i,t,H] = 1 when current Y[i,t] is 0 and any of the next H hourly labels is 1; otherwise 0.
+```
 
 The official Challenge label already uses a six-hour lead convention. Therefore, these experiments forecast **entry into the Challenge-positive label window**, not independently observed biological sepsis onset. Set B is a held-out partition within the same challenge—not an independent external clinical cohort.
 
