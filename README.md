@@ -1,23 +1,38 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:071A2B,45:0B7285,100:46D9C5&height=220&section=header&text=VITALIS&fontSize=72&fontColor=FFFFFF&fontAlignY=38&desc=Adaptive%20Physiological%20Digital%20Twin&descAlignY=58&descSize=18" alt="VITALIS — Adaptive Physiological Digital Twin" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=venom&height=280&color=0:050816,20:32106B,45:7B2FF7,70:00D4FF,100:00F5A0&text=VITALIS&fontColor=FFFFFF&fontSize=82&fontAlignY=43&desc=PHYSIOLOGY%20%7C%20AI%20%7C%20TIME-SERIES%20RESEARCH&descSize=16&descAlignY=65&animation=fadeIn" width="100%" alt="VITALIS vibrant neon research banner" />
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=17&duration=2800&pause=900&color=38D9C8&center=true&vCenter=true&width=760&lines=Physiology+%C3%97+AI+%C3%97+Time-Series+Research;Explore+patterns.+Study+trajectories.+Validate+carefully.;A+research+prototype%E2%80%94not+a+medical+device." alt="Animated VITALIS project tagline" />
-
-<br/>
-
-[![Research Preview](https://img.shields.io/badge/Release-v0.1.0%20Research%20Preview-0b7285?style=for-the-badge&logo=github)](https://github.com/culprit-k/VITALIS/releases)
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Testing-pytest-2f855a?style=for-the-badge&logo=pytest&logoColor=white)](https://docs.pytest.org/)
-[![Research only](https://img.shields.io/badge/Use-Research%20Only-c05621?style=for-the-badge&logo=academia&logoColor=white)](https://github.com/culprit-k/VITALIS)
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=18&duration=2400&pause=700&color=00E5FF&center=true&vCenter=true&width=820&lines=Mapping+physiology+through+time+%F0%9F%AB%80;Adaptive+digital+twin+%C3%97+AI+research+%F0%9F%A7%A0;Explore+patterns.+Validate+with+care.+%E2%9C%A8" alt="Animated VITALIS tagline" />
 
 <br/>
 
-**An adaptive, physiology-centred research platform for studying patterns associated with clinical deterioration.**
+<a href="https://github.com/culprit-k/VITALIS/releases"><img src="https://img.shields.io/badge/%E2%9C%A8%20RESEARCH%20PREVIEW-v0.1.0-7B2FF7?style=for-the-badge&labelColor=101026" alt="Research Preview v0.1.0"/></a>
+<img src="https://img.shields.io/badge/AI-Physiology-00D4FF?style=for-the-badge&labelColor=101026" alt="AI and physiology"/>
+<img src="https://img.shields.io/badge/Focus-Time--Series-FF4ECD?style=for-the-badge&labelColor=101026" alt="Time-series"/>
+<img src="https://img.shields.io/badge/Status-Research%20Only-FF9F1C?style=for-the-badge&labelColor=101026" alt="Research only"/>
 
-[Explore the code](https://github.com/culprit-k/VITALIS/tree/main/src/vitalis) · [Read the project status](docs/PROJECT_STATUS.md) · [Explore the hardware blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md) · [Release notes](RELEASE_NOTES_v0.1.0.md)
+<br/><br/>
+
+### 🌌 Turning physiological signals into a clearer picture of change
+
+*VITALIS explores an adaptive physiological digital twin designed to study evolving baselines, temporal deviations, and patterns associated with clinical deterioration.*
+
+<br/>
+
+[**📚 Explore the research**](docs/PROJECT_STATUS.md) &nbsp; ✦ &nbsp; [**🧬 Meet the adaptive twin**](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) &nbsp; ✦ &nbsp; [**🖥️ Open the demo guide**](docs/PHONE_DEPLOYMENT.md) &nbsp; ✦ &nbsp; [**🔌 Hardware concept**](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
 
 </div>
+
+<table>
+<tr>
+<td align="center" width="25%"><h3>🧠</h3><b>Adaptive Twin</b><br/><sub>Baseline & deviation research</sub></td>
+<td align="center" width="25%"><h3>📈</h3><b>Temporal AI</b><br/><sub>Patterns across time</sub></td>
+<td align="center" width="25%"><h3>🧪</h3><b>Reproducibility</b><br/><sub>Auditable experiments</sub></td>
+<td align="center" width="25%"><h3>🔭</h3><b>Future Hardware</b><br/><sub>Proposed sensor pathway</sub></td>
+</tr>
+</table>
+
+> **Project status at a glance:** the repository contains retrospective research workflows and an initial adaptive-deviation software component. The wearable and full sensor integration remain proposed work; clinical validation has not occurred.
 
 > [!IMPORTANT]
 > **Research prototype only.** VITALIS is not a medical device or a clinically validated decision-support system. Do not use it to diagnose, triage, monitor, or treat patients, and do not use its outputs to guide patient care.
