@@ -349,11 +349,11 @@ Software correctness, exact-source reproducibility, independent statistical/clin
 
 ### 👨‍💻 Created by the researcher
 
-**© 2026 Abhijith Premjithlal.**  
+**© 2026 Dr Abhijith.**  
 VITALIS is an ongoing research prototype. Please credit the author and link to this repository when referencing or sharing this work. This notice does not replace the repository's applicable open-source licence.
 
 <a href="https://www.instagram.com/a.bhijit.h_/" target="_blank" rel="noopener noreferrer">
-  <img src="https://img.shields.io/badge/FOLLOW%20ON-INSTAGRAM-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Follow Abhijith on Instagram"/>
+  <img src="docs/assets/instagram-follow-card.svg" width="330" alt="Follow Dr Abhijith on Instagram — @a.bhijit.h_"/>
 </a>
 
 <sub>Research, ideas, and project progress — follow along on Instagram.</sub>
