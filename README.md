@@ -23,6 +23,16 @@
 
 </div>
 
+<div align="center">
+
+### 🎨 Meet the VITALIS research world
+
+<img src="docs/assets/vitalis-cartoon-overview.svg" alt="Cartoon-style VITALIS illustration: friendly AI robot, glowing heart waveform, and research dashboard" width="100%" />
+
+<sub>Concept art for explaining the idea to everyone: signals → adaptive-twin research → visualised patterns. The dashboard and wearable shown are illustrative, not a completed clinical system.</sub>
+
+</div>
+
 <table>
 <tr>
 <td align="center" width="25%"><h3>🧠</h3><b>Adaptive Twin</b><br/><sub>Baseline & deviation research</sub></td>
