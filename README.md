@@ -339,3 +339,27 @@ python scripts/demo_integrated_inference.py
 The adapter in `src/vitalis/integrated_inference.py` keeps the adaptive twin's heuristic deviation/trajectory fields separate from supervised horizon probabilities. By default the demo has **no trained supervised model loaded**, so it intentionally reports the supervised outputs as unavailable with null probabilities rather than inventing zeros. A caller may inject a frozen predictor only with explicit model, calibration, and feature-schema version metadata. This interface does not itself train or load the retrospective horizon model, establish calibration quality, or make the output clinically meaningful. The GitHub Actions workflow smoke-tests this demo and the contract tests are part of pytest.
 
 See [the interface contract](docs/STREAMING_SUPERVISED_INTERFACE.md) and [release acceptance matrix](docs/RELEASE_ACCEPTANCE_MATRIX.md). VITALIS remains research-only and must not be used to guide patient care.
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00F5A0,35:00D4FF,70:7B2FF7,100:211044&height=150&section=footer&text=Curiosity%20into%20discovery&fontSize=28&fontColor=FFFFFF&fontAlignY=65&animation=fadeIn" width="100%" alt="VITALIS closing banner — Curiosity into discovery"/>
+
+### 🌱 Every signal tells a story. Research helps us ask better questions.
+
+**Built with curiosity. Guided by physiology. Grounded in reproducibility.**
+
+<br/>
+
+[![Explore repository](https://img.shields.io/badge/Explore-VITALIS%20Repository-7B2FF7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/culprit-k/VITALIS)
+[![Research preview](https://img.shields.io/badge/Read-Research%20Preview-00B8D9?style=for-the-badge&logo=readthedocs&logoColor=white)](RELEASE_NOTES_v0.1.0.md)
+[![Project status](https://img.shields.io/badge/Check-Project%20Status-FF4FA3?style=for-the-badge&logo=githubactions&logoColor=white)](docs/PROJECT_STATUS.md)
+
+<br/>
+
+<sub>🧪 An evolving research prototype — not a medical device. No clinical diagnosis, triage, monitoring, or treatment decisions.</sub>
+
+<sub>✨ Thank you for exploring VITALIS. Keep questioning, keep testing, keep validating.</sub>
+
+</div>
