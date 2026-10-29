@@ -123,3 +123,12 @@ All four gates are separate. Passing software CI or reproducing benchmark aggreg
 - **Action:** this plan update intentionally triggers the existing `full-cohort-reproduction` workflow through its documented `main` path filter. The workflow must check out its exact event commit, preserve evaluator blob `891b84ad4a5da039f1dc38411211c503c971167c`, retain six-decimal mean/sample-SD reconciliation, and keep Set B evaluation-only.
 - **Acceptance:** wait for the run to complete; verify all workflow steps, reconciliation counts, source/environment manifests, and retained aggregate-only artifact contents. If the hosted runner fails its AVX-512F preflight, report that as an infrastructure block and do not change the evaluator or tolerance.
 - **Release boundary:** standard CI passing is not a substitute for this run. This checkpoint does not authorize publication or deployment. VITALIS remains private and research-only; independent review, physical bench testing, and external-cohort/governance gates remain open.
+
+
+## Exact-current-main reproduction checkpoint — 29 October 2026
+
+- **Purpose:** close the evidence gap between the previously successful full-cohort run on `2f14fb556981645d79642ed30a2a964ecadc5ffa` and the newer software-tested source commit `05c65924d4f6505960791e366498762c9c74abad`.
+- **Trigger:** this checkpoint update is intended to trigger the existing `full-cohort-reproduction` workflow via the documented `main` path filter.
+- **Required evidence:** record the resulting workflow run ID and exact event commit; verify every job step; verify the frozen baseline reconciliation (42 metric mean/sample-SD pairs, 84 scalar values at six-decimal precision); inspect the aggregate-only artifact and source/environment manifests.
+- **Interpretation:** earlier success is historical evidence only and must not be presented as proof that the newer commit reproduced. A failed runner preflight is an infrastructure block, not permission to weaken the evaluator, CPU requirements, or numerical tolerance.
+- **Safety/release boundary:** Set B remains evaluation-only; no raw patient data or row-level predictions should be retained in public artifacts. VITALIS remains research-only, and this checkpoint does not establish clinical utility, independent external validation, ethics approval, or publication readiness.
