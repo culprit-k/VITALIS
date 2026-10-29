@@ -209,10 +209,10 @@ The complete guide covers the input contract, robust scale definition, frozen an
 ➡️ **<a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="docs/assets/button-ai-math.svg" width="280" alt="Open the full AI Mathematics & Algorithms Lab — open resource"/></a>**
 
 Related source and specifications:
-- <a href="docs/ADAPTIVE_TWIN_IMPLEMENTATION.md"><img src="docs/assets/button-ai-math.svg" width="280" alt="Adaptive twin implementation & validation contract — open resource"/></a>
-- <a href="docs/VITALIS_PB_ALGORITHM.md"><img src="docs/assets/button-ai-math.svg" width="280" alt="VITALIS-PB algorithm — open resource"/></a>
-- <a href="docs/HORIZON_FORECASTING.md"><img src="docs/assets/button-ai-math.svg" width="280" alt="Future-label forecasting protocol — open resource"/></a>
-- <a href="docs/STREAMING_SUPERVISED_INTERFACE.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Streaming/supervised interface contract — open resource"/></a>
+- <a href="docs/ADAPTIVE_TWIN_IMPLEMENTATION.md"><img src="docs/assets/button-adaptive-twin.svg" width="280" alt="Adaptive twin implementation & validation contract — open resource"/></a>
+- <a href="docs/VITALIS_PB_ALGORITHM.md"><img src="docs/assets/button-vitalis-pb.svg" width="280" alt="VITALIS-PB algorithm — open resource"/></a>
+- <a href="docs/HORIZON_FORECASTING.md"><img src="docs/assets/button-forecasting.svg" width="280" alt="Future-label forecasting protocol — open resource"/></a>
+- <a href="docs/STREAMING_SUPERVISED_INTERFACE.md"><img src="docs/assets/button-streaming.svg" width="280" alt="Streaming/supervised interface contract — open resource"/></a>
 
 </details>
 
@@ -267,14 +267,14 @@ All streaming demos use generated signals and do not constitute clinical predict
 | Resource | What it contains |
 |---|---|
 | <a href="docs/PROJECT_STATUS.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Project status — open resource"/></a> | Plain-language progress, limitations, and remaining gates. |
-| <a href="docs/RELEASE_READINESS_AUDIT.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Release readiness audit — open resource"/></a> | Remaining software and validation requirements. |
-| <a href="docs/REPRODUCIBLE_WORKFLOW.md"><img src="docs/assets/button-demo.svg" width="280" alt="Reproducible workflow — open resource"/></a> | Commands and steps for a documented run. |
-| <a href="docs/FULL_COHORT_CROSS_COHORT_RESULTS.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Full-cohort cross-cohort report — open resource"/></a> | Benchmark Set A-to-Set B comparison and limitations. |
-| <a href="docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Full-cohort horizon report — open resource"/></a> | Retrospective 1/3/6-hour label-window experiments. |
-| <a href="docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Calibration and operating-point protocol — open resource"/></a> | Development-only calibration/threshold-selection rules and evaluation boundary. |
-| <a href="docs/INDEPENDENT_EVALUATION_PROTOCOL.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Independent evaluation protocol — open resource"/></a> | Requirements for a genuinely new cohort and independent review. |
-| <a href="docs/MODEL_CARD.md"><img src="docs/assets/button-project-status.svg" width="280" alt="Model card — open resource"/></a> | Intended use, evaluation, limitations, and governance. |
-| <a href="docs/NEXT_STEPS.md"><img src="docs/assets/button-demo.svg" width="280" alt="Next steps — open resource"/></a> | Research roadmap and unresolved work. |
+| <a href="docs/RELEASE_READINESS_AUDIT.md"><img src="docs/assets/button-release-audit.svg" width="280" alt="Release readiness audit — open resource"/></a> | Remaining software and validation requirements. |
+| <a href="docs/REPRODUCIBLE_WORKFLOW.md"><img src="docs/assets/button-reproducibility.svg" width="280" alt="Reproducible workflow — open resource"/></a> | Commands and steps for a documented run. |
+| <a href="docs/FULL_COHORT_CROSS_COHORT_RESULTS.md"><img src="docs/assets/button-cross-cohort.svg" width="280" alt="Full-cohort cross-cohort report — open resource"/></a> | Benchmark Set A-to-Set B comparison and limitations. |
+| <a href="docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md"><img src="docs/assets/button-horizon-results.svg" width="280" alt="Full-cohort horizon report — open resource"/></a> | Retrospective 1/3/6-hour label-window experiments. |
+| <a href="docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md"><img src="docs/assets/button-calibration.svg" width="280" alt="Calibration and operating-point protocol — open resource"/></a> | Development-only calibration/threshold-selection rules and evaluation boundary. |
+| <a href="docs/INDEPENDENT_EVALUATION_PROTOCOL.md"><img src="docs/assets/button-independent-eval.svg" width="280" alt="Independent evaluation protocol — open resource"/></a> | Requirements for a genuinely new cohort and independent review. |
+| <a href="docs/MODEL_CARD.md"><img src="docs/assets/button-model-card.svg" width="280" alt="Model card — open resource"/></a> | Intended use, evaluation, limitations, and governance. |
+| <a href="docs/NEXT_STEPS.md"><img src="docs/assets/button-roadmap.svg" width="280" alt="Next steps — open resource"/></a> | Research roadmap and unresolved work. |
 
 Historical reports are evidence tied to specific code and data provenance. They are not automatically reproduced by the current repository head. Do not describe Set B as independent external clinical validation, and do not interpret benchmark label-window metrics as validated biological sepsis-onset forecasts.
 
@@ -299,9 +299,9 @@ Historical reports are evidence tied to specific code and data provenance. They 
 The hardware blueprint describes a proposed route from suitable sensor interfaces through a timestamped gateway to VITALIS software. The physical wristband, custom PCB, validated sensor acquisition, complete synchronisation, and clinical safety testing are **not built or validated**.
 
 - <a href="docs/HARDWARE_INTEGRATION_BLUEPRINT.md"><img src="docs/assets/button-hardware.svg" width="280" alt="Hardware integration blueprint — open resource"/></a>
-- <a href="docs/ESP32_SYNTHETIC_GATEWAY.md"><img src="docs/assets/button-hardware.svg" width="280" alt="Synthetic ESP32 gateway instructions — open resource"/></a>
-- <a href="docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md"><img src="docs/assets/button-hardware.svg" width="280" alt="Synthetic gateway test record — open resource"/></a>
-- <a href="docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md"><img src="docs/assets/button-hardware.svg" width="280" alt="Physical-bench record template — open resource"/></a>
+- <a href="docs/ESP32_SYNTHETIC_GATEWAY.md"><img src="docs/assets/button-esp32.svg" width="280" alt="Synthetic ESP32 gateway instructions — open resource"/></a>
+- <a href="docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md"><img src="docs/assets/button-bench-results.svg" width="280" alt="Synthetic gateway test record — open resource"/></a>
+- <a href="docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md"><img src="docs/assets/button-bench-template.svg" width="280" alt="Physical-bench record template — open resource"/></a>
 
 Do not connect a person to the synthetic ESP32 bench. It transmits generated toy values and is not a physiological sensor acquisition system.
 
@@ -341,7 +341,7 @@ Software correctness, exact-source reproducibility, independent statistical/clin
 
 **Built with curiosity. Guided by physiology. Grounded in reproducibility.**
 
-<a href="docs/PROJECT_STATUS.md"><img src="docs/assets/button-project-status.svg" width="280" alt="📚 Project status — open resource"/></a> · <a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="docs/assets/button-ai-math.svg" width="280" alt="🧠 AI Mathematics Lab — open resource"/></a> · <a href="docs/RELEASE_READINESS_AUDIT.md"><img src="docs/assets/button-project-status.svg" width="280" alt="🧪 Release readiness — open resource"/></a>
+<a href="docs/PROJECT_STATUS.md"><img src="docs/assets/button-project-status.svg" width="280" alt="📚 Project status — open resource"/></a> · <a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="docs/assets/button-ai-math.svg" width="280" alt="🧠 AI Mathematics Lab — open resource"/></a> · <a href="docs/RELEASE_READINESS_AUDIT.md"><img src="docs/assets/button-release-audit.svg" width="280" alt="🧪 Release readiness — open resource"/></a>
 
 <sub>VITALIS remains research-only—not a medical device, diagnosis system, or clinical decision-support tool.</sub>
 
