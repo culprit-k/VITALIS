@@ -14,7 +14,14 @@
 
 VITALIS explores an **adaptive physiological digital twin** alongside separate retrospective machine-learning experiments. It studies personal baselines, deviations, persistence, temporal features, and benchmark-label forecasting.
 
-[🧠 **AI mathematics lab**](docs/AI_MATHEMATICS_AND_ALGORITHMS.md) &nbsp; · &nbsp; [📘 Project status](docs/PROJECT_STATUS.md) &nbsp; · &nbsp; [🖥️ Demo guide](docs/PHONE_DEPLOYMENT.md) &nbsp; · &nbsp; [🔌 Hardware concept](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
+<p align="center">
+  <a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="https://img.shields.io/badge/🧠_AI_MATHEMATICS-Explore_the_algorithms-8B5CF6?style=for-the-badge&labelColor=17152B" alt="Explore AI mathematics and algorithms"/></a>
+  <a href="docs/PROJECT_STATUS.md"><img src="https://img.shields.io/badge/📘_PROJECT_STATUS-Track_progress-06B6D4?style=for-the-badge&labelColor=102733" alt="Track project status"/></a>
+</p>
+<p align="center">
+  <a href="docs/PHONE_DEPLOYMENT.md"><img src="https://img.shields.io/badge/🖥️_DEMO_GUIDE-Run_the_demo-22C55E?style=for-the-badge&labelColor=123020" alt="Read the demo guide"/></a>
+  <a href="docs/HARDWARE_INTEGRATION_BLUEPRINT.md"><img src="https://img.shields.io/badge/🔌_HARDWARE_CONCEPT-Explore_the_design-F97316?style=for-the-badge&labelColor=382014" alt="Explore the conceptual hardware design"/></a>
+</p>
 
 </div>
 
