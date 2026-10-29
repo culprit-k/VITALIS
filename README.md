@@ -64,6 +64,12 @@ This is the mathematical heart of VITALIS. The diagrams below are original, topi
 
 <div align="center">
 
+<img src="docs/assets/math-algorithm-map.svg" width="100%" alt="Animated map of VITALIS adaptive-twin and supervised machine-learning research tracks"/>
+
+</div>
+
+<div align="center">
+
 <img src="docs/assets/math-robust-baseline.svg" width="100%" alt="Animated robust median and median absolute deviation baseline diagram"/>
 
 </div>
