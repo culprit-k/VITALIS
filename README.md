@@ -82,7 +82,7 @@ The central idea is simple: **a measurement is more meaningful when we understan
 
 # 🧠 AI Mathematics & Algorithms Lab
 
-This is the mathematical heart of VITALIS. The diagrams below are original, topic-specific visual explanations; the full derivations, assumptions, implementation boundaries, and source links are in the [complete AI Mathematics & Algorithms guide](docs/AI_MATHEMATICS_AND_ALGORITHMS.md).
+This is the mathematical heart of VITALIS. The diagrams below are original, topic-specific visual explanations; the full derivations, assumptions, implementation boundaries, and source links are in the <a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="https://img.shields.io/badge/COMPLETE%20AI%20MATHEMATICS%20ALGORITHMS%20GUIDE-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="complete AI Mathematics & Algorithms guide" height="22"/></a>.
 
 <div align="center">
 
@@ -206,13 +206,13 @@ The two are **not** added, averaged, or fused. The twin score is not a probabili
 
 The complete guide covers the input contract, robust scale definition, frozen and rolling baselines, CUSUM update rules, system aggregation, EWMA, persistent-deviation states, causal patient-baseline features, future-label target semantics, separate output contract, and validation plan.
 
-➡️ **[Open the full AI Mathematics & Algorithms Lab](docs/AI_MATHEMATICS_AND_ALGORITHMS.md)**
+➡️ **<a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="https://img.shields.io/badge/OPEN%20THE%20FULL%20AI%20MATHEMATICS%20ALGORITHMS%20LAB-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="Open the full AI Mathematics & Algorithms Lab" height="22"/></a>**
 
 Related source and specifications:
-- [Adaptive twin implementation & validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md)
-- [VITALIS-PB algorithm](docs/VITALIS_PB_ALGORITHM.md)
-- [Future-label forecasting protocol](docs/HORIZON_FORECASTING.md)
-- [Streaming/supervised interface contract](docs/STREAMING_SUPERVISED_INTERFACE.md)
+- <a href="docs/ADAPTIVE_TWIN_IMPLEMENTATION.md"><img src="https://img.shields.io/badge/ADAPTIVE%20TWIN%20IMPLEMENTATION%20VALIDATION%20CONTRACT-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="Adaptive twin implementation & validation contract" height="22"/></a>
+- <a href="docs/VITALIS_PB_ALGORITHM.md"><img src="https://img.shields.io/badge/VITALIS--PB%20ALGORITHM-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="VITALIS-PB algorithm" height="22"/></a>
+- <a href="docs/HORIZON_FORECASTING.md"><img src="https://img.shields.io/badge/FUTURE--LABEL%20FORECASTING%20PROTOCOL-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="Future-label forecasting protocol" height="22"/></a>
+- <a href="docs/STREAMING_SUPERVISED_INTERFACE.md"><img src="https://img.shields.io/badge/STREAMINGSUPERVISED%20INTERFACE%20CONTRACT-OPEN-475569?style=for-the-badge&labelColor=111827" alt="Streaming/supervised interface contract" height="22"/></a>
 
 </details>
 
@@ -266,15 +266,15 @@ All streaming demos use generated signals and do not constitute clinical predict
 
 | Resource | What it contains |
 |---|---|
-| [Project status](docs/PROJECT_STATUS.md) | Plain-language progress, limitations, and remaining gates. |
-| [Release readiness audit](docs/RELEASE_READINESS_AUDIT.md) | Remaining software and validation requirements. |
-| [Reproducible workflow](docs/REPRODUCIBLE_WORKFLOW.md) | Commands and steps for a documented run. |
-| [Full-cohort cross-cohort report](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) | Benchmark Set A-to-Set B comparison and limitations. |
-| [Full-cohort horizon report](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) | Retrospective 1/3/6-hour label-window experiments. |
-| [Calibration and operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md) | Development-only calibration/threshold-selection rules and evaluation boundary. |
-| [Independent evaluation protocol](docs/INDEPENDENT_EVALUATION_PROTOCOL.md) | Requirements for a genuinely new cohort and independent review. |
-| [Model card](docs/MODEL_CARD.md) | Intended use, evaluation, limitations, and governance. |
-| [Next steps](docs/NEXT_STEPS.md) | Research roadmap and unresolved work. |
+| <a href="docs/PROJECT_STATUS.md"><img src="https://img.shields.io/badge/PROJECT%20STATUS-OPEN-0891B2?style=for-the-badge&labelColor=111827" alt="Project status" height="22"/></a> | Plain-language progress, limitations, and remaining gates. |
+| <a href="docs/RELEASE_READINESS_AUDIT.md"><img src="https://img.shields.io/badge/RELEASE%20READINESS%20AUDIT-OPEN-0891B2?style=for-the-badge&labelColor=111827" alt="Release readiness audit" height="22"/></a> | Remaining software and validation requirements. |
+| <a href="docs/REPRODUCIBLE_WORKFLOW.md"><img src="https://img.shields.io/badge/REPRODUCIBLE%20WORKFLOW-OPEN-16A34A?style=for-the-badge&labelColor=111827" alt="Reproducible workflow" height="22"/></a> | Commands and steps for a documented run. |
+| <a href="docs/FULL_COHORT_CROSS_COHORT_RESULTS.md"><img src="https://img.shields.io/badge/FULL--COHORT%20CROSS--COHORT%20REPORT-OPEN-0891B2?style=for-the-badge&labelColor=111827" alt="Full-cohort cross-cohort report" height="22"/></a> | Benchmark Set A-to-Set B comparison and limitations. |
+| <a href="docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md"><img src="https://img.shields.io/badge/FULL--COHORT%20HORIZON%20REPORT-OPEN-0891B2?style=for-the-badge&labelColor=111827" alt="Full-cohort horizon report" height="22"/></a> | Retrospective 1/3/6-hour label-window experiments. |
+| <a href="docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md"><img src="https://img.shields.io/badge/CALIBRATION%20AND%20OPERATING--POINT%20PROTOCOL-OPEN-475569?style=for-the-badge&labelColor=111827" alt="Calibration and operating-point protocol" height="22"/></a> | Development-only calibration/threshold-selection rules and evaluation boundary. |
+| <a href="docs/INDEPENDENT_EVALUATION_PROTOCOL.md"><img src="https://img.shields.io/badge/INDEPENDENT%20EVALUATION%20PROTOCOL-OPEN-475569?style=for-the-badge&labelColor=111827" alt="Independent evaluation protocol" height="22"/></a> | Requirements for a genuinely new cohort and independent review. |
+| <a href="docs/MODEL_CARD.md"><img src="https://img.shields.io/badge/MODEL%20CARD-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="Model card" height="22"/></a> | Intended use, evaluation, limitations, and governance. |
+| <a href="docs/NEXT_STEPS.md"><img src="https://img.shields.io/badge/NEXT%20STEPS-OPEN-475569?style=for-the-badge&labelColor=111827" alt="Next steps" height="22"/></a> | Research roadmap and unresolved work. |
 
 Historical reports are evidence tied to specific code and data provenance. They are not automatically reproduced by the current repository head. Do not describe Set B as independent external clinical validation, and do not interpret benchmark label-window metrics as validated biological sepsis-onset forecasts.
 
@@ -298,10 +298,10 @@ Historical reports are evidence tied to specific code and data provenance. They 
 
 The hardware blueprint describes a proposed route from suitable sensor interfaces through a timestamped gateway to VITALIS software. The physical wristband, custom PCB, validated sensor acquisition, complete synchronisation, and clinical safety testing are **not built or validated**.
 
-- [Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
-- [Synthetic ESP32 gateway instructions](docs/ESP32_SYNTHETIC_GATEWAY.md)
-- [Synthetic gateway test record](docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md)
-- [Physical-bench record template](docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md)
+- <a href="docs/HARDWARE_INTEGRATION_BLUEPRINT.md"><img src="https://img.shields.io/badge/HARDWARE%20INTEGRATION%20BLUEPRINT-OPEN-EA580C?style=for-the-badge&labelColor=111827" alt="Hardware integration blueprint" height="22"/></a>
+- <a href="docs/ESP32_SYNTHETIC_GATEWAY.md"><img src="https://img.shields.io/badge/SYNTHETIC%20ESP32%20GATEWAY%20INSTRUCTIONS-OPEN-EA580C?style=for-the-badge&labelColor=111827" alt="Synthetic ESP32 gateway instructions" height="22"/></a>
+- <a href="docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md"><img src="https://img.shields.io/badge/SYNTHETIC%20GATEWAY%20TEST%20RECORD-OPEN-475569?style=for-the-badge&labelColor=111827" alt="Synthetic gateway test record" height="22"/></a>
+- <a href="docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md"><img src="https://img.shields.io/badge/PHYSICAL--BENCH%20RECORD%20TEMPLATE-OPEN-EA580C?style=for-the-badge&labelColor=111827" alt="Physical-bench record template" height="22"/></a>
 
 Do not connect a person to the synthetic ESP32 bench. It transmits generated toy values and is not a physiological sensor acquisition system.
 
@@ -341,7 +341,7 @@ Software correctness, exact-source reproducibility, independent statistical/clin
 
 **Built with curiosity. Guided by physiology. Grounded in reproducibility.**
 
-[📚 Project status](docs/PROJECT_STATUS.md) · [🧠 AI Mathematics Lab](docs/AI_MATHEMATICS_AND_ALGORITHMS.md) · [🧪 Release readiness](docs/RELEASE_READINESS_AUDIT.md)
+<a href="docs/PROJECT_STATUS.md"><img src="https://img.shields.io/badge/PROJECT%20STATUS-OPEN-0891B2?style=for-the-badge&labelColor=111827" alt="📚 Project status" height="22"/></a> · <a href="docs/AI_MATHEMATICS_AND_ALGORITHMS.md"><img src="https://img.shields.io/badge/AI%20MATHEMATICS%20LAB-OPEN-7C3AED?style=for-the-badge&labelColor=111827" alt="🧠 AI Mathematics Lab" height="22"/></a> · <a href="docs/RELEASE_READINESS_AUDIT.md"><img src="https://img.shields.io/badge/RELEASE%20READINESS-OPEN-475569?style=for-the-badge&labelColor=111827" alt="🧪 Release readiness" height="22"/></a>
 
 <sub>VITALIS remains research-only—not a medical device, diagnosis system, or clinical decision-support tool.</sub>
 
