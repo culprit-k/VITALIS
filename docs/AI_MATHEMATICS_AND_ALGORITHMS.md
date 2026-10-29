@@ -4,7 +4,7 @@
 
 <div align="center">
 
-<img src="assets/math-robust-baseline.svg" width="100%" alt="Animated illustration of a robust median baseline that is less influenced by an outlier"/>
+<img src="assets/math-algorithm-map.svg" width="100%" alt="Animated overview of VITALIS adaptive-twin and separate supervised machine-learning tracks"/>
 
 </div>
 
