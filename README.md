@@ -86,8 +86,8 @@ This is the mathematical heart of VITALIS. The diagrams below are original, topi
 For channel \(j\) at time \(t\), the twin uses earlier accepted observations \(H_{j,t}\):
 
 $$
-m_{j,t}=\operatorname{median}(H_{j,t}),\qquad
-s_{j,t}=\max(1.4826\,\operatorname{MAD}(H_{j,t}),\epsilon_j)
+m_{j,t}=\mathrm{median}(H_{j,t}),\qquad
+s_{j,t}=\max(1.4826\,\mathrm{MAD}(H_{j,t}),\epsilon_j)
 $$
 
 The median is less sensitive than the mean to a single extreme observation. The robust scale floor \(\epsilon_j\) avoids a vanishing denominator; it is a numerical engineering parameter, not a validated sensor-noise or clinical threshold. The current value is scored **before** it can update the history.
@@ -153,7 +153,7 @@ The twin also tracks data coverage, persistent channel deviations, and cross-sys
 A separate feature generator uses valid observations strictly before row \(t\) to calculate a personal baseline, raw deviation, and robust normalized deviation:
 
 $$
-b_{i,j,t}=\operatorname{median}\{x_{i,j,\tau}:\tau<t\},\qquad
+b_{i,j,t}=\mathrm{median}\{x_{i,j,\tau}:\tau<t\},\qquad
 d_{i,j,t}=x_{i,j,t}-b_{i,j,t}
 $$
 
