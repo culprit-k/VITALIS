@@ -1,394 +1,308 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=venom&height=280&color=0:050816,20:32106B,45:7B2FF7,70:00D4FF,100:00F5A0&text=VITALIS&fontColor=FFFFFF&fontSize=82&fontAlignY=43&desc=PHYSIOLOGY%20%7C%20AI%20%7C%20TIME-SERIES%20RESEARCH&descSize=16&descAlignY=65&animation=fadeIn" width="100%" alt="VITALIS vibrant neon research banner" />
+<img src="https://capsule-render.vercel.app/api?type=venom&height=270&color=0:050816,18:24104B,42:7438DB,68:00CFE8,100:00E6A8&text=VITALIS&fontColor=FFFFFF&fontSize=84&fontAlignY=42&desc=ADAPTIVE%20PHYSIOLOGY%20%7C%20AI%20%7C%20RESEARCH&descSize=16&descAlignY=64&animation=fadeIn" width="100%" alt="VITALIS neon research header"/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=18&duration=2400&pause=700&color=00E5FF&center=true&vCenter=true&width=820&lines=Mapping+physiology+through+time+%F0%9F%AB%80;Adaptive+digital+twin+%C3%97+AI+research+%F0%9F%A7%A0;Explore+patterns.+Validate+with+care.+%E2%9C%A8" alt="Animated VITALIS tagline" />
-
-<br/>
-
-<a href="https://github.com/culprit-k/VITALIS/releases"><img src="https://img.shields.io/badge/%E2%9C%A8%20RESEARCH%20PREVIEW-v0.1.0-7B2FF7?style=for-the-badge&labelColor=101026" alt="Research Preview v0.1.0"/></a>
-<img src="https://img.shields.io/badge/AI-Physiology-00D4FF?style=for-the-badge&labelColor=101026" alt="AI and physiology"/>
-<img src="https://img.shields.io/badge/Focus-Time--Series-FF4ECD?style=for-the-badge&labelColor=101026" alt="Time-series"/>
-<img src="https://img.shields.io/badge/Status-Research%20Only-FF9F1C?style=for-the-badge&labelColor=101026" alt="Research only"/>
-
-<br/><br/>
-
-### 🌌 Turning physiological signals into a clearer picture of change
-
-*VITALIS explores an adaptive physiological digital twin designed to study evolving baselines, temporal deviations, and patterns associated with clinical deterioration.*
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=17&duration=2600&pause=800&color=00E5FF&center=true&vCenter=true&width=820&lines=Signals+change.+Patterns+matter.;Explore+the+mathematics+behind+the+twin.;Research+first.+Evidence+always." alt="Animated VITALIS tagline"/>
 
 <br/>
 
-[**📚 Explore the research**](docs/PROJECT_STATUS.md) &nbsp; ✦ &nbsp; [**🧬 Meet the adaptive twin**](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) &nbsp; ✦ &nbsp; [**🖥️ Open the demo guide**](docs/PHONE_DEPLOYMENT.md) &nbsp; ✦ &nbsp; [**🔌 Hardware concept**](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
+<img src="https://img.shields.io/badge/PROJECT-RESEARCH%20PREVIEW-7B2FF7?style=for-the-badge&labelColor=101026" alt="Research preview"/>
+<img src="https://img.shields.io/badge/FOCUS-Physiological%20time--series-00CFE8?style=for-the-badge&labelColor=101026" alt="Physiological time series"/>
+<img src="https://img.shields.io/badge/SAFETY-Research%20only-FF9F1C?style=for-the-badge&labelColor=101026" alt="Research only"/>
+
+### A research prototype exploring how physiology changes over time
+
+VITALIS explores an **adaptive physiological digital twin** alongside separate retrospective machine-learning experiments. It studies personal baselines, deviations, persistence, temporal features, and benchmark-label forecasting.
+
+[🧠 **AI mathematics lab**](docs/AI_MATHEMATICS_AND_ALGORITHMS.md) &nbsp; · &nbsp; [📘 Project status](docs/PROJECT_STATUS.md) &nbsp; · &nbsp; [🖥️ Demo guide](docs/PHONE_DEPLOYMENT.md) &nbsp; · &nbsp; [🔌 Hardware concept](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
 
 </div>
+
+---
+
+## 💜 Meet VITALIS
 
 <div align="center">
 
-### 🎨 Meet the VITALIS research world
+<img src="docs/assets/vitalis-cartoon-overview.svg" width="100%" alt="Cartoon overview of VITALIS showing an AI robot, heart waveform and research dashboard"/>
 
-<img src="docs/assets/vitalis-cartoon-overview.svg" alt="Cartoon-style VITALIS illustration: friendly AI robot, glowing heart waveform, and research dashboard" width="100%" />
-
-<sub>Concept art for explaining the idea to everyone: signals → adaptive-twin research → visualised patterns. The dashboard and wearable shown are illustrative, not a completed clinical system.</sub>
+<sub>The robot, heart and dashboard are explanatory artwork—not a completed medical device or a validated clinical system.</sub>
 
 </div>
 
-<details open>
-<summary><b>🪄 Take a little tour of VITALIS — tap to explore</b></summary>
+## 🌊 From signal to research insight
 
 <div align="center">
 
-| 🩺 The signal | 🧠 The twin | 📊 The story |
-|:---:|:---:|:---:|
-| <img src="https://img.shields.io/badge/01-Observe-FF5DA2?style=for-the-badge" alt="Observe"/> | <img src="https://img.shields.io/badge/02-Learn-8B5CF6?style=for-the-badge" alt="Learn"/> | <img src="https://img.shields.io/badge/03-Explore-06B6D4?style=for-the-badge" alt="Explore"/> |
-| Physiological time-series or synthetic examples | Research baseline and deviation modelling | Visualise trends for analysis |
+<img src="docs/assets/vitalis-signal-to-insight.svg" width="100%" alt="Animated original illustration showing observations flowing through quality checks and model study to a research review"/>
 
 </div>
 
-</details>
+The central idea is simple: **a measurement is more meaningful when we understand its history, data quality, and context.** VITALIS experiments with mathematics that represents deviations from a changing personal reference, while keeping retrospective prediction models as a separate research track.
 
-<div align="center">
+## 🧭 What exists today—and what does not
 
-<img src="docs/assets/vitalis-pulse-animation.svg" width="100%" alt="Animated VITALIS cartoon: friendly AI robot, pulsing heart waveform, and signal dashboard" />
-
-<sub>💓 Your body is constantly producing signals. VITALIS explores how AI might help researchers study patterns in those signals over time—without treating a pattern as a diagnosis.</sub>
-
-</div>
-
-<details>
-<summary><b>🤖 What does the VITALIS “digital twin” mean?</b></summary>
-
-Imagine a friendly digital companion that learns what a person's measurements usually look like over time. The research question is whether changes from that evolving baseline can help researchers understand physiological patterns.
-
-- **Input:** available time-series observations or synthetic demonstration data.
-- **Twin component:** an experimental baseline and deviation representation.
-- **Research view:** visual summaries and trajectories to inspect.
-- **Reality check:** this is not a clinically validated patient model or a diagnostic tool.
-
-</details>
-
-<details>
-<summary><b>🧪 What is real today, and what is still a concept?</b></summary>
-
-| Component | Current status |
+| Area | Current state |
 |---|---|
-| Retrospective research workflows | Present in repository; reproduce against documented environment |
-| Adaptive-deviation software component | Initial research implementation |
-| Synthetic stream demonstration | Demonstration only; generated values |
-| Wearable wristband and custom PCB | Proposed, not built |
-| Independent external clinical validation | Not completed |
-| Clinical use | Not permitted |
-
-</details>
-
-<details>
-<summary><b>🗺️ Quick navigation — open the section you need</b></summary>
-
-- [📘 Project status](docs/PROJECT_STATUS.md)
-- [🧬 Adaptive twin implementation](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md)
-- [🔌 Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
-- [🧾 External validation protocol](docs/EXTERNAL_VALIDATION_PROTOCOL.md)
-- [✅ Release readiness audit](docs/RELEASE_READINESS_AUDIT.md)
-- [📦 Research Preview release notes](RELEASE_NOTES_v0.1.0.md)
-
-</details>
-
-<table>
-<tr>
-<td align="center" width="25%"><h3>🧠</h3><b>Adaptive Twin</b><br/><sub>Baseline & deviation research</sub></td>
-<td align="center" width="25%"><h3>📈</h3><b>Temporal AI</b><br/><sub>Patterns across time</sub></td>
-<td align="center" width="25%"><h3>🧪</h3><b>Reproducibility</b><br/><sub>Auditable experiments</sub></td>
-<td align="center" width="25%"><h3>🔭</h3><b>Future Hardware</b><br/><sub>Proposed sensor pathway</sub></td>
-</tr>
-</table>
-
-> **Project status at a glance:** the repository contains retrospective research workflows and an initial adaptive-deviation software component. The wearable and full sensor integration remain proposed work; clinical validation has not occurred.
+| Retrospective cohort workflow | Research scripts and documented benchmark experiments are present; follow the runbook to reproduce them. |
+| Adaptive physiological twin | An initial software component calculates unitless deviation and trajectory heuristics. |
+| Patient-baseline features | An experimental causal feature generator supports retrospective model comparison. |
+| Supervised horizon experiments | Separate retrospective experiments target future entry into the Challenge label window at 1, 3, and 6 hourly rows. |
+| Streaming demo | Synthetic/generated values only; not real patient monitoring. |
+| ESP32 USB example | Synthetic test values only; no sensor drivers or patient connection. |
+| Wristband, PCB and physical sensor integration | Proposed architecture—not built or validated. |
+| Independent external or prospective clinical validation | Not completed. |
 
 > [!IMPORTANT]
-> **Research prototype only.** VITALIS is not a medical device or a clinically validated decision-support system. Do not use it to diagnose, triage, monitor, or treat patients, and do not use its outputs to guide patient care.
-
-## 🧭 Project at a glance
-
-<div align="center">
-<img src="docs/assets/vitalis-research-pipeline.svg" width="100%" alt="VITALIS research workflow from physiological signals through quality checks and model study to review"/>
-<sub>Follow the research path: observe signals → check data quality → study patterns → review evidence.</sub>
-</div>
-
-
-| 🧠 Adaptive twin | 📈 Temporal ML | 🔬 Reproducibility | 🔌 Hardware pathway |
-|:---:|:---:|:---:|:---:|
-| Explore deviations from an evolving baseline | Study patterns across time | Auditable experiments and aggregate metrics | Proposed sensor-to-software architecture |
-| **Research implementation** | **Retrospective evaluation** | **Validation still required** | **Physical device not built** |
-
-## 🧬 How VITALIS is intended to work
-
-```mermaid
-flowchart LR
-    A["Physiological observations<br/>or synthetic signals"] --> B["Quality checks<br/>and timestamping"]
-    B --> C["Adaptive twin<br/>baseline + deviation"]
-    B --> D["Supervised temporal model<br/>(when available)"]
-    C --> E["Research dashboard<br/>and trajectory view"]
-    D --> E
-    E --> F["Evaluation, uncertainty<br/>and independent review"]
-    style A fill:#102a43,stroke:#38d9c8,color:#ffffff
-    style B fill:#163b50,stroke:#38d9c8,color:#ffffff
-    style C fill:#0b7285,stroke:#99f6e4,color:#ffffff
-    style D fill:#0b7285,stroke:#99f6e4,color:#ffffff
-    style E fill:#163b50,stroke:#38d9c8,color:#ffffff
-    style F fill:#102a43,stroke:#38d9c8,color:#ffffff
-```
-
-<div align="center">
-<sub>Conceptual architecture only. Synthetic demos use generated values; this diagram does not imply a validated clinical pipeline or a completed wearable.</sub>
-</div>
+> **Research prototype only.** VITALIS is not a medical device or a clinically validated decision-support system. Do not use its outputs for diagnosis, triage, monitoring, treatment, or any patient-care decision.
 
 ---
 
+# 🧠 AI Mathematics & Algorithms Lab
 
-**VITALIS** is a research-first platform exploring adaptive physiological modeling for early prediction of sepsis-related clinical deterioration from longitudinal observations.
-
-> **Research prototype only.** VITALIS is not a medical device or a clinically validated decision-support system. Do not use it to guide patient care.
-
-## Open the demo on a phone
-
-The synthetic adaptive-twin sandbox can be hosted in Streamlit Community Cloud and opened in Safari: follow [Phone deployment instructions](docs/PHONE_DEPLOYMENT.md). Choose `dashboard/twin_demo.py` as the app file. A repository maintainer must complete the one-time deployment and authorize GitHub access; GitHub alone does not run the app. The demo is synthetic-only and is not a clinical sepsis predictor.
+This is the mathematical heart of VITALIS. The diagrams below are original, topic-specific visual explanations; the full derivations, assumptions, implementation boundaries, and source links are in the [complete AI Mathematics & Algorithms guide](docs/AI_MATHEMATICS_AND_ALGORITHMS.md).
 
 <div align="center">
-<img src="docs/assets/vitalis-reproducibility.svg" width="100%" alt="Research principles: reproducibility, documentation, data protection, and independent review"/>
+
+<img src="docs/assets/math-robust-baseline.svg" width="100%" alt="Animated robust median and median absolute deviation baseline diagram"/>
+
 </div>
 
-## Research goals
+### 1. Robust baseline — median and MAD
 
-- Build a reproducible, auditable cohort pipeline.
-- Compare static, causal temporal, and experimental patient-specific baseline-deviation features.
-- Implement an online adaptive physiological deviation layer while keeping deviation detection separate from supervised clinical-outcome prediction.
-- Prevent patient leakage and label-timing errors.
-- Evaluate discrimination, calibration, sensitivity, specificity, and aggregate alert behavior.
-- Document uncertainty and limitations before considering any clinical translation.
+For channel \(j\) at time \(t\), the twin uses earlier accepted observations \(H_{j,t}\):
 
-## Repository layout
+$$
+m_{j,t}=\operatorname{median}(H_{j,t}),\qquad
+s_{j,t}=\max(1.4826\,\operatorname{MAD}(H_{j,t}),\epsilon_j)
+$$
 
-<sub>🗂️ Think of the repository as a research lab: documentation explains the method, source code runs the experiments, scripts orchestrate workflows, tests check behavior, and dashboards display aggregate results.</sub>
+The median is less sensitive than the mean to a single extreme observation. The robust scale floor \(\epsilon_j\) avoids a vanishing denominator; it is a numerical engineering parameter, not a validated sensor-noise or clinical threshold. The current value is scored **before** it can update the history.
 
+<div align="center">
 
-```text
-docs/                 Research protocol, algorithm specs, model card, workflow
-src/vitalis/          Reusable temporal features, validation, adaptive twin
-scripts/              Dataset audit, training, comparisons, synthetic twin demo
-configs/              Baseline experiment configuration
-tests/                Unit and regression tests
-dashboard/            Aggregate-only Streamlit evaluation dashboard
-.github/workflows/    Automated tests
-```
+<img src="docs/assets/math-zscore.svg" width="100%" alt="Animated standardized-deviation diagram comparing the current value to a personal baseline"/>
 
-## Local workflow
+</div>
 
-<sub>🛠️ Reproducible workflow: create an isolated environment → install the project → run tests → execute a documented experiment. Keep datasets and patient-level outputs outside Git.</sub>
+### 2. Standardized deviation — how far from the reference?
 
+$$
+z_{j,t}=\frac{x_{j,t}-m_{j,t}}{s_{j,t}},\qquad
+z^0_{j,t}=\frac{x_{j,t}-m^0_j}{s^0_j}
+$$
 
-Install and test:
+VITALIS compares the current value with both a rolling baseline and a frozen initial reference. It clips the larger absolute standardized deviation to a bounded, unitless channel score \(q_{j,t}\in[0,1]\). This score is **not** a sepsis probability.
 
-```bash
-python -m venv .venv
-# Activate the environment, then:
+<div align="center">
+
+<img src="docs/assets/math-cusum.svg" width="100%" alt="Animated cumulative-sum illustration showing how gradual positive and negative shifts build over time"/>
+
+</div>
+
+### 3. CUSUM — help reveal gradual drift
+
+$$
+C^+_{j,t}=\max(0,C^+_{j,t-1}+z^0_{j,t}-k)
+$$
+
+$$
+C^-_{j,t}=\max(0,C^-_{j,t-1}-z^0_{j,t}-k)
+$$
+
+The twin tracks positive and negative departures from the frozen reference. A configured shift condition is reached when \(\max(C^+_{j,t},C^-_{j,t})\ge h\). Parameters \(k\) and \(h\) need validation and are **not** clinical alarm cutoffs.
+
+<div align="center">
+
+<img src="docs/assets/math-ewma-systems.svg" width="100%" alt="Animated flow from per-channel scores to equal-weight physiological-system averages and EWMA trajectory smoothing"/>
+
+</div>
+
+### 4. Multiple systems — aggregate without letting one group dominate
+
+Channels are averaged within each represented physiological system; the available systems then receive equal weight. An exponentially weighted moving average (EWMA) smooths the result:
+
+$$
+u_t=\frac{1}{|G_t|}\sum_{g\in G_t}Q_{g,t},\qquad
+S_t=\alpha u_t+(1-\alpha)S_{t-1}
+$$
+
+The twin also tracks data coverage, persistent channel deviations, and cross-system concordance. It withholds an eligible summary unless minimum data coverage, scored-channel count, and represented-system count are met. Weights and thresholds are configurable engineering defaults, not learned medical weights.
+
+<div align="center">
+
+<img src="docs/assets/math-personal-baseline.svg" width="100%" alt="Animated patient-baseline feature diagram showing causal historical features entering a retrospective supervised model"/>
+
+</div>
+
+### 5. VITALIS-PB — patient-specific features for retrospective ML
+
+A separate feature generator uses valid observations strictly before row \(t\) to calculate a personal baseline, raw deviation, and robust normalized deviation:
+
+$$
+b_{i,j,t}=\operatorname{median}\{x_{i,j,\tau}:\tau<t\},\qquad
+d_{i,j,t}=x_{i,j,t}-b_{i,j,t}
+$$
+
+The experimental model can also use current values, lags, one-step deltas, and trailing six-row means. The supervised logistic-regression workflow fits preprocessing only on training folds and keeps patient groups separate across train/validation/test. This is a research feature experiment—not proof of clinical utility, novelty, or patentability.
+
+<div align="center">
+
+<img src="docs/assets/math-horizon-forecast.svg" width="100%" alt="Animated retrospective forecasting diagram showing current label and future Challenge label window"/>
+
+</div>
+
+### 6. Supervised forecasting — separate 1-, 3-, and 6-hour experiments
+
+For current Challenge label \(Y_{i,t}=0\), the experimental target asks whether any label becomes positive in the next \(H\) hourly rows:
+
+$$
+Y^{(H)}_{i,t}=\mathbb{1}\left[Y_{i,t}=0\land\max_{r=1,\ldots,H}Y_{i,t+r}=1\right]
+$$
+
+The official Challenge label already uses a six-hour lead convention. Therefore, these experiments forecast **entry into the Challenge-positive label window**, not independently observed biological sepsis onset. Set B is a held-out partition within the same challenge—not an independent external clinical cohort.
+
+<div align="center">
+
+<img src="docs/assets/math-dual-output.svg" width="100%" alt="Animated dual-lane diagram keeping adaptive twin heuristics separate from supervised model probabilities"/>
+
+</div>
+
+### 7. Two outputs must stay separate
+
+- **Adaptive twin:** unitless deviation heuristic, data coverage, persistence, cross-system pattern, and trajectory summary.
+- **Supervised model:** retrospective model output for a specifically defined benchmark target, when a fitted predictor and matching feature schema are available.
+
+The two are **not** added, averaged, or fused. The twin score is not a probability. If no frozen supervised predictor is supplied, the research interface marks the supervised output unavailable/null rather than inventing a zero.
+
+<details>
+<summary><b>🔎 Open the full equations, assumptions, and implementation boundaries</b></summary>
+
+The complete guide covers the input contract, robust scale definition, frozen and rolling baselines, CUSUM update rules, system aggregation, EWMA, persistent-deviation states, causal patient-baseline features, future-label target semantics, separate output contract, and validation plan.
+
+➡️ **[Open the full AI Mathematics & Algorithms Lab](docs/AI_MATHEMATICS_AND_ALGORITHMS.md)**
+
+Related source and specifications:
+- [Adaptive twin implementation & validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md)
+- [VITALIS-PB algorithm](docs/VITALIS_PB_ALGORITHM.md)
+- [Future-label forecasting protocol](docs/HORIZON_FORECASTING.md)
+- [Streaming/supervised interface contract](docs/STREAMING_SUPERVISED_INTERFACE.md)
+
+</details>
+
+---
+
+## 🧪 Research workflow: make results reproducible
+
+<div align="center">
+
+<img src="docs/assets/vitalis-experiment-workflow.svg" width="100%" alt="Animated four-step reproducible research workflow: configure, run, evaluate, report"/>
+
+</div>
+
+VITALIS is organised around auditable experiments, not just a live-looking dashboard. Pin the environment, run tests, compare models on the defined split, and store aggregate results with provenance. A passing test suite shows expected software behavior; it does not establish clinical performance.
+
+### Quick start
+
+<pre><code>python -m venv .venv
+# Activate the virtual environment, then:
 pip install -e ".[dev]"
-pytest
-```
+pytest</code></pre>
 
-Keep the PhysioNet/CinC Challenge 2019 data outside Git and follow its access terms. Run the aggregate cohort inventory:
+Keep authorised PhysioNet/CinC Challenge 2019 data outside Git and comply with dataset terms. To inventory a local per-patient PSV folder:
 
-```bash
-python scripts/build_cohort.py /path/to/psv_files --output outputs/cohort_inventory.json
-```
+<pre><code>python scripts/build_cohort.py /path/to/psv_files --output outputs/cohort_inventory.json</code></pre>
 
-Train the static baseline, temporal variant, matched comparison, or a deterministic subset experiment:
+Run synthetic demonstrations:
 
-```bash
-python scripts/train_baseline.py /path/to/psv_files --output outputs/static_metrics.json
-python scripts/train_baseline.py /path/to/psv_files --temporal --output outputs/temporal_metrics.json
-python scripts/train_baseline.py /path/to/psv_files --temporal --personalized --output outputs/personalized_metrics.json
-python scripts/compare_models.py /path/to/psv_files --output outputs/model_comparison.json
-python scripts/run_subset_experiment.py /path/to/psv_files --sample-size 1500 --sampling-seed 2026 --split-seed 42 --output outputs/subset_comparison.json
-python scripts/train_horizon_model.py /path/to/psv_files --horizons 1 3 6 --seed 42 --threshold 0.5 --refractory-hours 6 --bootstrap-replicates 200 --output outputs/horizon_forecast_summary.json
-python scripts/evaluate_horizon_cross_cohort.py --set-a-cache /path/outside/repo/cache_set_a --set-b-cache /path/outside/repo/cache_set_b --horizons 1 3 6 --seeds 42 123 2026 --threshold 0.5 --refractory-hours 6 --bootstrap-replicates 200 --output /path/outside/repo/horizon_cross_cohort.json
-```
+<pre><code>python scripts/demo_adaptive_twin.py
+python scripts/demo_integrated_inference.py</code></pre>
 
-Run the synthetic streaming demonstration of the adaptive physiological twin:
+For the aggregate dashboard, install the optional extra and run:
 
-```bash
-python scripts/demo_adaptive_twin.py
-```
+<pre><code>pip install -e ".[dashboard]"
+streamlit run dashboard/app.py</code></pre>
 
-This script uses generated values only. It illustrates baseline warm-up, deviation scoring, multisystem aggregation, and trajectory direction; it is not clinical evidence.
+For the synthetic adaptive-twin sandbox:
 
-## Synthetic ESP32 software bench
+<pre><code>streamlit run dashboard/twin_demo.py</code></pre>
 
-The USB gateway is implemented for **generated test values only**. It sends heart-rate and SpO₂ toy signals from an ESP32-S3 over USB serial to the Python timestamped stream and adaptive twin. It has no sensor drivers, Wi-Fi, patient connection, or clinical output.
+All streaming demos use generated signals and do not constitute clinical prediction or patient monitoring.
 
-- [Gateway architecture, setup, and failure checks](docs/ESP32_SYNTHETIC_GATEWAY.md)
-- [Synthetic replay benchmark results](docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md)
-- [Physical bench record template](docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md)
+## 📊 Research reports and provenance
 
-Run receiver tests without hardware:
+| Resource | What it contains |
+|---|---|
+| [Project status](docs/PROJECT_STATUS.md) | Plain-language progress, limitations, and remaining gates. |
+| [Release readiness audit](docs/RELEASE_READINESS_AUDIT.md) | Remaining software and validation requirements. |
+| [Reproducible workflow](docs/REPRODUCIBLE_WORKFLOW.md) | Commands and steps for a documented run. |
+| [Full-cohort cross-cohort report](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) | Benchmark Set A-to-Set B comparison and limitations. |
+| [Full-cohort horizon report](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) | Retrospective 1/3/6-hour label-window experiments. |
+| [Calibration and operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md) | Development-only calibration/threshold-selection rules and evaluation boundary. |
+| [Independent evaluation protocol](docs/INDEPENDENT_EVALUATION_PROTOCOL.md) | Requirements for a genuinely new cohort and independent review. |
+| [Model card](docs/MODEL_CARD.md) | Intended use, evaluation, limitations, and governance. |
+| [Next steps](docs/NEXT_STEPS.md) | Research roadmap and unresolved work. |
 
-```bash
-pytest -q tests/test_esp32_gateway.py tests/test_stream.py
-```
+Historical reports are evidence tied to specific code and data provenance. They are not automatically reproduced by the current repository head. Do not describe Set B as independent external clinical validation, and do not interpret benchmark label-window metrics as validated biological sepsis-onset forecasts.
 
-With a board later, upload `firmware/esp32_synthetic_gateway/esp32_synthetic_gateway.ino`, install `pyserial`, then run `python scripts/receive_esp32_stream.py --port <YOUR_SERIAL_PORT>`. The exact USB port depends on the operating system and board. Physical serial testing remains outstanding; do not connect sensors or people to this synthetic bench.
-
-For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit run dashboard/app.py`. Upload aggregate metrics JSON only.
-
-For the synthetic adaptive-twin sandbox: `streamlit run dashboard/twin_demo.py`. It uses generated signals only and shows heuristic trajectory behavior, not clinical predictions.
+## 🔐 Data safety is part of the design
 
 <div align="center">
-<img src="docs/assets/vitalis-pulse-animation.svg" width="100%" alt="Animated concept illustration of AI studying physiological signals over time"/>
-<sub>🧠 The twin explores deviations from a changing baseline; a deviation is not the same as a clinical diagnosis or calibrated risk.</sub>
+
+<img src="docs/assets/vitalis-data-safety.svg" width="100%" alt="Data-safety illustration separating private raw data from public code and aggregate reports"/>
+
 </div>
 
-## Adaptive twin component
+**Never commit** raw patient files, derived patient-level tables, individual predictions, credentials, tokens, or private caches. Keep sensitive inputs and row-level outputs in an approved private workspace. Aggregate-only outputs still require review; data hygiene does not replace a governance or privacy audit.
 
-- [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.
-- `src/vitalis/stream.py` adds a timestamped input contract with unit checks, freshness handling, quality flags, out-of-order rejection, and session reset; device-specific acquisition is still future work.
-- [VITALIS-PB research specification](docs/VITALIS_PB_ALGORITHM.md) defines the separate retrospective patient-baseline feature experiment.
-- The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** itself estimate a calibrated clinical risk.
-- `scripts/train_horizon_model.py` adds separate 1-, 3-, and 6-hour future-Challenge-label forecasting experiments with patient-disjoint splits and patient-level warning-burden metrics. `scripts/evaluate_horizon_cross_cohort.py` trains on a patient-disjoint Set A subset and evaluates all eligible Set B patients, with Set B used only for final evaluation. These horizons refer to entry into the challenge-positive label window, not independently observed sepsis onset. See [Horizon forecasting protocol](docs/HORIZON_FORECASTING.md) and [cross-cohort execution checklist](docs/HORIZON_CROSS_COHORT_EXECUTION.md).
-- [Full-cohort horizon results](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) records the completed 1/3/6-hour Set A→Set B evaluation across three seeds, including patient-level warning burden and limitations. The results do not support clinical use; raw caches and individual predictions remain local-only.
+## 🔌 Hardware pathway: future integration, not a finished device
 
 <div align="center">
-<img src="docs/assets/vitalis-reproducibility.svg" width="100%" alt="Data protection and research integrity principles"/>
+
+<img src="docs/assets/vitalis-hardware-concept.svg" width="100%" alt="Conceptual sensor input to gateway to research software architecture for future VITALIS hardware"/>
+
 </div>
 
-## Data safety and label semantics
+The hardware blueprint describes a proposed route from suitable sensor interfaces through a timestamped gateway to VITALIS software. The physical wristband, custom PCB, validated sensor acquisition, complete synchronisation, and clinical safety testing are **not built or validated**.
 
-**Do not commit raw patient data, derived patient-level records, individual predictions, credentials, or tokens.** Local `data/`, `outputs/`, `artifacts/`, and `.psv` files are ignored by Git.
+- [Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
+- [Synthetic ESP32 gateway instructions](docs/ESP32_SYNTHETIC_GATEWAY.md)
+- [Synthetic gateway test record](docs/GATE3_SOFTWARE_BENCH_RESULTS_2026-10-18.md)
+- [Physical-bench record template](docs/GATE3_PHYSICAL_BENCH_RECORD_TEMPLATE.md)
 
-The challenge `SepsisLabel` already uses a six-hour lead convention. Do not shift it a second time. A positive label should not be described as independently observed clinical onset.
+Do not connect a person to the synthetic ESP32 bench. It transmits generated toy values and is not a physiological sensor acquisition system.
 
-## Research provenance
+## 🗂️ Repository map
 
-- [Plain-language project status](docs/PROJECT_STATUS.md) summarizes the current stage, findings, limitations, remaining release gates, and next steps.
-- [Local experiment history](docs/LOCAL_EXPERIMENTS.md) records prior exploratory runs and their limitations.
-- [Aggregate dataset inventory](results/dataset_inventory.json) records the verified local archive counts for training sets A and B; no raw or patient-level data are stored here.
-- [Multi-seed experiment runner](scripts/run_experiment_suite.py) supports reproducible static-versus-temporal comparisons across patient-level split seeds.
-- [Subset experiment runner](scripts/run_subset_experiment.py) deterministically samples patient files and writes aggregate-only matched comparison results.
-- [Exact-source cross-cohort results](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) documents the Set-A-to-Set-B benchmark comparison and its limitations.
-- [1,000-replicate patient-cluster uncertainty analysis](docs/CROSS_COHORT_BOOTSTRAP_RAW_AND_RECALIBRATED_1000.md) records raw and Set-A-validation-Platt-recalibrated comparisons across seeds 42, 123, and 2026. Row-level score archives remain local-only.
-- For the accelerated uncertainty runner, install the optional extra with `pip install -e ".[bootstrap-accelerated]"`; use only local score archives stored outside the repository.
-- [Structured historical results](results/local_experiment_summary.json) is an aggregate-only record of earlier experiments. These historical metrics are not automatically reproduced by the current workflow.
-- [Fresh subset rerun](results/current_subset_rerun.json) records an earlier 1,500-patient experiment; its results are mixed and exploratory.
-- [Three-seed subset experiment report](docs/MULTISEED_SUBSET_EXPERIMENT.md) and [aggregate metrics](results/multiseed_subset_summary.json) document a fresh comparison on the same deterministic 1,500-patient sample across split seeds 42, 123, and 2026.
-- [Next steps and research roadmap](docs/NEXT_STEPS.md) lists pipeline fixes, reproducible validation, external validation, and IP safeguards.
-- [Full-cohort rerun report](docs/FULL_COHORT_RERUN.md) and [aggregate JSON](results/full_cohort_rerun_2026-10-14.json) record the latest local rerun, with implementation provenance and limitations.
-- [Combined A+B cohort evaluation](docs/FULL_AB_COMBINED_RESULTS.md) reports a patient-disjoint three-seed comparison using all 40,336 patients from both official training sets; [aggregate results](results/full_AB_combined_multiseed_2026-10-14.json).
-- [Train-A/test-B cross-cohort evaluation](docs/FULL_COHORT_CROSS_COHORT_RESULTS.md) separately tests generalization across the benchmark's two cohorts.
-- [Full-cohort future-label horizon results](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) records the Set A→Set B 1/3/6-hour run; [aggregate-only metrics and provenance](results/horizon_cross_cohort_2026-10-14.json).
-- [Horizon calibration and operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md) defines patient-disjoint Set-A-only Platt recalibration, a predeclared threshold grid, and evaluation-only Set B handling. Completed results: [interpretation report](docs/HORIZON_CALIBRATION_RESULTS_2026-10-15.md) and [aggregate-only JSON](results/horizon_calibration_summary_2026-10-15.json). Patient-cluster uncertainty intervals are summarized in [the uncertainty report](docs/HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) and [aggregate JSON](results/horizon_calibration_uncertainty_summary_2026-10-15.json).
-- [Patient-cluster calibration uncertainty analysis](docs/HORIZON_CALIBRATION_UNCERTAINTY_RESULTS_2026-10-15.md) reports 200-replicate per-patient bootstrap intervals across the nine predeclared seed × horizon runs; [aggregate-only JSON](results/horizon_calibration_uncertainty_summary_2026-10-15.json).
-- [Paired static-versus-temporal comparison](docs/HORIZON_PAIRED_MODEL_COMPARISON_RESULTS_2026-10-15.md) reports paired patient-cluster differences in AUROC, AUPRC, Brier score, and log loss; [aggregate-only JSON](results/horizon_paired_model_comparison_aggregate_2026-10-15.json).
+<pre><code>docs/                 Research protocols, math lab, model card, validation
+docs/assets/          Original explanatory SVG illustrations and animations
+src/vitalis/          Reusable time-series features, adaptive twin, stream contracts
+scripts/              Cohort audit, training, comparison, synthetic demos
+configs/              Experiment and independent-evaluation templates
+tests/                Unit, regression, and interface-contract tests
+dashboard/            Aggregate report dashboard and synthetic twin sandbox
+.github/workflows/    Automated checks</code></pre>
 
-## Development status
-
-VITALIS now has retrospective static/temporal research workflows plus an initial streaming adaptive deviation component. The adaptive component is a software milestone, not a complete digital twin or clinical predictor. Clean-checkout reproducibility, current-head CI, security review, independent statistical/clinical review, and future external/ prospective validation remain separate gates. No claim of novelty or patentability is made. See [release-readiness audit](docs/RELEASE_READINESS_AUDIT.md), [reproducible workflow](docs/REPRODUCIBLE_WORKFLOW.md), [model card](docs/MODEL_CARD.md), and [cohort protocol](docs/COHORT_PROTOCOL.md).
-
-
-### Utility-based operating-point analysis
-
-The Set-A-only cost-sensitivity framework is documented in [Utility operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) and [the calibration/operating-point protocol](docs/HORIZON_CALIBRATION_OPERATING_POINT_PROTOCOL.md). The evaluator now adds patient-cluster uncertainty intervals and threshold-selection stability summaries on the untouched Set-A holdout (default 200 replicates; `--utility-bootstrap-replicates`); these quantify conditional development-sample variability, not clinical optimality. Exploratory nine-run point estimates and the source-provenance caveat are in [the utility results report](docs/HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate-only JSON](results/horizon_utility_operating_point_aggregate_2026-10-15.json). The completed 200-replicate-per-fit Set-A-only uncertainty/stability analysis is in [the utility bootstrap report](docs/HORIZON_UTILITY_BOOTSTRAP_RESULTS_2026-10-15.md) and [aggregate-only summary](results/horizon_utility_bootstrap_summary_2026-10-15.json). Cost ratios are illustrative, not clinical recommendations. Set B remains evaluation-only.
-
-
-### Independent evaluation gate
-
-The next external evidence stage is specified in the [independent-cohort evaluation protocol](docs/INDEPENDENT_EVALUATION_PROTOCOL.md). It requires a frozen model/policy, a genuinely new cohort, an independently defined event time, and clinical/statistical and governance sign-off. This is a planning protocol only; no external or prospective validation has occurred. The [utility cost review checklist](docs/UTILITY_COST_REVIEW_CHECKLIST.md) is available for independent review.
-
-
-### Independent evaluation freeze gate
-
-The independent-evaluation protocol now has a machine-checkable scaffold: `configs/independent_evaluation_lockfile.template.json`, validated by `scripts/validate_evaluation_lockfile.py`. It refuses draft/unfrozen policies, Set B reuse, proxy-label/clinical-onset mismatches, and missing reviewer/governance sign-offs. The template is intentionally invalid until independently completed. Keep the completed lockfile and any cohort-identifying information in an approved private workspace; this validator is not an ethics approval or clinical-validity check. The lockfile now also requires explicit utility-cost scenarios, the primary scenario, a Set-A-only candidate-selection rule, and a clinical/statistical rationale or an explicit exploratory-only statement; the validator rejects Set B as the threshold-selection cohort.
-
-
-- [Utility-based operating-point framework](docs/UTILITY_OPERATING_POINT_FRAMEWORK.md) documents the cost-sensitivity method for missed forecast windows versus alert burden. The exploratory nine-run aggregate analysis is complete: [results report](docs/HORIZON_UTILITY_OPERATING_POINT_RESULTS_2026-10-15.md) and [aggregate JSON](results/horizon_utility_operating_point_aggregate_2026-10-15.json). Cost ratios are illustrative, the run used a reconstructed working copy, and no threshold is selected from Set B. Independent cost review and a new evaluation cohort remain required.
-
-
-### Repository data-artifact hygiene
-
-CI runs \`scripts/check_repository_hygiene.py\` to reject common row-level data/cache/model-artifact file extensions and files larger than 5 MiB in the current working tree. This is a preventive current-tree check only; it does not scan Git history or replace secret scanning, data-governance review, or a manual privacy audit.
-
-
-### Historical repository privacy audit
-
-The current-tree guard is complemented by a full-history scanner: see [Git-history privacy audit](docs/GIT_HISTORY_PRIVACY_AUDIT.md) and run python scripts/audit_git_history.py from a complete clone with all relevant refs fetched. It reports artifact paths, oversized blobs, and high-confidence credential-pattern matches without printing credential values. Findings require human triage; a clean scan is not proof of no prior exposure.
-
-
-## Clinical translation and regulatory readiness
-
-The [clinical translation and regulatory roadmap](docs/CLINICAL_TRANSLATION_AND_REGULATORY_ROADMAP.md) defines the gates for moving from retrospective research toward a possible medical-device programme: intended-use definition, target-market classification, quality/design controls, risk management, independent clinical validation, prospective studies, regulatory authorization, and post-market monitoring. It is a planning document, not proof of compliance or clinical validation. VITALIS remains research-only; do not use it to guide patient care.
-
-
-## Uzbekistan research-readiness gate
-
-- [Uzbekistan research-readiness dossier](docs/UZBEKISTAN_RESEARCH_READINESS.md) records the proposed offline retrospective research boundary, current legal/regulatory source checks, data-protection and ethics questions, and stop conditions.
-- [Machine-readable Uzbekistan readiness register](configs/regulatory/uzbekistan_research_readiness.json) tracks the evidence gates without implying approvals.
-- Initial market: **Uzbekistan**. Initial intended deployment: **research only**, beginning with offline retrospective analysis of authorized, de-identified data.
-- No live hospital feed, prospective patient monitoring, clinician-facing score, patient-care influence, or clinical marketing is authorized by this project status. The pathway for software-specific registration and study governance requires written confirmation from the competent Uzbekistan authorities and host institution.
-- This documentation is a planning aid, not legal advice, medical-device classification, ethics approval, data-processing permission, regulatory authorization, or clinical validation.
-
-
-### Strict source-reproduction gate
-
-The documented provenance exception for full-cohort runs is tracked in the [strict source and full-cohort reproduction runbook](docs/STRICT_SOURCE_REPRODUCIBILITY_RUNBOOK.md). It defines clean-checkout/blob checks, environment capture, fresh-cache requirements, Set-B evaluation-only safeguards, and aggregate-output reconciliation. The gate remains open until a fresh, byte-verified full-cohort run and independent review are recorded; do not treat previous reconstructed-working-copy results as exact-source reproduction.
-
-
-## Aggregate report dashboard
-
-The dashboard now validates and displays baseline and full-cohort horizon aggregate reports. See [dashboard usage and privacy boundaries](docs/AGGREGATE_REPORT_DASHBOARD.md). It accepts aggregate-only JSON and does not fit models or make clinical recommendations.
+## ✅ What must happen before any clinical translation?
 
 <div align="center">
-<img src="docs/assets/vitalis-hardware-concept.svg" width="100%" alt="Conceptual future pathway from sensor inputs to gateway and VITALIS research software"/>
+
+<img src="docs/assets/math-validation-gates.svg" width="100%" alt="Animated validation gates from software testing and reproducibility to external-cohort evidence and governance review"/>
+
 </div>
 
-## Hardware integration roadmap
-
-The intended integration architecture, plain-language explanation, proposed components, sensor data contract, inference cycle, safety gates and current implementation gaps are documented here:
-
-- **[Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)** — how the software and proposed physiology twin could connect to sensors and an embedded gateway, which parts are needed, how the pipeline works, and what remains to be built.
-- The Mermaid architecture diagram in that guide can be rendered by GitHub directly.
-
-**Important:** this is a proposed research prototype architecture. Sensor adapters and the physical device are not yet confirmed as implemented. VITALIS is not clinically validated and must not guide patient care.
-
-
-## Integrated twin/supervised interface (research-only)
-
-A deterministic synthetic demonstration of the versioned interface is available:
-
-```bash
-python scripts/demo_integrated_inference.py
-```
-
-The adapter in `src/vitalis/integrated_inference.py` keeps the adaptive twin's heuristic deviation/trajectory fields separate from supervised horizon probabilities. By default the demo has **no trained supervised model loaded**, so it intentionally reports the supervised outputs as unavailable with null probabilities rather than inventing zeros. A caller may inject a frozen predictor only with explicit model, calibration, and feature-schema version metadata. This interface does not itself train or load the retrospective horizon model, establish calibration quality, or make the output clinically meaningful. The GitHub Actions workflow smoke-tests this demo and the contract tests are part of pytest.
-
-See [the interface contract](docs/STREAMING_SUPERVISED_INTERFACE.md) and [release acceptance matrix](docs/RELEASE_ACCEPTANCE_MATRIX.md). VITALIS remains research-only and must not be used to guide patient care.
+Software correctness, exact-source reproducibility, independent statistical/clinical review, authorized independent-cohort evaluation, prospective evaluation, suitable sensor testing, and regulatory/governance approvals are separate gates. No external or prospective clinical validation has been completed. The project does not claim novelty or patentability.
 
 ---
 
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00F5A0,35:00D4FF,70:7B2FF7,100:211044&height=150&section=footer&text=Curiosity%20into%20discovery&fontSize=28&fontColor=FFFFFF&fontAlignY=65&animation=fadeIn" width="100%" alt="VITALIS closing banner — Curiosity into discovery"/>
-
-### 🌱 Every signal tells a story. Research helps us ask better questions.
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:00E6A8,35:00CFE8,70:7B2FF7,100:171033&height=145&section=footer&text=Curiosity%20into%20discovery&fontSize=28&fontColor=FFFFFF&fontAlignY=65&animation=fadeIn" width="100%" alt="VITALIS closing banner"/>
 
 **Built with curiosity. Guided by physiology. Grounded in reproducibility.**
 
-<br/>
+[📚 Project status](docs/PROJECT_STATUS.md) · [🧠 AI Mathematics Lab](docs/AI_MATHEMATICS_AND_ALGORITHMS.md) · [🧪 Release readiness](docs/RELEASE_READINESS_AUDIT.md)
 
-[![Explore repository](https://img.shields.io/badge/Explore-VITALIS%20Repository-7B2FF7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/culprit-k/VITALIS)
-[![Research preview](https://img.shields.io/badge/Read-Research%20Preview-00B8D9?style=for-the-badge&logo=readthedocs&logoColor=white)](RELEASE_NOTES_v0.1.0.md)
-[![Project status](https://img.shields.io/badge/Check-Project%20Status-FF4FA3?style=for-the-badge&logo=githubactions&logoColor=white)](docs/PROJECT_STATUS.md)
-
-<br/>
-
-<sub>🧪 An evolving research prototype — not a medical device. No clinical diagnosis, triage, monitoring, or treatment decisions.</sub>
-
-<sub>✨ Thank you for exploring VITALIS. Keep questioning, keep testing, keep validating.</sub>
+<sub>VITALIS remains research-only—not a medical device, diagnosis system, or clinical decision-support tool.</sub>
 
 </div>
