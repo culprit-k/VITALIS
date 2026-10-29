@@ -49,9 +49,9 @@
 
 <div align="center">
 
-<img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif" width="260" alt="Decorative animated science visual" />
+<img src="docs/assets/vitalis-pulse-animation.svg" width="100%" alt="Animated VITALIS cartoon: friendly AI robot, pulsing heart waveform, and signal dashboard" />
 
-<sub>Decorative GIF from an external service. If it doesn't load in GitHub, the rest of the README still works.</sub>
+<sub>💓 Your body is constantly producing signals. VITALIS explores how AI might help researchers study patterns in those signals over time—without treating a pattern as a diagnosis.</sub>
 
 </div>
 
