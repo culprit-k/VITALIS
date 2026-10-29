@@ -109,6 +109,12 @@ Imagine a friendly digital companion that learns what a person's measurements us
 
 ## 🧭 Project at a glance
 
+<div align="center">
+<img src="docs/assets/vitalis-research-pipeline.svg" width="100%" alt="VITALIS research workflow from physiological signals through quality checks and model study to review"/>
+<sub>Follow the research path: observe signals → check data quality → study patterns → review evidence.</sub>
+</div>
+
+
 | 🧠 Adaptive twin | 📈 Temporal ML | 🔬 Reproducibility | 🔌 Hardware pathway |
 |:---:|:---:|:---:|:---:|
 | Explore deviations from an evolving baseline | Study patterns across time | Auditable experiments and aggregate metrics | Proposed sensor-to-software architecture |
@@ -147,6 +153,10 @@ flowchart LR
 
 The synthetic adaptive-twin sandbox can be hosted in Streamlit Community Cloud and opened in Safari: follow [Phone deployment instructions](docs/PHONE_DEPLOYMENT.md). Choose `dashboard/twin_demo.py` as the app file. A repository maintainer must complete the one-time deployment and authorize GitHub access; GitHub alone does not run the app. The demo is synthetic-only and is not a clinical sepsis predictor.
 
+<div align="center">
+<img src="docs/assets/vitalis-reproducibility.svg" width="100%" alt="Research principles: reproducibility, documentation, data protection, and independent review"/>
+</div>
+
 ## Research goals
 
 - Build a reproducible, auditable cohort pipeline.
@@ -157,6 +167,9 @@ The synthetic adaptive-twin sandbox can be hosted in Streamlit Community Cloud a
 - Document uncertainty and limitations before considering any clinical translation.
 
 ## Repository layout
+
+<sub>🗂️ Think of the repository as a research lab: documentation explains the method, source code runs the experiments, scripts orchestrate workflows, tests check behavior, and dashboards display aggregate results.</sub>
+
 
 ```text
 docs/                 Research protocol, algorithm specs, model card, workflow
@@ -169,6 +182,9 @@ dashboard/            Aggregate-only Streamlit evaluation dashboard
 ```
 
 ## Local workflow
+
+<sub>🛠️ Reproducible workflow: create an isolated environment → install the project → run tests → execute a documented experiment. Keep datasets and patient-level outputs outside Git.</sub>
+
 
 Install and test:
 
@@ -225,6 +241,11 @@ For the evaluation dashboard: `pip install -e ".[dashboard]"` then `streamlit ru
 
 For the synthetic adaptive-twin sandbox: `streamlit run dashboard/twin_demo.py`. It uses generated signals only and shows heuristic trajectory behavior, not clinical predictions.
 
+<div align="center">
+<img src="docs/assets/vitalis-pulse-animation.svg" width="100%" alt="Animated concept illustration of AI studying physiological signals over time"/>
+<sub>🧠 The twin explores deviations from a changing baseline; a deviation is not the same as a clinical diagnosis or calibrated risk.</sub>
+</div>
+
 ## Adaptive twin component
 
 - [Algorithm and validation contract](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md) defines the robust baseline, normalized deviation, multisystem aggregation, trajectory smoothing, output semantics, and next validation gates.
@@ -233,6 +254,10 @@ For the synthetic adaptive-twin sandbox: `streamlit run dashboard/twin_demo.py`.
 - The online twin combines a rolling robust baseline with a frozen initial reference and two-sided CUSUM to help expose gradual shifts, alongside multisystem aggregation and trajectory smoothing. It does **not** itself estimate a calibrated clinical risk.
 - `scripts/train_horizon_model.py` adds separate 1-, 3-, and 6-hour future-Challenge-label forecasting experiments with patient-disjoint splits and patient-level warning-burden metrics. `scripts/evaluate_horizon_cross_cohort.py` trains on a patient-disjoint Set A subset and evaluates all eligible Set B patients, with Set B used only for final evaluation. These horizons refer to entry into the challenge-positive label window, not independently observed sepsis onset. See [Horizon forecasting protocol](docs/HORIZON_FORECASTING.md) and [cross-cohort execution checklist](docs/HORIZON_CROSS_COHORT_EXECUTION.md).
 - [Full-cohort horizon results](docs/FULL_COHORT_HORIZON_CROSS_COHORT_RESULTS.md) records the completed 1/3/6-hour Set A→Set B evaluation across three seeds, including patient-level warning burden and limitations. The results do not support clinical use; raw caches and individual predictions remain local-only.
+
+<div align="center">
+<img src="docs/assets/vitalis-reproducibility.svg" width="100%" alt="Data protection and research integrity principles"/>
+</div>
 
 ## Data safety and label semantics
 
@@ -317,6 +342,10 @@ The documented provenance exception for full-cohort runs is tracked in the [stri
 ## Aggregate report dashboard
 
 The dashboard now validates and displays baseline and full-cohort horizon aggregate reports. See [dashboard usage and privacy boundaries](docs/AGGREGATE_REPORT_DASHBOARD.md). It accepts aggregate-only JSON and does not fit models or make clinical recommendations.
+
+<div align="center">
+<img src="docs/assets/vitalis-hardware-concept.svg" width="100%" alt="Conceptual future pathway from sensor inputs to gateway and VITALIS research software"/>
+</div>
 
 ## Hardware integration roadmap
 
