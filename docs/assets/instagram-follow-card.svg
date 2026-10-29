@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="112" viewBox="0 0 440 112">
+<defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#feda75"/><stop offset=".28" stop-color="#fa7e1e"/><stop offset=".58" stop-color="#d62976"/><stop offset=".82" stop-color="#962fbf"/><stop offset="1" stop-color="#4f5bd5"/></linearGradient><linearGradient id="shine" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+<rect x="2" y="2" width="436" height="108" rx="26" fill="#171321" stroke="url(#ig)" stroke-width="3"/>
+<rect x="6" y="6" width="428" height="100" rx="22" fill="url(#shine)"/>
+<rect x="23" y="25" width="62" height="62" rx="19" fill="url(#ig)"/>
+<rect x="38" y="40" width="32" height="32" rx="10" fill="none" stroke="#fff" stroke-width="3"/>
+<circle cx="54" cy="56" r="8" fill="none" stroke="#fff" stroke-width="3"/>
+<circle cx="65" cy="45" r="2.7" fill="#fff"/>
+<text x="105" y="48" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#e9d5ff">FOLLOW THE JOURNEY</text>
+<text x="105" y="75" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#fff">@a.bhijit.h_</text>
+<path d="M391 44l10 12-10 12" fill="none" stroke="#f9a8d4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="408" cy="56" r="17" fill="none" stroke="#d946ef" stroke-opacity=".7"><animate attributeName="r" values="15;19;15" dur="2.4s" repeatCount="indefinite"/><animate attributeName="stroke-opacity" values=".8;.25;.8" dur="2.4s" repeatCount="indefinite"/></circle>
+</svg>
