@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="280" viewBox="0 0 720 280">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17143d"/><stop offset="1" stop-color="#075b73"/></linearGradient>
+ <linearGradient id="heart" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff79b0"/><stop offset="1" stop-color="#ff456f"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="720" height="280" rx="26" fill="url(#bg)"/>
+<g opacity=".15" stroke="#8df8ef" fill="none"><circle cx="360" cy="140" r="110"/><circle cx="360" cy="140" r="145"/><path d="M25 50H695M25 230H695"/></g>
+<g transform="translate(110 38)">
+ <rect x="0" y="0" width="145" height="150" rx="32" fill="#64e8e0" stroke="#d7fffb" stroke-width="4"/>
+ <rect x="20" y="28" width="105" height="70" rx="22" fill="#15264b"/>
+ <ellipse cx="49" cy="58" rx="8" ry="12" fill="#8dfff2"/><ellipse cx="96" cy="58" rx="8" ry="12" fill="#8dfff2"/>
+ <path d="M48 79Q72 98 97 79" fill="none" stroke="#8dfff2" stroke-width="4" stroke-linecap="round"/>
+ <path d="M72 0V-14" stroke="#d7fffb" stroke-width="5" stroke-linecap="round"/><circle cx="72" cy="-19" r="8" fill="#ffcf70"/>
+ <text x="72" y="125" fill="#14244a" font-family="Arial,sans-serif" font-weight="700" font-size="16" text-anchor="middle">VITALIS</text>
+</g>
+<g transform="translate(315 68)">
+ <path d="M65 20C39 -8 0 7 0 42C0 78 65 122 65 122S130 78 130 42C130 7 91 -8 65 20Z" fill="url(#heart)" stroke="#ffd4e4" stroke-width="3" filter="url(#glow)">
+  <animateTransform attributeName="transform" type="scale" values="1;1.08;1" dur="1.2s" repeatCount="indefinite"/>
+ </path>
+ <path d="M9 61H31L43 39L56 82L70 50L82 61H120" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="180" stroke-dashoffset="180">
+  <animate attributeName="stroke-dashoffset" values="180;0;0" dur="2s" repeatCount="indefinite"/>
+ </path>
+</g>
+<g transform="translate(500 48)">
+ <rect width="170" height="145" rx="16" fill="#101d43" stroke="#65e9f8" stroke-width="3"/>
+ <text x="85" y="25" fill="#dffaff" font-family="Arial,sans-serif" font-size="13" font-weight="700" text-anchor="middle">SIGNALS → PATTERNS</text>
+ <path d="M14 74H37L48 48L62 102L77 65L92 74H155" fill="none" stroke="#4cf2dc" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <animate attributeName="stroke-dasharray" values="1,220;70,150;220,1" dur="2.4s" repeatCount="indefinite"/>
+ </path>
+ <path d="M14 116Q48 103 78 117T155 110" fill="none" stroke="#c77dff" stroke-width="3" stroke-linecap="round"/>
+</g>
+<text x="360" y="235" fill="#fff" font-family="Arial,sans-serif" font-size="21" font-weight="700" text-anchor="middle">Your body has patterns. AI helps us study them.</text>
+<text x="360" y="260" fill="#c5e8ff" font-family="Arial,sans-serif" font-size="13" text-anchor="middle">Concept illustration • Research prototype • Not for clinical use</text>
+</svg>
