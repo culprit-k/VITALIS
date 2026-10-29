@@ -41,13 +41,13 @@ These are software input checks, not proof that a physical sensor is accurate. T
 
 For channel \(j\) at time \(t\), let \(H_{j,t}\) contain previous accepted observations only. The current observation is scored **before** it can update its own history.
 
-$$
-m_{j,t}=\mathrm{median}(H_{j,t})
-$$
+```text
+m[j,t] = median(H[j,t])
+```
 
-$$
-s_{j,t}=\max\left(1.4826\,\mathrm{MAD}(H_{j,t}),\epsilon_j\right)
-$$
+```text
+s[j,t] = max(1.4826 * MAD(H[j,t]), epsilon[j])
+```
 
 Here, \(\mathrm{MAD}(H)=\mathrm{median}(|x-m|)\). The factor 1.4826 is a conventional robust scale conversion for normally distributed data; the numerical floor \(\epsilon_j\) prevents division by a vanishing scale. Channel-specific floors can be configured because values can use different units.
 
@@ -151,13 +151,14 @@ These names summarise the algorithm's configured rules. They do not describe a d
 
 The separate retrospective VITALIS-PB feature generator creates personal-baseline features for patient \(i\), variable \(j\), and row \(t\), using valid observations strictly before \(t\):
 
-$$
-b_{i,j,t}=\mathrm{median}\{x_{i,j,\tau}:\tau<t,\ x_{i,j,\tau}\text{ observed}\}
-$$
+```text
+b[i,j,t] = median(x[i,j,tau] for tau < t where x[i,j,tau] is observed)
+```
 
-$$
-d_{i,j,t}=x_{i,j,t}-b_{i,j,t},\qquad z_{i,j,t}=\frac{d_{i,j,t}}{s_{i,j,t}}
-$$
+```text
+d[i,j,t] = x[i,j,t] - b[i,j,t]
+z[i,j,t] = d[i,j,t] / s[i,j,t]
+```
 
 The experimental feature set can include current measurements, existing covariates, within-patient lags, one-step deltas, trailing six-row means, personal baseline, deviation, and robust normalised deviation. By default, the PB generator requires at least three previous valid observations; when scale is too small or unavailable, normalized deviation stays missing for the training-fold imputation pipeline rather than being assigned an arbitrary value.
 
