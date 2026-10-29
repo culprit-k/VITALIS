@@ -42,6 +42,13 @@ The central idea is simple: **a measurement is more meaningful when we understan
 
 ## 🧭 What exists today—and what does not
 
+<div align="center">
+
+<img src="docs/assets/vitalis-status-board.svg" width="100%" alt="Animated status board distinguishing existing research software, synthetic demos, proposed hardware, and incomplete clinical validation"/>
+
+</div>
+
+
 | Area | Current state |
 |---|---|
 | Retrospective cohort workflow | Research scripts and documented benchmark experiments are present; follow the runbook to reproduce them. |
@@ -237,6 +244,13 @@ All streaming demos use generated signals and do not constitute clinical predict
 
 ## 📊 Research reports and provenance
 
+<div align="center">
+
+<img src="docs/assets/vitalis-evidence-map.svg" width="100%" alt="Animated provenance map from source configuration to patient-disjoint safeguards, metrics, and careful interpretation"/>
+
+</div>
+
+
 | Resource | What it contains |
 |---|---|
 | [Project status](docs/PROJECT_STATUS.md) | Plain-language progress, limitations, and remaining gates. |
@@ -279,6 +293,13 @@ The hardware blueprint describes a proposed route from suitable sensor interface
 Do not connect a person to the synthetic ESP32 bench. It transmits generated toy values and is not a physiological sensor acquisition system.
 
 ## 🗂️ Repository map
+
+<div align="center">
+
+<img src="docs/assets/vitalis-repository-map.svg" width="100%" alt="Animated visual map of VITALIS docs, source scripts, tests, configuration, dashboard, and CI folders"/>
+
+</div>
+
 
 <pre><code>docs/                 Research protocols, math lab, model card, validation
 docs/assets/          Original explanatory SVG illustrations and animations
