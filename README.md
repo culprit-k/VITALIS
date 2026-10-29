@@ -164,10 +164,11 @@ The twin also tracks data coverage, persistent channel deviations, and cross-sys
 
 A separate feature generator uses valid observations strictly before row \(t\) to calculate a personal baseline, raw deviation, and robust normalized deviation:
 
-```text
-b[i,j,t] = median of valid observations x[i,j,tau] from earlier times (tau < t)
-d[i,j,t] = current observation x[i,j,t] - personal baseline b[i,j,t]
-```
+<div align="center">
+
+<img src="docs/assets/vitalis-pb-equation.svg" width="100%" alt="VITALIS-PB equations: personal baseline is the median of valid observations strictly before time t; deviation is the current value minus that baseline."/>
+
+</div>
 
 The experimental model can also use current values, lags, one-step deltas, and trailing six-row means. The supervised logistic-regression workflow fits preprocessing only on training folds and keeps patient groups separate across train/validation/test. This is a research feature experiment—not proof of clinical utility, novelty, or patentability.
 
