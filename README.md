@@ -33,6 +33,66 @@
 
 </div>
 
+<details open>
+<summary><b>🪄 Take a little tour of VITALIS — tap to explore</b></summary>
+
+<div align="center">
+
+| 🩺 The signal | 🧠 The twin | 📊 The story |
+|:---:|:---:|:---:|
+| <img src="https://img.shields.io/badge/01-Observe-FF5DA2?style=for-the-badge" alt="Observe"/> | <img src="https://img.shields.io/badge/02-Learn-8B5CF6?style=for-the-badge" alt="Learn"/> | <img src="https://img.shields.io/badge/03-Explore-06B6D4?style=for-the-badge" alt="Explore"/> |
+| Physiological time-series or synthetic examples | Research baseline and deviation modelling | Visualise trends for analysis |
+
+</div>
+
+</details>
+
+<div align="center">
+
+<img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif" width="260" alt="Decorative animated science visual" />
+
+<sub>Decorative GIF from an external service. If it doesn't load in GitHub, the rest of the README still works.</sub>
+
+</div>
+
+<details>
+<summary><b>🤖 What does the VITALIS “digital twin” mean?</b></summary>
+
+Imagine a friendly digital companion that learns what a person's measurements usually look like over time. The research question is whether changes from that evolving baseline can help researchers understand physiological patterns.
+
+- **Input:** available time-series observations or synthetic demonstration data.
+- **Twin component:** an experimental baseline and deviation representation.
+- **Research view:** visual summaries and trajectories to inspect.
+- **Reality check:** this is not a clinically validated patient model or a diagnostic tool.
+
+</details>
+
+<details>
+<summary><b>🧪 What is real today, and what is still a concept?</b></summary>
+
+| Component | Current status |
+|---|---|
+| Retrospective research workflows | Present in repository; reproduce against documented environment |
+| Adaptive-deviation software component | Initial research implementation |
+| Synthetic stream demonstration | Demonstration only; generated values |
+| Wearable wristband and custom PCB | Proposed, not built |
+| Independent external clinical validation | Not completed |
+| Clinical use | Not permitted |
+
+</details>
+
+<details>
+<summary><b>🗺️ Quick navigation — open the section you need</b></summary>
+
+- [📘 Project status](docs/PROJECT_STATUS.md)
+- [🧬 Adaptive twin implementation](docs/ADAPTIVE_TWIN_IMPLEMENTATION.md)
+- [🔌 Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md)
+- [🧾 External validation protocol](docs/EXTERNAL_VALIDATION_PROTOCOL.md)
+- [✅ Release readiness audit](docs/RELEASE_READINESS_AUDIT.md)
+- [📦 Research Preview release notes](RELEASE_NOTES_v0.1.0.md)
+
+</details>
+
 <table>
 <tr>
 <td align="center" width="25%"><h3>🧠</h3><b>Adaptive Twin</b><br/><sub>Baseline & deviation research</sub></td>
