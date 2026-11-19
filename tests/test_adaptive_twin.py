@@ -262,3 +262,19 @@ def test_twin_reset_is_deterministic_for_reused_instance():
     assert first["state"] == second["state"]
     assert first["trajectory_score"] == second["trajectory_score"]
     assert first["channels"]["heart_rate"]["z_score"] == second["channels"]["heart_rate"]["z_score"]
+
+
+def test_deviation_index_is_bounded_and_saturates_only_after_z_clipping():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "spo2", "respiratory_rate"],
+        scale_floors={"heart_rate": 1.0, "spo2": 0.5, "respiratory_rate": 0.5},
+        config=TwinConfig(min_history=3, history_window=8, min_channels=2, min_systems=2),
+    )
+    for _ in range(3):
+        t.update({"heart_rate": 70, "spo2": 98, "respiratory_rate": 16})
+    result = t.update({"heart_rate": 200, "spo2": 70, "respiratory_rate": 60})
+    assert result["eligible"] is True
+    assert 0.0 <= result["trajectory_score"] <= 1.0
+    assert result["trajectory_score"] == 1.0
+    assert all(value == 1.0 for value in result["system_scores"].values())
+    assert result["score_semantics"].startswith("unitless heuristic")
