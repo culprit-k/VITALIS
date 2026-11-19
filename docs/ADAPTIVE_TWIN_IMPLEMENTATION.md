@@ -20,11 +20,17 @@ m_{j,t}=\operatorname{median}(H_{j,t}),\qquad
 s_{j,t}=\max(1.4826\operatorname{MAD}(H_{j,t}),\epsilon).
 \]
 
-The current standardized deviation is:
+The current rolling- and frozen-reference standardized deviations are:
 
 \[
 z_{j,t}=\frac{x_{j,t}-m_{j,t}}{s_{j,t}},\qquad
-q_{j,t}=\min\left(\frac{|z_{j,t}|}{z_{\max}},1\right).
+z^0_{j,t}=\frac{x_{j,t}-m^0_j}{s^0_j}.
+\]
+
+The bounded channel component used in system aggregation is:
+
+\[
+q_{j,t}=\frac{\min\left(\max(|z_{j,t}|,|z^0_{j,t}|),z_{\max}\right)}{z_{\max}}\in[0,1].
 \]
 
 Here, (\epsilon) is a numerical scale floor. It is **not** a clinically established sensor noise floor. It must be chosen per measurement and validated before interpreting scores.
@@ -57,7 +63,7 @@ u_t=\frac{1}{|G_t|}\sum_{g\in G_t}Q_{g,t},\qquad
 S_t=\alpha u_t+(1-\alpha)S_{t-1}.
 \]
 
-Equal system weighting avoids letting a system dominate merely because more channels are mapped to it. These weights are engineering defaults, not fitted medical weights. The implementation also tracks consecutive observations whose absolute z-score exceeds a configurable deviation threshold and reports the fraction of represented systems with elevated scores.
+Equal system weighting avoids letting a system dominate merely because more channels are mapped to it. These weights are engineering defaults, not fitted medical weights. The implementation also tracks consecutive observations whose larger absolute rolling/reference z-score exceeds a configurable deviation threshold. A persistent-*multisystem* state now requires the persistent channels to span at least the configured minimum number of distinct physiological systems; two persistent channels from one system are reported as `persistent_channel_deviation`, not as multisystem persistence. The output separately reports persistent channel and persistent system counts.
 
 ## Causality and adaptation safeguards
 
@@ -71,9 +77,9 @@ The fixed reference helps reveal gradual drift, but it can become stale after re
 
 ## Output contract
 
-- `state`: one of `insufficient_data`, `within_person_range`, `deviation_detected`, `marked_deviation`, `persistent_multisystem_deviation`, `cumulative_shift_detected`, or `cumulative_multisystem_shift`.
+- `state`: one of `insufficient_data`, `within_person_range`, `deviation_detected`, `marked_deviation`, `persistent_channel_deviation`, `persistent_multisystem_deviation`, `cumulative_shift_detected`, or `cumulative_multisystem_shift`. The multisystem persistence label requires persistent channels across at least `min_systems` distinct systems.
 - `trajectory_score`: unitless heuristic in the approximate range 0–1 when eligible; **not a risk probability**.
-- `cross_system_concordance`: fraction of represented systems whose normalized deviation score exceeds the configured comparison threshold.
+- `cross_system_concordance`: fraction of represented systems whose normalized deviation score exceeds the configured comparison threshold.\n- `persistent_channels` and `persistent_systems`: counts of channels and distinct systems meeting the configured consecutive-sample persistence rule.
 - `coverage`, per-channel baselines/z-scores, history counts, and baseline-update flags support debugging and audit.
 - `clinical_recommendation` is always null.
 
