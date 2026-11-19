@@ -333,6 +333,38 @@ dashboard/            Aggregate report dashboard and synthetic twin sandbox
 
 Software correctness, exact-source reproducibility, independent statistical/clinical review, authorized independent-cohort evaluation, prospective evaluation, suitable sensor testing, and regulatory/governance approvals are separate gates. No external or prospective clinical validation has been completed. The project does not claim novelty or patentability.
 
+
+## 🤝 Join the VITALIS research and engineering community
+
+VITALIS welcomes **independent critique and practical contributions** from clinicians, physiologists, statisticians, machine-learning researchers, biomedical engineers, embedded developers, and students.
+
+This is an invitation to inspect the work, challenge its assumptions, identify limitations, and help make the research more reproducible. A critical review is as valuable as a code contribution.
+
+| Start here | Purpose |
+|---|---|
+| [Community review guide](docs/COMMUNITY_REVIEW_GUIDE.md) | What to review and how to submit useful feedback |
+| [Contributing guide](CONTRIBUTING.md) | Contribution paths, pull requests, safety and data rules |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | Standards for respectful collaboration |
+| [Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md) | Proposed bench-only hardware architecture |
+| [Current project status](docs/PROJECT_STATUS.md) | Evidence, limitations and unresolved release gates |
+
+**Priority collaboration needs**
+- Independent clinical and physiological review.
+- Independent statistical and machine-learning review of cohort provenance, splits, calibration, uncertainty and alert burden.
+- Biomedical hardware and embedded-systems review of the proposed bench architecture.
+- Software and research-engineering contributions that improve reproducibility and tests.
+
+**Open review gates:** [Issue #4 — independent statistical and methods review](https://github.com/culprit-k/VITALIS/issues/4) · [Issue #6 — reproducibility and bench-prototype gate](https://github.com/culprit-k/VITALIS/issues/6).
+
+**Open community calls:** [Issue #49 — clinical, statistical, and ML reviewers](https://github.com/culprit-k/VITALIS/issues/49) · [Issue #50 — hardware architecture review challenge](https://github.com/culprit-k/VITALIS/issues/50).
+
+**Maintainer decision:** [Issue #51 — software and hardware licensing](https://github.com/culprit-k/VITALIS/issues/51).
+
+> [!IMPORTANT]
+> **Licensing status:** this repository currently has no top-level `LICENSE` file. Public visibility does not grant blanket reuse rights. Review comments and feedback are welcome; please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting code or hardware designs. The maintainer must clarify and publish appropriate software and hardware licensing before the project is represented as unrestricted open source or open hardware.
+
+All hardware work is research-bench only. Do not connect people to DIY or unverified prototypes. VITALIS is not approved for patient-care use.
+
 ---
 
 <div align="center">

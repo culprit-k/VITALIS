@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use or discuss VITALIS in research, please cite the repository and the specific version or commit you examined."
+type: software
+title: "VITALIS: Adaptive Physiological Digital Twin Research Prototype"
+authors:
+  - family-names: Premjithlal
+    given-names: Abhijith
+repository-code: "https://github.com/culprit-k/VITALIS"
+date-released: 2026-11-19
+abstract: >-
+  VITALIS is a research prototype exploring an adaptive physiological digital
+  twin alongside separate retrospective machine-learning experiments. It
+  investigates personal physiological baselines, deviations, persistence,
+  temporal features, and benchmark-label forecasting. It is not a clinically
+  validated medical device or clinical decision-support system.
+keywords:
+  - physiological time series
+  - digital twin
+  - clinical deterioration
+  - sepsis research
+  - machine learning
+  - biomedical engineering

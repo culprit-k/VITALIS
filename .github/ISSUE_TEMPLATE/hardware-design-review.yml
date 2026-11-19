@@ -1,0 +1,67 @@
+name: Hardware and embedded-systems design review
+description: Review the proposed VITALIS bench-only hardware architecture.
+title: "[Hardware review] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The VITALIS hardware blueprint is a proposal, not a completed or validated device. All suggested work must remain on synthetic signals or non-human bench equipment. Do not connect a person to DIY or unverified hardware.
+  - type: dropdown
+    id: focus
+    attributes:
+      label: Area reviewed
+      options:
+        - Sensor selection and data access
+        - ECG or PPG/SpO2 acquisition
+        - Temperature or respiration input
+        - Blood-pressure interface
+        - Embedded gateway and communications
+        - Timestamp synchronisation and data quality
+        - Power, enclosure, and maintainability
+        - Electrical/biomedical safety
+        - Cybersecurity and privacy
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: reviewed_doc
+    attributes:
+      label: Document or commit reviewed
+      placeholder: docs/HARDWARE_INTEGRATION_BLUEPRINT.md
+  - type: textarea
+    id: proposed_design
+    attributes:
+      label: Proposed change or design suggestion
+      description: Include exact part numbers/interfaces only when supported by manufacturer documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and technical rationale
+      description: Link datasheets, protocols, standards, or bench tests. Do not include restricted documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Safety, privacy, and failure modes
+      description: Address isolation, stale data, dropout, clock drift, power, cybersecurity, and any patient-connected risks.
+    validations:
+      required: true
+  - type: textarea
+    id: bench_test
+    attributes:
+      label: Suggested non-human bench verification
+      description: Describe a test using synthetic signals, simulators, or appropriate non-human test equipment.
+    validations:
+      required: true
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Confirmations
+      options:
+        - label: I understand that VITALIS hardware is not approved for human use.
+          required: true
+        - label: I have not included patient data, credentials, or confidential material.
+          required: true
