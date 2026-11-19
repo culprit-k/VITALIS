@@ -191,7 +191,7 @@ for step in range(steps):
     row: dict[str, Any] = {"sample": step + 1, "timestamp_utc": timestamp.isoformat(), "time": timestamp.strftime("%H:%M"), **observed}
     for channel in CHANNELS:
         row[f"observed_{channel}"] = observed[channel]
-    row.update({"trajectory_score": result.get("trajectory_score"), "trajectory_direction": result.get("trajectory_direction"), "state": result.get("state", "unknown"), "coverage": result.get("coverage", 0), "cross_system_concordance": result.get("cross_system_concordance"), "persistent_channels": result.get("persistent_channels", 0), "cumulative_shift_channels": result.get("cumulative_shift_channels", 0), "cumulative_shift_systems": result.get("cumulative_shift_systems", 0)})
+    row.update({"trajectory_score": result.get("trajectory_score"), "trajectory_direction": result.get("trajectory_direction"), "state": result.get("state", "unknown"), "coverage": result.get("coverage", 0), "cross_system_concordance": result.get("cross_system_concordance"), "persistent_channels": result.get("persistent_channels", 0), "persistent_systems": result.get("persistent_systems", 0), "cumulative_shift_channels": result.get("cumulative_shift_channels", 0), "cumulative_shift_systems": result.get("cumulative_shift_systems", 0)})
     latest_result = result
     state = str(row["state"])
     if prev_state is not None and state != prev_state:
@@ -327,10 +327,11 @@ elif page == "Command center":
             st.markdown("**Channel-level evidence**")
             st.dataframe(pd.DataFrame(channel_rows), use_container_width=True, hide_index=True)
             st.markdown("**Cross-system and persistence context**")
-            c1, c2, c3 = st.columns(3)
+            c1, c2, c3, c4 = st.columns(4)
             c1.metric("Cross-system concordance", "—" if latest_result.get("cross_system_concordance") is None else f"{float(latest_result['cross_system_concordance']):.0%}")
             c2.metric("Persistent channels", str(latest_result.get("persistent_channels", 0)))
-            c3.metric("Cumulative-shift systems", str(latest_result.get("cumulative_shift_systems", 0)))
+            c3.metric("Persistent systems", str(latest_result.get("persistent_systems", 0)))
+            c4.metric("Cumulative-shift systems", str(latest_result.get("cumulative_shift_systems", 0)))
         st.markdown("#### Physiological signals · independent native units")
         a, b = st.columns(2)
         for idx, channel in enumerate(CHANNELS):
