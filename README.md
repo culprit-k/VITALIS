@@ -55,6 +55,14 @@ VITALIS explores an **adaptive physiological digital twin** alongside separate r
 
 The central idea is simple: **a measurement is more meaningful when we understand its history, data quality, and context.** VITALIS experiments with mathematics that represents deviations from a changing personal reference, while keeping retrospective prediction models as a separate research track.
 
+## Release candidate status
+
+**VITALIS v0.1.0-rc1 — research software candidate, not a clinical release.**
+
+The release-candidate gate is tracked in [RC1 readiness](docs/RC1_READINESS.md). The candidate is not approved for a final release until the exact candidate commit passes its required software and reproducibility checks and the independent human-review gates are documented. No clinical use is authorized.
+
+---
+
 ## 🧭 What exists today—and what does not
 
 <div align="center">
