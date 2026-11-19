@@ -191,7 +191,8 @@ for step in range(steps):
     row: dict[str, Any] = {"sample": step + 1, "timestamp_utc": timestamp.isoformat(), "time": timestamp.strftime("%H:%M"), **observed}
     for channel in CHANNELS:
         row[f"observed_{channel}"] = observed[channel]
-    row.update({"trajectory_score": result.get("trajectory_score"), "trajectory_direction": result.get("trajectory_direction"), "state": result.get("state", "unknown"), "coverage": result.get("coverage", 0)})
+    row.update({"trajectory_score": result.get("trajectory_score"), "trajectory_direction": result.get("trajectory_direction"), "state": result.get("state", "unknown"), "coverage": result.get("coverage", 0), "cross_system_concordance": result.get("cross_system_concordance"), "persistent_channels": result.get("persistent_channels", 0), "cumulative_shift_channels": result.get("cumulative_shift_channels", 0), "cumulative_shift_systems": result.get("cumulative_shift_systems", 0)})
+    latest_result = result
     state = str(row["state"])
     if prev_state is not None and state != prev_state:
         events.append({"time": timestamp.strftime("%H:%M"), "category": "Twin output", "event": "Illustrative twin state changed", "detail": f"{prev_state.replace('_', ' ').title()} → {state.replace('_', ' ').title()}"})
@@ -295,8 +296,41 @@ elif page == "Command center":
         st.markdown("<div class='vh-panel'><div class='vh-kicker'>LIVE SIMULATION SNAPSHOT</div><h3 style='font-size:1.35rem'>Current synthetic trajectory</h3><div class='vh-muted'>The display updates when you change the controls. It is a replayed simulation, not a live feed.</div></div>", unsafe_allow_html=True)
         k1, k2, k3 = st.columns(3)
         k1.metric("Latest twin state", state_text)
-        k2.metric("Trajectory heuristic", score_text, delta=None if score_delta is None else f"{score_delta:+.3f} vs previous")
+        k2.metric("Clipped deviation index · 0–1", "—" if pd.isna(score) else f"{float(score):.4f}", delta=None if score_delta is None else f"{score_delta:+.4f} vs previous")
         k3.metric("Observed channel coverage", f"{coverage:.0%}")
+        st.caption("The deviation index is a bounded, unitless algorithmic summary—not a probability, percentage likelihood, diagnosis, alert threshold or clinical risk.")
+        with st.expander("Interpret this score and inspect its components", expanded=True):
+            st.markdown("**How it is calculated**")
+            st.latex(r"m_{c,t}=\\frac{\\min(\\max(|z_{rolling}|,|z_{reference}|),z_{clip})}{z_{clip}}")
+            st.latex(r"S_t=\\alpha\\,\\overline{m}_{systems,t}+(1-\\alpha)S_{t-1}")
+            st.write("Each channel's robust deviation is scaled and clipped at the configured z-score cap. Channels are averaged within physiological systems; system means are then averaged and smoothed with an EWMA. The displayed index is therefore bounded between 0 and 1.")
+            if not pd.isna(score) and float(score) >= 0.995:
+                st.warning("Near-ceiling result: one or more system-level deviations are saturating the configured clipping scale. A value displayed near 1.000 does not mean 100% probability. Inspect the channel z-scores and system breakdown below.")
+            elif not pd.isna(score):
+                st.info("This value is a relative algorithmic deviation summary for this synthetic replay. It has no calibrated clinical interpretation.")
+            system_scores = latest_result.get("system_scores", {})
+            if system_scores:
+                st.markdown("**Current system-level components**")
+                st.dataframe(pd.DataFrame([{"Physiological system": key.replace("_", " ").title(), "Clipped deviation component (0–1)": round(float(value), 4)} for key, value in system_scores.items()]), use_container_width=True, hide_index=True)
+            channel_rows = []
+            for channel, details in latest_result.get("channels", {}).items():
+                channel_rows.append({
+                    "Channel": CHANNELS.get(channel, {}).get("label", channel),
+                    "Rolling baseline": "—" if details.get("baseline") is None else round(float(details["baseline"]), 3),
+                    "Frozen reference": "—" if details.get("reference_baseline") is None else round(float(details["reference_baseline"]), 3),
+                    "Rolling z": "—" if details.get("z_score") is None else round(float(details["z_score"]), 2),
+                    "Reference z": "—" if details.get("reference_z_score") is None else round(float(details["reference_z_score"]), 2),
+                    "CUSUM": round(float(details.get("cusum_score", 0.0)), 2),
+                    "Persistence samples": twin.states[channel].consecutive_deviations,
+                    "Baseline updated": "Yes" if details.get("baseline_updated") else "No",
+                })
+            st.markdown("**Channel-level evidence**")
+            st.dataframe(pd.DataFrame(channel_rows), use_container_width=True, hide_index=True)
+            st.markdown("**Cross-system and persistence context**")
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Cross-system concordance", "—" if latest_result.get("cross_system_concordance") is None else f"{float(latest_result['cross_system_concordance']):.0%}")
+            c2.metric("Persistent channels", str(latest_result.get("persistent_channels", 0)))
+            c3.metric("Cumulative-shift systems", str(latest_result.get("cumulative_shift_systems", 0)))
         st.markdown("#### Physiological signals · independent native units")
         a, b = st.columns(2)
         for idx, channel in enumerate(CHANNELS):
@@ -333,7 +367,7 @@ elif page == "Twin studio":
     x1, x2, x3, x4 = st.columns(4)
     x1.metric("Twin state", state_text)
     x2.metric("Trajectory direction", direction)
-    x3.metric("Latest heuristic", score_text)
+    x3.metric("Clipped deviation index", "—" if pd.isna(score) else f"{float(score):.4f}")
     x4.metric("Data coverage", f"{coverage:.0%}")
     left, right = st.columns(2, gap="large")
     with left:
