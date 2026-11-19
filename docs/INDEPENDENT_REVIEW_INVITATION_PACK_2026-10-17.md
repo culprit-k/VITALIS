@@ -1,6 +1,6 @@
 # VITALIS independent scientific review invitation pack
 
-**Updated:** 18 October 2026  
+**Updated:** 19 November 2026  
 **Purpose:** help the project owner invite an unaffiliated reviewer and make the review bounded, reproducible, and candid. This is not a reviewer sign-off and does not imply that a reviewer has agreed to participate.
 
 ## Who to invite
@@ -14,7 +14,11 @@ Invite one or more people who have not authored the VITALIS analysis and have no
 
 A reviewer who has relevant experience with the PhysioNet Challenge can assess endpoint semantics, but should disclose any prior involvement with the source dataset or Challenge. Ask permission before publishing a reviewer’s name, employer, affiliation, comments, or review letter. Do not upload confidential data or private correspondence to the public repository without permission.
 
-## Copy-ready invitation
+## Current consolidated package
+
+Use [INDEPENDENT_SCIENTIFIC_REVIEW_PACKAGE_2026-11-19.md](INDEPENDENT_SCIENTIFIC_REVIEW_PACKAGE_2026-11-19.md) as the authoritative reviewer package. It supersedes the older commit/run-specific wording below and contains updated evidence qualifications, a structured decision form and a copy-ready invitation.
+
+## Copy-ready invitation (historical wording; use consolidated package instead)
 
 **Subject:** Request for independent methods review of VITALIS sepsis-prediction research prototype
 
