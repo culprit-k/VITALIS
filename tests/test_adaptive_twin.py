@@ -278,3 +278,21 @@ def test_deviation_index_is_bounded_and_saturates_only_after_z_clipping():
     assert result["trajectory_score"] == 1.0
     assert all(value == 1.0 for value in result["system_scores"].values())
     assert result["score_semantics"].startswith("unitless heuristic")
+
+
+def test_persistent_multisystem_label_requires_distinct_persistently_deviating_systems():
+    t = AdaptivePhysiologicalTwin(
+        channels=["heart_rate", "systolic_bp", "spo2"],
+        config=TwinConfig(
+            min_history=3, history_window=8, min_channels=2, min_systems=2,
+            min_coverage=0.5, persistence_steps=2, cusum_threshold=1_000_000,
+        ),
+    )
+    for _ in range(3):
+        t.update({"heart_rate": 70, "systolic_bp": 120, "spo2": 98})
+    t.update({"heart_rate": 110, "systolic_bp": 160, "spo2": 98})
+    result = t.update({"heart_rate": 112, "systolic_bp": 162, "spo2": 98})
+    assert result["persistent_channels"] == 2
+    assert result["persistent_systems"] == 1
+    assert result["state"] == "persistent_channel_deviation"
+    assert result["state"] != "persistent_multisystem_deviation"
