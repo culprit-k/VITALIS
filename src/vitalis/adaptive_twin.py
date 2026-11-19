@@ -202,7 +202,7 @@ class AdaptivePhysiologicalTwin:
         )
         trajectory_score = concordance = trajectory_delta = None
         trajectory_direction = None
-        persistent_channels = cumulative_shift_channels = cumulative_shift_systems = 0
+        persistent_channels = persistent_systems = cumulative_shift_channels = cumulative_shift_systems = 0
         if eligible:
             instantaneous = sum(system_scores.values()) / len(system_scores)
             previous_score = self._trajectory_score
@@ -228,6 +228,10 @@ class AdaptivePhysiologicalTwin:
                 state.consecutive_deviations >= self.config.persistence_steps
                 for state in self.states.values()
             )
+            persistent_systems = len({
+                self.channel_systems[name] for name, state in self.states.items()
+                if state.consecutive_deviations >= self.config.persistence_steps
+            })
             cumulative_shift_channels = sum(
                 max(state.cusum_positive, state.cusum_negative) >= self.config.cusum_threshold
                 for state in self.states.values()
@@ -239,12 +243,18 @@ class AdaptivePhysiologicalTwin:
 
         if not eligible:
             label = "insufficient_data"
-        elif persistent_channels >= self.config.min_channels and (concordance or 0) >= 0.5:
+        elif (
+            persistent_channels >= self.config.min_channels
+            and persistent_systems >= self.config.min_systems
+            and (concordance or 0) >= 0.5
+        ):
             label = "persistent_multisystem_deviation"
         elif cumulative_shift_channels >= self.config.min_channels and cumulative_shift_systems >= self.config.min_systems:
             label = "cumulative_multisystem_shift"
         elif cumulative_shift_channels:
             label = "cumulative_shift_detected"
+        elif persistent_channels >= self.config.min_channels:
+            label = "persistent_channel_deviation"
         elif (trajectory_score or 0) >= self.config.high_deviation_z / self.config.z_clip:
             label = "marked_deviation"
         elif (trajectory_score or 0) >= self.config.deviation_z / self.config.z_clip:
@@ -259,6 +269,7 @@ class AdaptivePhysiologicalTwin:
             "score_semantics": "unitless heuristic; not a probability or clinical risk",
             "cross_system_concordance": concordance, "system_scores": system_scores,
             "persistent_channels": persistent_channels,
+            "persistent_systems": persistent_systems,
             "cumulative_shift_channels": cumulative_shift_channels,
             "cumulative_shift_systems": cumulative_shift_systems,
             "channels": channel_results, "clinical_recommendation": None,
