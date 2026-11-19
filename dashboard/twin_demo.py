@@ -305,7 +305,7 @@ elif page == "Command center":
             st.latex(r"S_t=\\alpha\\,\\overline{m}_{systems,t}+(1-\\alpha)S_{t-1}")
             st.write("Each channel's robust deviation is scaled and clipped at the configured z-score cap. Channels are averaged within physiological systems; system means are then averaged and smoothed with an EWMA. The displayed index is therefore bounded between 0 and 1.")
             if not pd.isna(score) and float(score) >= 0.995:
-                st.warning("Near-ceiling result: one or more system-level deviations are saturating the configured clipping scale. A value displayed near 1.000 does not mean 100% probability. Inspect the channel z-scores and system breakdown below.")
+                st.warning("Near-ceiling result: the index is at or near its mathematical cap. This can reflect clipped channel deviations and EWMA carry-over; it does not mean 100% probability. Inspect the current channel z-scores and system breakdown below.")
             elif not pd.isna(score):
                 st.info("This value is a relative algorithmic deviation summary for this synthetic replay. It has no calibrated clinical interpretation.")
             system_scores = latest_result.get("system_scores", {})
