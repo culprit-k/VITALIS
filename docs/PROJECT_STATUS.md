@@ -4,7 +4,7 @@ This section records the latest code and CI state. Historical experiment section
 
 ## Software and demo
 
-- **Current main commit:** `08bd1c49d3c28c532feced6da5571996e4624d49` (this status-document update follows the tested code snapshot).
+- **Code snapshot covered by the 19 November software tests:** `01d6845245edf6dfa55e49a4b58993f8eb790213`. Subsequent merges on `main` have been documentation/community-onboarding changes; the exact-current-main full-cohort run remains a separate release gate.
 - **Automated tests:** [GitHub Actions run #44467431900](https://github.com/culprit-k/VITALIS/actions/runs/44467431900) completed successfully on code snapshot `01d6845245edf6dfa55e49a4b58993f8eb790213`; a fresh check on this documentation update is running at [#44467537117](https://github.com/culprit-k/VITALIS/actions/runs/44467537117). Compilation, package installation, source-manifest checks, repository artifact hygiene, reachable-history audit, synthetic stream smoke test, integrated-interface smoke test, synthetic replay bench, and the test suite all passed.
 - **Adaptive-twin persistence semantics:** a `persistent_multisystem_deviation` state now requires persistent channels to span at least the configured minimum number of distinct physiological systems. Persistent channels confined to one system are reported separately as `persistent_channel_deviation`. Regression coverage is in `tests/test_adaptive_twin.py`.
 - **Dashboard diagnostics:** the synthetic demo explains the bounded 0–1 deviation index, exposes rolling/reference z-scores, CUSUM, system components, coverage, persistent channel/system counts, and clearly states that the index is not a probability.
@@ -22,7 +22,7 @@ This section records the latest code and CI state. Historical experiment section
 
 ## Remaining release gates
 
-1. Obtain independent statistical and clinical-methods review of the reconciliation evidence, including the documented OpenBLAS dispatch sensitivity, source/cohort provenance, patient-level splits, endpoint semantics, calibration, missingness, subgroup analysis, and alert burden. Keep the historical failure report and baseline unchanged.
+1. Keep the historical baseline and six-decimal rule unchanged, and retain the `SkylakeX`/AVX-512F fail-closed workflow guard. Reopen the numerical investigation if a compatible clean run fails reconciliation.
 2. Run and archive a fresh, exact-current-main full-cohort reproduction from an authorized clean checkout and permitted data environment; distinguish this new run from prior successful runs on earlier commits.
 3. Obtain independent statistical and clinical-methods review of endpoint semantics, patient-level splits, calibration, missingness, subgroup analysis, and alert burden.
 4. Obtain institutional ethics/research-governance determinations, dataset credentialing/DUAs, and an approved data-management plan before any new external cohort analysis.
