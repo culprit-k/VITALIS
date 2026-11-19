@@ -17,12 +17,13 @@ This section records the latest code and CI state. Historical experiment section
 - The separate supervised experiments forecast entry into the PhysioNet/CinC Challenge `SepsisLabel` positive window. That target is not independently adjudicated biological sepsis onset.
 - Set B is a held-out Challenge benchmark cohort, **not** an independent external clinical cohort.
 - Existing retrospective results do not establish clinical utility, prospective performance, patient benefit, subgroup safety, or an appropriate clinical operating threshold.
-- The historic temporal-model metric discrepancies and probability-quality limitations remain research issues; they must not be silently overwritten or described as resolved by the current UI work.
+- The five temporal-model mismatches recorded on 15 October were subsequently reproduced as an OpenBLAS CPU-dispatch effect: controlled Python 3.11 runs using the historical `SkylakeX` kernel passed all 42 mean/SD pairs, while `Haswell` runs repeated the five mismatches. The current workflow requests `SkylakeX` and fails closed unless AVX-512F and the loaded kernel are verified. See [the reproduction-failure triage record](REPRODUCTION_FAILURE_TRIAGE_2026-10-15.md). The 15 October failure report remains preserved as historical evidence; no baseline value or six-decimal tolerance was changed.
+- Probability-quality and operating-point limitations remain separate research questions. Exact reproduction does not establish well-calibrated probabilities, clinical utility, or a safe alert threshold.
 
 ## Remaining release gates
 
-1. Reconcile the historical baseline/temporal metric discrepancies using exact source, environment, cohort, split, and cache provenance; preserve conflicting results until independently resolved.
-2. Run and archive a fresh, exact-current-main full-cohort reproduction from an authorized clean checkout and permitted data environment.
+1. Obtain independent statistical and clinical-methods review of the reconciliation evidence, including the documented OpenBLAS dispatch sensitivity, source/cohort provenance, patient-level splits, endpoint semantics, calibration, missingness, subgroup analysis, and alert burden. Keep the historical failure report and baseline unchanged.
+2. Run and archive a fresh, exact-current-main full-cohort reproduction from an authorized clean checkout and permitted data environment; distinguish this new run from prior successful runs on earlier commits.
 3. Obtain independent statistical and clinical-methods review of endpoint semantics, patient-level splits, calibration, missingness, subgroup analysis, and alert burden.
 4. Obtain institutional ethics/research-governance determinations, dataset credentialing/DUAs, and an approved data-management plan before any new external cohort analysis.
 5. Freeze the model, feature schema, thresholds, endpoint, and analysis plan before a genuinely independent external evaluation.
