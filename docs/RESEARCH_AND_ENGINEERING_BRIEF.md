@@ -38,7 +38,7 @@ The software demonstrations use generated/synthetic signals. The repository does
 - The adaptive-twin trajectory score is a **unitless heuristic**, not a calibrated probability of sepsis or deterioration.
 - The retrospective supervised experiments target entry into the PhysioNet/CinC Challenge 2019 `SepsisLabel` positive window. This is not independently adjudicated biological sepsis onset.
 - Set B is a held-out cohort from the same Challenge, not an independent external clinical cohort.
-- Historical metric/reproducibility discrepancies remain documented and require independent investigation; acceptance criteria must not be relaxed to make results match.
+- The five temporal-model mismatches recorded on 15 October were subsequently linked to OpenBLAS CPU-dispatch differences: controlled Python 3.11 runs using the reference `SkylakeX` kernel passed the unchanged 42-pair/84-scalar reconciliation, while `Haswell` runs repeated the five mismatches. The workflow now requests `SkylakeX` and checks AVX-512F plus the loaded kernel before cohort download. Historical failures remain preserved; no baseline or tolerance was changed. A fresh full-cohort run on the exact current main snapshot and independent methods review remain outstanding.
 - Retrospective benchmark results do not establish clinical utility, prospective performance, patient benefit, subgroup safety, or a clinically appropriate operating threshold.
 - No VITALIS output is approved for diagnosis, triage, monitoring, treatment, or patient-care decisions.
 

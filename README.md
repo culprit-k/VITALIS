@@ -349,6 +349,10 @@ This is an invitation to inspect the work, challenge its assumptions, identify l
 | [Hardware integration blueprint](docs/HARDWARE_INTEGRATION_BLUEPRINT.md) | Proposed bench-only hardware architecture |
 | [Current project status](docs/PROJECT_STATUS.md) | Evidence, limitations and unresolved release gates |
 
+## Independent scientific review
+
+The consolidated reviewer package contains the methods summary, reproducibility evidence, limitations, decision form and copy-ready invitation: [Independent Scientific Review Package](docs/INDEPENDENT_SCIENTIFIC_REVIEW_PACKAGE_2026-11-19.md). The review is open; no independent sign-off is claimed. See [tracking issue #4](https://github.com/culprit-k/VITALIS/issues/4).
+
 **Priority collaboration needs**
 - Independent clinical and physiological review.
 - Independent statistical and machine-learning review of cohort provenance, splits, calibration, uncertainty and alert burden.
