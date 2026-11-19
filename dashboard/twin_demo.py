@@ -107,6 +107,21 @@ div[data-testid="stTabs"] button { color:#b9d4e4; font-weight:650; }
   .vh-title{font-size:3rem;}
   [data-testid="stMetricValue"]{font-size:1.45rem;}
 }
+/* Sidebar navigation: keep every destination in the scrollable panel */
+[data-testid="stSidebar"] [role="radiogroup"] { gap: .18rem; }
+[data-testid="stSidebar"] [role="radiogroup"] label {
+  padding: .38rem .48rem;
+  border-radius: 9px;
+  min-height: 2.35rem;
+}
+[data-testid="stSidebar"] [role="radiogroup"] label p {
+  font-size: .88rem;
+  line-height: 1.25;
+}
+@media (max-width:700px) {
+  [data-testid="stSidebar"] [data-testid="stVerticalBlock"] { gap: .7rem; }
+  [data-testid="stSidebar"] [role="radiogroup"] label { min-height: 2.5rem; }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -114,7 +129,7 @@ with st.sidebar:
     st.markdown("<div style='font-size:1.55rem;font-weight:850;letter-spacing:-.06em;color:#f3fbff'>🧬 VITALIS</div>", unsafe_allow_html=True)
     st.markdown("<div style='color:#7fa7bd;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;margin-top:-.2rem'>Adaptive physiology research</div>", unsafe_allow_html=True)
     st.markdown("<hr class='vh-sep'>", unsafe_allow_html=True)
-    page = st.selectbox("WORKSPACE", ["Command center", "About VITALIS", "Twin studio", "Signal lab", "Events & data", "Architecture", "Hardware lab", "Research library", "Validation & governance"], label_visibility="visible")
+    page = st.radio("WORKSPACE", ["Command center", "About VITALIS", "Twin studio", "Signal lab", "Events & data", "Architecture", "Hardware lab", "Research library", "Validation & governance"], label_visibility="visible", key="workspace_navigation")
     st.markdown("<hr class='vh-sep'>", unsafe_allow_html=True)
     st.markdown("**Simulation configuration**")
     scenario_label = st.selectbox("Scenario", list(SCENARIOS), index=1)
