@@ -1,0 +1,59 @@
+name: Clinical, physiological, or methods review
+description: Submit an independent review of VITALIS assumptions, evidence, or evaluation methods.
+title: "[Review] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        VITALIS is a research prototype, not a clinically validated system. Do not include patient information, private data, or confidential institutional material.
+  - type: dropdown
+    id: review_area
+    attributes:
+      label: Review area
+      options:
+        - Clinical workflow and intended use
+        - Physiology and signal interpretation
+        - Statistics and evaluation
+        - Machine learning and data leakage
+        - Calibration and uncertainty
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: reviewed_version
+    attributes:
+      label: Commit, workflow run, or document reviewed
+      description: Provide a commit SHA, run URL, or document path where possible.
+  - type: textarea
+    id: finding
+    attributes:
+      label: Main finding
+      description: Describe the confirmed issue, concern, or recommendation.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and reasoning
+      description: Include references, calculations, file locations, or reproducible examples. Do not include patient data.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Potential impact and suggested next step
+    validations:
+      required: true
+  - type: textarea
+    id: reviewer_context
+    attributes:
+      label: Relevant expertise and conflicts of interest (optional)
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have not included patient-level, identifiable, confidential, or restricted data.
+          required: true
+        - label: I understand this review does not imply endorsement or clinical validation.
+          required: true
