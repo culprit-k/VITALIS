@@ -1,3 +1,38 @@
+# Current verified checkpoint — 19 November 2026
+
+This section records the latest code and CI state. Historical experiment sections below are retained as dated records and should not be mistaken for fresh runs on the current commit.
+
+## Software and demo
+
+- **Current main commit:** `01d6845245edf6dfa55e49a4b58993f8eb790213`.
+- **Automated tests:** [GitHub Actions run #44467431900](https://github.com/culprit-k/VITALIS/actions/runs/44467431900) completed successfully on this commit. Compilation, package installation, source-manifest checks, repository artifact hygiene, reachable-history audit, synthetic stream smoke test, integrated-interface smoke test, synthetic replay bench, and the test suite all passed.
+- **Adaptive-twin persistence semantics:** a `persistent_multisystem_deviation` state now requires persistent channels to span at least the configured minimum number of distinct physiological systems. Persistent channels confined to one system are reported separately as `persistent_channel_deviation`. Regression coverage is in `tests/test_adaptive_twin.py`.
+- **Dashboard diagnostics:** the synthetic demo explains the bounded 0–1 deviation index, exposes rolling/reference z-scores, CUSUM, system components, coverage, persistent channel/system counts, and clearly states that the index is not a probability.
+- **Container publication:** latest-main publication is pending at [run #44467431842](https://github.com/culprit-k/VITALIS/actions/runs/44467431842). An earlier container publication succeeded, but it predates the latest adaptive-twin change; do not treat it as the current image until the latest run succeeds.
+- **Deployment:** Streamlit demo remains synthetic-only. A GitHub code commit and passing CI do not by themselves prove that the hosted Streamlit instance has completed redeployment; verify the live app after its host refreshes.
+
+## Research and clinical-readiness boundary
+
+- The adaptive twin is an experimental, unitless deviation/trajectory heuristic. It is not a calibrated sepsis probability, clinical score, alarm, diagnosis, or treatment recommendation.
+- The separate supervised experiments forecast entry into the PhysioNet/CinC Challenge `SepsisLabel` positive window. That target is not independently adjudicated biological sepsis onset.
+- Set B is a held-out Challenge benchmark cohort, **not** an independent external clinical cohort.
+- Existing retrospective results do not establish clinical utility, prospective performance, patient benefit, subgroup safety, or an appropriate clinical operating threshold.
+- The historic temporal-model metric discrepancies and probability-quality limitations remain research issues; they must not be silently overwritten or described as resolved by the current UI work.
+
+## Remaining release gates
+
+1. Reconcile the historical baseline/temporal metric discrepancies using exact source, environment, cohort, split, and cache provenance; preserve conflicting results until independently resolved.
+2. Run and archive a fresh, exact-current-main full-cohort reproduction from an authorized clean checkout and permitted data environment.
+3. Obtain independent statistical and clinical-methods review of endpoint semantics, patient-level splits, calibration, missingness, subgroup analysis, and alert burden.
+4. Obtain institutional ethics/research-governance determinations, dataset credentialing/DUAs, and an approved data-management plan before any new external cohort analysis.
+5. Freeze the model, feature schema, thresholds, endpoint, and analysis plan before a genuinely independent external evaluation.
+6. Treat prospective silent-mode evaluation as a separate, approved study; do not use the current demo or outputs in patient care.
+7. Keep hardware at the bench/synthetic stage until sensor accuracy, synchronization, electrical/biomedical safety, and risk controls are independently verified.
+
+**Decision:** software research-demo quality has improved and current CI passes. VITALIS remains a research prototype; clinical validation and clinical deployment are not approved.
+
+---
+
 # VITALIS — project status in plain language
 
 ## Latest strict full-cohort retry — PASS (17 October 2026)
