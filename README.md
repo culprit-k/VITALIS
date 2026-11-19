@@ -356,6 +356,10 @@ This is an invitation to inspect the work, challenge its assumptions, identify l
 
 **Open review gates:** [Issue #4 — independent statistical and methods review](https://github.com/culprit-k/VITALIS/issues/4) · [Issue #6 — reproducibility and bench-prototype gate](https://github.com/culprit-k/VITALIS/issues/6).
 
+**Open community calls:** [Issue #49 — clinical, statistical, and ML reviewers](https://github.com/culprit-k/VITALIS/issues/49) · [Issue #50 — hardware architecture review challenge](https://github.com/culprit-k/VITALIS/issues/50).
+
+**Maintainer decision:** [Issue #51 — software and hardware licensing](https://github.com/culprit-k/VITALIS/issues/51).
+
 > [!IMPORTANT]
 > **Licensing status:** this repository currently has no top-level `LICENSE` file. Public visibility does not grant blanket reuse rights. Review comments and feedback are welcome; please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting code or hardware designs. The maintainer must clarify and publish appropriate software and hardware licensing before the project is represented as unrestricted open source or open hardware.
 
