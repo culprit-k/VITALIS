@@ -342,6 +342,7 @@ This is an invitation to inspect the work, challenge its assumptions, identify l
 
 | Start here | Purpose |
 |---|---|
+| [Research and engineering concept brief](docs/RESEARCH_AND_ENGINEERING_BRIEF.md) | Concise project overview, current evidence, limitations, and collaboration needs |
 | [Community review guide](docs/COMMUNITY_REVIEW_GUIDE.md) | What to review and how to submit useful feedback |
 | [Contributing guide](CONTRIBUTING.md) | Contribution paths, pull requests, safety and data rules |
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Standards for respectful collaboration |
