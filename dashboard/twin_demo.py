@@ -16,7 +16,7 @@ import streamlit as st
 from vitalis.adaptive_twin import AdaptivePhysiologicalTwin, TwinConfig
 from vitalis.stream import Observation, TimestampedTwinStream
 
-APP_VERSION = "0.2.0-preview"
+APP_VERSION = "0.3.0-mobile-polish"
 CHANNELS = {
     "heart_rate": {"label": "Heart rate", "unit": "bpm", "system": "Cardiovascular", "color": "#ff6b83", "icon": "♥"},
     "spo2": {"label": "SpO₂", "unit": "%", "system": "Oxygenation", "color": "#54c7ec", "icon": "◉"},
@@ -45,7 +45,7 @@ RESOURCE_LIBRARY = [
     {"category": "Engineering", "title": "ESP32-S3 Technical Documentation", "summary": "Official Espressif documentation for the proposed embedded gateway platform; board-specific wiring still needs confirmation.", "url": "https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/get-started/index.html", "kind": "Hardware documentation", "access": "Public resource"},
 ]
 
-st.set_page_config(page_title="VITALIS | Research Workspace", page_icon="🧬", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="VITALIS | Research Workspace", page_icon="🧬", layout="wide", initial_sidebar_state="collapsed")
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
@@ -82,7 +82,31 @@ div[data-testid="stTabs"] button { color:#b9d4e4; font-weight:650; }
 .vh-node { background:linear-gradient(145deg,#103149,#0b2030); border:1px solid #28536b; border-radius:12px; padding:13px 15px; min-width:145px; flex:1; }
 .vh-node strong { display:block; color:#ecf9ff; margin-bottom:5px; }
 .vh-node span { color:#91b1c6; font-size:.78rem; line-height:1.45; }
-@media (max-width:700px) { .block-container{padding-left:1rem;padding-right:1rem;} .vh-title{font-size:2.4rem;} .vh-panel{padding:14px;} }
+/* Responsive metric and navigation treatment */
+[data-testid="stMetric"] { min-width:0; overflow:hidden; }
+[data-testid="stMetricValue"] { font-size:clamp(1.05rem, 2.4vw, 2rem); line-height:1.18; white-space:normal; overflow-wrap:anywhere; word-break:normal; }
+[data-testid="stMetricLabel"] { white-space:normal; overflow-wrap:anywhere; }
+[data-testid="stDataFrame"], [data-testid="stTable"] { max-width:100%; }
+.stButton>button,.stDownloadButton>button { min-height:2.7rem; }
+@media (max-width:700px) {
+  .block-container{padding:1rem .85rem 3rem;}
+  .vh-title{font-size:clamp(2rem,9vw,2.65rem); line-height:1.06; letter-spacing:-.055em;}
+  .vh-subtitle{font-size:.96rem; line-height:1.55;}
+  .vh-panel{padding:14px; border-radius:15px;}
+  .vh-section{font-size:1.18rem;}
+  .vh-chip{font-size:.66rem; padding:5px 8px; margin:2px 0;}
+  [data-testid="stMetric"]{padding:11px 12px; min-height:88px; border-radius:12px;}
+  [data-testid="stMetricValue"]{font-size:1.18rem; line-height:1.2;}
+  [data-testid="stMetricLabel"]{font-size:.74rem;}
+  [data-testid="stHorizontalBlock"]{gap:.55rem;}
+  [data-testid="stSidebar"]{min-width:min(86vw,360px);}
+  .vh-flow{gap:7px;} .vh-node{min-width:100%;}
+  .stButton>button,.stDownloadButton>button,.stLinkButton a{width:100%;}
+}
+@media (min-width:701px) and (max-width:1100px) {
+  .vh-title{font-size:3rem;}
+  [data-testid="stMetricValue"]{font-size:1.45rem;}
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -90,7 +114,7 @@ with st.sidebar:
     st.markdown("<div style='font-size:1.55rem;font-weight:850;letter-spacing:-.06em;color:#f3fbff'>🧬 VITALIS</div>", unsafe_allow_html=True)
     st.markdown("<div style='color:#7fa7bd;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;margin-top:-.2rem'>Adaptive physiology research</div>", unsafe_allow_html=True)
     st.markdown("<hr class='vh-sep'>", unsafe_allow_html=True)
-    page = st.radio("WORKSPACE", ["Command center", "Twin studio", "Signal lab", "Events & data", "Architecture", "Hardware lab", "Research library", "Validation & governance"], label_visibility="visible")
+    page = st.selectbox("WORKSPACE", ["Command center", "About VITALIS", "Twin studio", "Signal lab", "Events & data", "Architecture", "Hardware lab", "Research library", "Validation & governance"], label_visibility="visible")
     st.markdown("<hr class='vh-sep'>", unsafe_allow_html=True)
     st.markdown("**Simulation configuration**")
     scenario_label = st.selectbox("Scenario", list(SCENARIOS), index=1)
@@ -185,6 +209,7 @@ def link_card(item: dict[str, str]) -> None:
 
 page_titles = {
     "Command center": ("A physiology-first\nresearch workspace.", "Explore a personal-baseline concept through deterministic synthetic signals, visible data-quality context, and a transparent research roadmap."),
+    "About VITALIS": ("A digital twin for\nphysiological context.", "A university-facing overview of the research question, software architecture, independent model tracks, and evidence still required."),
     "Twin studio": ("Understand the twin.\nChange the scenario.", "Inspect warm-up, signal coverage, and within-person deviation behavior. Outputs are software heuristics, not clinical risk."),
     "Signal lab": ("Every signal.\nOne coherent timeline.", "Compare channels, explore missingness and noise, and inspect the generated traces without mixing their original units."),
     "Events & data": ("Trace every sample.\nExport the synthetic run.", "Review generated observations, state changes and quality events, then download the current simulation with its configuration."),
@@ -201,7 +226,55 @@ st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
 st.markdown("<span class='vh-chip'>● SYNTHETIC RESEARCH MODE</span> &nbsp; <span class='vh-chip vh-chip-blue'>NO LIVE PATIENT DATA</span> &nbsp; <span class='vh-chip vh-chip-warn'>NOT CLINICALLY VALIDATED</span>", unsafe_allow_html=True)
 st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
-if page == "Command center":
+if page == "About VITALIS":
+    section("Project overview", "VITALIS is a research prototype exploring whether a changing personal physiological reference can add useful temporal context to retrospective deterioration research.")
+    st.markdown("""
+    <div class="vh-panel">
+      <div class="vh-kicker">CORE RESEARCH QUESTION</div>
+      <h3 style="font-size:1.45rem">Can a model learn a person's evolving physiological reference and describe meaningful deviation over time?</h3>
+      <div class="vh-muted">The project studies baseline adaptation, signal quality, persistence and cross-system patterns. This is a research question—not an established clinical benefit.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    a, b, c = st.columns(3)
+    a.metric("Research focus", "Adaptive physiology")
+    b.metric("Input mode here", "Synthetic only")
+    c.metric("Clinical status", "Not validated")
+    section("How the software is organised")
+    st.markdown("""
+    <div class="vh-flow">
+      <div class="vh-node"><strong>01 · Physiological observations</strong><span>Timestamped channels, units, missingness and data-quality context</span></div>
+      <div class="vh-node"><strong>02 · Adaptive twin</strong><span>Rolling and reference baselines, robust deviation and trajectory heuristics</span></div>
+      <div class="vh-node"><strong>03 · Research interpretation</strong><span>Coverage, persistence, signal traces and transparent limitations</span></div>
+    </div>
+    """, unsafe_allow_html=True)
+    section("Two research tracks — kept separate")
+    left, right = st.columns(2, gap="large")
+    with left:
+        st.markdown("<div class='vh-panel'><div class='vh-kicker'>TRACK A</div><h3>Adaptive physiological twin</h3><div class='vh-muted'>A stateful software component compares incoming synthetic observations with rolling and frozen personal references. Its trajectory output is a unitless heuristic, not a probability.</div></div>", unsafe_allow_html=True)
+    with right:
+        st.markdown("<div class='vh-panel'><div class='vh-kicker'>TRACK B</div><h3>Retrospective supervised prediction</h3><div class='vh-muted'>Separate machine-learning experiments study benchmark-label forecasting. They are not loaded into this demo and are not fused with the twin heuristic.</div></div>", unsafe_allow_html=True)
+    section("What is implemented in this demonstration")
+    for label, detail in [
+        ("Synthetic signal replay", "Deterministic scenario generation with configurable noise, missingness, sampling interval and seed."),
+        ("Timestamped stream", "The synthetic observations are passed through the project streaming interface."),
+        ("Adaptive twin display", "The interface exposes heuristic state, trajectory direction, coverage and signal traces."),
+        ("Research audit views", "Events, generated samples, configuration and synthetic-only exports are available in the workspace."),
+    ]:
+        with st.expander(label):
+            st.write(detail)
+    section("Evidence still required before clinical claims")
+    st.markdown("""
+    - Independent reproduction and statistical review of retrospective experiments.
+    - Frozen endpoint definitions, feature schema, model and thresholds before external evaluation.
+    - Independent external-cohort validation with appropriate permissions and governance.
+    - Calibration, uncertainty, subgroup, missing-data and alert-burden evaluation.
+    - Prospective clinical evaluation and regulatory/ethics review where applicable.
+    - Separate hardware verification; a working software demo is not evidence of sensor accuracy.
+    """)
+    st.warning("VITALIS is a research prototype, not a medical device or clinically validated decision-support system. This application uses synthetic data only and must not guide diagnosis, triage, treatment or patient care.")
+    st.markdown("**Repository:** [culprit-k/VITALIS](https://github.com/culprit-k/VITALIS) · **Research status:** see the project status and validation documents in the repository.")
+
+elif page == "Command center":
     left, right = st.columns([1.7, 1], gap="large")
     with left:
         st.markdown("<div class='vh-panel'><div class='vh-kicker'>LIVE SIMULATION SNAPSHOT</div><h3 style='font-size:1.35rem'>Current synthetic trajectory</h3><div class='vh-muted'>The display updates when you change the controls. It is a replayed simulation, not a live feed.</div></div>", unsafe_allow_html=True)
