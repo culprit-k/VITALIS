@@ -4,11 +4,11 @@ This section records the latest code and CI state. Historical experiment section
 
 ## Software and demo
 
-- **Current main commit:** `01d6845245edf6dfa55e49a4b58993f8eb790213`.
-- **Automated tests:** [GitHub Actions run #44467431900](https://github.com/culprit-k/VITALIS/actions/runs/44467431900) completed successfully on this commit. Compilation, package installation, source-manifest checks, repository artifact hygiene, reachable-history audit, synthetic stream smoke test, integrated-interface smoke test, synthetic replay bench, and the test suite all passed.
+- **Current main commit:** `08bd1c49d3c28c532feced6da5571996e4624d49` (this status-document update follows the tested code snapshot).
+- **Automated tests:** [GitHub Actions run #44467431900](https://github.com/culprit-k/VITALIS/actions/runs/44467431900) completed successfully on code snapshot `01d6845245edf6dfa55e49a4b58993f8eb790213`; a fresh check on this documentation update is running at [#44467537117](https://github.com/culprit-k/VITALIS/actions/runs/44467537117). Compilation, package installation, source-manifest checks, repository artifact hygiene, reachable-history audit, synthetic stream smoke test, integrated-interface smoke test, synthetic replay bench, and the test suite all passed.
 - **Adaptive-twin persistence semantics:** a `persistent_multisystem_deviation` state now requires persistent channels to span at least the configured minimum number of distinct physiological systems. Persistent channels confined to one system are reported separately as `persistent_channel_deviation`. Regression coverage is in `tests/test_adaptive_twin.py`.
 - **Dashboard diagnostics:** the synthetic demo explains the bounded 0–1 deviation index, exposes rolling/reference z-scores, CUSUM, system components, coverage, persistent channel/system counts, and clearly states that the index is not a probability.
-- **Container publication:** latest-main publication is pending at [run #44467431842](https://github.com/culprit-k/VITALIS/actions/runs/44467431842). An earlier container publication succeeded, but it predates the latest adaptive-twin change; do not treat it as the current image until the latest run succeeds.
+- **Container publication:** latest-main publication is pending at [run #44467537118](https://github.com/culprit-k/VITALIS/actions/runs/44467537118). An earlier container publication succeeded, but it predates the latest adaptive-twin change; do not treat it as the current image until the latest run succeeds.
 - **Deployment:** Streamlit demo remains synthetic-only. A GitHub code commit and passing CI do not by themselves prove that the hosted Streamlit instance has completed redeployment; verify the live app after its host refreshes.
 
 ## Research and clinical-readiness boundary
