@@ -152,3 +152,32 @@ A gate cannot be declared passed by a plan, a synthetic demo, a successful CI ru
 5. Prepare a concise, technically specific request for independent reviewers and hardware contributors.
 
 **Safety statement:** VITALIS remains a research and education prototype. Do not connect it to a person or use it for patient-care decisions.
+
+
+## 9. Implementation checkpoint — 23 November 2026
+
+The first bench transport slice has been implemented on `research/vitalis-2.0-execution-plan`:
+
+- Versioned observation envelope: `schemas/observation-v1.schema.json`.
+- Strict JSONL parser and sequence-gap tracker: `src/vitalis/transport.py`.
+- Mapping into the existing scalar stream is restricted to supported, good-quality channels; suspect, bad, missing and ECG placeholder samples do not enter the twin.
+- Synthetic JSONL generator: `scripts/generate_bench_stream.py`, with nominal, gradual-drift, dropout and packet-loss fixtures. These are software fixtures, not physiological simulation or sensor validation.
+- Parser/sequence tests: `tests/test_transport.py`.
+- Generator integration tests: `tests/test_bench_generator.py`.
+
+### Verified CI evidence
+
+Standard `tests` workflow run [#45149988287](https://github.com/culprit-k/VITALIS/actions/runs/45149988287) completed successfully on commit `0a284d926fb66b5bdcb3c75fe8693e258208a9f9`. All 14 substantive workflow steps passed, including installation, compilation, repository/source audits, stream and integrated-inference smoke tests, a 1,000-frame aggregate-only synthetic replay bench, and pytest. Its retained audit artifact is [#14806500317](https://github.com/culprit-k/VITALIS/actions/runs/45149988287/artifacts/14806500317).
+
+The additional generator-specific test file was committed afterward as `41fd2ea83542453a81f9bcd2d1f6f317480c7141`; it is **not covered by run #45149988287**. A new CI result for that later commit must be inspected before marking the expanded test suite green.
+
+### Current status and limits
+
+- Software transport implementation: authored; parser and sequence tests included in the successful earlier CI snapshot.
+- Generator integration tests: authored after that CI snapshot; verification pending.
+- Hardware platform: architecture candidate only (ESP32-S3 acquisition board to Raspberry Pi 5 gateway); no parts purchased and no physical prototype assembled.
+- Sensor interfaces: no human-connected sensor path approved; MAX86141 remains an evaluation-front-end candidate, not a finished pulse oximeter.
+- Research: no prospective patient data, independent clinical validation, clinical utility or safety evidence.
+- Release: PR remains draft; artifact privacy review, independent review, licensing and governance gates remain open.
+
+The next engineering gate is a verified replay-to-stream integration run, followed by a reviewed bill of materials and tabletop-only hardware acceptance tests. Do not bypass the privacy or no-human-connection boundaries.
