@@ -46,5 +46,5 @@ def test_malformed_and_mixed_session_lines_are_rejected():
     changed["session_id"] = "second-session"
     lines.append(json.dumps(changed))
     summary = replay_lines(lines)
-    assert summary["parse_rejected"] == 1 if "parse_rejected" in summary else summary["rejected_total"] >= 1
-    assert summary["session_rejected"] == 1 if "session_rejected" in summary else summary["rejected_total"] >= 1
+    assert summary["parse_rejected"] == 1
+    assert summary["session_rejected"] == 1
