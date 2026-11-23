@@ -169,12 +169,12 @@ The first bench transport slice has been implemented on `research/vitalis-2.0-ex
 
 Standard `tests` workflow run [#45149988287](https://github.com/culprit-k/VITALIS/actions/runs/45149988287) completed successfully on commit `0a284d926fb66b5bdcb3c75fe8693e258208a9f9`. All 14 substantive workflow steps passed, including installation, compilation, repository/source audits, stream and integrated-inference smoke tests, a 1,000-frame aggregate-only synthetic replay bench, and pytest. Its retained audit artifact is [#14806500317](https://github.com/culprit-k/VITALIS/actions/runs/45149988287/artifacts/14806500317).
 
-The additional generator-specific test file was committed afterward as `41fd2ea83542453a81f9bcd2d1f6f317480c7141`; it is **not covered by run #45149988287**. A new CI result for that later commit must be inspected before marking the expanded test suite green.
+The generator-specific tests were added in commit `41fd2ea83542453a81f9bcd2d1f6f317480c7141`. The first run exposed a packet-loss fixture boundary issue: a final dropped interval had no later packet to reveal its sequence gap. The fixture was corrected by extending the replay to include a subsequent packet. The corrected expanded suite passed on exact commit `89d3528e68b13a7344745256b4331655376b04c4` in workflow run [#45174378921](https://github.com/culprit-k/VITALIS/actions/runs/45174378921): **302 tests passed in 4.35 seconds** (Python 3.11.18, pytest 9.2.0). The job and all workflow steps completed successfully. Retained audit artifact: [#14817983794](https://github.com/culprit-k/VITALIS/actions/runs/45174378921/artifacts/14817983794), SHA-256 `719adc05e017cca808c5ea2d5dd889e45313960d34a4d8ab351dc47138dc638d` (expires 23 December 2026). This artifact is an engineering CI record, not evidence of clinical validity or sensor performance.
 
 ### Current status and limits
 
-- Software transport implementation: authored; parser and sequence tests included in the successful earlier CI snapshot.
-- Generator integration tests: authored after that CI snapshot; verification pending.
+- Software transport implementation: authored; parser, sequence and generator integration tests are included in the corrected successful CI run.
+- Expanded software test suite: 302 passed on exact commit `89d3528e68b13a7344745256b4331655376b04c4`; replay-to-twin integration remains the next engineering task.
 - Hardware platform: architecture candidate only (ESP32-S3 acquisition board to Raspberry Pi 5 gateway); no parts purchased and no physical prototype assembled.
 - Sensor interfaces: no human-connected sensor path approved; MAX86141 remains an evaluation-front-end candidate, not a finished pulse oximeter.
 - Research: no prospective patient data, independent clinical validation, clinical utility or safety evidence.
