@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/culprit-k/VITALIS/blob/research/vitalis-2.0-execution-plan/schemas/observation-v1.schema.json",
+  "title": "VITALIS Research Observation Envelope v1",
+  "description": "Transport contract for synthetic and non-human bench observations. Not a clinical interchange standard.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "source_id",
+    "sequence",
+    "channel",
+    "timestamp",
+    "quality",
+    "value",
+    "unit"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Ephemeral bench-session token; never a patient or participant identifier."
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Opaque sensor/simulator identity local to this bench session."
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "channel": {
+      "enum": [
+        "heart_rate",
+        "hrv",
+        "systolic_bp",
+        "diastolic_bp",
+        "spo2",
+        "respiratory_rate",
+        "temperature",
+        "peripheral_temperature",
+        "capillary_refill_seconds",
+        "accelerometer_x",
+        "accelerometer_y",
+        "accelerometer_z",
+        "ecg_sample"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 timestamp with an explicit UTC offset. Consumers normalize to UTC."
+    },
+    "quality": {
+      "enum": ["good", "suspect", "bad", "missing"]
+    },
+    "value": {
+      "type": ["number", "null"]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "missing_reason": {
+      "enum": [
+        "not_sampled",
+        "sensor_unavailable",
+        "transport_loss",
+        "quality_rejected",
+        "not_applicable"
+      ]
+    },
+    "sample_rate_hz": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "calibration_revision": {
+      "type": "string",
+      "maxLength": 64
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "quality": { "const": "good" }
+        },
+        "required": ["quality"]
+      },
+      "then": {
+        "properties": {
+          "value": { "type": "number" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "quality": { "enum": ["bad", "missing"] }
+        },
+        "required": ["quality"]
+      },
+      "then": {
+        "properties": {
+          "value": { "type": "null" }
+        },
+        "required": ["missing_reason"]
+      }
+    }
+  ]
+}
