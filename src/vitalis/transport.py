@@ -122,7 +122,7 @@ def parse_envelope(message: str | bytes) -> BenchEnvelope:
         raise ValueError("timestamp must include an explicit UTC offset")
 
     quality = payload["quality"]
-    if quality not in QUALITIES:
+    if not isinstance(quality, str) or quality not in QUALITIES:
         raise ValueError("quality must be good, suspect, bad or missing")
 
     raw_value = payload["value"]
@@ -132,12 +132,15 @@ def parse_envelope(message: str | bytes) -> BenchEnvelope:
     else:
         if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
             raise ValueError("value must be a finite number or null")
-        value = float(raw_value)
+        try:
+            value = float(raw_value)
+        except OverflowError as exc:
+            raise ValueError("value must be finite") from exc
         if not isfinite(value):
             raise ValueError("value must be finite")
 
     missing_reason = payload.get("missing_reason")
-    if missing_reason is not None and missing_reason not in MISSING_REASONS:
+    if missing_reason is not None and (not isinstance(missing_reason, str) or missing_reason not in MISSING_REASONS):
         raise ValueError("invalid missing_reason")
     if quality == "good" and value is None:
         raise ValueError("good-quality observations require a numeric value")
