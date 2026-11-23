@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from math import isfinite
 from typing import Any
 
@@ -114,12 +114,15 @@ def parse_envelope(message: str | bytes) -> BenchEnvelope:
         raise ValueError("unit does not match channel")
 
     timestamp_text = _nonempty_string(payload["timestamp"], "timestamp", 64)
+    if "T" not in timestamp_text:
+        raise ValueError("timestamp must be RFC 3339 date-time")
     try:
         timestamp = datetime.fromisoformat(timestamp_text.replace("Z", "+00:00"))
     except ValueError as exc:
         raise ValueError("timestamp must be RFC 3339 date-time") from exc
     if timestamp.tzinfo is None or timestamp.utcoffset() is None:
         raise ValueError("timestamp must include an explicit UTC offset")
+    timestamp = timestamp.astimezone(timezone.utc)
 
     quality = payload["quality"]
     if not isinstance(quality, str) or quality not in QUALITIES:
