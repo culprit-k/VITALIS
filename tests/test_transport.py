@@ -1,10 +1,7 @@
 import json
-from datetime import timezone
-
 import pytest
 
 from vitalis.transport import (
-    BenchEnvelope,
     SequenceTracker,
     parse_envelope,
     to_stream_observation,
