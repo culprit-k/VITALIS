@@ -41,8 +41,8 @@ def test_dropout_generator_marks_missing_values_explicitly():
 
 def test_packet_loss_generator_produces_sequence_gaps_without_filling_them():
     tracker = SequenceTracker()
-    generated = list(envelopes(frames=15, seed=5, scenario="packet_loss"))
-    assert len(generated) == 52
+    generated = list(envelopes(frames=16, seed=5, scenario="packet_loss"))
+    assert len(generated) == 56
 
     gaps = 0
     for item in generated:
